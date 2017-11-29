@@ -1,0 +1,105 @@
+/*
+ * Copyright (c) 2017 Ghent University - imec
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package io.rml.framework.core.extractors.std
+
+import io.rml.framework.core.extractors.{LogicalSourceExtractor, PredicateObjectMapExtractor, SubjectMapExtractor, TripleMapExtractor}
+import io.rml.framework.core.internal.{Debug, Logging, Off}
+import io.rml.framework.core.extractors.{LogicalSourceExtractor, PredicateObjectMapExtractor, TripleMapExtractor}
+import io.rml.framework.core.model.{ParentTriplesMap, TripleMap, Uri}
+import io.rml.framework.core.model.rdf.{RDFGraph, RDFLiteral, RDFResource}
+import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.shared.RMLException
+
+/**
+  * Extractor for extracting triple maps from a graph.
+  */
+class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
+                            subjectMapExtractor: SubjectMapExtractor,
+                            predicateObjectMapExtractor: PredicateObjectMapExtractor)
+
+  extends TripleMapExtractor with Logging {
+
+  /**
+    * Extracts a set of triple maps from a graph.
+    * If extraction for a triple map fails, this triple map will be skipped.
+    * @param graph Graph to extract an Array of triple maps from.
+    * @return
+    */
+  override def extract(graph: RDFGraph) : List[TripleMap] = {
+
+    val tripleMapResources = filterTripleMaps(graph)
+
+    // iterate over each triple map resource
+    tripleMapResources.flatMap {
+      resource: RDFResource => extractTripleMapProperties(resource)
+    }
+
+  }
+
+  /**
+    *
+    * @param graph
+    */
+  private def filterTripleMaps(graph: RDFGraph): List[RDFResource] = {
+
+    // filter all triple map resources from the graph
+    val typeUri = Uri(RMLVoc.Class.TRIPLEMAP)
+    val tripleMapResources = graph.filterResources(typeUri)
+
+    // debug log, inside check for performance
+    if(isDebugEnabled) {
+      logDebug(graph.uri + ": Extracting triple maps from graph.")
+      logDebug(graph.uri + ": Triple maps found: " +
+        tripleMapResources.size + ", " + tripleMapResources)
+    }
+
+    tripleMapResources
+  }
+
+  /**
+    *
+    * @param resource
+    * @return
+    */
+  def extractTripleMapProperties(resource: RDFResource) : Option[TripleMap] = {
+    // errors can occur during extraction of sub structures
+    try {
+
+      // create a new triple map by extracting all sub structures
+      val  tripleMap = TripleMap(predicateObjectMapExtractor.extract(resource),
+                                 logicalSourceExtractor.extract(resource),
+                                 subjectMapExtractor.extract(resource),
+                                 resource.uri)
+      Some(tripleMap)
+
+    } catch {
+      // in case of an error, skip this triple map and log warnings
+      case e : RMLException =>
+        logWarning(e.getMessage)
+        logWarning(resource.uri + ": Skipping triple map.")
+        None
+    }
+  }
+
+
+}
