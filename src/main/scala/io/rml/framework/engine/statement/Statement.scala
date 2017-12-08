@@ -23,8 +23,8 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.model.{Literal, Uri, Value}
-import io.rml.framework.flink.{FlinkRDFLiteral, FlinkRDFResource, FlinkRDFTriple}
 import io.rml.framework.flink.item.{Item, JoinedItem}
+import io.rml.framework.flink.sink.{FlinkRDFLiteral, FlinkRDFResource, FlinkRDFTriple}
 
 /**
   * Represents a potential triple. A statement potentially generates a triple

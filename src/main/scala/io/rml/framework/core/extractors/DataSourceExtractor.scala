@@ -34,11 +34,10 @@ object DataSourceExtractor {
     * Creates a data source extractor.
     * Per default, only file data sources are supported. Other sources their extraction
     * functionalities must be injected.
-    * @param availableDataSources
     * @return
     */
-  def apply(availableDataSources : Map[Uri, (RDFResource) => DataSource] = Map()) : DataSourceExtractor = {
-    lazy val extractor = new StdDataSourceExtractor(availableDataSources)
+  def apply() : DataSourceExtractor = {
+    lazy val extractor = new StdDataSourceExtractor()
     extractor
   }
 

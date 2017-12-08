@@ -27,5 +27,5 @@ import io.rml.framework.core.model.std.StdBlank
 trait Blank extends Uri
 
 object Blank {
-  def apply(): Blank = new StdBlank()
+  def apply(): Blank = StdBlank()
 }

@@ -22,9 +22,8 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{ObjectMapExtractor, PredicateMapExtractor, PredicateObjectMapExtractor}
+import io.rml.framework.core.extractors._
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.extractors.{ObjectMapExtractor, PredicateMapExtractor, PredicateObjectMapExtractor, ResourceExtractor}
 import io.rml.framework.core.model.PredicateObjectMap
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.vocabulary.RMLVoc
@@ -34,7 +33,8 @@ import io.rml.framework.shared.RMLException
   * Extractor for predicate object maps.
   */
 class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtractor,
-                                     objectMapExtractor: ObjectMapExtractor)
+                                     objectMapExtractor: ObjectMapExtractor,
+                                     functionMapExtractor: FunctionMapExtractor)
 
   extends PredicateObjectMapExtractor with Logging {
 
@@ -68,8 +68,9 @@ class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtracto
     */
   private def extractPredicateObjectMap(resource: RDFResource) : PredicateObjectMap = {
     val objectMaps = objectMapExtractor.extract(resource)
+    val functionMaps = functionMapExtractor.extract(resource)
     val predicateMaps = predicateMapExtractor.extract(resource)
-    PredicateObjectMap(resource.uri, objectMaps, predicateMaps)
+    PredicateObjectMap(resource.uri, objectMaps, functionMaps, predicateMaps)
   }
 
 }

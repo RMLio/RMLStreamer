@@ -1,4 +1,4 @@
-package io.rml.framework.flink.dataset
+package io.rml.framework.flink.source
 
 import io.rml.framework.flink.item.Item
 import org.apache.flink.api.scala.DataSet

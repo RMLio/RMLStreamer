@@ -1,8 +1,8 @@
-package io.rml.framework.flink
+package io.rml.framework.flink.sink
 
 import io.rml.framework.core.model.{Literal, Uri, Value}
 
-abstract class FlinkRDFNode(value: Value) extends Serializable
+abstract class FlinkRDFNode(val value: Value) extends Serializable
 
 case class FlinkRDFResource(uri: Uri) extends FlinkRDFNode(uri) {
   override def toString: String = "<" + uri.toString + ">"

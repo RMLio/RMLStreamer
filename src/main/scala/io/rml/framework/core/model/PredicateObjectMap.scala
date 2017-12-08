@@ -41,13 +41,15 @@ trait PredicateObjectMap extends Resource {
 
   def objectMaps : List[ObjectMap]
 
+  def functionMaps : List[FunctionMap]
+
   def predicateMaps : List[PredicateMap]
 
 }
 
 object PredicateObjectMap {
-  def apply(uri: Uri, objectMaps: List[ObjectMap], predicateMaps: List[PredicateMap]): PredicateObjectMap =
+  def apply(uri: Uri, objectMaps: List[ObjectMap], functionMaps: List[FunctionMap], predicateMaps: List[PredicateMap]): PredicateObjectMap =
     {
-      StdPredicateObjectMap(uri, objectMaps, predicateMaps)
+      StdPredicateObjectMap(uri, objectMaps, functionMaps, predicateMaps)
     }
 }

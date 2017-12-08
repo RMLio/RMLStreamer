@@ -67,10 +67,13 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     val properties = resource.listProperties(property)
 
     // iterates over predicatesMaps
-    properties.map {
+    properties.flatMap {
       case literal: RDFLiteral =>
         throw new RMLException(literal.toString + ": Cannot convert literal to predicate map.")
-      case resource: RDFResource => extractObjectMap(resource)
+      case resource: RDFResource => resource.getType match {
+        case Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP)) => None // TODO: rethink this
+        case _ => Some(extractObjectMap(resource))
+      }
     }
 
   }
@@ -81,6 +84,9 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     * @return
     */
   private def extractObjectMap(resource: RDFResource) : ObjectMap = {
+
+    require(resource != null, "Resource can't be null.")
+
     val termType = extractTermType(resource)
     val template = extractTemplate(resource)
     val constant = extractConstant(resource)

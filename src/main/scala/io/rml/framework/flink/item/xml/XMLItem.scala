@@ -7,10 +7,18 @@ import io.rml.framework.flink.item.Item
 import org.apache.commons.io.IOUtils
 import org.w3c.dom.{Document, NodeList}
 
+import scala.util.control.NonFatal
+
 class XMLItem(xml: Document) extends Item {
 
+  private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
+  private val documentBuilder = documentBuilderFactory.newDocumentBuilder()
+  private val xPath = XPathFactory.newInstance().newXPath()
+
   override def refer(reference: String) : Option[String] = {
-    val nodes = XMLItem.xPath.compile(reference).evaluate(xml, XPathConstants.NODESET).asInstanceOf[NodeList]
+    val nodes = try {xPath.compile(reference).evaluate(xml, XPathConstants.NODESET).asInstanceOf[NodeList]}
+                catch { case NonFatal(e) => return None }
+
     if(nodes.getLength > 0) {
       val text = nodes.item(0).getTextContent
       if(text == null) None
@@ -22,13 +30,22 @@ class XMLItem(xml: Document) extends Item {
 
 object XMLItem {
 
-  private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
-  private val documentBuilder = documentBuilderFactory.newDocumentBuilder()
-  private val xPath = XPathFactory.newInstance().newXPath()
+
 
   def fromString(xml:String): XMLItem = {
+    val documentBuilderFactory = DocumentBuilderFactory.newInstance()
+    val documentBuilder = documentBuilderFactory.newDocumentBuilder()
+    val xPath = XPathFactory.newInstance().newXPath()
     val document: Document = documentBuilder.parse(IOUtils.toInputStream(xml))
     new XMLItem(document)
+  }
+
+  def fromStringOptionable(xml: String): Option[XMLItem] = {
+    try {
+      Some(fromString(xml))
+    } catch {
+      case NonFatal(e) => None
+    }
   }
 
 }

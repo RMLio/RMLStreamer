@@ -1,4 +1,4 @@
-package io.rml.framework.flink
+package io.rml.framework.flink.sink
 
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 
@@ -39,4 +39,6 @@ class FlinkResource extends RDFResource {
   override def addLiteral(property: String, literal: RDFLiteral) = ???
 
   override def uri = ???
+
+  override def getType = ???
 }

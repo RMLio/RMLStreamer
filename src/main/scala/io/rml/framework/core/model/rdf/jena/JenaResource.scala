@@ -24,8 +24,11 @@ package io.rml.framework.core.model.rdf.jena
 
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFNode, RDFResource}
+import io.rml.framework.core.vocabulary.{RDFVoc, RMLVoc}
 import org.apache.jena.rdf.model.Resource
+
 import scala.collection.JavaConverters._
+import scala.collection.immutable
 
 class JenaResource(resource: Resource) extends RDFResource{
 
@@ -79,6 +82,19 @@ class JenaResource(resource: Resource) extends RDFResource{
     this.resource.addLiteral(model.createProperty(property), literal.toString)
     this
   }
+
+  override def getType: Option[Uri] = {
+    val types: Seq[RDFNode] = listProperties(RDFVoc.Property.TYPE)
+    // check if there are type statements, or else return None
+    if(types.size != 1) return None
+    // if there is a type statement, make sure this is a Resource and that there is only one in total
+    require(types.head.isInstanceOf[RDFResource], "Type must be a resource.")
+
+    // TODO: what if there are multiple types?
+
+    Some(types.head.asInstanceOf[RDFResource].uri)
+  }
+
 
 }
 

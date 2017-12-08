@@ -22,10 +22,11 @@
 
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{ObjectMap, PredicateMap, PredicateObjectMap, Uri}
+import io.rml.framework.core.model._
 
 case class StdPredicateObjectMap(uri: Uri,
                                  objectMaps: List[ObjectMap],
+                                 functionMaps: List[FunctionMap],
                                  predicateMaps: List[PredicateMap])
 
   extends PredicateObjectMap

@@ -24,8 +24,8 @@ package io.rml.framework.engine
 
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.RDFTriple
-import io.rml.framework.flink.FlinkRDFTriple
 import io.rml.framework.flink.item.Item
+import io.rml.framework.flink.sink.FlinkRDFTriple
 
 case class AirplanesMockEngine() extends Engine[Item] {
 

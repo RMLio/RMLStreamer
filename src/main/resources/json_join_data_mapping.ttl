@@ -1,0 +1,96 @@
+@prefix rr:     <http://www.w3.org/ns/r2rml#>.
+@prefix rml:    <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql:     <http://semweb.mmlab.be/ns/ql#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix oslo:   <http://purl.org/oslo/ns/localgov#>.
+@prefix adms:   <http://www.w3.org/ns/adms#>.
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcard:  <http://www.w3.org/2006/vcard/ns#> .
+@prefix dcterms:<http://purl.org/dc/terms/> .
+@prefix adms:   <http://www.w3.org/ns/adms#>.
+@prefix locn:   <http://www.w3.org/ns/locn#>.
+
+
+
+# LIJSTProducttype
+
+ <#LogicalSource>
+    a rml:LogicalSource;
+    rml:source "file:///home/wmaroy/github/rml-framework/akka-pipeline/src/main/resources/io/rml/framework/data/books.json";
+    rml:iterator "id" ;
+    rml:referenceFormulation ql:JSONPath.
+
+ <#LogicalSource_2>
+     a rml:LogicalSource;
+     rml:source "file:///home/wmaroy/github/rml-framework/akka-pipeline/src/main/resources/io/rml/framework/data/books.json";
+     rml:iterator "id" ;
+     rml:referenceFormulation ql:JSONPath.
+
+ <#LIJSTProducttype_only_subject>
+
+     a rr:TriplesMap;
+     rml:logicalSource <#LogicalSource>;
+
+     rr:subjectMap [
+         rr:template "https://io.rml.airports/{id}";
+         rr:termType rr:IRI;
+         rr:class skos:Concept
+     ].
+
+
+ <#ParentTriplesMap>
+    a rr:TriplesMap;
+    rml:logicalSource <#LogicalSource_2>;
+    rr:subjectMap [
+        rr:template "https://io.rml.airports/parent/{id}";
+        rr:termType rr:IRI;
+        rr:class skos:Concept
+    ].
+
+ <#LIJSTProducttype>
+
+    a rr:TriplesMap;
+    rml:logicalSource <#LogicalSource>;
+
+    rr:subjectMap [
+        rml:reference "id";
+        rr:termType rr:IRI;
+        rr:class skos:Concept
+    ];
+
+    rr:predicateObjectMap [
+            rr:predicateMap [
+                rr:constant dcterms:title;
+                rr:termType rr:IRI
+            ];
+            rr:objectMap [
+                rml:reference "id";
+                rr:termType rr:Literal
+            ]
+        ];
+
+    rr:predicateObjectMap [
+                rr:predicateMap [
+                    rr:constant dcterms:parent;
+                    rr:termType rr:IRI
+                ];
+                rr:objectMap [
+                    rr:parentTriplesMap <#ParentTriplesMap>;
+                    rr:joinCondition [
+                        rr:parent "id" ;
+                        rr:child "id"
+                    ];
+                    rr:termType rr:IRI
+                ]
+            ];
+
+    rr:predicateObjectMap [
+        rr:predicateMap [
+            rr:constant dcterms:city;
+            rr:termType rr:IRI
+        ];
+        rr:objectMap [
+            rml:reference "id";
+            rr:termType rr:Literal
+        ]
+    ].

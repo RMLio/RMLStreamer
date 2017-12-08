@@ -18,13 +18,13 @@
 
     a rr:TriplesMap;
     rml:logicalSource [
-        rml:source "file:///home/wmaroy/github/rml-framework/akka-pipeline/src/main/resources/io/rml/framework/data/orders.xml";
+        rml:source "/home/wmaroy/Downloads/standard";
         rml:referenceFormulation ql:XPath;
-        rml:iterator "item"
+        rml:iterator "/site/regions/africa/item"
     ];
 
     rr:subjectMap [
-        rml:reference "/item/id";
+        rml:reference "/item/name";
         rr:termType rr:IRI;
         rr:class skos:Concept
     ];
@@ -35,7 +35,7 @@
                 rr:termType rr:IRI
             ];
             rr:objectMap [
-                rml:reference "/item/id";
+                rml:reference "/item/location";
                 rr:termType rr:Literal
             ]
         ];
@@ -46,7 +46,7 @@
             rr:termType rr:IRI
         ];
         rr:objectMap [
-            rr:template "test/{/item/id}";
+            rr:template "test/{/item/location}";
             rr:termType rr:IRI
         ]
     ].

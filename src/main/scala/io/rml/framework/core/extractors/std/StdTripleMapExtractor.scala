@@ -95,6 +95,7 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     } catch {
       // in case of an error, skip this triple map and log warnings
       case e : RMLException =>
+        e.printStackTrace()
         logWarning(e.getMessage)
         logWarning(resource.uri + ": Skipping triple map.")
         None

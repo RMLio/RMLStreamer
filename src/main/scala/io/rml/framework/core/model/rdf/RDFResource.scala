@@ -29,6 +29,8 @@ import io.rml.framework.core.model.{Resource, Uri}
   */
 trait RDFResource extends Resource with RDFNode {
 
+  def getType : Option[Uri]
+
   /**
     *
     * @param property

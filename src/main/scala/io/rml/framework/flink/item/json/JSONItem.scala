@@ -23,34 +23,47 @@
 package io.rml.framework.flink.item.json
 
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
-import com.fasterxml.jackson.databind.node.ObjectNode
-import io.rml.framework.core.internal.Logging
+import com.fasterxml.jackson.databind.node.{ObjectNode, TextNode}
 import io.rml.framework.flink.item.Item
+import org.jsfr.json.compiler.JsonPathCompiler
+import org.jsfr.json.{JacksonParser, JsonSurfer}
+import org.jsfr.json.provider.JacksonProvider
 import org.slf4j.LoggerFactory
 
 import scala.util.control.NonFatal
 
-class JSONItem(objectNode: JsonNode) extends Item with Logging {
+class JSONItem(objectNode: JsonNode) extends Item {
+
+  val LOG = LoggerFactory.getLogger(JSONItem.getClass)
 
   override def refer(reference: String): Option[String] = {
     try {
-      Some(objectNode.get(reference).asText())
+      val surfer = new JsonSurfer(JacksonParser.INSTANCE, JacksonProvider.INSTANCE)
+      val iterator = surfer.iterator(objectNode.toString, JsonPathCompiler.compile(reference))
+      val next = iterator.next()
+      require(next.isInstanceOf[TextNode], "JSONPath result is not a text node.")
+      Some(next.asInstanceOf[TextNode].toString)
     } catch {
-      case NonFatal(e) =>
-        if(isWarnEnabled) {
-          logWarning(e.getMessage)
-        }
-        None
+      case NonFatal(e) => None
     }
   }
-
 }
 
 object JSONItem {
+
   def fromString(json:String): JSONItem = {
-    LoggerFactory.getLogger(JSONItem.getClass).debug(json)
     val mapper = new ObjectMapper()
     val node = mapper.readTree(json)
     new JSONItem(node)
+  }
+
+  def fromStringOptionable(json:String): Option[JSONItem] = {
+    try {
+      val mapper = new ObjectMapper()
+      val node = mapper.readTree(json)
+      Some(new JSONItem(node))
+    } catch {
+      case NonFatal(e) => None
+    }
   }
 }

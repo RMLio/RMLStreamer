@@ -28,6 +28,8 @@ import io.rml.framework.core.model.LogicalSource
 trait LogicalSourceExtractor extends ResourceExtractor[LogicalSource]
 
 object LogicalSourceExtractor {
+
+
   def apply(dataSourceExtractor: DataSourceExtractor = DataSourceExtractor())
   : LogicalSourceExtractor = {
     lazy val extractor = new StdLogicalSourceExtractor(dataSourceExtractor)

@@ -40,17 +40,9 @@ class StdMappingExtractor extends MappingExtractor {
     * @return
     */
   override def extract(graph: RDFGraph): RMLMapping = {
-    val tripleMapsExtractor = injectStandardTripleMapExtractor
+    val tripleMapsExtractor = TripleMapExtractor()
     val triplesMaps = tripleMapsExtractor.extract(graph)
     RMLMapping(triplesMaps, graph.uri)
-  }
-
-  /**
-    * Creates a TripleMapExtractor through dependency injection.
-    * @return
-    */
-  private def injectStandardTripleMapExtractor : TripleMapExtractor = {
-    TripleMapExtractor() // default injections
   }
 
 }

@@ -26,8 +26,8 @@ import io.rml.framework.core.extractors.std.TermMapExtractor
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.Literal
 import io.rml.framework.core.model.rdf.RDFTriple
-import io.rml.framework.flink.FlinkRDFTriple
 import io.rml.framework.flink.item.Item
+import io.rml.framework.flink.sink.FlinkRDFTriple
 
 /**
   * Created by wmaroy on 22.08.17.

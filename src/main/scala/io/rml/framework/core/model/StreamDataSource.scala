@@ -22,4 +22,34 @@
 
 package io.rml.framework.core.model
 
+import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.flink.source.{CSVStream, JSONStream, Stream, XMLStream}
+import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+import org.apache.flink.api.scala._
+
+
 trait StreamDataSource extends DataSource
+
+object StreamDataSource {
+  def fromLogicalSource(logicalSource: LogicalSource)(implicit env: StreamExecutionEnvironment): Stream = {
+    val source = logicalSource.source match {
+      case tcpStream : TCPSocketStream =>
+        val hostName = tcpStream.hostName
+        val port = tcpStream.port
+        logicalSource.referenceFormulation match {
+          case Uri(RMLVoc.Class.CSV) => CSVStream.fromTCPSocketStream(hostName, port, Array(""))
+          case Uri(RMLVoc.Class.XPATH) => XMLStream.fromTCPSocketStream(hostName, port)
+          case Uri(RMLVoc.Class.JSONPATH) => JSONStream.fromTCPSocketStream(hostName, port)
+        }
+      case fileStream : FileStream =>
+        val path = fileStream.path
+        val iterator = logicalSource.iterator.get.value
+        logicalSource.referenceFormulation match {
+          case Uri(RMLVoc.Class.CSV) => CSVStream.fromFileStream(path)
+          case Uri(RMLVoc.Class.XPATH) => XMLStream.fromFileStream(path, iterator)
+          case Uri(RMLVoc.Class.JSONPATH) => JSONStream.fromFileStream(path, iterator)
+        }
+    }
+    source
+  }
+}

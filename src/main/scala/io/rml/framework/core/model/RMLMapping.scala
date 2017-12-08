@@ -58,7 +58,10 @@ object RMLMapping {
       tm.predicateObjectMaps.flatMap(pm =>
         pm.objectMaps.flatMap(om => om.parentTriplesMap)))
     val transformedPTM = parentTriplesMaps.map(ParentTriplesMap(_))
+
+    // filter out all triple maps that are not parent triple maps themselves
     val nonPTMTripleMaps = tripleMaps.filter(tm => !transformedPTM.contains(ParentTriplesMap(tm)))
+
     StdRMLMapping(nonPTMTripleMaps, uri)
   }
 

@@ -32,7 +32,10 @@ object Namespaces {
     "rdfs" -> "http://www.w3.org/2000/01/rdf-schema#",
     "rr" -> "http://www.w3.org/ns/r2rml#",
     "ql" -> "http://semweb.mmlab.be/ns/ql#",
-    "rml" -> "http://semweb.mmlab.be/ns/rml#"
+    "rml" -> "http://semweb.mmlab.be/ns/rml#",
+    "rmls" -> "http://semweb.mmlab.be/ns/rmls#",
+    "fnml" -> "http://semweb.mmlab.be/ns/fnml#",
+    "fno" -> "http://w3id.org/function/ontology#"
   )
 
   /**

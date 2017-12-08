@@ -23,12 +23,12 @@
 package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.DataSourceExtractor
-import io.rml.framework.core.model.{DataSource, FileDataSource, Literal, Uri}
+import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.RDFResource
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.{RDFVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
 
-class StdDataSourceExtractor(availableDataSources : Map[Uri, (RDFResource) => DataSource])
+class StdDataSourceExtractor
   extends DataSourceExtractor {
 
   /**
@@ -56,10 +56,41 @@ class StdDataSourceExtractor(availableDataSources : Map[Uri, (RDFResource) => Da
     * @return
     */
   private def extractDataSourceFromResource(resource: RDFResource) : DataSource = {
-    if(!availableDataSources.contains(resource.uri))
-      throw new RMLException(resource.uri + ": data source not supported.")
-
-    availableDataSources(resource.uri)(resource)
+    val property = RDFVoc.Property.TYPE
+    val properties = resource.listProperties(property)
+    if(properties.size != 1) throw new RMLException(resource.uri + ": type must be given.")
+    properties.head match {
+      case classResource: RDFResource => classResource.uri match {
+        case Uri(RMLVoc.Class.TCPSOCKETSTREAM) => extractTCPSocketStream(resource)
+        case Uri(RMLVoc.Class.FILESTREAM) => extractFileStream(resource)
+      }
+      case literal: Literal => throw new RMLException(literal.value + ": type must be a resource.")
+    }
   }
 
+  private def extractFileStream(resource: RDFResource) : StreamDataSource = {
+    val pathProperties = resource.listProperties(RMLVoc.Property.PATH)
+    require(pathProperties.length == 1, "exactly 1 path needed.")
+    val path = pathProperties.head match {
+      case literal : Literal => literal.value
+      case res: RDFResource => throw new RMLException(res.uri + ": must be a literal.")
+    }
+    FileStream(resource.uri, path)
+  }
+
+  private def extractTCPSocketStream(resource: RDFResource) : StreamDataSource = {
+    val hostNameProperties = resource.listProperties(RMLVoc.Property.HOSTNAME)
+    require(hostNameProperties.length == 1, resource.uri.toString + ": exactly 1 hostname needed.")
+    val portProperties = resource.listProperties(RMLVoc.Property.PORT)
+    require(portProperties.length == 1, resource.uri.toString + ": exactly 1 port needed.")
+    val hostName = hostNameProperties.head match {
+      case resource: RDFResource => throw new RMLException(resource.uri + ": hostname must be a literal.")
+      case literal: Literal => literal.value
+    }
+    val port = portProperties.head match {
+      case resource: RDFResource => throw new RMLException(resource.uri + ": port must be a literal.")
+      case literal: Literal => literal.value
+    }
+    TCPSocketStream(resource.uri, hostName, port.toInt)
+  }
 }

@@ -25,8 +25,8 @@ package io.rml.framework.engine.statement
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{JoinedTripleMap, RMLMapping, TripleMap}
 import io.rml.framework.engine.Engine
-import io.rml.framework.flink.FlinkRDFTriple
 import io.rml.framework.flink.item.{Item, JoinedItem}
+import io.rml.framework.flink.sink.FlinkRDFTriple
 
 /**
   * A statement engine is an engine implementation that makes use of a transformed

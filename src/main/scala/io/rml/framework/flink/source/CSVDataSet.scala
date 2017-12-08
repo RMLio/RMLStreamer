@@ -1,12 +1,13 @@
-package io.rml.framework.flink.dataset
+package io.rml.framework.flink.source
 
 import java.nio.file.Paths
 
-import io.rml.framework.flink.item.{Item, RowItem}
 import io.rml.framework.flink.item.csv.CSVHeader
+import io.rml.framework.flink.item.{Item, RowItem}
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala.DataSet
-import org.apache.flink.table.api.scala.BatchTableEnvironment
+import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
+import org.apache.flink.table.api.scala.{BatchTableEnvironment, StreamTableEnvironment}
 import org.apache.flink.table.api.{Table, Types}
 import org.apache.flink.table.sources.CsvTableSource
 import org.apache.flink.types.Row
@@ -36,6 +37,7 @@ object CSVDataSet {
     val table: Table = tEnv
       .scan(name)
       .select(convertToSelection(header.get))
+
 
     // create the header->index map
     val headersMap = convertToIndexMap(header.get)
