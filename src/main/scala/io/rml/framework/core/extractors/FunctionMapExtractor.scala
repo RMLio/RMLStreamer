@@ -5,8 +5,7 @@ import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
-case class FunctionMapExtractor()
-  extends ResourceExtractor[List[FunctionMap]] {
+case class FunctionMapExtractor() extends ResourceExtractor[List[FunctionMap]] {
 
   lazy val tripleMapExtractor: TripleMapExtractor = TripleMapExtractor()
 

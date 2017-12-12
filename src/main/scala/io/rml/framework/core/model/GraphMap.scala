@@ -22,6 +22,8 @@
 
 package io.rml.framework.core.model
 
+import io.rml.framework.core.model.std.StdGraphMap
+
 /**
   * This trait represents a graph-map.
   * Graph maps are themselves term maps.
@@ -33,3 +35,11 @@ package io.rml.framework.core.model
   *
   */
 trait GraphMap extends TermMap
+
+object GraphMap {
+  def apply(uri: Uri,
+            constant: Option[Value],
+            reference: Option[Literal],
+            template: Option[Literal],
+            termType: Option[Uri]): GraphMap = new StdGraphMap(uri, constant, reference, template, termType)
+}

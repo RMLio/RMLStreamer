@@ -28,8 +28,7 @@ import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.vocabulary.{RDFVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
 
-class StdDataSourceExtractor
-  extends DataSourceExtractor {
+class StdDataSourceExtractor extends DataSourceExtractor {
 
   /**
     * Extracts a data source from a resource.

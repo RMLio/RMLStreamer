@@ -47,6 +47,7 @@ object RMLVoc {
     val JOINCONDITION = Namespaces("rr", "joinCondition")
     val PARENT = Namespaces("rr", "parent")
     val CHILD = Namespaces("rr", "child")
+    val GRAPHMAP = Namespaces("rr", "graphMap")
 
     ///////////////////////////////////////////////////////////////////////////
     // RML

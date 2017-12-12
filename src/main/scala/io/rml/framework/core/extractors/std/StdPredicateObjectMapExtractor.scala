@@ -56,9 +56,9 @@ class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtracto
         throw new RMLException(literal.toString +
           ": A literal cannot be converted to a predicate object map")
 
-      case resource : RDFResource =>
-        extractPredicateObjectMap(resource)
+      case resource : RDFResource => extractPredicateObjectMap(resource)
     }
+
   }
 
   /**
