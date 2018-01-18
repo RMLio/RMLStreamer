@@ -11,6 +11,7 @@ bash install.sh
 ```
 
 #### Executing RML Mappings
+`bash run.sh [-p <RML Mapping Location>]`
 
 ##### Stream Mappings
 
