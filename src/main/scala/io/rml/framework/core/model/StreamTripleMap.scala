@@ -32,6 +32,13 @@ abstract class StreamTripleMap(tripleMap: TripleMap) extends TripleMap {
   override def containsParentTripleMap = tripleMap.containsParentTripleMap
 
   override def uri = tripleMap.uri
+
+  /**
+    *
+    * @return
+    */
+  override def graphMap = ???
+
 }
 
 object StreamTripleMap {

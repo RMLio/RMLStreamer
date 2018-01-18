@@ -63,6 +63,12 @@ trait TripleMap extends Resource {
     *
     * @return
     */
+  def graphMap : Option[GraphMap]
+
+  /**
+    *
+    * @return
+    */
   def containsParentTripleMap : Boolean
 
 }
@@ -80,11 +86,14 @@ object TripleMap {
   def apply(predicateObjectMaps : List[PredicateObjectMap],
             logicalSource: LogicalSource,
             subjectMap: SubjectMap,
-            uri: Uri) : TripleMap = {
+            uri: Uri,
+            graphMap: Option[GraphMap] = None
+            ) : TripleMap = {
 
       StdTriplesMap(predicateObjectMaps,
                     logicalSource,
                     subjectMap,
+                    graphMap,
                     uri)
 
   }

@@ -21,16 +21,15 @@
     a rr:TriplesMap;
     rml:logicalSource [
         rml:source [
-            rdf:type rmls:TCPSocketStream;
+            rdf:type rmls:TCPSocketStream ;
             rmls:hostName "localhost";
             rmls:port "5005"
         ];
         rml:referenceFormulation ql:JSONPath;
-        rml:iterator "id"
     ];
 
     rr:subjectMap [
-        rml:reference "id";
+        rml:reference "$.id";
         rr:termType rr:IRI;
         rr:class skos:Concept
     ];
@@ -41,7 +40,7 @@
                 rr:termType rr:IRI
             ];
             rr:objectMap [
-                rml:reference "id";
+                rml:reference "$.id";
                 rr:termType rr:Literal
             ]
         ];
@@ -52,7 +51,7 @@
                     rr:termType rr:IRI
                 ];
                 rr:objectMap [
-                    rml:reference "id";
+                    rml:reference "$.id";
                     rr:termType rr:Literal
                 ]
             ];
@@ -63,7 +62,7 @@
                     rr:termType rr:IRI
                 ];
                 rr:objectMap [
-                    rml:reference "id";
+                    rml:reference "$.id";
                     rr:termType rr:Literal
                 ]
             ];
@@ -74,7 +73,7 @@
                     rr:termType rr:IRI
                 ];
                 rr:objectMap [
-                    rml:reference "id";
+                    rml:reference "$.id";
                     rr:termType rr:Literal
                 ]
             ];
@@ -86,7 +85,7 @@
                      rr:termType rr:IRI
                  ];
                  rr:objectMap [
-                     rml:reference "id";
+                     rml:reference "$.id";
                      rr:termType rr:Literal
                  ]
              ];
@@ -98,7 +97,7 @@
                              rr:termType rr:IRI
                          ];
                          rr:objectMap [
-                             rml:reference "id";
+                             rml:reference "$.id";
                              rr:termType rr:Literal
                          ]
                      ];
@@ -112,7 +111,7 @@
                                      rr:termType rr:IRI
                                  ];
                                  rr:objectMap [
-                                     rml:reference "id";
+                                     rml:reference "$.id";
                                      rr:termType rr:Literal
                                  ]
                              ];
@@ -123,7 +122,7 @@
             rr:termType rr:IRI
         ];
         rr:objectMap [
-            rr:template "test/{id}";
+            rr:template "test/{$.id}";
             rr:termType rr:IRI
         ]
     ].

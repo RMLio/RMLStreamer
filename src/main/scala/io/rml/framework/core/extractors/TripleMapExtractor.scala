@@ -47,12 +47,14 @@ object TripleMapExtractor {
   def apply(logicalSourceExtractor: LogicalSourceExtractor = LogicalSourceExtractor(),
             subjectMapExtractor: SubjectMapExtractor = SubjectMapExtractor(),
             predicateObjectMapExtractor: PredicateObjectMapExtractor =
-            PredicateObjectMapExtractor())
+            PredicateObjectMapExtractor(), graphMapExtractor: GraphMapExtractor = new StdGraphMapExtractor())
 
   : TripleMapExtractor = {
 
-    lazy val extractor = new StdTripleMapExtractor(logicalSourceExtractor,
+    lazy val extractor = new StdTripleMapExtractor(
+                              logicalSourceExtractor,
                               subjectMapExtractor,
+                              graphMapExtractor,
                               predicateObjectMapExtractor)
     extractor
   }

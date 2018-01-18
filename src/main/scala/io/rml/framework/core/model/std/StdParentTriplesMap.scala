@@ -22,10 +22,16 @@ case class StdParentTriplesMap(triplesMap: TripleMap) extends ParentTriplesMap {
   override def subjectMap = triplesMap.subjectMap
 
   /**
-    *
+    *cd f
     * @return
     */
   override def containsParentTripleMap = triplesMap.containsParentTripleMap
 
   override def uri = triplesMap.uri
+
+  /**
+    *
+    * @return
+    */
+  override def graphMap = ???
 }

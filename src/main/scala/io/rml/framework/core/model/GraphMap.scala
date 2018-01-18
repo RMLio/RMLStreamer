@@ -41,5 +41,5 @@ object GraphMap {
             constant: Option[Value],
             reference: Option[Literal],
             template: Option[Literal],
-            termType: Option[Uri]): GraphMap = new StdGraphMap(uri, constant, reference, template, termType)
+            termType: Option[Uri]): GraphMap = StdGraphMap(uri, constant, reference, template)
 }

@@ -27,6 +27,7 @@ import io.rml.framework.core.model._
 case class StdTriplesMap(predicateObjectMaps : List[PredicateObjectMap],
                          logicalSource: LogicalSource,
                          subjectMap: SubjectMap,
+                         graphMap: Option[GraphMap],
                          uri: Uri) extends TripleMap {
   /**
     *

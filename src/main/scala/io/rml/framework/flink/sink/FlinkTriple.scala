@@ -17,3 +17,11 @@ case class FlinkRDFTriple(subject: FlinkRDFResource, predicate: FlinkRDFResource
     subject + "  " + predicate + "  " + `object` + " ."
   }
 }
+/**
+case class FlinkRDFQuad(override val subject: FlinkRDFResource, predicate: FlinkRDFResource, `object`: FlinkRDFNode, graphName: FlinkRDFResource)
+  extends FlinkRDFTriple(subject,predicate,`object`){
+  override def toString: String = {
+    subject + "  " + predicate + "  " + `object` + " " + graphName + " ."
+  }
+}
+  **/

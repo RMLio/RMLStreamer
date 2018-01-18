@@ -28,4 +28,10 @@ case class StdJoinedTripleMap(tripleMap: TripleMap) extends JoinedTripleMap(trip
   override def containsParentTripleMap = tripleMap.containsParentTripleMap
 
   override def uri = tripleMap.uri
+
+  /**
+    *
+    * @return
+    */
+  override def graphMap = ???
 }

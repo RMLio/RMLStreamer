@@ -22,9 +22,8 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{LogicalSourceExtractor, PredicateObjectMapExtractor, SubjectMapExtractor, TripleMapExtractor}
+import io.rml.framework.core.extractors._
 import io.rml.framework.core.internal.{Debug, Logging, Off}
-import io.rml.framework.core.extractors.{LogicalSourceExtractor, PredicateObjectMapExtractor, TripleMapExtractor}
 import io.rml.framework.core.model.{ParentTriplesMap, TripleMap, Uri}
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFLiteral, RDFResource}
 import io.rml.framework.core.vocabulary.RMLVoc
@@ -35,6 +34,7 @@ import io.rml.framework.shared.RMLException
   */
 class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
                             subjectMapExtractor: SubjectMapExtractor,
+                            graphMapExtractor: GraphMapExtractor,
                             predicateObjectMapExtractor: PredicateObjectMapExtractor)
 
   extends TripleMapExtractor with Logging {
@@ -89,7 +89,9 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
       val  tripleMap = TripleMap(predicateObjectMapExtractor.extract(resource),
                                  logicalSourceExtractor.extract(resource),
                                  subjectMapExtractor.extract(resource),
-                                 resource.uri)
+                                 resource.uri,
+                                 graphMapExtractor.extract(resource)
+                                 )
       Some(tripleMap)
 
     } catch {

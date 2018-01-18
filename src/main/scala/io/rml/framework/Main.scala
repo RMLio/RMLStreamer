@@ -114,7 +114,8 @@ object Main {
       entry._1.asInstanceOf[io.rml.framework.flink.source.Stream]
         .stream
         .map(new StdProcessor(entry._2)).name("Execute statements on items.")
-        .flatMap(list => if(list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b) + "\n\n") else None).name("Reduce to strings.")
+        .flatMap(list => if(list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b) + "\n\n") else None)
+        .name("Reduce to strings.")
     })
 
     unionStreams(processedStreams)
@@ -156,16 +157,22 @@ object Main {
 
     // group triple maps with identical logical sources together
     val grouped = triplesMaps.groupBy(tripleMap => tripleMap.logicalSource)
+
     // create a map with as key the logical source and as value the engine with loaded statements
     val sourceEngineMap = grouped.map(entry => Source(entry._1) -> {
       println(entry._2.size + " Triple Maps are found.")
       StatementEngine.fromTripleMaps(entry._2)
     })
+
     val processedDataSets = sourceEngineMap.map(entry => {
       entry._1.asInstanceOf[FileDataSet]
         .dataset
-        .map(new StdProcessor(entry._2)).name("Execute statements on items.")
-        .flatMap(list => if(list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None).name("Reduce to strings.")
+
+        .map(new StdProcessor(entry._2))
+        .name("Execute statements on items.")
+
+        .flatMap(list => if(list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
+        .name("Reduce to strings.")
     })
 
     unionDataSets(processedDataSets.toList)
@@ -189,21 +196,25 @@ object Main {
                             .dataset
                             .filter(item => {
                               item.refer(tm.joinCondition.child.toString).isDefined
-                            }).name("Read child dataset.")
+                            })
+                            .name("Read child dataset.")
 
       val parentDataset = Source(tm.parentTriplesMap.logicalSource).asInstanceOf[FileDataSet]
                             .dataset
                             .filter(item => {
                               item.refer(tm.joinCondition.parent.toString).isDefined
-                            }).name("Read parent dataset.")
+                            })
+                            .name("Read parent dataset.")
 
       val joined: JoinDataSet[Item, Item] = childDataset.join(parentDataset)
                                                         .where(_.refer(tm.joinCondition.child.toString).get) // empty fields are already filtered
                                                         .equalTo(_.refer(tm.joinCondition.parent.toString).get) // empty fields are already filtered
 
-      joined.name("Join child and parent.").map(items => JoinedItem(items._1, items._2))
+      joined.name("Join child and parent.")
+            .map(items => JoinedItem(items._1, items._2))
             .map(new JoinedProcessor(engine)).name("Execute statements.")
-            .flatMap(list => if(list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None).name("Reduce to strings.")
+            .flatMap(list => if(list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
+            .name("Reduce to strings.")
 
     })
 
@@ -243,7 +254,8 @@ object Main {
   abstract class Processor[T](engine: StatementEngine[T]) extends RichMapFunction[T, List[String]] {
 
     override def map(in: T): List[String] = {
-      engine.process(in).map(triple => triple.toString)
+      engine.process(in)
+            .map(triple => triple.toString)
     }
 
   }
