@@ -13,9 +13,9 @@ bash install.sh
 #### Executing RML Mappings
 
 ```
-bash run.sh [-p <RML Mapping Location>]
+bash run.sh [-p <RML Mapping Location> -o <File Output Location> -s <Output Socket Port Number>]
 ```
 
-##### Stream Mappings
+##### Stream Mappings Examples
 
-##### Dataset Mappings
+##### Dataset Mappings Examples
