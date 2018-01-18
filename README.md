@@ -79,7 +79,7 @@ bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Soc
                 rml:reference "$.id";
                 rr:termType rr:Literal
             ]
-        ];
+        ].
 ```
 
 ##### Dataset Mappings Examples
