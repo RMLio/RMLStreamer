@@ -83,3 +83,34 @@ bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Soc
 ```
 
 ##### Dataset Mappings Examples
+
+###### Generating a dataset from a dataset
+
+```
+ <#TripleMap>
+
+    a rr:TriplesMap;
+    rml:logicalSource [
+        rml:source "/home/wmaroy/github/rml-framework/akka-pipeline/src/main/resources/io/rml/framework/data/books_small.json";
+        rml:referenceFormulation ql:JSONPath;
+        rml:iterator "$.store.books"
+    ];
+
+    rr:subjectMap [
+        rml:reference "id";
+        rr:termType rr:IRI;
+        rr:class skos:Concept
+    ];
+
+    rr:predicateObjectMap [
+            rr:predicateMap [
+                rr:constant dcterms:title;
+                rr:termType rr:IRI
+            ];
+            rr:objectMap [
+                rml:reference "id";
+                rr:termType rr:Literal
+            ]
+        ] .
+        
+ ```
