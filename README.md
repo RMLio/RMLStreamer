@@ -82,9 +82,9 @@ bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Soc
         ].
 ```
 
-##### Dataset Mappings Examples
+#### Dataset Mappings Examples
 
-###### Generating a dataset from a dataset
+##### Generating a dataset from a dataset
 
 ```
  <#TripleMap>
