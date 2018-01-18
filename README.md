@@ -2,7 +2,7 @@
 
 #### Installing Flink
 The RML Framework runs it's jobs on Flink clusters. More information on how to install Flink and getting clusters up and running can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.4/quickstart/setup_quickstart.html).
-At least a local cluster must be running in order to start executing RML Mappings with the RML Framework.
+ At least a local cluster must be running in order to start executing RML Mappings with the RML Framework.
 #### Installing RML Framework
 ```
 git clone ssh://git@git.datasciencelab.ugent.be:4444/rml/rml-streamer.git
@@ -13,7 +13,7 @@ bash install.sh
 #### Executing RML Mappings
 
 ```
-bash run.sh [-p <RML Mapping Location> -o <File Output Location> -s <Output Socket Port Number>]
+bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Socket Port Number> ]
 ```
 
 ##### Stream Mappings Examples
