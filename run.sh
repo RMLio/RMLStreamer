@@ -6,6 +6,18 @@
 #
 #
 
+PROPERTY_FILE=configuration.properties
+
+function getProperty {
+   PROP_KEY=$1
+   PROP_VALUE=`cat $PROPERTY_FILE | grep "$PROP_KEY" | cut -d'=' -f2`
+   echo $PROP_VALUE
+}
+
+echo "# Reading property from $PROPERTY_FILE"
+FLINKDIR=$(getProperty "flinkdir")
+
+
 echo ""
 echo "// RML Run Script"
 echo "------------------------------------------"
@@ -35,7 +47,7 @@ set -- "${POSITIONAL[@]}"
 # Check if $MAPPINGPATH is set
 if [ ! -z "$MAPPINGPATH"  ]; then
 	# Execute
-	bash ~/Downloads/flink-1.3.2/bin/flink run  -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar --path $MAPPINGPATH
+	bash $FLINKDIR run  -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar --path $MAPPINGPATH
 else
 	echo "Execution aborted: -p|--path must be given."
 	echo ""
