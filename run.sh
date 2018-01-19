@@ -35,10 +35,22 @@ case $key in
 	shift
 	shift
 	;;
+	-o|--outputPath)
+    OUTPUTPATH="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -s|--socket)
+    SOCKET="$2"
+    shift # past argument
+    shift # past value
+    ;;
 	*)
 	POSITIONAL+=("$1")
 	shift
 	;;
+
+
 esac
 done
 set -- "${POSITIONAL[@]}"
@@ -47,7 +59,7 @@ set -- "${POSITIONAL[@]}"
 # Check if $MAPPINGPATH is set
 if [ ! -z "$MAPPINGPATH"  ]; then
 	# Execute
-	bash $FLINKDIR run  -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar --path $MAPPINGPATH
+	bash $FLINKDIR run  -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET
 else
 	echo "Execution aborted: -p|--path must be given."
 	echo ""

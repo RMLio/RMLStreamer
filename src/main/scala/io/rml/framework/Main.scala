@@ -45,6 +45,12 @@ object Main {
     // get parameters
     val parameters = ParameterTool.fromArgs(args)
     val mappingPath = parameters.get("path")
+    val outputPath = parameters.get("outputPath")
+    val outputSocket = parameters.get("socket")
+
+    println("Mapping path: " + mappingPath)
+    println("Output path: " + outputPath)
+    println("Output socket: " + outputSocket.toInt)
 
     // Read mapping file
     val formattedMapping = readMappingFile(mappingPath)
@@ -59,7 +65,7 @@ object Main {
       // execute data set job
       val dataset = createDataSetFromFormattedMapping(formattedMapping)
       // write dataset to file
-      dataset.writeAsText("file:///home/wmaroy/framework/output.txt", WriteMode.OVERWRITE)
+      dataset.writeAsText("file://" + outputPath, WriteMode.OVERWRITE)
              .name("Write to output")
       env.execute("DATASET JOB")
 
@@ -68,7 +74,8 @@ object Main {
       println("Datastream Job found.")
       // execute stream job
       val stream = createStreamFromFormattedMapping(formattedMapping)
-      stream.writeToSocket("localhost", 9090, new SimpleStringSchema())
+      require(outputSocket != null, "Output socket must be given as a parameter.")
+      stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
       senv.execute("DATASTREAM JOB")
 
     }
@@ -167,10 +174,8 @@ object Main {
     val processedDataSets = sourceEngineMap.map(entry => {
       entry._1.asInstanceOf[FileDataSet]
         .dataset
-
         .map(new StdProcessor(entry._2))
         .name("Execute statements on items.")
-
         .flatMap(list => if(list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
         .name("Reduce to strings.")
     })
