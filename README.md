@@ -18,7 +18,7 @@ Location of the Flink installation directory must be configured in `configuratio
 bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Socket Port Number> ]
 ```
 
-#### Stream Mappings Examples
+#### Examples
 
 ##### Processing a stream
 
@@ -55,10 +55,11 @@ An example of how to define the generation of an RDF stream from a stream in an 
 ```
 The RML Mapping above can be executed as follows:
 
-The input and output in the RML Framework are both TCP clients when streaming. Before running stream mappings the input and output sockets must be opened by an application. For testing purposes the following commands can be used:
+The input and output in the RML Framework are both TCP clients when streaming. Before running stream mappings the input and output ports must be listened to by an application. For testing purposes the following commands can be used:
  ```
- nc -lk 5005 # This will be the input socket
- nc -lk 9000 # This will be the output socket
+ nc -lk 5005 # This will start listening for input connections at port 5005
+ nc -lk 9000 # This will start listening for output connections at port 9000
+ # This is for testing purposes, your own application needs to start listening to the input and output ports. 
  ```
 Once the input and output sockets are opened by applications or by the above commands, the RML Mapping can be executed.
 ```
@@ -102,8 +103,6 @@ Whenever data is written (every data object needs to end with `\r\n`) to the soc
             ]
         ].
 ```
-
-#### Dataset Mappings Examples
 
 ##### Generating a dataset from a dataset
 
