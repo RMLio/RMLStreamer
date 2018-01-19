@@ -19,6 +19,8 @@ bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Soc
 #### Stream Mappings Examples
 
 ##### Generating a stream from a stream
+
+An example of how to define the generation of stream from a stream in an RML Mapping.
 ```
  <#TripleMap>
 
@@ -49,6 +51,20 @@ bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Soc
             ]
         ].
 ```
+The RML Mapping above can be executed as follows:
+
+The input and output in the RML Framework are both TCP clients when streaming. Before running stream mappings the input and output sockets must be opened by an application. For example:
+ ```
+ nc -lk 5005 # This will be the input socket
+ nc -lk 9000 # This will be the output socket
+ ```
+Once the input and output sockets are opened by applications or by the above commands, the RML Mapping can be executed.
+```
+bash run.sh -p /home/wmaroy/framework/src/main/resources/json_stream_data_mapping.ttl -s 9000
+# The -p paramater sets the mapping file location
+# The -s parameter sets the output socket port number
+```
+
 
 ##### Generating a stream from a file
 ```
