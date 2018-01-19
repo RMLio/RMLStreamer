@@ -22,7 +22,7 @@ bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Soc
 
 ##### Generating a stream from a stream
 
-An example of how to define the generation of stream from a stream in an RML Mapping.
+An example of how to define the generation of an RDF stream from a stream in an RML Mapping.
 ```
  <#TripleMap>
 
@@ -55,7 +55,7 @@ An example of how to define the generation of stream from a stream in an RML Map
 ```
 The RML Mapping above can be executed as follows:
 
-The input and output in the RML Framework are both TCP clients when streaming. Before running stream mappings the input and output sockets must be opened by an application. For example:
+The input and output in the RML Framework are both TCP clients when streaming. Before running stream mappings the input and output sockets must be opened by an application. For testing purposes the following commands can be used:
  ```
  nc -lk 5005 # This will be the input socket
  nc -lk 9000 # This will be the output socket
