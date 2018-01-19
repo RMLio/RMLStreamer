@@ -7,6 +7,8 @@ The RML Framework runs it's jobs on Flink clusters. More information on how to i
 ### Installing RML Framework
 ```
 git clone ssh://git@git.datasciencelab.ugent.be:4444/rml/rml-streamer.git
+cd rml-streamer
+mvn clean install
 ```
 Location of the Flink installation directory must be configured in `configuration.properties` .
 
