@@ -20,7 +20,7 @@ bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Soc
 
 #### Stream Mappings Examples
 
-##### Generating a stream from a stream
+##### Processing a stream
 
 An example of how to define the generation of an RDF stream from a stream in an RML Mapping.
 ```
@@ -65,7 +65,10 @@ Once the input and output sockets are opened by applications or by the above com
 bash run.sh -p /home/wmaroy/framework/src/main/resources/json_stream_data_mapping.ttl -s 9000
 # The -p paramater sets the mapping file location
 # The -s parameter sets the output socket port number
+# The -o parameter sets the output path if the output needs to be written to a file instead of a stream.
 ```
+
+Whenever data is written (every data object needs to end with `\r\n`) to the socket, this data will be processed by the RML Framework.
 
 
 ##### Generating a stream from a file

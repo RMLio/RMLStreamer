@@ -42,15 +42,17 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
+    val EMPTY_VALUE = "__NO_VALUE_KEY"
+
     // get parameters
     val parameters = ParameterTool.fromArgs(args)
     val mappingPath = parameters.get("path")
-    val outputPath = parameters.get("outputPath")
+    val outputPath = "file://" + new File(parameters.get("outputPath")).getAbsolutePath // file prefix necessary for Flink API
     val outputSocket = parameters.get("socket")
 
     println("Mapping path: " + mappingPath)
     println("Output path: " + outputPath)
-    println("Output socket: " + outputSocket.toInt)
+    println("Output socket: " + outputSocket)
 
     // Read mapping file
     val formattedMapping = readMappingFile(mappingPath)
@@ -74,8 +76,8 @@ object Main {
       println("Datastream Job found.")
       // execute stream job
       val stream = createStreamFromFormattedMapping(formattedMapping)
-      require(outputSocket != null, "Output socket must be given as a parameter.")
-      stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
+      if(outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
+      else if(outputPath != EMPTY_VALUE) stream.writeAsText(outputPath, WriteMode.OVERWRITE)
       senv.execute("DATASTREAM JOB")
 
     }
@@ -120,6 +122,10 @@ object Main {
     val processedStreams: immutable.Iterable[DataStream[String]] = sourceEngineMap.map(entry => {
       entry._1.asInstanceOf[io.rml.framework.flink.source.Stream]
         .stream
+        .map(item => {
+          println(item)
+          item
+        })
         .map(new StdProcessor(entry._2)).name("Execute statements on items.")
         .flatMap(list => if(list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b) + "\n\n") else None)
         .name("Reduce to strings.")
