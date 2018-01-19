@@ -61,7 +61,7 @@ The input and output in the RML Framework are both TCP clients when streaming. B
  nc -lk 9000 # This will start listening for output connections at port 9000
  # This is for testing purposes, your own application needs to start listening to the input and output ports. 
  ```
-Once the input and output sockets are opened by applications or by the above commands, the RML Mapping can be executed.
+Once the input and output ports are listened to by applications or by the above commands, the RML Mapping can be executed. The RML Framework will open the input and output sockets so it can act upon data that will be written to the input socket.
 ```
 bash run.sh -p /home/wmaroy/framework/src/main/resources/json_stream_data_mapping.ttl -s 9000
 # The -p paramater sets the mapping file location
