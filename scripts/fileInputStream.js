@@ -3,7 +3,6 @@ var inputPort = 5005
 var outputPort = 9000
 var os = require("os")
 var delay = 0; // time in ms!
-var lineReader = require('line-reader')
 var LineByLineReader = require('line-by-line')
     
 
