@@ -1,0 +1,4 @@
+<http://combust.iminds.be/company/82> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Company> .
+<http://combust.iminds.be/company/94> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Company> .
+<http://combust.iminds.be/status/11> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Status> .
+<http://combust.iminds.be/status/21> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Status> .

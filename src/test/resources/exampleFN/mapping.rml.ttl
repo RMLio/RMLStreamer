@@ -1,0 +1,107 @@
+######################################################################################
+# 1. Prefixes
+######################################################################################
+
+@prefix rr:     <http://www.w3.org/ns/r2rml#>.
+@prefix rml:    <http://semweb.mmlab.be/ns/rml#> .
+@prefix crml:   <http://semweb.mmlab.be/ns/crml#> .
+@prefix fnml:   <http://semweb.mmlab.be/ns/fnml#> .
+@prefix fno: 	<http://w3id.org/function/ontology#> .
+@prefix ql:     <http://semweb.mmlab.be/ns/ql#> .
+@prefix dbo:	<http://dbpedia.org/ontology/> .
+@prefix dbf:	<http://dbpedia.org/function/> .
+@prefix geo: 	<http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix georss: <http://www.georss.org/georss/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: 	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+
+######################################################################################
+# 2. Mapping Document Metadata
+######################################################################################
+
+[]  dcterms:title "DBpedia Mappings";
+    dcterms:created "2016-07-09"^^xsd:date ;
+    dcterms:modified "2016-07-09"^^xsd:date .
+
+
+######################################################################################
+# 3. Input Sources
+######################################################################################
+
+
+# 3.1 Data Sources
+######################################################################################
+
+
+# 3.1 Logical Sources
+######################################################################################
+
+<#Person_LogicalSource>
+	rml:source "src/test/resources/exampleFn/input.csv" ;
+	rml:referenceFormulation ql:CSV .
+
+######################################################################################
+# 4. Mapping Definitions
+######################################################################################
+
+<#Person_TemplateMapping>	
+	rml:logicalSource <#Person_LogicalSource> ;
+	rr:subjectMap <#Person_SubjectMap> ;
+	rr:predicateObjectMap <#CoordinatesGeoMapping> .
+
+<#CoordinatesGeoMapping>
+	rr:predicate dbo:restingPlacePosition ;
+	rr:objectMap  [ rr:parentTriplesMap <#IntermediateCoordinatesGeoMapping> ] .
+
+<#IntermediateCoordinatesGeoMapping>
+	rml:logicalSource <#LogicalSource_Person> ;
+	rr:subjectMap <#Person_SubjectMap> ;	
+
+	rr:predicateObjectMap [
+		rr:predicate geo:lon ;
+		rr:objectMap  <#FunctionMapLongitudeIntermediateCoordinatesGeoMapping> ] .
+
+	#rr:predicateObjectMap [
+	#	rr:predicate geo:lat ;
+	#	rr:objectMap  <#FunctionMapLatitudeIntermediateCoordinatesGeoMapping> ] ;
+
+	#rr:predicateObjectMap [
+	#	rr:predicate rdf:type ;
+	#	rr:objectMap  geo:SpatialThing ]  .
+
+
+<#FunctionMapLongitudeIntermediateCoordinatesGeoMapping>
+	a fnml:FunctionTermMap ;
+	fnml:functionValue <#FunctionValueLongitudeIntermediateCoordinatesGeoMapping> .
+
+#<#FunctionMapLatitudeIntermediateCoordinatesGeoMapping>
+#	a fnml:FunctionTermMap ;
+#	fnml:functionValue <#FunctionValueLatitudeIntermediateCoordinatesGeoMapping> .
+
+
+#<#FunctionValueLatitudeIntermediateCoordinatesGeoMapping>
+#	rml:logicalSource <#Person_LogicalSource> ;
+#	rr:subjectMap <#GeoCoordinates_SubjectMap> ;
+#	rr:predicateObjectMap [
+#		rr:predicate fno:executes ;
+#		rr:objectMap [ rr:constant dbf:lat ] ] ;
+#		rr:predicateObjectMap [
+#			rr:predicate dbf:latParameter ;
+#			rr:objectMap [ rml:reference "resting_place_coordinates" ] ] .
+
+<#FunctionValueLongitudeIntermediateCoordinatesGeoMapping>
+	rml:logicalSource <#Person_LogicalSource> ;
+	rr:subjectMap <#GeoCoordinates_SubjectMap> ;
+	rr:predicateObjectMap [
+		rr:predicate fno:executes ;
+		rr:objectMap [ rr:constant dbf:lon ] ] ;
+	rr:predicateObjectMap [
+		rr:predicate dbf:lonParameter ;
+		rr:objectMap [ rml:reference "resting_place_coordinates" ] ] .
+
+
+#<#GeoCoordinates_SubjectMap>
+#	rr:termType rr:BlankNode ;
+#	rr:class fno:Execution .

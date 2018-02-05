@@ -1,0 +1,24 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix mail: <http://example.com/mail#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix dt: <http://www.example.com/DateTime/> .
+@prefix ex: <http://www.example.com/> .
+@base <http://example.com/base> .
+
+</home/andimou/Desktop/test/test/RML-Mapper/RML-Processor/src/test/resources/example1/example.output.ttl> 
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdfs.org/ns/void#Dataset> ;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/dcat#Distribution> ;
+<http://rdfs.org/ns/void#feature> <http://www.w3.org/ns/formats/turtle> ;
+    <http://rdfs.org/ns/void#distinctSubjects> "4" ;
+    <http://rdfs.org/ns/void#triples> "20" .
+
+#</home/andimou/Desktop/test/test/RML-Mapper/RML-Processor/src/test/resources/example1/example.output.ttl> <http://rdfs.org/ns/void#properties> "9" .
+
+
+<http://example.com/base#FromToMaps> 
+    <http://rdfs.org/ns/void#distinctSubjects> "2" ;
+    <http://rdfs.org/ns/void#triples> "12" .
+<http://example.com/base#DateTime> 
+    <http://rdfs.org/ns/void#distinctSubjects> "2" ;
+    <http://rdfs.org/ns/void#triples> "8" .

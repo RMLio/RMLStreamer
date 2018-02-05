@@ -1,0 +1,2 @@
+<http://www.example.com/d1/0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.example.com/Person> .
+<http://www.example.com/d1/1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.example.com/Person> .

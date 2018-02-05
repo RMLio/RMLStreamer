@@ -1,0 +1,128 @@
+######################################################################################
+# 1. Prefixes
+######################################################################################
+
+@prefix rr:     <http://www.w3.org/ns/r2rml#>.
+@prefix rml:    <http://semweb.mmlab.be/ns/rml#> .
+@prefix crml:   <http://semweb.mmlab.be/ns/crml#> .
+@prefix ql:     <http://semweb.mmlab.be/ns/ql#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#>.
+
+@prefix dcat: 	<http://www.w3.org/ns/dcat#> .
+@prefix sd: 	<http://www.w3.org/ns/sparql-service-description#> .
+
+@prefix dcterms:<http://purl.org/dc/terms/> .
+@prefix ex:     <http://example.com/> .
+
+@base <http://example.com/base> .
+
+######################################################################################
+# 2. Mapping Document Metadata
+######################################################################################
+
+[]  dcterms:title "iMinds Mappings";
+    dcterms:creator <http://rml.io/people/AnastasiaDimou> ;
+    dcterms:created "2016-12-01"^^xsd:date;
+    dcterms:modified "2016-05-22"^^xsd:date .
+
+
+######################################################################################
+# 3. Input Sources
+######################################################################################
+
+<#DataSourceY> 
+	a sd:Service ; 
+	sd:endpoint <http://dbpedia.org/sparql/> ;
+	sd:supportedLanguage sd:SPARQL11Query ;
+	sd:resultFormat <http://www.w3.org/ns/formats/SPARQL_Results_XML> .
+
+
+######################################################################################
+# 4. Logical Sources
+######################################################################################
+
+<#LogicalSourceX> 
+	rml:source "src/test/resources/exampleFallback/Companies.csv" ;
+	rml:referenceFormulation ql:CSV .
+
+<#LogicalSourceY> 
+	rml:source <#DataSourceY> ;
+	rml:iterator "/sparql:sparql/sparql:results/sparql:result" ;
+	rml:referenceFormulation ql:XPath ;
+	rml:query """SELECT DISTINCT ?countryName ?country WHERE {
+?country a dbo:Country; rdfs:label ?countryName .
+FILTER ( lang(?countryName) = "en" ) }
+ORDER BY DESC(?countryName)
+LIMIT 7000""" .
+
+
+######################################################################################
+# 5. Mapping Definitions - Triples Maps
+######################################################################################
+
+
+<#Companies>
+    rml:logicalSource <#LogicalSourceX> ;
+
+    rr:subjectMap [
+        rr:template "http://ex.com/comp/{id}";
+        rr:class ex:Company ];
+
+    rr:predicateObjectMap [
+        rr:predicate ex:country ;
+        rr:objectMap <#CountryDBpedia_RefObjMap> ]. 
+
+
+<#City_DBpedia>
+    rml:logicalSource <#LogicalSourceY> ;
+
+    rr:subjectMap [
+        rml:reference "sparql:binding/sparql:uri" ;
+        rr:termType rr:IRI ] .
+
+
+<#Country_Local>
+    rml:logicalSource <#LogicalSourceX> ;
+
+    rr:subjectMap [ 
+        rr:template "http://ex.com/country/{country}" ] .
+
+
+<#Country_DBpedia>
+    rml:logicalSource <#LogicalSourceY> ;
+
+    rr:subjectMap [
+        rml:reference "sparql:binding/sparql:uri" ;
+        rr:termType rr:IRI ] .
+
+
+<#Country_Local_DBpedia>
+    rml:logicalSource <#LogicalSourceX> ;
+
+    rr:subjectMap [
+        rr:template "http://dbpedia.org/resource/{country}" ] .
+
+
+######################################################################################
+# 5. Mapping Definitions - Term Maps
+######################################################################################
+
+<#CountryDBpedia_RefObjMap>
+    rr:parentTriplesMap <#Country_Local_DBpedia> ;
+    crml:equalCondition <#Country_Condition> ;
+    crml:fallbackMap <#Country_RefObjMap> .
+
+<#Country_RefObjMap>
+    rr:parentTriplesMap <#Country_Local> .
+
+
+######################################################################################
+# 6. Conditions
+######################################################################################
+
+<#Country_Condition>
+    crml:condition """!match(%%country%%,\"NewZealand\")""" ;
+    crml:binding [
+        crml:variable "country" ;
+        rml:reference "country" ] .

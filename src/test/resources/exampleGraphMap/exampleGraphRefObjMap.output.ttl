@@ -1,0 +1,4 @@
+#Airport.csv output
+<http://airport.example.com/6523> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://vocab.org/transit/terms/Stop> .
+<http://airport.example.com/6523> <http://www.example.com/bus> <http://bus.example.com/25> <http://www.example.com/Graph4> .
+<http://bus.example.com/25> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.example.com/Bus> .

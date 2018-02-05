@@ -1,0 +1,29 @@
+<http://ex.com/comp/1> a <http://example.com/Company> ;
+	<http://example.com/country> <http://dbpedia.org/resource/Greece> .
+
+<http://ex.com/comp/2> a <http://example.com/Company> ;
+	<http://example.com/country> <http://dbpedia.org/resource/Ukraine> .
+
+<http://ex.com/comp/3> a <http://example.com/Company> ;
+	<http://example.com/country> <http://dbpedia.org/resource/Indonesia> .
+
+<http://ex.com/comp/4> a <http://example.com/Company> ;
+	<http://example.com/country> <http://dbpedia.org/resource/Russia> .
+
+<http://ex.com/comp/5> a <http://example.com/Company> ;
+	<http://example.com/country> <http://dbpedia.org/resource/Egypt> .
+
+<http://ex.com/comp/6> a <http://example.com/Company> ;
+	<http://example.com/country> <http://dbpedia.org/resource/China> .
+
+<http://ex.com/comp/7> a <http://example.com/Company> ;
+	<http://example.com/country> <http://dbpedia.org/resource/Portugal> .
+
+<http://ex.com/comp/8> a <http://example.com/Company> ;
+	<http://example.com/country> <http://dbpedia.org/resource/France> .
+
+<http://ex.com/comp/9> a <http://example.com/Company> ;
+	<http://example.com/country> <http://dbpedia.org/resource/Italy> .
+
+<http://ex.com/comp/10> a <http://example.com/Company> ;
+	<http://example.com/country> <http://ex.com/country/NewZealand> .

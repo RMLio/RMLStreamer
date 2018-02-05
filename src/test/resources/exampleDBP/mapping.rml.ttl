@@ -1,0 +1,138 @@
+@prefix schema: <http://schema.org/> .
+@prefix rr:    <http://www.w3.org/ns/r2rml#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix gml:   <http://www.opengis.net/gml/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix bio:   <http://purl.org/vocab/bio/0.1/> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix d0:    <http://www.ontologydesignpatterns.org/ont/d0.owl#> .
+@prefix geo:   <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix rml:   <http://semweb.mmlab.be/ns/rml#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix fnml:  <http://semweb.mmlab.be/ns/fnml#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ql:    <http://semweb.mmlab.be/ns/ql#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix crml:  <http://semweb.mmlab.be/ns/crml#> .
+@prefix fno:   <http://w3id.org/function/ontology#> .
+@prefix georss: <http://www.georss.org/georss/> .
+@prefix dbf:   <http://dbpedia.org/function/> .
+@prefix dbo:   <http://dbpedia.org/ontology/> .
+@prefix mappings: <http://mappings.dbpedia.org/wiki/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix bibo:  <http://purl.org/ontology/bibo/> .
+@prefix dul:   <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> .
+@prefix cidoccrm: <http://purl.org/NET/cidoc-crm/core#> .
+@prefix wikidata: <http://www.wikidata.org/entity/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en/Infobox_artist>
+        a                      rr:TriplesMap ;
+        dcterms:type           "conditionalMapping" ;
+        rml:logicalSource      <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/Infobox_artist/LogicalSource> ;
+        rr:predicateObjectMap  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1> ;
+        rr:subjectMap          <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/Infobox_artist/SubjectMap> .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/Infobox_artist/LogicalSource>
+        a                         rml:LogicalSource ;
+        rml:referenceFormulation  ql:CSV ;
+        rml:source                "src/test/resources/exampleDBP/input.csv" .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/Infobox_artist/SubjectMap>
+        a            rr:SubjectMap ;
+        rr:constant  "http://mappings.dbpedia.org/wiki/resource/wikititle" ;
+        rr:termType  rr:IRI .      
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1>
+        a                    rr:PredicateObjectMap ;
+        dcterms:type         "conditionalMapping" ;
+        crml:equalCondition  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap> ;
+        crml:fallbackMap     <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2> ;
+        rr:objectMap         <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/ObjectMap> ;
+        rr:predicate         rdf:type .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/ObjectMap>
+        a            rr:ObjectMap ;
+        rr:constant  dbo:Band .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap>
+        a                   fnml:FunctionTermMap ;
+        fnml:functionValue  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap/FunctionValue> .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap/FunctionValue>
+        a                      rr:TriplesMap ;
+        rml:logicalSource      <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/Infobox_artist/LogicalSource> ;
+        rr:predicateObjectMap  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap/FunctionValue/PropertyParameterPOM> , <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap/FunctionValue/ExecutePOM> ;
+        rr:subjectMap          <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/Infobox_artist/SubjectMap/Function> .                
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap/FunctionValue/PropertyParameterPOM>
+        a             rr:PredicateObjectMap ;
+        rr:objectMap  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap/FunctionValue/PropertyParameterPOM/ObjectMap> ;
+        rr:predicate  fno:isSetpropertyParameter .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap/FunctionValue/PropertyParameterPOM/ObjectMap>
+        a            rr:ObjectMap ;
+        rr:constant  "pastmembers" .        
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap/FunctionValue/ExecutePOM>
+        a             rr:PredicateObjectMap ;
+        rr:objectMap  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap/FunctionValue/ExecutePOM/ObjectMap> ;
+        rr:predicate  fno:executes .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/FunctionTermMap/FunctionValue/ExecutePOM/ObjectMap>
+        a            rr:ObjectMap ;
+        rr:constant  dbf:isSet .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/Infobox_artist/SubjectMap/Function>
+        a            rr:SubjectMap ;
+        rr:class     fno:Execution ;
+        rr:termType  rr:BlankNode .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2>
+        a                    rr:PredicateObjectMap ;
+        crml:equalCondition  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap> ;
+        rr:objectMap         <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/ObjectMap> ;
+        rr:predicate         rdf:type .        
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap>
+        a                   fnml:FunctionTermMap ;
+        fnml:functionValue  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue> .
+
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue>
+        a                      rr:TriplesMap ;
+        rml:logicalSource      <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/Infobox_artist/LogicalSource> ;
+        rr:predicateObjectMap  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/PropertyParameterPOM> , <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/ValueParameterPOM> , <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/ExecutePOM> ;
+        rr:subjectMap          <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/Infobox_artist/SubjectMap/Function> .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/PropertyParameterPOM>
+        a             rr:PredicateObjectMap ;
+        rr:objectMap  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/PropertyParameterPOM/ObjectMap> ;
+        rr:predicate  fno:containspropertyParameter .        
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/PropertyParameterPOM/ObjectMap>
+        a            rr:ObjectMap ;
+        rr:constant  "occupation" .        
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/ValueParameterPOM>
+        a             rr:PredicateObjectMap ;
+        rr:objectMap  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/ValueParameterPOM/ObjectMap> ;
+        rr:predicate  fno:containsvalueParameter .
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/ValueParameterPOM/ObjectMap>
+        a            rr:ObjectMap ;
+        rr:constant  "actor" .
+                
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/ExecutePOM>
+        a             rr:PredicateObjectMap ;
+        rr:objectMap  <http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/ExecutePOM/ObjectMap> ;
+        rr:predicate  fno:executes .               
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/FunctionTermMap/FunctionValue/ExecutePOM/ObjectMap>
+        a            rr:ObjectMap ;
+        rr:constant  dbf:contains .  
+
+<http://mappings.dbpedia.org/wiki/Mapping_en:Infobox_artist/ConditionalMapping/currentmembers_isSet_null/1/2/ObjectMap>
+        a            rr:ObjectMap ;
+        rr:constant  dbo:Actor .      

@@ -1,0 +1,5 @@
+<http://ex.com/conf/ESWC16> a <http://example.com/Conference> ;
+	<http://example.com/city> <http://dbpedia.org/resource/Thessaloniki> .
+
+<http://ex.com/conf/ESWC15> a <http://example.com/Conference> ;
+	<http://example.com/city> <http://ex.com/city/Portoroz> .

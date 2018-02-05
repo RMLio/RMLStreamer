@@ -1,0 +1,128 @@
+######################################################################################
+# 1. Prefixes
+######################################################################################
+
+@prefix rr:     <http://www.w3.org/ns/r2rml#>.
+@prefix rml:    <http://semweb.mmlab.be/ns/rml#> .
+@prefix crml:   <http://semweb.mmlab.be/ns/crml#> .
+@prefix ql:     <http://semweb.mmlab.be/ns/ql#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#>.
+
+@prefix dcat: 	<http://www.w3.org/ns/dcat#> .
+@prefix sd: 	<http://www.w3.org/ns/sparql-service-description#> .
+
+@prefix dcterms:<http://purl.org/dc/terms/> .
+@prefix ex:     <http://example.com/> .
+
+@base <http://example.com/base> .
+
+######################################################################################
+# 2. Mapping Document Metadata
+######################################################################################
+
+[]  dcterms:title "iMinds Mappings";
+    dcterms:creator <http://rml.io/people/AnastasiaDimou> ;
+    dcterms:created "2016-12-01"^^xsd:date;
+    dcterms:modified "2016-12-24"^^xsd:date .
+
+
+######################################################################################
+# 3. Input Sources
+######################################################################################
+
+<#DataSourceX> 
+	a dcat:Distribution ; 
+	dcat:downloadURL "http://rml.io/data/ESWC16/conferences.csv".
+
+<#DataSourceY> 
+	a sd:Service ; 
+	sd:endpoint <http://dbpedia.org/sparql/> ;
+	sd:supportedLanguage sd:SPARQL11Query ;
+	sd:resultFormat <http://www.w3.org/ns/formats/SPARQL_Results_XML> .
+
+
+######################################################################################
+# 4. Logical Sources
+######################################################################################
+
+<#LogicalSourceX> 
+	rml:source <#DataSourceX> ;
+	rml:referenceFormulation ql:CSV .
+
+<#LogicalSourceY> 
+	rml:source <#DataSourceY> ;
+	rml:iterator "/sparql:sparql/sparql:results/sparql:result" ;
+	rml:referenceFormulation ql:XPath ;
+	rml:query """SELECT DISTINCT ?city ?cityName ?country WHERE {
+?city a dbo:City; rdfs:label ?cityName; dbo:country ?country.
+FILTER ( lang(?cityName) = "en" ) }
+ORDER BY DESC(?cityName)
+LIMIT 7000""" .
+
+
+######################################################################################
+# 5. Mapping Definitions - Triples Maps
+######################################################################################
+
+
+<#Conference>
+    rml:logicalSource <#LogicalSourceX> ;
+
+    rr:subjectMap [
+        rr:template "http://ex.com/conf/{short}";
+        rr:class ex:Conference ];
+
+    rr:predicateObjectMap [
+        rr:predicate ex:city ;
+        rr:objectMap <#CityDBpedia_RefObjMap> ]. 
+
+
+<#City_DBpedia>
+    rml:logicalSource <#LogicalSourceY> ;
+
+    rr:subjectMap [
+        rml:reference "sparql:binding/sparql:uri" ;
+        rr:termType rr:IRI ] .
+
+
+<#City_Local>
+    rml:logicalSource <#LogicalSourceX> ;
+
+    rr:subjectMap [ 
+        rr:template "http://ex.com/city/{city}" ] .
+
+
+<#Country_DBpedia>
+    rml:logicalSource <#LogicalSourceY> ;
+
+    rr:subjectMap [
+        rml:reference "sparql:binding/sparql:uri" ;
+        rr:termType rr:IRI ;
+        rr:class ex:Test ] .
+
+
+######################################################################################
+# 5. Mapping Definitions - Term Maps
+######################################################################################
+
+<#CityDBpedia_RefObjMap>
+    rr:parentTriplesMap <#City_DBpedia> ;
+    rr:joinCondition <#City_JoinCondition> ;
+    crml:fallbackMap <#CityLocal_RefObjMap> .
+
+<#CityLocal_RefObjMap>
+    rr:parentTriplesMap <#City_Local> .
+
+<#Country_RefObjMap>
+    rr:parentTriplesMap <#Country_DBpedia> ;
+    rr:joinCondition <#City_JoinCondition> .
+
+
+######################################################################################
+# 6. Conditions
+######################################################################################
+
+<#City_JoinCondition>
+    rr:child "city" ;
+    rr:parent "sparql:binding/sparql:literal" .

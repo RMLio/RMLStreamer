@@ -1,0 +1,16 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix mail: <http://example.com/mail#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex: <http://www.example.com/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix transit: <http://vocab.org/transit/terms/> .
+@prefix dcterms:<http://purl.org/dc/terms/> .
+
+#Airport.csv output
+#<http://airport.example.com/6524> a transit:Stop.
+#<http://airport.example.com/6524> dcterms:identifier "6524".
+
+<http://airport.example.com/6524> a <http://vocab.org/transit/terms/Stop> .
+<http://airport.example.com/6524> <http://purl.org/dc/terms/identifier> "6524" .
