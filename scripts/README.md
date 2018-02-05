@@ -5,7 +5,6 @@
 First the necessary dependencies need to be installed in the scripts folder.
 
 ```
-cd scripts/
 npm install
 ```
 #### Using scripts
@@ -14,7 +13,6 @@ npm install
 
 Easy setup of a TCP Server that opens a the given port and sends items from a file when a socket connection has been made. The individual items in the file need to be separated by new lines. When all elements have been read the TCP server will be closed.
 ```
-cd scripts/
 node fileInputStream.js <Input File Location> <Input Port> <Delay in ms>
 ```
 
@@ -46,14 +44,12 @@ Input file examples:
 
 Easy setup of TCP server that opens a given port and send stdinput to this port when a socket connection has been made.
 ```
-cd scripts/
 node standardInputStream.js <Input Port>
 ```
 - Input Port: port where the input stream will be send to by TCP
 
 An example with pipes:
 ```
-cd scripts/
 cat inputFile | node standardInputStream.js <Input Port>
 ```
 ##### Setting up streaming output to stdout
@@ -61,7 +57,6 @@ cat inputFile | node standardInputStream.js <Input Port>
 Easy setup of a TCP server that sends an output stream to standard output over a given port.
 
 ```
-cd scripts/
 node standardOutputStream.js <Output Port>
 ```
 - Output Port: port where the output stream will be send to by TCP
