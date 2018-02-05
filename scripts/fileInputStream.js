@@ -53,4 +53,4 @@ var inputServer = net.createServer(function(socket) {
 // start tcp server
 inputServer.listen(inputPort);
 
-console.log("Listening on ports " + inputPort + os.EOL)
+console.log("Opening port " + inputPort + os.EOL)
