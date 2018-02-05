@@ -23,6 +23,26 @@ node fileInputStream.js <Input File Location> <Input Port> <Delay in ms>
 - Input Port: port where the input stream will be send to by TCP
 - Delay in ms: send each element with a delay in ms
 
+Input file examples:
+
+```
+{ "id" : "12" }
+{ "id" : "14" }
+{ "id" : "16" }
+{ "id" : "18" }
+{ "id" : "20" }
+{ "id" : "29" }
+```
+
+```
+<element><id>2</id></element>
+<element><id>4</id></element>
+<element><id>6</id></element>
+<element><id>8</id></element>
+<element><id>10</id></element>
+<element><id>12</id></element>
+```
+
 ##### Setting up streaming input from stdin
 
 Easy setup of TCP server that opens a given port and send stdinput to this port when a socket connection has been made.
