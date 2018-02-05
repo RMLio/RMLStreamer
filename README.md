@@ -75,11 +75,14 @@ The repository contains node.js scripts for setting up stream input and output.
 
 ###### Creating stream input from a file
 ```
-node plugins/fileStream.js <Input File Location> <Input Port> <Output Port>
+cd scripts/
+npm install
+node fileInputStream.js <Input File Location> <Input Port> <Delay in ms>
+node standardOutputStream.js <Output Port>
+cd ../
 bash run.sh -p /home/wmaroy/framework/src/main/resources/json_stream_data_mapping.ttl -s <Output Port>
 # The individual elements (json, csv, xml) need to be separated by an EOL.
 ```
-
 
 ##### Generating a stream from a file
 ```
