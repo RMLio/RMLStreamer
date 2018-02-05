@@ -21,8 +21,22 @@ node fileInputStream.js <Input File Location> <Input Port> <Delay in ms>
 
 - Input File Location: location of the file that contains the elements
 - Input Port: port where the input stream will be send to by TCP
-- Delay in ms: send each element with a delay in ms.
+- Delay in ms: send each element with a delay in ms
 
+##### Setting up streaming input from stdin
+
+Easy setup of TCP server that opens a given port and send stdinput to this port when a socket connection has been made.
+```
+cd scripts/
+node standardInputStream.js <Input Port>
+```
+- Input Port: port where the input stream will be send to by TCP
+
+An example with pipes:
+```
+cd scripts/
+cat inputFile | node standardInputStream.js <Input Port>
+```
 ##### Setting up streaming output to stdout
 
 Easy setup of a TCP server that sends an output stream to standard output over a given port.
