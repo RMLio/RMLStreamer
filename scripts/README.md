@@ -14,7 +14,6 @@ Easy setup of a TCP Server that listens on a given port and sends items from a f
 ```
 cd scripts/
 node fileInputStream.js <Input File Location> <Input Port> <Delay in ms>
-cd ../
 ```
 
 ##### Setting up streaming output to stdout
