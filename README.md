@@ -71,6 +71,15 @@ bash run.sh -p /home/wmaroy/framework/src/main/resources/json_stream_data_mappin
 
 Whenever data is written (every data object needs to end with `\r\n`) to the socket, this data will be processed by the RML Framework.
 
+The repository contains node.js scripts for setting up stream input and output.
+
+###### Creating stream input from a file
+```
+node plugins/fileStream.js <Input File Location> <Input Port> <Output Port>
+bash run.sh -p /home/wmaroy/framework/src/main/resources/json_stream_data_mapping.ttl -s <Output Port>
+# The individual elements (json, csv, xml) need to be separated by an EOL.
+```
+
 
 ##### Generating a stream from a file
 ```

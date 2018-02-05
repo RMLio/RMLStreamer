@@ -9,6 +9,12 @@ process.argv.forEach(function (val, index, array) {
   if(index==2) {
 	filePath = val;
   } 
+  if(index==3) {
+	inputPort = val;
+  }
+  if(index==4) {
+	outputPort = val;
+  }
 });
 
 // create input tcp server
