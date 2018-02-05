@@ -77,7 +77,7 @@ object Main {
       // execute stream job
       val stream = createStreamFromFormattedMapping(formattedMapping)
       if(outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
-      else if(outputPath != EMPTY_VALUE) stream.writeAsText(outputPath, WriteMode.OVERWRITE)
+      else if(!outputPath.contains(EMPTY_VALUE)) stream.writeAsText(outputPath, WriteMode.OVERWRITE)
       senv.execute("DATASTREAM JOB")
 
     }
