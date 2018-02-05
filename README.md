@@ -1,12 +1,12 @@
 ## RML Framework
 
 ### Installing Flink
-The RML Framework runs it's jobs on Flink clusters. More information on how to install Flink and getting clusters up and running can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.4/quickstart/setup_quickstart.html).
- At least a local cluster must be running in order to start executing RML Mappings with the RML Framework.
+The RML Framework runs it's jobs on Flink clusters. More information on how to install Flink and getting clusters up and running can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.3/quickstart/setup_quickstart.html).
+ At least a local cluster must be running in order to start executing RML Mappings with the RML Framework. At the moment of writing this readme it is not necessary to install Hadoop. Please not that the current repository works with Flink 1.3.2, which can be downloaded [here](http://www.apache.org/dyn/closer.lua/flink/flink-1.3.2/flink-1.3.2-bin-scala_2.11.tgz).
 
 ### Installing RML Framework
 ```
-git clone ssh://git@git.datasciencelab.ugent.be:4444/rml/rml-streamer.git
+git clone ssh://git@git.datasciencelab.ugent.be:4444/rml/rml-streamer.git 
 cd rml-streamer
 mvn clean install
 ```
@@ -71,18 +71,7 @@ bash run.sh -p /home/wmaroy/framework/src/main/resources/json_stream_data_mappin
 
 Whenever data is written (every data object needs to end with `\r\n`) to the socket, this data will be processed by the RML Framework.
 
-The repository contains node.js scripts for setting up stream input and output.
-
-###### Creating stream input from a file
-```
-cd scripts/
-npm install
-node fileInputStream.js <Input File Location> <Input Port> <Delay in ms>
-node standardOutputStream.js <Output Port>
-cd ../
-bash run.sh -p /home/wmaroy/framework/src/main/resources/json_stream_data_mapping.ttl -s <Output Port>
-# The individual elements (json, csv, xml) need to be separated by an EOL.
-```
+The repository contains node.js scripts for setting up stream input and output. The readme can be found in the `scripts` folder.
 
 ##### Generating a stream from a file
 ```
