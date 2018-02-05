@@ -1,7 +1,12 @@
 var net = require('net')
-var inputPort = 5005;
-var outputPort = 9000;
-var os = require("os");
+var inputPort = 5005
+var outputPort = 9000
+var os = require("os")
+var delay = 0; // time in ms!
+var lineReader = require('line-reader')
+var LineByLineReader = require('line-by-line')
+    
+
 	
 // process file path argument for input data
 var filePath = ""
@@ -12,6 +17,9 @@ process.argv.forEach(function (val, index, array) {
   if(index==3) {
 	inputPort = val;
   }
+  if(index==4) {
+	delay = val;
+  }
 });
 
 // create input tcp server
@@ -19,22 +27,27 @@ var inputServer = net.createServer(function(socket) {
 
     console.log("Input Socket connected." + os.EOL + os.EOL)	
 
-    // create line reader
-    var lineReader = require('readline').createInterface({
-  	input: require('fs').createReadStream(filePath)
-    });
+	lr = new LineByLineReader(filePath);
 
+	lr.on('line', function (line) {
+    	// pause emitting of lines...
+    	lr.pause();
 
-    // write each line to the input socket
-    lineReader.on('line', function (line) {
-	socket.write(line + os.EOL);
-    });
+	    // ...do your asynchronous line processing..
+	    setTimeout(function () {
 
-    // close socket and tcp servers
-    lineReader.on('close', function() {
-	socket.end();
-	inputServer.close();
-    });	
+		socket.write(line + os.EOL);
+		lr.resume();
+	    }, delay);
+	});
+
+	lr.on('end', function () {
+	    // All lines are read, file is closed now.
+		socket.end();
+		  inputServer.close();
+
+	});
+	
 
 });
 
