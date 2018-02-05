@@ -12,7 +12,7 @@ npm install
 
 ##### Setting up streaming input from file
 
-Easy setup of a TCP Server that listens on a given port and sends items from a file over a socket when an RML Streamer makes a connection. The individual items in the file need to be separated by new lines.
+Easy setup of a TCP Server that listens to the given port and sends items from a file when an RML Streamer makes a connection. The individual items in the file need to be separated by new lines.
 
 ```
 cd scripts/
