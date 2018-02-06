@@ -82,7 +82,7 @@ class StdPredicateMapExtractor extends PredicateMapExtractor {
     * @return
     */
   private def extractPredicateMap(resource: RDFResource) : PredicateMap = {
-    val termType = extractTermType(resource)
+    val termType = Some(Uri(RMLVoc.Class.IRI)) // this is always the case as defined by the spec
     val template = extractTemplate(resource)
     val constant = extractConstant(resource)
     val reference = extractReference(resource)

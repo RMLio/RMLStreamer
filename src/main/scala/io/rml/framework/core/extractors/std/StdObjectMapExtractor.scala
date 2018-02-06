@@ -97,6 +97,19 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     ObjectMap(resource.uri, constant, reference, template, termType, parentTriplesMap, joinCondition)
   }
 
+  override def extractTermType(resource: RDFResource): Option[Uri] = {
+    val result = super.extractTermType(resource)
+    if(result.isDefined) result else {
+      // if this is a reference-based term map or contains an referenceFormulation or has a datatype property the
+      // term type is a literal
+      val elements = resource.listProperties(RMLVoc.Property.REFERENCE) ++
+        resource.listProperties(RMLVoc.Property.REFERENCEFORMULATION) ++
+        resource.listProperties(RMLVoc.Property.DATATYPE)
+      if(elements.isEmpty) Some(Uri(RMLVoc.Class.LITERAL))
+      else Some(Uri(RMLVoc.Class.IRI))
+    }
+  }
+
   private def extractParentTriplesMap(resource: RDFResource) : Option[TripleMap] = {
 
     val property = RMLVoc.Property.PARENTTRIPLESMAP

@@ -48,6 +48,7 @@ object RMLVoc {
     val PARENT = Namespaces("rr", "parent")
     val CHILD = Namespaces("rr", "child")
     val GRAPHMAP = Namespaces("rr", "graphMap")
+    val DATATYPE = Namespaces("rr", "datatype")
 
     ///////////////////////////////////////////////////////////////////////////
     // RML

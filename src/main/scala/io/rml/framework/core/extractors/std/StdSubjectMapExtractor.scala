@@ -88,6 +88,11 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
     SubjectMap(resource.uri, _class, constant, reference, template, termType)
   }
 
+  override def extractTermType(resource: RDFResource): Option[Uri] = {
+    val result = super.extractTermType(resource)
+    if(result.isDefined) result else Some(Uri(RMLVoc.Class.IRI))
+  }
+
   /**
     * Extracts class properties from subject map.
     *

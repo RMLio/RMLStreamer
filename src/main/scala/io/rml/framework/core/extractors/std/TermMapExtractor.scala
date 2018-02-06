@@ -120,6 +120,15 @@ abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
       throw new RMLException(resource.uri + ": invalid amount of term type properties.")
     if(properties.isEmpty) return None
 
+    /**{
+      // if this is a reference-based term map or contains an referenceFormulation or has a datatype property the
+      // term type is a literal
+      val elements = resource.listProperties(RMLVoc.Property.REFERENCE) ++
+      resource.listProperties(RMLVoc.Property.REFERENCEFORMULATION) ++
+      resource.listProperties(RMLVoc.Property.DATATYPE)
+      if(elements.isEmpty) Some(Uri(RMLVoc.Class.LITERAL))
+    } else Some(Uri(RMLVoc.Class.IRI)) **/
+
     properties.head match {
       case resource: RDFResource => Some(resource.uri)
       case literal: Literal =>
