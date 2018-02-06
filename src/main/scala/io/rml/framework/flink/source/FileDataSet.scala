@@ -49,8 +49,6 @@ object FileDataSet {
     hInput.getConfiguration.set(XmlInputFormat.END_TAG_KEY, "</" + tag.split(' ').head + ">")
     val hDataset = env.createInput(hInput)
     val dataset: DataSet[Item] = hDataset.map(item => {
-      var counter = 0
-      for(x <- 0 until 10000) { counter += 5}
       XMLItem.fromString(item._2.toString).asInstanceOf[Item]
     })  // needed since types of datasets can't be subclasses due to Flink implementation
     XMLDataSet(dataset)

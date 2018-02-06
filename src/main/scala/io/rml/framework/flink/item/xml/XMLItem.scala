@@ -16,7 +16,8 @@ class XMLItem(xml: Document) extends Item {
   private val xPath = XPathFactory.newInstance().newXPath()
 
   override def refer(reference: String) : Option[String] = {
-    val nodes = try {xPath.compile(reference).evaluate(xml, XPathConstants.NODESET).asInstanceOf[NodeList]}
+    // the node name is added as a little hack such that the node itself does not need to be in the reference (e.g. "/note/@day" vs "@day")
+    val nodes = try {xPath.compile("/" + xml.getFirstChild.getNodeName + "/" + reference).evaluate(xml, XPathConstants.NODESET).asInstanceOf[NodeList]}
                 catch { case NonFatal(e) => return None }
 
     if(nodes.getLength > 0) {

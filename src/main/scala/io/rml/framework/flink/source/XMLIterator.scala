@@ -59,9 +59,26 @@ class XMLIterator(val ap: AutoPilot, vn: VTDNav) extends Iterator[Option[Item]] 
 
       // get the element string
       val element = vn.toString(node)
+      val ap2 = new AutoPilot (vn)
+      ap2.selectXPath("@*")
+
+      val attributesMap = new mutable.HashMap[String, String]()
+      var i = ap2.evalXPath()
+
+      while(i != -1) {
+
+        val attributeKey = vn.toString(i)
+        val attributeValue = vn.toString(i+1)
+        attributesMap.put(attributeKey, attributeValue)
+        i = ap2.evalXPath()
+
+      }
 
       val document = documentBuilder.newDocument()
       val firstElement = document.createElement(element)
+      attributesMap.foreach(entry => {
+        firstElement.setAttribute(entry._1, entry._2)
+      })
       document.appendChild(firstElement)
 
       // map to hold attributes and values of element
@@ -97,18 +114,10 @@ class XMLIterator(val ap: AutoPilot, vn: VTDNav) extends Iterator[Option[Item]] 
         }
       }
 
+      map.foreach(item => println(item))
+
       // navigate back to the parent
       vn.toElement(VTDNav.PARENT)
-
-      // create the item
-      val item = new Item {
-        val references: mutable.HashMap[String, String] = map
-        override def toString: String = element + ": " + map
-        override def refer(reference: String) = {
-          val result = references.get(reference)
-          result
-        }
-      }
 
       // return the item
       //Some(item)

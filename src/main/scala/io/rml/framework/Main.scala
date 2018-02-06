@@ -314,7 +314,7 @@ object Main {
     * @tparam T
     * @return
     */
-  private def unionDataSets[T](datasets: List[DataSet[T]]): DataSet[T] = {
+  def unionDataSets[T](datasets: List[DataSet[T]]): DataSet[T] = {
     // error handling for the case where there is no standard TM
     val head = datasets.head
     if(datasets.size > 1) {
@@ -328,7 +328,7 @@ object Main {
     * @tparam T
     * @return
     */
-  private def unionStreams[T](streams: Iterable[DataStream[T]]): DataStream[T] = {
+  def unionStreams[T](streams: Iterable[DataStream[T]]): DataStream[T] = {
     // error handling for the case where there is no standard TM
     val head = streams.head
     if(streams.size > 1) {
