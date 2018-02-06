@@ -48,24 +48,14 @@ object Engine extends Logging {
     * @return
     */
   def processTemplate(template: Literal, item: Item) : Option[String] = {
-    val result = "(\\{[^\\{\\}]*\\})".r.replaceAllIn(template.value, m => {
+    val regex = "(\\{[^\\{\\}]*\\})".r
+    val result = regex.replaceAllIn(template.value, m => {
       val reference = removeBrackets(m.toString())
       val referred = item.refer(reference)
       if(referred.isDefined) referred.get
       else m.toString()
     })
-    return Some(result)
-    template.toString match {
-      case TermMapExtractor.TEMPLATE_REGEX(prefix, reference, suffix) =>
-        val referenceValue = item.refer(removeBrackets(reference))
-        if(referenceValue.isDefined)
-          Some(prefix + referenceValue.get + suffix)
-        else None
-      case _ =>
-        if(isDebugEnabled) logDebug(template.toString + ": No template found.")
-        None
-    }
-
+    if(regex.findFirstIn(result).isEmpty) Some(result) else None
   }
 
   /**
