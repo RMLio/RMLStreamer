@@ -105,7 +105,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
       val elements = resource.listProperties(RMLVoc.Property.REFERENCE) ++
         resource.listProperties(RMLVoc.Property.REFERENCEFORMULATION) ++
         resource.listProperties(RMLVoc.Property.DATATYPE)
-      if(elements.isEmpty) Some(Uri(RMLVoc.Class.LITERAL))
+      if(elements.nonEmpty) Some(Uri(RMLVoc.Class.LITERAL))
       else Some(Uri(RMLVoc.Class.IRI))
     }
   }
