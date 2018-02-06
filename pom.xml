@@ -151,6 +151,15 @@ under the License.
 			<version>RELEASE</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.scalacheck/scalacheck -->
+		<!-- This dependency is needed for testing purposes :/>
+		<dependency>
+			<groupId>org.scalacheck</groupId>
+			<artifactId>scalacheck_2.10</artifactId>
+			<version>1.13.5</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.directory.studio</groupId>
 			<artifactId>org.apache.commons.io</artifactId>

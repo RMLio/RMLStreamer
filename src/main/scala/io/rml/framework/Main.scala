@@ -30,6 +30,7 @@ import org.apache.flink.api.common.functions.RichMapFunction
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala._
 import org.apache.flink.core.fs.FileSystem.WriteMode
+import org.apache.flink.streaming.api.functions.sink.SinkFunction
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema
 
@@ -46,9 +47,12 @@ object Main {
 
     // get parameters
     val parameters = ParameterTool.fromArgs(args)
-    val mappingPath = parameters.get("path")
-    val outputPath = "file://" + new File(parameters.get("outputPath")).getAbsolutePath // file prefix necessary for Flink API
-    val outputSocket = parameters.get("socket")
+    val mappingPath = if(parameters.has("path")) parameters.get("path")
+                      else EMPTY_VALUE
+    val outputPath = if(parameters.has("outputPath")) "file://" + new File(parameters.get("outputPath")).getAbsolutePath // file prefix necessary for Flink API
+                     else EMPTY_VALUE
+    val outputSocket = if(parameters.has("socket")) parameters.get("socket")
+                       else EMPTY_VALUE
 
     println("Mapping path: " + mappingPath)
     println("Output path: " + outputPath)
@@ -64,23 +68,95 @@ object Main {
     if(formattedMapping.standardTripleMaps.nonEmpty) {
 
       println("Dataset Job Found.")
-      // execute data set job
-      val dataset = createDataSetFromFormattedMapping(formattedMapping)
+
+      val dataset: DataSet[String] = createDataSetFromFormattedMapping(formattedMapping)
       // write dataset to file
       dataset.writeAsText("file://" + outputPath, WriteMode.OVERWRITE)
+
              .name("Write to output")
+
+      // execute data set job
       env.execute("DATASET JOB")
 
     } else if(formattedMapping.streamTripleMaps.nonEmpty) {
 
       println("Datastream Job found.")
-      // execute stream job
+
       val stream = createStreamFromFormattedMapping(formattedMapping)
       if(outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
+
       else if(!outputPath.contains(EMPTY_VALUE)) stream.writeAsText(outputPath, WriteMode.OVERWRITE)
+
+      // execute stream job
       senv.execute("DATASTREAM JOB")
 
     }
+
+  }
+
+  /**
+    * Testing main method with in memory sinks for asserting output triples.
+    * @param args
+    */
+  def test(args: Array[String]) : List[String] = {
+
+    var output : List[String] = List()
+
+    val EMPTY_VALUE = "__NO_VALUE_KEY"
+
+    // get parameters
+    val parameters = ParameterTool.fromArgs(args)
+    val mappingPath = if(parameters.has("path")) parameters.get("path")
+    else EMPTY_VALUE
+    val outputPath = if(parameters.has("outputPath")) "file://" + new File(parameters.get("outputPath")).getAbsolutePath // file prefix necessary for Flink API
+    else EMPTY_VALUE
+    val outputSocket = if(parameters.has("socket")) parameters.get("socket")
+    else EMPTY_VALUE
+
+    println("Mapping path: " + mappingPath)
+    println("Output path: " + outputPath)
+    println("Output socket: " + outputSocket)
+
+    // Read mapping file
+    val formattedMapping = readMappingFile(mappingPath)
+
+    // set up execution environments
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    if(formattedMapping.standardTripleMaps.nonEmpty) {
+
+      println("Dataset Job Found.")
+
+      val dataset: DataSet[String] = createDataSetFromFormattedMapping(formattedMapping)
+      // write dataset to file
+      output = output ++ dataset.collect()
+
+      // execute data set job
+      env.execute("DATASET JOB")
+
+    } else if(formattedMapping.streamTripleMaps.nonEmpty) {
+
+      println("Datastream Job found.")
+
+      val stream = createStreamFromFormattedMapping(formattedMapping)
+      if(outputSocket != EMPTY_VALUE) stream.addSink(new SinkFunction[String] {
+        println("creating stub sink")
+        override def invoke(in: String): Unit = {
+          synchronized {
+            output = output :+ in
+          }
+        }
+      })
+
+      else if(!outputPath.contains(EMPTY_VALUE)) stream.writeAsText(outputPath, WriteMode.OVERWRITE)
+
+      // execute stream job
+      senv.execute("DATASTREAM JOB")
+
+    }
+
+    output
 
   }
 
@@ -123,7 +199,6 @@ object Main {
       entry._1.asInstanceOf[io.rml.framework.flink.source.Stream]
         .stream
         .map(item => {
-          println(item)
           item
         })
         .map(new StdProcessor(entry._2)).name("Execute statements on items.")

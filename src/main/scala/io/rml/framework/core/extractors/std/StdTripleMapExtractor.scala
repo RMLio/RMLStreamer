@@ -64,7 +64,9 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
 
     // filter all triple map resources from the graph
     val typeUri = Uri(RMLVoc.Class.TRIPLEMAP)
-    val tripleMapResources = graph.filterResources(typeUri)
+    val tripleMapResources = (graph.filterResources(typeUri) ++
+                             graph.filterProperties(Uri(RMLVoc.Property.LOGICALSOURCE))).distinct
+
 
     // debug log, inside check for performance
     if(isDebugEnabled) {

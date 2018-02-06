@@ -23,7 +23,6 @@
 package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.{MappingExtractor, TripleMapExtractor}
-import io.rml.framework.core.extractors.{MappingExtractor, TripleMapExtractor}
 import io.rml.framework.core.model.RMLMapping
 import io.rml.framework.core.model.rdf.RDFGraph
 
