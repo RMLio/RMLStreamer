@@ -58,7 +58,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
   private def constantGenerator(termMap: TermMap): Item => Option[Value] = {
     termMap.termType.get.toString match {
       case RMLVoc.Class.IRI => TermMapGenerators.constantUriGenerator(termMap.constant.get)
-      case RMLVoc.Class.LITERAL => TermMapGenerators.constantLiteralGenerator(termMap.constant.get)
+      case RMLVoc.Class.LITERAL => TermMapGenerators.constantLiteralGenerator(termMap.constant.get, termMap.datatype)
     }
   }
 

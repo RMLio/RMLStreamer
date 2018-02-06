@@ -72,10 +72,10 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   override def write(format: Format): String = ??? //TODO
 
   @throws(classOf[ReadException])
-  override def read(dump: String): Unit = {
+  override def read(dump: String, format : String = "TURTLE"): Unit = {
     val stream = new ByteArrayInputStream(dump.getBytes(StandardCharsets.UTF_8))
     try {
-      model.read(stream, null, JenaUtil.format(Turtle))
+      model.read(stream, null, format)
       logModelWhenDebugEnabled()
     } catch {
       case jenaException: JenaException =>

@@ -93,8 +93,23 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     val reference = extractReference(resource)
     val parentTriplesMap = extractParentTriplesMap(resource)
     val joinCondition = extractJoinCondition(resource)
+    val datatype = extractDatatype(resource)
 
-    ObjectMap(resource.uri, constant, reference, template, termType, parentTriplesMap, joinCondition)
+    ObjectMap(resource.uri, constant, reference, template, termType, datatype, parentTriplesMap, joinCondition)
+  }
+
+  def extractDatatype(resource: RDFResource) : Option[Uri] = {
+    val property = RMLVoc.Property.DATATYPE
+    val properties = resource.listProperties(property)
+
+    if(properties.size > 1)
+      throw new RMLException(resource.uri + ": invalid amount of reference properties.")
+    if(properties.isEmpty) return None
+
+    properties.head match {
+      case literal: Literal => throw new RMLException(resource.uri + ": invalid data type.")
+      case resource: RDFResource => Some(resource.uri)
+    }
   }
 
   override def extractTermType(resource: RDFResource): Option[Uri] = {

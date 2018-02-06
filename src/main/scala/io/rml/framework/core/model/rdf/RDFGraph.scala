@@ -24,7 +24,7 @@ package io.rml.framework.core.model.rdf
 
 import java.io.File
 
-import io.rml.framework.core.model.rdf.jena.JenaFactory
+import io.rml.framework.core.model.rdf.jena.{JenaFactory, JenaGraph}
 import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.util.Format
 import io.rml.framework.shared.ReadException
@@ -103,7 +103,7 @@ trait RDFGraph extends RDFNode {
     * @throws io.rml.framework.shared.ReadException
     */
   @throws(classOf[ReadException])
-  def read(dump: String) : Unit
+  def read(dump: String, format: String = "TURTLE") : Unit
 
   /**
     * Creates an RDFResource instance from a uri.

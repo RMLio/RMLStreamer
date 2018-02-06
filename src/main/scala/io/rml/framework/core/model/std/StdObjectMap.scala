@@ -29,5 +29,6 @@ case class StdObjectMap(uri: Uri,
                    reference: Option[Literal],
                    template: Option[Literal],
                    termType: Option[Uri],
+                   override val datatype: Option[Uri],
                    parentTriplesMap: Option[TripleMap],
                    joinCondition: Option[JoinCondition]) extends ObjectMap

@@ -9,7 +9,12 @@ case class FlinkRDFResource(uri: Uri) extends FlinkRDFNode(uri) {
 }
 
 case class FlinkRDFLiteral(literal: Literal) extends FlinkRDFNode(literal) {
-  override def toString: String = '"' + literal.toString + '"'
+  override def toString: String = {
+    val base = '"' + literal.toString + '"'
+    if(literal.`type`.isDefined) {
+      base + "^^<" + literal.`type`.get.toString + ">"
+    } else base
+  }
 }
 
 case class FlinkRDFTriple(subject: FlinkRDFResource, predicate: FlinkRDFResource, `object`: FlinkRDFNode) extends Serializable {

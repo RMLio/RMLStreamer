@@ -51,6 +51,12 @@ trait TermMap extends Resource {
     *
     * @return
     */
+  def datatype : Option[Uri] = None
+
+  /**
+    *
+    * @return
+    */
   def reference : Option[Literal]
 
   /**

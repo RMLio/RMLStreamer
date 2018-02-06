@@ -47,6 +47,7 @@ object ObjectMap {
             reference: Option[Literal] = None,
             template: Option[Literal] = None,
             termType: Option[Uri] = None,
+            datatype: Option[Uri] = None,
             parentTriplesMap: Option[TripleMap] = None,
             joinCondition: Option[JoinCondition] = None) : ObjectMap  =
 
@@ -55,6 +56,7 @@ object ObjectMap {
       reference,
       template,
       termType,
+      datatype,
       parentTriplesMap,
       joinCondition)
 }
