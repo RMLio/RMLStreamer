@@ -20,7 +20,6 @@ package io.rml.framework
 
 
 import java.io.File
-
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model._
 import io.rml.framework.engine.statement.StatementEngine
@@ -72,7 +71,6 @@ object Main {
       val dataset: DataSet[String] = createDataSetFromFormattedMapping(formattedMapping)
       // write dataset to file
       dataset.writeAsText("file://" + outputPath, WriteMode.OVERWRITE)
-
              .name("Write to output")
 
       // execute data set job
@@ -217,7 +215,7 @@ object Main {
     * @param senv
     * @return
     */
-  private def createDataSetFromFormattedMapping(formattedMapping: FormattedRMLMapping)
+  def createDataSetFromFormattedMapping(formattedMapping: FormattedRMLMapping)
                                                (implicit env: ExecutionEnvironment,
                                                 senv: StreamExecutionEnvironment): DataSet[String] = {
 
@@ -281,26 +279,41 @@ object Main {
       val childDataset = Source(tm.logicalSource).asInstanceOf[FileDataSet]
                             .dataset
                             .filter(item => {
-                              item.refer(tm.joinCondition.child.toString).isDefined
+                              if(tm.joinCondition.isDefined) {
+                                item.refer(tm.joinCondition.get.child.toString).isDefined
+                              } else true
                             })
                             .name("Read child dataset.")
 
       val parentDataset = Source(tm.parentTriplesMap.logicalSource).asInstanceOf[FileDataSet]
                             .dataset
                             .filter(item => {
-                              item.refer(tm.joinCondition.parent.toString).isDefined
+                              if(tm.joinCondition.isDefined) {
+                                item.refer(tm.joinCondition.get.parent.toString).isDefined
+                              } else true
                             })
                             .name("Read parent dataset.")
 
-      val joined: JoinDataSet[Item, Item] = childDataset.join(parentDataset)
-                                                        .where(_.refer(tm.joinCondition.child.toString).get) // empty fields are already filtered
-                                                        .equalTo(_.refer(tm.joinCondition.parent.toString).get) // empty fields are already filtered
+      if(tm.joinCondition.isDefined) {
+        val joined: JoinDataSet[Item, Item] =
+          childDataset.join(parentDataset)
+            .where(_.refer(tm.joinCondition.get.child.toString).get) // empty fields are already filtered
+            .equalTo(_.refer(tm.joinCondition.get.parent.toString).get) // empty fields are already filtered
 
-      joined.name("Join child and parent.")
-            .map(items => JoinedItem(items._1, items._2))
-            .map(new JoinedProcessor(engine)).name("Execute statements.")
-            .flatMap(list => if(list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
-            .name("Reduce to strings.")
+        joined.name("Join child and parent.")
+          .map(items => JoinedItem(items._1, items._2))
+          .map(new JoinedProcessor(engine)).name("Execute statements.")
+          .flatMap(list => if(list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
+          .name("Reduce to strings.")
+      } else {
+        val crossed = childDataset.cross(parentDataset)
+        crossed.map(items => JoinedItem(items._1, items._2))
+                .map(new JoinedProcessor(engine)).name("Execute statements.")
+                .flatMap(list => if(list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
+                .name("Reduce to strings.")
+      }
+
+
 
     })
 

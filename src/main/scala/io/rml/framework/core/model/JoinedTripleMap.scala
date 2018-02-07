@@ -25,8 +25,8 @@ abstract class JoinedTripleMap(tripleMap: TripleMap) extends TripleMap {
   if(joinConditions.exists(_ != joinConditions.head)) throw new RMLException(tripleMap.uri +
     ": Can only create JoinedTripleMap from triple map with one general join condition.")
 
-  val parentTriplesMap = parentTriplesMaps.head
-  val joinCondition = joinConditions.head
+  val parentTriplesMap: TripleMap = parentTriplesMaps.head
+  val joinCondition: Option[JoinCondition] = joinConditions.headOption
 
 }
 

@@ -14,6 +14,7 @@ class XMLItem(xml: Document) extends Item {
   private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
   private val documentBuilder = documentBuilderFactory.newDocumentBuilder()
   private val xPath = XPathFactory.newInstance().newXPath()
+  private val content = toString()
 
   override def refer(reference: String) : Option[String] = {
     // the node name is added as a little hack such that the node itself does not need to be in the reference (e.g. "/note/@day" vs "@day")
@@ -25,6 +26,21 @@ class XMLItem(xml: Document) extends Item {
       if(text == null) None
       Some(text)
     } else None
+  }
+
+  override def toString : String = {
+    import javax.xml.transform.OutputKeys
+    import javax.xml.transform.TransformerFactory
+    import javax.xml.transform.dom.DOMSource
+    import javax.xml.transform.stream.StreamResult
+    import java.io.StringWriter
+    val tf = TransformerFactory.newInstance
+    val transformer = tf.newTransformer
+    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
+    val writer = new StringWriter
+    transformer.transform(new DOMSource(xml), new StreamResult(writer))
+    val output = writer.getBuffer.toString.replaceAll("\n|\r", "")
+    output
   }
 
 }

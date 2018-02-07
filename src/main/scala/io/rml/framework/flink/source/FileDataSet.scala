@@ -1,5 +1,7 @@
 package io.rml.framework.flink.source
 
+import java.io.File
+
 import com.alexholmes.json.mapreduce.MultiLineJsonInputFormat
 import com.ximpleware.{AutoPilot, VTDGen}
 import io.rml.framework.core.model.{LogicalSource, Uri}
@@ -23,7 +25,6 @@ abstract class FileDataSet extends Source {
 object FileDataSet {
 
   def apply(logicalSource: LogicalSource)(implicit env: ExecutionEnvironment): FileDataSet = {
-
     logicalSource.referenceFormulation match {
       case Uri(RMLVoc.Class.CSV) => createCSVDataSet(logicalSource.source.uri.toString)
       case Uri(RMLVoc.Class.XPATH) => createXMLWithXPathDataSet(logicalSource.source.uri.toString, logicalSource.iterator.get.value)

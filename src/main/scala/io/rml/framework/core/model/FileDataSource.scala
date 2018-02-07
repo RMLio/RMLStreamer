@@ -22,6 +22,8 @@
 
 package io.rml.framework.core.model
 
+import java.io.File
+
 import io.rml.framework.core.model.std.StdFileDataSource
 
 /**
@@ -40,8 +42,9 @@ object FileDataSource {
     * @return An instance of DataSource.
     */
   def apply(uri: Uri) : DataSource = {
-
-      StdFileDataSource(uri)
+      val url = ClassLoader.getSystemResource(uri.toString)
+      val file = new File(url.toURI)
+      StdFileDataSource(Uri(file.getAbsolutePath))
 
   }
 
