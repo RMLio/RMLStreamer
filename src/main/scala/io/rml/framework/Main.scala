@@ -53,7 +53,7 @@ object Main {
     val parameters = ParameterTool.fromArgs(args)
     val mappingPath = if(parameters.has("path")) parameters.get("path")
                       else EMPTY_VALUE
-    val outputPath = if(parameters.has("outputPath")) "file://" + new File(parameters.get("outputPath")).getAbsolutePath // file prefix necessary for Flink API
+    val outputPath = if(parameters.has("outputPath")) new File(parameters.get("outputPath")).getAbsolutePath // file prefix necessary for Flink API
                      else EMPTY_VALUE
     val outputSocket = if(parameters.has("socket")) parameters.get("socket")
                        else EMPTY_VALUE
@@ -113,8 +113,16 @@ object Main {
     * @return
     */
   private def readMappingFile(path: String): FormattedRMLMapping = {
-    val file = new File(path)
-    val mapping = MappingReader().read(file)
+    val classLoader = getClass.getClassLoader
+    val file_1 = new File(path)
+    val mapping = if(file_1.isAbsolute) {
+      val file = new File(path)
+      MappingReader().read(file)
+    } else {
+      val file = new File(classLoader.getResource(path).getFile)
+      MappingReader().read(file)
+    }
+
     FormattedRMLMapping.fromRMLMapping(mapping)
   }
 

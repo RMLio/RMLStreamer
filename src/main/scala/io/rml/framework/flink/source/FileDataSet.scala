@@ -36,7 +36,7 @@ object FileDataSet {
   def createCSVDataSet(path: String)(implicit env: ExecutionEnvironment) : CSVDataSet = {
     implicit val tEnv = TableEnvironment.getTableEnvironment(env)
     val delimiter = ","
-    val csvDataSet: CSVDataSet = CSVDataSet("airplanes", path, delimiter)
+    val csvDataSet: CSVDataSet = CSVDataSet("", path, delimiter)
     csvDataSet
   }
 

@@ -1,7 +1,9 @@
 package io.rml.framework.engine
 
 import java.io.File
+
 import io.rml.framework.Main
+import io.rml.framework.Main.getClass
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model.{FormattedRMLMapping, Uri}
 import io.rml.framework.core.model.rdf.RDFGraph
@@ -13,12 +15,34 @@ import org.scalatest.{FunSuite, Matchers}
 
 class StatementEngineTest extends FunSuite with Matchers {
 
+  /**
+  test("quicktest") {
+
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // read the mapping
+    //val formattedMapping = readMapping("example1/example.rml.ttl")
+    val formattedMapping = readMapping("/home/wmaroy/Desktop/mapping.rml")
+
+    // execute
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+
+    // compare the results
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example1/example.output.ttl")
+    //triples_1 should be (triples_2)
+
+  }
+  **/
+  
   test("example1") {
 
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
     // read the mapping
+    //val formattedMapping = readMapping("example1/example.rml.ttl")
     val formattedMapping = readMapping("example1/example.rml.ttl")
 
     // execute
@@ -197,10 +221,17 @@ class StatementEngineTest extends FunSuite with Matchers {
 
 
 
-  private def readMapping(fileName:String): FormattedRMLMapping = {
+  private def readMapping(path:String): FormattedRMLMapping = {
     val classLoader = getClass.getClassLoader
-    val file = new File(classLoader.getResource(fileName).getFile)
-    val mapping = MappingReader().read(file)
+    val file_1 = new File(path)
+    val mapping = if(file_1.isAbsolute) {
+      val file = new File(path)
+      MappingReader().read(file)
+    } else {
+      val file = new File(classLoader.getResource(path).getFile)
+      MappingReader().read(file)
+    }
+
     FormattedRMLMapping.fromRMLMapping(mapping)
   }
 

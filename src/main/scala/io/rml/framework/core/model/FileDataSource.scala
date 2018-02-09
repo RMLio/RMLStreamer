@@ -42,10 +42,15 @@ object FileDataSource {
     * @return An instance of DataSource.
     */
   def apply(uri: Uri) : DataSource = {
-      val url = ClassLoader.getSystemResource(uri.toString)
-      val file = new File(url.toURI)
-      StdFileDataSource(Uri(file.getAbsolutePath))
-
+      val file = new File(uri.toString)
+      if(file.isAbsolute) {
+        println(Uri(file.getAbsolutePath))
+        StdFileDataSource(Uri(file.getAbsolutePath))
+      } else {
+        val url = ClassLoader.getSystemResource(uri.toString)
+        val file_2 = new File(url.toURI)
+        StdFileDataSource(Uri(file_2.getAbsolutePath))
+      }
   }
 
 }
