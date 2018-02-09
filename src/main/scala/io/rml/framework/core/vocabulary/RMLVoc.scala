@@ -49,6 +49,7 @@ object RMLVoc {
     val CHILD = Namespaces("rr", "child")
     val GRAPHMAP = Namespaces("rr", "graphMap")
     val DATATYPE = Namespaces("rr", "datatype")
+    val LANGUAGE = Namespaces("rr", "language")
 
     ///////////////////////////////////////////////////////////////////////////
     // RML
@@ -90,6 +91,7 @@ object RMLVoc {
     val OBJECTMAP = Namespaces("rr", "ObjectMap")
     val TRIPLEMAP = Namespaces("rr", "TriplesMap")
     val IRI = Namespaces("rr", "IRI")
+    val BLANKNODE = Namespaces("rr", "BlankNode")
     val LITERAL = Namespaces("rr", "Literal")
 
     ///////////////////////////////////////////////////////////////////////////

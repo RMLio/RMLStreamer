@@ -48,6 +48,7 @@ object ObjectMap {
             template: Option[Literal] = None,
             termType: Option[Uri] = None,
             datatype: Option[Uri] = None,
+            language: Option[Literal] = None,
             parentTriplesMap: Option[TripleMap] = None,
             joinCondition: Option[JoinCondition] = None) : ObjectMap  =
 
@@ -57,6 +58,7 @@ object ObjectMap {
       template,
       termType,
       datatype,
+      language,
       parentTriplesMap,
       joinCondition)
 }

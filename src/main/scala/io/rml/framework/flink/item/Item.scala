@@ -22,11 +22,15 @@
 
 package io.rml.framework.flink.item
 
+import org.apache.jena.graph.BlankNodeId
+
 /**
   * Represents a data item.
   */
 trait Item extends Serializable {
 
   def refer(reference : String) : Option[String]
+
+  val blankNodeId: BlankNodeId = BlankNodeId.create()
 
 }

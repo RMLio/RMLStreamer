@@ -26,12 +26,12 @@ import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.model.rdf.RDFLiteral
 import org.apache.jena.rdf.model.{Literal => JLiteral}
 
-case class JenaLiteral(value: String, `type`: Option[Uri], language: Option[String]) extends RDFLiteral
+case class JenaLiteral(value: String, `type`: Option[Uri], override val language: Option[Literal]) extends RDFLiteral
 
 object JenaLiteral {
 
   def apply(literal: JLiteral): JenaLiteral = {
-    JenaLiteral(literal.toString, Option(Uri(literal.getDatatypeURI)), Option(literal.getLanguage))
+    JenaLiteral(literal.toString, Option(Uri(literal.getDatatypeURI)), Option(Literal(literal.getLanguage)))
   }
 
 }

@@ -22,7 +22,7 @@
 
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.Uri
+import io.rml.framework.core.model.{Uri}
 
 case class StdUri(uri: String) extends Uri {
 

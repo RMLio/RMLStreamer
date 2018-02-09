@@ -24,4 +24,4 @@ package io.rml.framework.core.model.std
 
 import io.rml.framework.core.model.{Literal, Uri}
 
-case class StdLiteral(value: String, `type`: Option[Uri], language: Option[String]) extends Literal
+case class StdLiteral(value: String, `type`: Option[Uri], language: Option[Literal]) extends Literal

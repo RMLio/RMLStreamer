@@ -38,10 +38,10 @@ object TermMapGenerators {
     }
   }
 
-  def constantLiteralGenerator(constant: Value, datatype: Option[Uri] = None) : Item => Option[Literal] = {
+  def constantLiteralGenerator(constant: Value, datatype: Option[Uri] = None, language: Option[Literal]) : Item => Option[Literal] = {
       // return a function that just returns the constant
       (item: Item) => {
-        Some(Literal(constant.toString, datatype))
+        Some(Literal(constant.toString, datatype, language))
       }
 
   }
@@ -61,7 +61,7 @@ object TermMapGenerators {
     (item: Item) => {
       for {
         value <- Engine.processTemplate(termMap.template.get, item)
-        uri <- Some(Literal(value, termMap.datatype))
+        uri <- Some(Literal(value, termMap.datatype, termMap.language))
       } yield uri
     }
   }
@@ -71,7 +71,7 @@ object TermMapGenerators {
     (item: Item) => {
       for {
         value <- Engine.processReference(termMap.reference.get, item)
-        uri <- Some(Literal(value, termMap.datatype))
+        uri <- Some(Literal(value, termMap.datatype, termMap.language))
       } yield uri
     }
   }

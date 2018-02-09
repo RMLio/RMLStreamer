@@ -19,9 +19,10 @@ import scala.collection.mutable
   * @param ap
   * @param vn
   */
-class XMLIterator(val ap: AutoPilot, vn: VTDNav) extends Iterator[Option[Item]] with Logging {
+class XMLIterator(val ap: AutoPilot, vn: VTDNav, namespaces: Map[String,String]) extends Iterator[Option[Item]] with Logging {
 
   private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
+  documentBuilderFactory.setNamespaceAware(true)
   private val documentBuilder = documentBuilderFactory.newDocumentBuilder()
 
   private val LOG = LoggerFactory.getLogger(XMLIterator.getClass)
@@ -59,65 +60,107 @@ class XMLIterator(val ap: AutoPilot, vn: VTDNav) extends Iterator[Option[Item]] 
 
       // get the element string
       val element = vn.toString(node)
-      val ap2 = new AutoPilot (vn)
+      val ap2 = new AutoPilot(vn)
       ap2.selectXPath("@*")
 
       val attributesMap = new mutable.HashMap[String, String]()
       var i = ap2.evalXPath()
 
-      while(i != -1) {
+      while (i != -1) {
 
         val attributeKey = vn.toString(i)
-        val attributeValue = vn.toString(i+1)
+        val attributeValue = vn.toString(i + 1)
         attributesMap.put(attributeKey, attributeValue)
         i = ap2.evalXPath()
 
       }
 
       val document = documentBuilder.newDocument()
-      val firstElement = document.createElement(element)
+
+      // check for namespaces
+      val firstElement = if (element.contains(':')) {
+        val regex = "(.*):".r
+        val matches = regex.findAllIn(element).matchData map {
+          m => m.group(1)
+        }
+        val namespaceKey = matches.toList.head
+        val namespace = namespaces.get(namespaceKey).orNull
+        document.createElementNS(namespace, element)
+      } else document.createElement(element)
+
       attributesMap.foreach(entry => {
         firstElement.setAttribute(entry._1, entry._2)
       })
+
+      println("XMLLLLLLL")
+      println(firstElement.getTagName)
+      for(x <- 0 until firstElement.getAttributes.getLength) {
+        println(firstElement.getAttributes.item(x))
+      }
+
       document.appendChild(firstElement)
 
       // map to hold attributes and values of element
       val map = new mutable.HashMap[String, String]()
 
-      // navigate to the first child, if there is one add the
-      // attribute and the value to the map
+      // navigate to the first child
       if(vn.toElement(VTDNav.FIRST_CHILD)) {
         // if first child has a direct value, add to map
         // if not, skip this one
+        val node = vn.toString(vn.getCurrentIndex)
+        println("FIRST_CHILD: " +  node)
         if(vn.getText != -1) {
           val attribute = vn.toString(vn.getText - 1)
           val value = vn.toString(vn.getText)
           map.put(attribute, value)
-          val element = document.createElement(attribute)
+           //document.createElement(attribute)
+           val element = if (node.contains(':')) {
+            val regex = "(.*):".r
+            val matches = regex.findAllIn(node).matchData map {
+              m => m.group(1)
+            }
+            val namespaceKey = matches.toList.head
+            val namespace = namespaces.get(namespaceKey).orNull
+            document.createElementNS(namespace, node)} else document.createElement(node)
+
           element.appendChild(document.createTextNode(value))
           firstElement.appendChild(element)
         }
+
+        // navigate to the siblings of the first child, if there are:
+        // add the attribute and value to the map
+        while(vn.toElement(VTDNav.NEXT_SIBLING)) {
+          val node = vn.toString(vn.getCurrentIndex)
+          if(vn.getText != -1) {
+            // if current sibling has a direct value, add to map
+            // if not, skip this one
+            val value = vn.toString(vn.getText)
+            val attribute = vn.toString(vn.getText - 1)
+            val element = if (node.contains(':')) {
+              val regex = "(.*):".r
+              val matches = regex.findAllIn(node).matchData map {
+                m => m.group(1)
+              }
+              val namespaceKey = matches.toList.head
+              val namespace = namespaces.get(namespaceKey).orNull
+              document.createElementNS(namespace, node)}
+            else document.createElement(node)
+            element.appendChild(document.createTextNode(value))
+            firstElement.appendChild(element)
+          }
+
+        }
+
+        // navigate back to the parent
+        vn.toElement(VTDNav.PARENT)
+
       }
 
-      // navigate to the siblings of the first child, if there are:
-      // add the attribute and value to the map
-      while(vn.toElement(VTDNav.NEXT_SIBLING)) {
-        if(vn.getText != -1) {
-          // if current sibling has a direct value, add to map
-          // if not, skip this one
-          val value = vn.toString(vn.getText)
-          val attribute = vn.toString(vn.getText - 1)
-          map.put(attribute, value)
-          val element = document.createElement(attribute)
-          element.appendChild(document.createTextNode(value))
-          firstElement.appendChild(element)
-        }
-      }
+
 
       map.foreach(item => println(item))
 
-      // navigate back to the parent
-      vn.toElement(VTDNav.PARENT)
+
 
       // return the item
       //Some(item)
@@ -141,8 +184,10 @@ class XMLIterator(val ap: AutoPilot, vn: VTDNav) extends Iterator[Option[Item]] 
           throw new RuntimeException("Error converting to String", ex)
       }
 
-      Some(XMLItem.fromString(xmlString))
-
+      val result = Some(XMLItem.fromString(xmlString, namespaces))
+      println("!!!XMLITEM!!!")
+      println(result.get)
+      result
     } else {
       LOG.info("It's done.. without errors though.")
       // no elements left, set finished flag to true and return None
@@ -155,7 +200,7 @@ class XMLIterator(val ap: AutoPilot, vn: VTDNav) extends Iterator[Option[Item]] 
 }
 
 object XMLIterator {
-  def apply(ap: AutoPilot, vn: VTDNav): XMLIterator = new XMLIterator(ap, vn)
+  def apply(ap: AutoPilot, vn: VTDNav, namespaces: Map[String,String]): XMLIterator = new XMLIterator(ap, vn, namespaces)
 }
 
 

@@ -1,7 +1,8 @@
-package io.rml.framework.flink.source
+ package io.rml.framework.flink.source
 
 import com.ximpleware.{AutoPilot, VTDGen}
 import io.rml.framework.flink.item.Item
+import io.rml.framework.flink.util.XMLNamespace
 import io.rml.framework.shared.RMLException
 import org.apache.flink.api.common.io.{GenericInputFormat, NonParallelInput}
 import org.apache.flink.core.io.GenericInputSplit
@@ -15,15 +16,22 @@ class XMLInputFormat(path : String, xpath: String) extends GenericInputFormat[It
 
   override def open(inputSplit: GenericInputSplit): Unit = {
     super.open(inputSplit)
+
+    val namespaces: Map[String, String] =  XMLNamespace.fromFile(path).map(tuple => tuple._1 -> tuple._2).toMap
+
     val vg = new VTDGen // parser for xml
+
     if (vg.parseFile(path, true)) {
       // setting up navigator and autopilot, these are needed to stream through the xml
       val vn = vg.getNav
       val ap = new AutoPilot(vn)
+      namespaces.foreach(tuple => {
+        ap.declareXPathNameSpace(tuple._1, tuple._2)
+      })
       // set the xpath expression
       ap.selectXPath(xpath)
       // create the iterator for the Akka Source
-      iterator = XMLIterator(ap, vn)
+      iterator = XMLIterator(ap, vn, namespaces)
       LOG.info("Run the XML source!")
     } else{
       throw new RMLException("Can't parse XML with VTD.")
@@ -36,9 +44,11 @@ class XMLInputFormat(path : String, xpath: String) extends GenericInputFormat[It
       LOG.info("Going for the next!")
       val next = iterator.next()
       if(next.isDefined) next.get
-      else new Item{
-        override def refer(reference: String): None.type = None
-      }
+      else new EmptyItem
   }
 
+}
+
+class EmptyItem extends Item {
+  override def refer(reference: String): Option[String] = None
 }

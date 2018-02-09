@@ -57,6 +57,12 @@ trait TermMap extends Resource {
     *
     * @return
     */
+  def language : Option[Literal] = None
+
+  /**
+    *
+    * @return
+    */
   def reference : Option[Literal]
 
   /**

@@ -23,7 +23,7 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.{TermMap, Value}
+import io.rml.framework.core.model.{TermMap, Uri, Value}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
 
@@ -44,9 +44,17 @@ abstract class TermMapGeneratorAssembler extends Logging {
       templateGenerator(termMap)
     } else if(termMap.hasReference) {
       referenceGenerator(termMap)
+    } else if(termMap.hasTermType && termMap.termType.get == Uri(RMLVoc.Class.BLANKNODE)) {
+      blankNodeGenerator()
     } else {
       if(isWarnEnabled) logWarning(termMap.uri.toString + ": no constant, template or reference present.")
       (item: Item) => None
+    }
+  }
+
+  private def blankNodeGenerator() : Item => Option[Value] = {
+    (item: Item) => {
+      Some(Uri(item.blankNodeId.toString))
     }
   }
 
@@ -58,7 +66,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
   private def constantGenerator(termMap: TermMap): Item => Option[Value] = {
     termMap.termType.get.toString match {
       case RMLVoc.Class.IRI => TermMapGenerators.constantUriGenerator(termMap.constant.get)
-      case RMLVoc.Class.LITERAL => TermMapGenerators.constantLiteralGenerator(termMap.constant.get, termMap.datatype)
+      case RMLVoc.Class.LITERAL => TermMapGenerators.constantLiteralGenerator(termMap.constant.get, termMap.datatype, termMap.language)
     }
   }
 

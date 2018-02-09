@@ -35,7 +35,7 @@ class JenaTriple(statement: Statement) extends RDFTriple {
 
   override def toString : String = {
 
-    "<" + subject.toString + "> <" +  predicate.toString + "> <" + `object`.toString + "> ."
+    statement.toString
 
     /**"<" + URLEncoder.encode(subject.toString,"UTF-8") + "> <" + URLEncoder.encode(predicate.toString, "UTF-8") + "> <" +
       URLEncoder.encode(`object`.toString, "UTF-8") + "> ."**/

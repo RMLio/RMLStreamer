@@ -51,9 +51,9 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     // iterates over predicates, converts these to predicate maps as blanks
     properties.map {
       case literal: RDFLiteral =>
-        ObjectMap(Blank(), constant = Some(Uri(literal.value)))
+        ObjectMap(Blank(), constant = Some(Literal(literal.value)), termType = Some(Uri(RMLVoc.Class.LITERAL)))
       case resource: RDFResource =>
-        ObjectMap(Blank(), constant = Some(resource.uri))
+        ObjectMap(Blank(), constant = Some(resource.uri), termType = Some(Uri(RMLVoc.Class.IRI)))
     }
   }
 
@@ -93,9 +93,10 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     val reference = extractReference(resource)
     val parentTriplesMap = extractParentTriplesMap(resource)
     val joinCondition = extractJoinCondition(resource)
+    val language = extractLanguage(resource)
     val datatype = extractDatatype(resource)
 
-    ObjectMap(resource.uri, constant, reference, template, termType, datatype, parentTriplesMap, joinCondition)
+    ObjectMap(resource.uri, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition)
   }
 
   def extractDatatype(resource: RDFResource) : Option[Uri] = {
@@ -122,6 +123,20 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
         resource.listProperties(RMLVoc.Property.DATATYPE)
       if(elements.nonEmpty) Some(Uri(RMLVoc.Class.LITERAL))
       else Some(Uri(RMLVoc.Class.IRI))
+    }
+  }
+
+  def extractLanguage(resource: RDFResource): Option[Literal] = {
+    val property = RMLVoc.Property.LANGUAGE
+    val properties = resource.listProperties(property)
+
+    if(properties.size > 1)
+      throw new RMLException(resource.uri + ": invalid amount of language properties.")
+    if(properties.isEmpty) return None
+
+    properties.head match {
+      case literal: Literal => Some(literal)
+      case resource: RDFResource => throw new RMLException(resource.uri + ": invalid language type.")
     }
   }
 

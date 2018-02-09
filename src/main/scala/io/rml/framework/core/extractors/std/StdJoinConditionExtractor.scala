@@ -22,7 +22,7 @@ class StdJoinConditionExtractor extends JoinConditionExtractor with Logging {
     for {
         parent <- extractParent(node)
         child <- extractChild(node)
-    } yield JoinCondition(parent, child)
+    } yield JoinCondition(child, parent)
 
   }
 

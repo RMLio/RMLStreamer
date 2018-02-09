@@ -45,7 +45,7 @@ trait Literal extends Value {
     *
     * @return
     */
-  def language : Option[String]
+  def language : Option[Literal]
 
   /**
     *
@@ -57,7 +57,7 @@ trait Literal extends Value {
 
 object Literal {
 
-  def apply(value: String, `type`: Option[Uri] = None, language: Option[String] = None): Literal = {
+  def apply(value: String, `type`: Option[Uri] = None, language: Option[Literal] = None): Literal = {
    StdLiteral(Value.clean(value, replace = false), `type`, language)
   }
 

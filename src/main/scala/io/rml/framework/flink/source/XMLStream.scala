@@ -44,7 +44,7 @@ class XMLSource(path: String, xpath: String) extends SourceFunction[Item] {
       // set the xpath expression
       ap.selectXPath(xpath)
       // create the iterator for the Akka Source
-      val iterator = XMLIterator(ap, vn)
+      val iterator = XMLIterator(ap, vn, null)
       LOG.info("Run the XML source!")
       while(iterator.hasNext) {
         LOG.info("Going for the next!")

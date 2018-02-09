@@ -61,7 +61,7 @@ object SubjectMap {
             template: Option[Literal],
             termType: Option[Uri]): SubjectMap = {
 
-    StdSubjectMap(uri, `class`, constant, reference, template, Some(Uri(RMLVoc.Class.IRI)))
+    StdSubjectMap(uri, `class`, constant, reference, template, termType)
   }
 
 }

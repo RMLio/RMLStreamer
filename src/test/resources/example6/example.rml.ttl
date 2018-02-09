@@ -8,7 +8,7 @@
 
 <#FromToMaps>
     rml:logicalSource [ 
-        rml:source "src/test/resources/example6/example6.xml";
+        rml:source "example6/example6.xml";
         rml:referenceFormulation ql:XPath;
         rml:iterator "/notes/note";
     ];
@@ -48,7 +48,7 @@
         
 <#DateTime>
     rml:logicalSource [ 
-	rml:source "src/test/resources/example6/example6.xml";
+	rml:source "example6/example6.xml";
 	rml:iterator "/notes/note";
 	rml:referenceFormulation ql:XPath;
 	];

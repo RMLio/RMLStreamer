@@ -39,10 +39,11 @@ class JSONItem(objectNode: JsonNode) extends Item {
   override def refer(reference: String): Option[String] = {
     try {
       val surfer = new JsonSurfer(JacksonParser.INSTANCE, JacksonProvider.INSTANCE)
-      val iterator = surfer.iterator(objectNode.toString, JsonPathCompiler.compile(reference))
+      val checkedReference = if(reference.contains('$')) reference else "$." + reference
+      val iterator = surfer.iterator(objectNode.toString, JsonPathCompiler.compile(checkedReference))
       val next = iterator.next()
       require(next.isInstanceOf[TextNode], "JSONPath result is not a text node.")
-      Some(next.asInstanceOf[TextNode].toString)
+      Some(next.asInstanceOf[TextNode].toString.replaceAll("\"", ""))
     } catch {
       case NonFatal(e) => None
     }
@@ -63,7 +64,7 @@ object JSONItem {
       val node = mapper.readTree(json)
       Some(new JSONItem(node))
     } catch {
-      case NonFatal(e) => None
+      case NonFatal(e) => e.printStackTrace(); None
     }
   }
 }

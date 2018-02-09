@@ -24,7 +24,7 @@
 
 <#AirportMapping>
     rml:logicalSource [
-	rml:source "src/test/resources/example3/Airport.csv";
+	rml:source "example3/Airport.csv";
         rml:referenceFormulation ql:CSV
     ];
     rr:subjectMap [
@@ -46,16 +46,17 @@
 	rr:objectMap [
 	    rr:parentTriplesMap <#VenueMapping>;
 	    rr:joinCondition [
-		rr:child "city";
-		rr:parent "$.location.city";
+            rr:child "city";
+            rr:parent "$.location.city";
 	    ]
 	]
     ].
 
 
 <#BusMapping>
+
     rml:logicalSource[
-      rml:source "src/test/resources/example3/Transport.xml";
+      rml:source "example3/Transport.xml";
       rml:iterator "/transport/bus";
       rml:referenceFormulation ql:XPath;
     ];
@@ -74,7 +75,7 @@
 
 <#BusStopMapping>
     rml:logicalSource [
-      rml:source "src/test/resources/example3/Transport.xml";
+      rml:source "example3/Transport.xml";
       rml:iterator "/transport/bus/route/stop";
       rml:referenceFormulation ql:XPath;
     ];
@@ -92,7 +93,7 @@
 
 <#VenueMapping>
     rml:logicalSource [
-      rml:source "src/test/resources/example3/Venue.json";
+      rml:source "example3/Venue.json";
       rml:referenceFormulation ql:JSONPath;
       rml:iterator "$"
     ];
@@ -123,7 +124,7 @@
 
 <#LocationMapping>
   rml:logicalSource [
-    rml:source "src/test/resources/example3/Venue.json";
+    rml:source "example3/Venue.json";
     rml:referenceFormulation ql:JSONPath;
     rml:iterator "$"
   ];

@@ -49,8 +49,9 @@ object Engine extends Logging {
     */
   def processTemplate(template: Literal, item: Item) : Option[String] = {
     val regex = "(\\{[^\\{\\}]*\\})".r
-    val result = regex.replaceAllIn(template.value, m => {
-      val reference = removeBrackets(m.toString())
+    val replaced = template.value.replaceAll("\\$", "#")
+    val result = regex.replaceAllIn(replaced, m => {
+      val reference = removeBrackets(m.toString()).replaceAll("#","\\$")
       val referred = item.refer(reference)
       if(referred.isDefined) referred.get
       else m.toString()

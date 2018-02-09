@@ -1,7 +1,6 @@
 package io.rml.framework.engine
 
 import java.io.File
-
 import io.rml.framework.Main
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model.{FormattedRMLMapping, Uri}
@@ -26,11 +25,8 @@ class StatementEngineTest extends FunSuite with Matchers {
     val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
 
     // compare the results
-    val model_1 = JenaGraph(ModelFactory.createDefaultModel()).withUri(Uri(""))
-    model_1.read(result, "N-TRIPLES")
-    val triples_1 = model_1.listTriples.map(item => item.toString).sorted
-    val model_2 = RDFGraph.fromFile(new File(getAbsolutePath("example1/example.output.ttl")))
-    val triples_2 = model_2.listTriples.map(item => item.toString).sorted
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example1/example.output.ttl")
     triples_1 should be (triples_2)
 
   }
@@ -47,15 +43,158 @@ class StatementEngineTest extends FunSuite with Matchers {
     val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
 
     // compare the results
-    val model_1 = JenaGraph(ModelFactory.createDefaultModel()).withUri(Uri(""))
-    model_1.read(result, "N-TRIPLES")
-    val triples_1 = model_1.listTriples.map(item => item.toString).sorted
-    val model_2 = RDFGraph.fromFile(new File(getAbsolutePath("example2/example.output.ttl")))
-    val triples_2 = model_2.listTriples.map(item => item.toString).sorted
-
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example2/example.output.ttl")
     triples_1 should be (triples_2)
 
   }
+
+  test("example2-bn") {
+
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // read the mapping
+    val formattedMapping = readMapping("example2-bn/example.rml.ttl")
+
+    // execute
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+
+    // compare the results
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example2-bn/example.output.ttl")
+    triples_1.length should be (triples_2.length)
+  }
+
+  test("example2-lang") {
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // read the mapping
+    val formattedMapping = readMapping("example2-lang/example.rml.ttl")
+
+    // execute
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+
+    // compare the results
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example2-lang/example.output.ttl")
+    triples_1 should be (triples_2)
+  }
+
+  test("example2-object") {
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // read the mapping
+    val formattedMapping = readMapping("example2-object/example.rml.ttl")
+
+    // execute
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+
+    // compare the results
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example2-object/example.output.ttl")
+    triples_1 should be (triples_2)
+  }
+
+  test("example2-pm") {
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // read the mapping
+    val formattedMapping = readMapping("example2pm/example.rml.ttl")
+
+    // execute
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+
+    // compare the results
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example2pm/example.output.ttl")
+    triples_1 should be (triples_2)
+  }
+
+  /**
+  test("example3") {
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // read the mapping
+    val formattedMapping = readMapping("example3/example3.rml.ttl")
+
+    // execute
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+
+    // compare the results
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example3/example3.output.ttl")
+    triples_1 should be (triples_2)
+  }
+  **/
+  test("example4") {
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // read the mapping
+    val formattedMapping = readMapping("example4/example4_Venue.rml.ttl")
+
+    // execute
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+
+    // compare the results
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example4/example4_Venue.output.ttl")
+    triples_1 should be (triples_2)
+  }
+
+  test("example4b") {
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // read the mapping
+    val formattedMapping = readMapping("example4b/example4_Venue.rml.ttl")
+
+    // execute
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+
+    // compare the results
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example4b/example4_Venue.output.ttl")
+    triples_1 should be (triples_2)
+  }
+
+  test("example6") {
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // read the mapping
+    val formattedMapping = readMapping("example6/example.rml.ttl")
+
+    // execute
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+
+    // compare the results
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example6/example.output.ttl")
+    triples_1 should be (triples_2)
+  }
+
+  test("example8") {
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // read the mapping
+    val formattedMapping = readMapping("example8/simergy.rml.ttl")
+
+    // execute
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+
+    // compare the results
+    val triples_1 = readTriplesFromString(result)
+    val triples_2 = readTriplesFromFile("example8/simergy.output.ttl")
+    triples_1 should be (triples_2)
+  }
+
 
 
   private def readMapping(fileName:String): FormattedRMLMapping = {
@@ -63,6 +202,17 @@ class StatementEngineTest extends FunSuite with Matchers {
     val file = new File(classLoader.getResource(fileName).getFile)
     val mapping = MappingReader().read(file)
     FormattedRMLMapping.fromRMLMapping(mapping)
+  }
+
+  private def readTriplesFromString(dump: String) : Seq[String] = {
+    val model_1 = JenaGraph(ModelFactory.createDefaultModel()).withUri(Uri(""))
+    model_1.read(dump, "N-TRIPLES")
+    model_1.listTriples.map(item => item.toString).sorted
+  }
+
+  private def readTriplesFromFile(path: String) : Seq[String] = {
+    val model_2 = RDFGraph.fromFile(new File(getAbsolutePath(path)))
+    model_2.listTriples.map(item => item.toString).sorted
   }
 
   private def getAbsolutePath(relativePath:String): String = {

@@ -53,6 +53,9 @@ class ChildStatement(subjectGenerator : Item => Option[Uri],
           case literal : Literal => FlinkRDFLiteral(literal)
           case resource: Uri => FlinkRDFResource(resource)
         }
+        println("TRIPLE PROV")
+        println(item)
+        println(Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode)).get.toString)
         Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode))
       } // generate the triple
     } yield triple // this can be Some[RDFTriple] or None
@@ -75,6 +78,9 @@ class ParentStatement(subjectGenerator : Item => Option[Uri],
           case literal : Literal => FlinkRDFLiteral(literal)
           case resource: Uri => FlinkRDFResource(resource)
         }
+        println("TRIPLE PROV")
+        println(item)
+        println(Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode)).get.toString)
         Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode))
       } // generate the triple
     } yield triple // this can be Some[RDFTriple] or None

@@ -25,10 +25,11 @@ package io.rml.framework.core.model.std
 import io.rml.framework.core.model._
 
 case class StdObjectMap(uri: Uri,
-                   constant: Option[Value],
-                   reference: Option[Literal],
-                   template: Option[Literal],
-                   termType: Option[Uri],
-                   override val datatype: Option[Uri],
-                   parentTriplesMap: Option[TripleMap],
-                   joinCondition: Option[JoinCondition]) extends ObjectMap
+                        constant: Option[Value],
+                        reference: Option[Literal],
+                        template: Option[Literal],
+                        termType: Option[Uri],
+                        override val datatype: Option[Uri],
+                        override val language : Option[Literal],
+                        parentTriplesMap: Option[TripleMap],
+                        joinCondition: Option[JoinCondition]) extends ObjectMap
