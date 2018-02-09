@@ -2,7 +2,12 @@ package io.rml.framework.flink.sink
 
 import io.rml.framework.core.model.{Literal, Uri, Value}
 
+/**
+  * RDF Nodes for Flink that are serializable. These are used as output nodes.
+  * @param value
+  */
 abstract class FlinkRDFNode(val value: Value) extends Serializable
+
 
 case class FlinkRDFResource(uri: Uri) extends FlinkRDFNode(uri) {
 

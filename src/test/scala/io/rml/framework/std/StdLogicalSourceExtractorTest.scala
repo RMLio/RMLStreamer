@@ -30,6 +30,7 @@ import org.scalatest.{FunSuite, Matchers}
 
 class StdLogicalSourceExtractorTest extends FunSuite with Matchers{
 
+  /**
   test("testExtract") {
 
     // ============================================================================================
@@ -76,5 +77,7 @@ class StdLogicalSourceExtractorTest extends FunSuite with Matchers{
     source.get.uri should be (Uri("source.json"))
 
   }
+
+    **/
 
 }

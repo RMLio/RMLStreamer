@@ -13,6 +13,7 @@ class ParentTriplesMapIntegrationTest extends FunSuite with Matchers
                                                        with Logging {
 
 
+  /**
   test("testReadFromFile") {
 
     // Read mapping file
@@ -31,6 +32,8 @@ class ParentTriplesMapIntegrationTest extends FunSuite with Matchers
 
   }
 
+    **/
+  /**
   test("testReadFromFile - test containsParentTripleMap method") {
 
     // Read mapping file
@@ -40,5 +43,7 @@ class ParentTriplesMapIntegrationTest extends FunSuite with Matchers
     mapping.containsParentTripleMaps should be (true)
 
   }
+
+    **/
 
 }

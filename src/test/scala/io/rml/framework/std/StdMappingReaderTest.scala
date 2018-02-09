@@ -39,7 +39,7 @@ class StdMappingReaderTest extends FunSuite with Matchers
                                             with BeforeAndAfter
                                             with Logging {
 
-
+/**
   test("testReadFromFile") {
 
     // ============================================================================================
@@ -80,6 +80,7 @@ class StdMappingReaderTest extends FunSuite with Matchers
 
   }
 
+  **//**
   test("testReadFromString") {
 
     // ============================================================================================
@@ -118,5 +119,7 @@ class StdMappingReaderTest extends FunSuite with Matchers
     verify(mappingExtractorMock, times(1)).extract(any[RDFGraph])
 
   }
+
+  **/
 
 }

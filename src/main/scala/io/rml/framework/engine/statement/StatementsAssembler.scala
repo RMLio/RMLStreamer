@@ -27,13 +27,13 @@ import io.rml.framework.core.vocabulary.RDFVoc
 import io.rml.framework.flink.item.{Item, JoinedItem}
 
 /**
-  *
+  * Creates statements from triple maps.
   */
 class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectGeneratorAssembler(),
                              predicateObjectAssembler: PredicateObjectGeneratorAssembler = PredicateObjectGeneratorAssembler()) {
 
   /**
-    *
+    * Creates statements from a triple map.
     * @param tripleMap
     * @return
     */
@@ -61,6 +61,7 @@ class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectG
       val objectGenerator = (item: Item) => Some(_class)
       (subjectGenerator, predicateGenerator, objectGenerator)
     })
+
   }
 
 }

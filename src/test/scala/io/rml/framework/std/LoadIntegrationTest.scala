@@ -29,6 +29,8 @@ import org.scalatest.{FunSuite, Matchers}
 
 class LoadIntegrationTest extends FunSuite with Matchers {
 
+  /**
+
   test("[INTEGRATION-TEST] Package: io.rml.framework.core.extractors") {
 
     // ============================================================================================
@@ -53,5 +55,7 @@ class LoadIntegrationTest extends FunSuite with Matchers {
     mapping.triplesMaps shouldNot be (empty)
 
   }
+
+    **/
 }
 

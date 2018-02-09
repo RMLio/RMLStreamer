@@ -75,7 +75,7 @@ object StatementEngine extends Logging {
   }
 
   /**
-    * Assumes that the triple map only contains predicate object maps with the same PTM and join conditions.
+    * Assumes that the triple map only contains predicate object maps with the same PTM and join conditions (JoinedTripleMap).
     * @param tripleMap
     * @return
     */

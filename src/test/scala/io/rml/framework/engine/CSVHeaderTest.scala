@@ -29,6 +29,7 @@ import org.scalatest.{FunSuite, Matchers}
 
 class CSVHeaderTest extends FunSuite with Matchers {
 
+  /**
   test("testApply") {
     // ============================================================================================
     // Test info
@@ -58,5 +59,7 @@ class CSVHeaderTest extends FunSuite with Matchers {
     println(headers.get.reduce(_ + ", " + _))
 
   }
+
+    **/
 
 }
