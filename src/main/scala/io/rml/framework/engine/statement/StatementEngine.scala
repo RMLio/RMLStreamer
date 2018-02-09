@@ -61,7 +61,7 @@ object StatementEngine extends Logging {
   /**
     *
     * @param tripleMaps
-    * @return
+    * @returnSubj
     */
   def fromTripleMaps(tripleMaps: List[TripleMap]): StatementEngine[Item] = {
     // assemble the statements
