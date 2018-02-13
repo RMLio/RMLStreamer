@@ -2,3 +2,7 @@
 .idea/
 target/
 *.txt
+*.swp
+*.properties
+!*_example.properties
+scripts/node_modules
