@@ -10,5 +10,6 @@ ADD target/framework-1.0-SNAPSHOT.jar /streamer.jar
 ADD docker/* /
 WORKDIR /flink-1.3.2
 RUN mv /json-mapreduce-1.0.jar ./lib
+RUN mv /flink-conf.yaml ./conf
 WORKDIR /
-CMD /flink-1.3.2/bin/start-local.sh; bash run.sh -p /data/mapping.rml.ttl -o /data/output.nt
+CMD /flink-1.3.2/bin/start-local.sh > /dev/null; bash run.sh -p /data/mapping.rml.ttl -o /data/output.nt > /dev/null; chmod 777 /data/output.nt
