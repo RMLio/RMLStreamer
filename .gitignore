@@ -5,4 +5,5 @@ target/
 *.swp
 *.properties
 !*_example.properties
+!docker/configuration.properties
 scripts/node_modules
