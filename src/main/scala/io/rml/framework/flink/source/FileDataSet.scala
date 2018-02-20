@@ -71,19 +71,6 @@ object FileDataSet {
     XMLDataSet(dataset)
   }
 
-  def createJSONDataSet(path: String, tag: String)(implicit env: ExecutionEnvironment) : JSONDataSet = {
-    println("Creating JSONDataSet from " + path + ", with tag " + tag)
-    implicit val longWritableTypeInfo: TypeInformation[LongWritable] = TypeInformation.of(classOf[LongWritable])
-    implicit val textTypeInfo: TypeInformation[Text] = TypeInformation.of(classOf[Text])
-    val job = Job.getInstance()
-    val hInput = HadoopInputs.readHadoopFile(new MultiLineJsonInputFormat(),classOf[LongWritable], classOf[Text], path, job)
-    //hInput.getConfiguration.set("multilinejsoninputformat.member", tag)
-    MultiLineJsonInputFormat.setInputJsonMember(job, tag)
-    val hDataset = env.createInput(hInput).name("Iterate over JSON.")
-    val dataset: DataSet[Item] = hDataset.map(item => JSONItem.fromString(item._2.toString).asInstanceOf[Item]).name("Parse JSON items.")  // needed since types of datasets can't be subclasses due to Flink implementation
-    JSONDataSet(dataset)
-  }
-
   def createJSONWithJSONPathDataSet(path: String, jsonPath: String)(implicit env: ExecutionEnvironment) : JSONDataSet = {
     println("Creating JSONDataSet from " + path + ", with JsonPath " + jsonPath)
     val dataset = env.createInput(new JSONInputFormat(path, jsonPath))

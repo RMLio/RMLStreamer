@@ -15,26 +15,27 @@ import org.scalatest.{FunSuite, Matchers}
 
 class StatementEngineTest extends FunSuite with Matchers {
 
-  /**
-  test("quicktest") {
+
+  test("example10") {
 
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
     // read the mapping
-    val formattedMapping = readMapping("/home/wmaroy/Downloads/json-test/mapping.rml.ttl")
+    val formattedMapping = readMapping("example10/mapping.rml.ttl")
 
     // execute
     val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
 
     // compare the results
-    val triples_1 = readTriplesFromString(result)
-    val triples_2 = readTriplesFromFile("example1/example.output.ttl")
-    //triples_1 should be (triples_2)
+    val total = readTriplesFromString(result).size
+
+
+    total should be (700)
 
   }
-  **/
-  
+
+
   test("example1") {
 
     implicit val env = ExecutionEnvironment.getExecutionEnvironment

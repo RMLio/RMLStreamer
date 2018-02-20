@@ -23,27 +23,25 @@
 package io.rml.framework.flink.item.json
 
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
-import com.fasterxml.jackson.databind.node.{LongNode, ObjectNode, TextNode}
+import com.jayway.jsonpath.JsonPath
 import io.rml.framework.flink.item.Item
-import org.jsfr.json.compiler.JsonPathCompiler
-import org.jsfr.json.{JacksonParser, JsonSurfer}
-import org.jsfr.json.provider.JacksonProvider
 import org.slf4j.LoggerFactory
 
 import scala.util.control.NonFatal
 
-class JSONItem(objectNode: JsonNode) extends Item {
+class JSONItem(map: java.util.Map[String,Object]) extends Item {
 
   val LOG = LoggerFactory.getLogger(JSONItem.getClass)
 
   override def refer(reference: String): Option[String] = {
     try {
-      val surfer = new JsonSurfer(JacksonParser.INSTANCE, JacksonProvider.INSTANCE)
       val checkedReference = if(reference.contains('$')) reference else "$." + reference
-      val iterator = surfer.iterator(objectNode.toString, JsonPathCompiler.compile(checkedReference))
-      val next = iterator.next()
-      require(next.isInstanceOf[TextNode] || next.isInstanceOf[LongNode], "JSONPath result is not a text node or long node: " + next.getClass)
-      Some(next.toString.replaceAll("\"", ""))
+      // Some(next.toString.replaceAll("\"", "")) still necessary?
+      val _object: Object = JsonPath.read(map, checkedReference)
+      if(_object.getClass.toString.equals("class java.lang.String")) Some(_object.asInstanceOf[String])
+      else if(_object.getClass.toString.equals("class java.lang.Long")) Some(_object.asInstanceOf[Long].toString)
+      else { println(_object); None }
+
     } catch {
       case NonFatal(e) => {
         None
@@ -57,14 +55,15 @@ object JSONItem {
   def fromString(json:String): JSONItem = {
     val mapper = new ObjectMapper()
     val node = mapper.readTree(json)
-    new JSONItem(node)
+    null//new JSONItem(node)
   }
 
   def fromStringOptionable(json:String): Option[JSONItem] = {
     try {
       val mapper = new ObjectMapper()
       val node = mapper.readTree(json)
-      Some(new JSONItem(node))
+      val map = mapper.convertValue(asInstanceOf, classOf[java.util.Map[String,Object]])
+      Some(new JSONItem(map))
     } catch {
       case NonFatal(e) => e.printStackTrace(); None
     }
