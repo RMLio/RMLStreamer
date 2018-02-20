@@ -38,8 +38,8 @@ class JSONItem(map: java.util.Map[String,Object]) extends Item {
       val checkedReference = if(reference.contains('$')) reference else "$." + reference
       // Some(next.toString.replaceAll("\"", "")) still necessary?
       val _object: Object = JsonPath.read(map, checkedReference)
-      if(_object.getClass.toString.equals("class java.lang.String")) Some(_object.asInstanceOf[String])
-      else if(_object.getClass.toString.equals("class java.lang.Long")) Some(_object.asInstanceOf[Long].toString)
+      if(_object.isInstanceOf[String]) Some(_object.asInstanceOf[String])
+      else if(_object.isInstanceOf[java.lang.Long]) Some(_object.asInstanceOf[Long].toString)
       else { println(_object); None }
 
     } catch {
