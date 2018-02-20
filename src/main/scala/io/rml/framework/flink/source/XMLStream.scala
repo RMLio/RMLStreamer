@@ -1,5 +1,6 @@
 package io.rml.framework.flink.source
 
+import com.ximpleware.extended.AutoPilotHuge
 import com.ximpleware.{AutoPilot, VTDGen}
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.xml.XMLItem
@@ -35,24 +36,6 @@ class XMLSource(path: String, xpath: String) extends SourceFunction[Item] {
   override def cancel(): Unit = isRunning = false
 
   override def run(ctx: SourceFunction.SourceContext[Item]): Unit = {
-    val vg = new VTDGen // parser for xml
-    if (vg.parseFile(path, true)) {
-      LOG.info("Parse XML from " + path + " with XPath expression " + xpath)
-      // setting up navigator and autopilot, these are needed to stream through the xml
-      val vn = vg.getNav
-      val ap = new AutoPilot(vn)
-      // set the xpath expression
-      ap.selectXPath(xpath)
-      // create the iterator for the Akka Source
-      val iterator = XMLIterator(ap, vn, null)
-      LOG.info("Run the XML source!")
-      while(iterator.hasNext) {
-        LOG.info("Going for the next!")
-        val next = iterator.next()
-        if(next.isDefined) ctx.collect(next.get)
-      }
-    } else{
-      throw new RMLException("Can't parse XML with VTD.")
-    }
+
   }
 }

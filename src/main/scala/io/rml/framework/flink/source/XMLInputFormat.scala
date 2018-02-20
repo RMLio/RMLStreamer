@@ -1,5 +1,6 @@
  package io.rml.framework.flink.source
 
+import com.ximpleware.extended.{AutoPilotHuge, VTDGenHuge}
 import com.ximpleware.{AutoPilot, VTDGen}
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.util.XMLNamespace
@@ -19,12 +20,12 @@ class XMLInputFormat(path : String, xpath: String) extends GenericInputFormat[It
 
     val namespaces: Map[String, String] =  XMLNamespace.fromFile(path).map(tuple => tuple._1 -> tuple._2).toMap
 
-    val vg = new VTDGen // parser for xml
+    val vg = new VTDGenHuge // parser for xml
 
-    if (vg.parseFile(path, true)) {
+    if (vg.parseFile(path, true,VTDGenHuge.MEM_MAPPED)) {
       // setting up navigator and autopilot, these are needed to stream through the xml
       val vn = vg.getNav
-      val ap = new AutoPilot(vn)
+      val ap = new AutoPilotHuge(vn)
       namespaces.foreach(tuple => {
         ap.declareXPathNameSpace(tuple._1, tuple._2)
       })

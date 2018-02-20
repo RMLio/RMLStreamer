@@ -3,6 +3,7 @@ package io.rml.framework.flink.source
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.xpath.XPathFactory
 
+import com.ximpleware.extended.{AutoPilotHuge, VTDNavHuge}
 import com.ximpleware.{AutoPilot, VTDNav}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.flink.item.Item
@@ -19,7 +20,7 @@ import scala.collection.mutable
   * @param ap
   * @param vn
   */
-class XMLIterator(val ap: AutoPilot, vn: VTDNav, namespaces: Map[String,String]) extends Iterator[Option[Item]] with Logging {
+class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,String]) extends Iterator[Option[Item]] with Logging {
 
   private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
   documentBuilderFactory.setNamespaceAware(true)
@@ -60,7 +61,7 @@ class XMLIterator(val ap: AutoPilot, vn: VTDNav, namespaces: Map[String,String])
 
       // get the element string
       val element = vn.toString(node)
-      val ap2 = new AutoPilot(vn)
+      val ap2 = new AutoPilotHuge(vn)
       ap2.selectXPath("@*")
 
       val attributesMap = new mutable.HashMap[String, String]()
@@ -92,12 +93,6 @@ class XMLIterator(val ap: AutoPilot, vn: VTDNav, namespaces: Map[String,String])
         firstElement.setAttribute(entry._1, entry._2)
       })
 
-      println("XMLLLLLLL")
-      println(firstElement.getTagName)
-      for(x <- 0 until firstElement.getAttributes.getLength) {
-        println(firstElement.getAttributes.item(x))
-      }
-
       document.appendChild(firstElement)
 
       // map to hold attributes and values of element
@@ -108,7 +103,6 @@ class XMLIterator(val ap: AutoPilot, vn: VTDNav, namespaces: Map[String,String])
         // if first child has a direct value, add to map
         // if not, skip this one
         val node = vn.toString(vn.getCurrentIndex)
-        println("FIRST_CHILD: " +  node)
         if(vn.getText != -1) {
           val attribute = vn.toString(vn.getText - 1)
           val value = vn.toString(vn.getText)
@@ -185,8 +179,6 @@ class XMLIterator(val ap: AutoPilot, vn: VTDNav, namespaces: Map[String,String])
       }
 
       val result = Some(XMLItem.fromString(xmlString, namespaces))
-      println("!!!XMLITEM!!!")
-      println(result.get)
       result
     } else {
       LOG.info("It's done.. without errors though.")
@@ -200,7 +192,7 @@ class XMLIterator(val ap: AutoPilot, vn: VTDNav, namespaces: Map[String,String])
 }
 
 object XMLIterator {
-  def apply(ap: AutoPilot, vn: VTDNav, namespaces: Map[String,String]): XMLIterator = new XMLIterator(ap, vn, namespaces)
+  def apply(ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,String]): XMLIterator = new XMLIterator(ap, vn, namespaces)
 }
 
 
