@@ -22,6 +22,9 @@ abstract class FileDataSet extends Source {
   def dataset : DataSet[Item]
 }
 
+/**
+  * Object for creating Flink Datasets from a LogicalSource
+  */
 object FileDataSet {
 
   def apply(logicalSource: LogicalSource)(implicit env: ExecutionEnvironment): FileDataSet = {
@@ -40,6 +43,13 @@ object FileDataSet {
     csvDataSet
   }
 
+  /**
+    * Not used
+    * @param path
+    * @param tag
+    * @param env
+    * @return
+    */
   @Deprecated
   def createXMLDataSet(path: String, tag: String)(implicit env: ExecutionEnvironment) : XMLDataSet = {
     println("Creating XMLDataSet from " + path + ", with tag " + tag)

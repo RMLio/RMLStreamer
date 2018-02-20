@@ -6,6 +6,9 @@ import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 
 trait Source
 
+/**
+  * Object for generating Flink Sources from a LogicalSource
+  */
 object Source {
 
   def apply(logicalSource: LogicalSource)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment): Source = {

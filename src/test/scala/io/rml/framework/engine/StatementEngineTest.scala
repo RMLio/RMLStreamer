@@ -22,8 +22,7 @@ class StatementEngineTest extends FunSuite with Matchers {
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
     // read the mapping
-    //val formattedMapping = readMapping("example1/example.rml.ttl")
-    val formattedMapping = readMapping("/home/wmaroy/Desktop/mapping.rml")
+    val formattedMapping = readMapping("/home/wmaroy/Downloads/json-test/mapping.rml.ttl")
 
     // execute
     val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)

@@ -23,7 +23,7 @@
 package io.rml.framework.flink.item.json
 
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
-import com.fasterxml.jackson.databind.node.{ObjectNode, TextNode}
+import com.fasterxml.jackson.databind.node.{LongNode, ObjectNode, TextNode}
 import io.rml.framework.flink.item.Item
 import org.jsfr.json.compiler.JsonPathCompiler
 import org.jsfr.json.{JacksonParser, JsonSurfer}
@@ -42,10 +42,13 @@ class JSONItem(objectNode: JsonNode) extends Item {
       val checkedReference = if(reference.contains('$')) reference else "$." + reference
       val iterator = surfer.iterator(objectNode.toString, JsonPathCompiler.compile(checkedReference))
       val next = iterator.next()
-      require(next.isInstanceOf[TextNode], "JSONPath result is not a text node.")
-      Some(next.asInstanceOf[TextNode].toString.replaceAll("\"", ""))
+      require(next.isInstanceOf[TextNode] || next.isInstanceOf[LongNode], "JSONPath result is not a text node or long node: " + next.getClass)
+      Some(next.toString.replaceAll("\"", ""))
     } catch {
-      case NonFatal(e) => None
+      case NonFatal(e) => {
+        e.printStackTrace()
+        None
+      }
     }
   }
 }

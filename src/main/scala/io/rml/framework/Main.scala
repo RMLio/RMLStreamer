@@ -71,6 +71,7 @@ object Main {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
+
     // check if the mapping contains standard dataset mappings
     if(formattedMapping.standardTripleMaps.nonEmpty) {
 
