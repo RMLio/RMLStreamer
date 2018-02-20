@@ -46,7 +46,6 @@ class JSONItem(objectNode: JsonNode) extends Item {
       Some(next.toString.replaceAll("\"", ""))
     } catch {
       case NonFatal(e) => {
-        e.printStackTrace()
         None
       }
     }
