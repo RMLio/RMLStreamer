@@ -4,13 +4,13 @@
 The RML Framework runs it's jobs on Flink clusters. More information on how to install Flink and getting clusters up and running can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.3/quickstart/setup_quickstart.html).
  At least a local cluster must be running in order to start executing RML Mappings with the RML Framework. At the moment of writing this readme it is not necessary to install Hadoop. Please not that the current repository works with Flink 1.3.2, which can be downloaded [here](http://www.apache.org/dyn/closer.lua/flink/flink-1.3.2/flink-1.3.2-bin-scala_2.11.tgz).
 
-### Installing RML Framework
+## Installing RML Framework
 ```
 git clone ssh://git@git.datasciencelab.ugent.be:4444/rml/rml-streamer.git 
 cd rml-streamer
 mvn clean install
 ```
-Location of the Flink installation directory must be configured in `configuration.properties` .
+Location of the Flink installation directory must be configured in `configuration.properties` (see the example file `configuration_example.properties`).
 
 ### Executing RML Mappings
 
