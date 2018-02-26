@@ -151,11 +151,6 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
       }
 
 
-
-      map.foreach(item => println(item))
-
-
-
       // return the item
       //Some(item)
       import javax.xml.transform.OutputKeys

@@ -62,7 +62,7 @@ object JSONItem {
     try {
       val mapper = new ObjectMapper()
       val node = mapper.readTree(json)
-      val map = mapper.convertValue(asInstanceOf, classOf[java.util.Map[String,Object]])
+      val map = mapper.convertValue(node, classOf[java.util.Map[String,Object]])
       Some(new JSONItem(map))
     } catch {
       case NonFatal(e) => e.printStackTrace(); None
