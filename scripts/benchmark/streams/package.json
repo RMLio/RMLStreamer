@@ -1,0 +1,16 @@
+{
+  "name": "streams",
+  "version": "0.0.1",
+  "description": "",
+  "main": "processOutput.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pieter Heyvaert <pheyvaer.heyvaert@ugent.be>",
+  "license": "MIT",
+  "dependencies": {
+    "csv-parse": "^2.0.4",
+    "line-by-line": "^0.1.6",
+    "n3": "^0.11.2"
+  }
+}

@@ -34,7 +34,6 @@ var inputServer = net.createServer(function(socket) {
 
 	    // ...do your asynchronous line processing..
 	    setTimeout(function () {
-
 		socket.write(line + os.EOL);
 		lr.resume();
 	    }, delay);
