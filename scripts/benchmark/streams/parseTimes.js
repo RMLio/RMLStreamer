@@ -4,7 +4,9 @@
  */
 
 //modules
-const parse = require('csv-parse/lib/sync');
+const parseSync = require('csv-parse/lib/sync');
+const parse = require('csv-parse');
+
 const fs    = require('fs');
 
 //arguments
@@ -13,34 +15,46 @@ const fileStop    = process.argv[3];
 const outputFile  = process.argv[4];
 
 //variables
-const fileStartString = fs.readFileSync(fileStart, {encoding: 'utf-8'});
 const fileStopString  = fs.readFileSync(fileStop, {encoding: 'utf-8'});
 
-const startRecords = parse(fileStartString, {columns:true});
-const stopRecords  = parse(fileStopString, {columns:true});
+const stopRecords  = parseSync(fileStopString, {columns:true});
 const stream       = fs.createWriteStream(outputFile, {flags: 'a'});
+const input = fs.createReadStream(fileStart, {encoding: 'utf-8'});
+
+const parser = parse({columns:true});
 
 let totalDelay = 0;
 let totalCompletedRecords = 0;
+let totalRecords = 0;
 
-for (let i = 0; i < startRecords.length; i ++) {
-  let j = 0;
+parser.on('readable', function(){
+  let record;
 
-  while (j < stopRecords.length && stopRecords[j].id !== startRecords[i].id) {
-    j ++;
+  while(record = parser.read()){
+    totalRecords ++;
+    let j = 0;
+
+    while (j < stopRecords.length && stopRecords[j].id !== record.id) {
+      j ++;
+    }
+
+    if (j < stopRecords.length) {
+      const difference = parseInt(stopRecords[j].time) - parseInt(record.time);
+      stream.write(`${record.id},${difference}\n`);
+      totalCompletedRecords ++;
+      totalDelay += difference;
+      stopRecords.splice(j, 1);
+    } else {
+      stream.write(`${record.id},\n`);
+    }
   }
+});
 
-  if (j < stopRecords.length) {
-    const difference = parseInt(stopRecords[j].time) - parseInt(startRecords[i].time);
-    stream.write(`${startRecords[i].id},${difference}\n`);
-    totalCompletedRecords ++;
-    totalDelay += difference;
-  } else {
-    stream.write(`${startRecords[i].id},\n`);
-  }
-}
+parser.on('end', () => {
+  const averageDelay = Math.round(totalDelay/totalCompletedRecords);
+  const droppedRecords = totalRecords - totalCompletedRecords;
 
-const averageDelay = Math.round(totalDelay/totalCompletedRecords);
-const droppedRecords = startRecords.length - totalCompletedRecords;
+  console.log(`${averageDelay},${droppedRecords}`);
+});
 
-console.log(`${averageDelay},${droppedRecords}`);
+input.pipe(parser);
