@@ -50,7 +50,7 @@ object TermMapGenerators {
     // return a function that processes the template
     (item: Item) => {
       for {
-        value <- Engine.processTemplate(termMap.template.get, item)
+        value <- Engine.processTemplate(termMap.template.get, item, encode = true)
         uri <- Some(Uri(value))
       } yield uri
     }
@@ -80,7 +80,7 @@ object TermMapGenerators {
     // return a function that processes a reference
     (item: Item) => {
       for {
-        value <- Engine.processReference(termMap.reference.get, item)
+        value <- Engine.processReference(termMap.reference.get, item, encode = true)
         uri <- Some(Uri(value))
       } yield uri
     }

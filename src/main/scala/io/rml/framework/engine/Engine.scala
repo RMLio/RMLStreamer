@@ -24,7 +24,7 @@ package io.rml.framework.engine
 
 import io.rml.framework.core.extractors.std.TermMapExtractor
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.Literal
+import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.model.rdf.RDFTriple
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.sink.FlinkRDFTriple
@@ -47,12 +47,12 @@ object Engine extends Logging {
     * @param item
     * @return
     */
-  def processTemplate(template: Literal, item: Item) : Option[String] = {
+  def processTemplate(template: Literal, item: Item, encode: Boolean = false) : Option[String] = {
     val regex = "(\\{[^\\{\\}]*\\})".r
     val replaced = template.value.replaceAll("\\$", "#")
     val result = regex.replaceAllIn(replaced, m => {
       val reference = removeBrackets(m.toString()).replaceAll("#","\\$")
-      val referred = item.refer(reference)
+      val referred = if(encode) item.refer(reference).flatMap(referred => Some(Uri.encode(referred))) else item.refer(reference) // if encode, this means this is an Uri
       if(referred.isDefined) referred.get
       else m.toString()
     })
@@ -65,8 +65,8 @@ object Engine extends Logging {
     * @param item
     * @return
     */
-  def processReference(reference: Literal, item: Item) : Option[String] = {
-    item.refer(reference.toString)
+  def processReference(reference: Literal, item: Item, encode: Boolean = false) : Option[String] = {
+    if(encode) item.refer(reference.toString).flatMap(referred => Some(Uri.encode(referred))) else item.refer(reference.toString)
   }
 
   /**

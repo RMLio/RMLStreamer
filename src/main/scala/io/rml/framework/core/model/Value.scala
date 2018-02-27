@@ -39,7 +39,7 @@ object Value {
     // characters to be removed from the string
     val toBeRemoved = Array('"')
     // characters to be replaced with a predefined character
-    val replaceMap = Map(' ' -> '_')
+    val replaceMap = Map()//Map(' ' -> '_')
 
     // filter out characters
     val filtered: String = s.filter(character => !toBeRemoved.contains(character))
