@@ -39,6 +39,7 @@ class JSONItem(map: java.util.Map[String,Object]) extends Item {
       // Some(next.toString.replaceAll("\"", "")) still necessary?
       val _object: Object = JsonPath.read(map, checkedReference)
       if(_object.isInstanceOf[String]) Some(_object.asInstanceOf[String])
+      else if(_object.isInstanceOf[java.lang.Integer]) Some(_object.asInstanceOf[Integer].toString)
       else if(_object.isInstanceOf[java.lang.Long]) Some(_object.asInstanceOf[Long].toString)
       else { println(_object); None }
 
