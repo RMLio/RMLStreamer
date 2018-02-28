@@ -19,11 +19,10 @@ docker run --rm --net=host -v $DATA_FOLDER:/data rml-streamer-stream
 STOPTIME=$(($(date +%s%N)/1000000))
 TIMEDIFFERENCE=`expr $STOPTIME - $STARTIME`
 
-echo "id,time" > $DATA_FOLDER/merge.csv
 cat $DATA_FOLDER/in.csv >> merge.csv
 cat $DATA_FOLDER/out.csv >> merge.csv
 sort merge.csv > temp.csv
-mv temp.csv merge.csv
+echo "id,time" | cat - temp.csv > merge.csv
 
 DELAY=`docker run --rm -v $DATA_FOLDER:/data stream-scripts parseTimes.js /data/merge.csv /data/compare.csv`
 
