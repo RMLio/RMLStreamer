@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "line-by-line": "^0.1.6"
+    "json-socket": "^0.3.0",
+    "line-by-line": "^0.1.6",
+    "ws": "^5.0.0"
   }
 }

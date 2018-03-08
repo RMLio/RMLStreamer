@@ -4,13 +4,14 @@
  */
 
 //modules
-const parseSync = require('csv-parse/lib/sync');
 const parse = require('csv-parse');
 const fs    = require('fs');
 
 //arguments
 const inputFile   = process.argv[2];
 const outputFile  = process.argv[3];
+let calculateTotalTime = process.argv.length === 5 ?process.argv[4] : "false";
+calculateTotalTime = calculateTotalTime === "true";
 
 //variables
 const stream       = fs.createWriteStream(outputFile, {flags: 'a'});
@@ -20,13 +21,19 @@ const inputParser  = parse({columns:true});
 let totalDelay            = 0;
 let totalCompletedRecords = 0;
 let totalRecords          = 0;
+let start                 = null;
+let stop                  = null;
 
 
 inputParser.on('end', () => {
   const averageDelay = Math.round(totalDelay/totalCompletedRecords);
   const droppedRecords = totalRecords - totalCompletedRecords;
 
-  console.log(`${averageDelay},${droppedRecords}`);
+  if (calculateTotalTime) {
+    console.log(`${stop-start},${averageDelay},${droppedRecords}`);
+  } else {
+    console.log(`${averageDelay},${droppedRecords}`);
+  }
 });
 
 let previousRecord;
@@ -46,6 +53,14 @@ inputParser.on('data', (record) => {
   } else {
     previousRecord = record;
     totalRecords ++;
+  }
+
+  if (!start || start > record.time) {
+    start = record.time;
+  }
+
+  if (!stop || stop < record.time) {
+    stop = record.time
   }
 });
 
