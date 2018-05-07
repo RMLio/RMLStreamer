@@ -219,6 +219,21 @@ class StatementEngineTest extends FunSuite with Matchers {
     triples_1 should be (triples_2)
   }
 
+  test("csv-special-character-headers") {
+
+    implicit val env = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // read the mapping
+    val formattedMapping = readMapping("csv-extensive-1/complete.rml.ttl")
+
+    // execute
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+
+    // compare the results
+    (result.length > 1) should be (true)
+  }
+
 
 
   private def readMapping(path:String): FormattedRMLMapping = {

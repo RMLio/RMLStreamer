@@ -38,8 +38,7 @@ object CSVDataSet {
     // create the table
     val table: Table = tEnv
       .scan(name)
-      .select("*")
-
+      .select("*") // select every field of the csv header
 
     // create the header->index map
     val headersMap = convertToIndexMap(header.get)
