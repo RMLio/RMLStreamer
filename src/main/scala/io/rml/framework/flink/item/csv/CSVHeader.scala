@@ -36,6 +36,7 @@ object CSVHeader {
   def apply(path: Path, delimiter: Char): Option[Array[String]] = {
     val src = Source.fromFile(path.toString)
     val line = src.getLines.take(1).next()
+    println(line)
     src.close
     CSVHeader(line, delimiter)
   }

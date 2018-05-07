@@ -49,6 +49,13 @@ object StreamDataSource {
           case Uri(RMLVoc.Class.XPATH) => XMLStream.fromFileStream(path, iterator)
           case Uri(RMLVoc.Class.JSONPATH) => JSONStream.fromFileStream(path, iterator)
         }
+      case kafkaStream: KafkaStream => {
+        logicalSource.referenceFormulation match {
+          case Uri(RMLVoc.Class.CSV) => CSVStream.fromKafkaStream(kafkaStream, null) //TODO headers!
+          case Uri(RMLVoc.Class.XPATH) => XMLStream.fromKafkaStream(kafkaStream)
+          case Uri(RMLVoc.Class.JSONPATH) => JSONStream.fromKafkaStream(kafkaStream)
+        }
+      }
     }
     source
   }

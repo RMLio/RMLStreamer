@@ -1,0 +1,393 @@
+@prefix tm: <http://ex.com/triplesMap/>.
+@prefix pom: <http://ex.com/preObjMap/>.
+@prefix ls: <http://ex.com/logicalSource/>.
+@prefix pm: <http://ex.com/predicateMap/>.
+@prefix om: <http://ex.com/objectMap/>.
+@prefix sm: <http://ex.com/subjectMap/>.
+
+@prefix tm1: <http://ex.com/triplesMap/1/>.
+@prefix pom1: <http://ex.com/preObjMap/1/>.
+@prefix ls1: <http://ex.com/logicalSource/1/>.
+@prefix pm1: <http://ex.com/predicateMap/1/>.
+@prefix om1: <http://ex.com/objectMap/1/>.
+@prefix sm1: <http://ex.com/subjectMap/1/>.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#>.
+@prefix ql: <http://semweb.mmlab.be/ns/ql#>.
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+
+ls:LogicalSource_0 rml:referenceFormulation ql:CSV;
+    rml:source "csv-extensive-1/VendorTable.csv";
+    a rml:LogicalSource.
+ls:LogicalSource_103 rml:referenceFormulation ql:CSV;
+    rml:source "csv-extensive-1/Item.csv";
+    a rml:LogicalSource.
+om:ObjMap_113 rr:template "{Description} {Description 2}";
+    rr:termType rr:Literal.
+om:ObjMap_73 rr:template "{Vendor Classification}";
+    rr:termType rr:Literal.
+om:ObjMap_75 rr:template "{Address} {Address 2}";
+    rr:termType rr:Literal.
+om:ObjMap_77 rr:template "{Home Page}";
+    rr:termType rr:Literal.
+om:ObjMap_79 rr:template "{Currency Code}";
+    rr:termType rr:Literal.
+om:ObjMap_81 rr:template "{Payment Terms Code}";
+    rr:termType rr:Literal.
+om:ObjMap_83 rr:template "{E-Mail}";
+    rr:termType rr:Literal.
+om:ObjMap_85 rr:template "{Country/Region Code}";
+    rr:termType rr:Literal.
+om:ObjMap_87 rr:template "{City}";
+    rr:termType rr:Literal.
+om:ObjMap_89 rr:template "{VAT Registration No.}";
+    rr:termType rr:Literal.
+om:ObjMap_91 rr:template "{Name} {Name 2}";
+    rr:termType rr:Literal.
+pom:PredObjMap_113 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_113;
+    rr:predicateMap pm:PreMap_114.
+pom:PredObjMap_73 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_73;
+    rr:predicateMap pm:PreMap_72.
+pom:PredObjMap_75 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_75;
+    rr:predicateMap pm:PreMap_74.
+pom:PredObjMap_77 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_77;
+    rr:predicateMap pm:PreMap_76.
+pom:PredObjMap_79 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_79;
+    rr:predicateMap pm:PreMap_78.
+pom:PredObjMap_81 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_81;
+    rr:predicateMap pm:PreMap_80.
+pom:PredObjMap_83 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_83;
+    rr:predicateMap pm:PreMap_82.
+pom:PredObjMap_85 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_85;
+    rr:predicateMap pm:PreMap_84.
+pom:PredObjMap_87 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_87;
+    rr:predicateMap pm:PreMap_86.
+pom:PredObjMap_89 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_89;
+    rr:predicateMap pm:PreMap_88.
+pom:PredObjMap_91 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_91;
+    rr:predicateMap pm:PreMap_90.
+pom:RefPredObjMap_113 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_114.
+pom:RefPredObjMap_116 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_119.
+pom:RefPredObjMap_73 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_72.
+pom:RefPredObjMap_75 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_74.
+pom:RefPredObjMap_77 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_76.
+pom:RefPredObjMap_79 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_78.
+pom:RefPredObjMap_81 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_80.
+pom:RefPredObjMap_83 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_82.
+pom:RefPredObjMap_85 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_84.
+pom:RefPredObjMap_87 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_86.
+pom:RefPredObjMap_89 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_88.
+pom:RefPredObjMap_91 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_90.
+pm:PreMap_114 a rr:PredicateMap;
+    rr:constant <http://ogp.me/ns#description>.
+pm:PreMap_119 a rr:PredicateMap.
+pm:PreMap_72 a rr:PredicateMap;
+    rr:constant <http://www.eurocris.org/ontologies/cerif/1.3#classification>.
+pm:PreMap_74 a rr:PredicateMap;
+    rr:constant <http://sw-portal.deri.org/ontologies/swportal#hasAddress>.
+pm:PreMap_76 a rr:PredicateMap;
+    rr:constant <http://xmlns.com/foaf/0.1/homepage>.
+pm:PreMap_78 a rr:PredicateMap;
+    rr:constant <http://aims.fao.org/aos/geopolitical.owl#codeCurrency>.
+pm:PreMap_80 a rr:PredicateMap;
+    rr:constant <http://vocab.gtfs.org/terms#paymentMethod>.
+pm:PreMap_82 a rr:PredicateMap;
+    rr:constant <http://www.ontotext.com/proton/protonext#hasEMail>.
+pm:PreMap_84 a rr:PredicateMap;
+    rr:constant <http://www.geonames.org/ontology#countryCode>.
+pm:PreMap_86 a rr:PredicateMap;
+    rr:constant <http://dbpedia.org/ontology/city>.
+pm:PreMap_88 a rr:PredicateMap;
+    rr:constant <http://schema.org/vatID>.
+pm:PreMap_90 a rr:PredicateMap;
+    rr:constant <http://schema.org/name>.
+sm:SubMap_0 a rr:SubjectMap;
+    rr:template "http://gis.international.net/vendor/{No.}";
+    rr:termType rr:IRI.
+sm:SubMap_103 a rr:SubjectMap;
+    rr:template "http://gisinternational.net/Item/{No.}";
+    rr:termType rr:IRI;
+    rr:class <http://gisinternational.net/ontology/Item>.
+tm:TriplesMap_0 rml:logicalSource ls:LogicalSource_0;
+    a rr:TriplesMap;
+    rr:predicateObjectMap pom:POM0011, pom:PredObjMap_73, pom:PredObjMap_75, pom:PredObjMap_77, pom:PredObjMap_79, pom:PredObjMap_81, pom:PredObjMap_83, pom:PredObjMap_85, pom:PredObjMap_87, pom:PredObjMap_89, pom:PredObjMap_91, pom:RefPredObjMap_73, pom:RefPredObjMap_75, pom:RefPredObjMap_77, pom:RefPredObjMap_79, pom:RefPredObjMap_81, pom:RefPredObjMap_83, pom:RefPredObjMap_85, pom:RefPredObjMap_87, pom:RefPredObjMap_89, pom:RefPredObjMap_91;
+    rr:subjectMap sm:SubMap_0.
+tm:TriplesMap_103 rml:logicalSource ls:LogicalSource_103;
+    a rr:TriplesMap;
+    rr:predicateObjectMap pom:PredObjMap_113, pom:RefPredObjMap_113, pom:RefPredObjMap_116, pom:POM0001, pom:POM0002, pom:POM0003, pom:POM0004, pom:POM0005, pom:POM0006, pom:POM0007, pom:POM0008, pom:POM0009, pom:POM0010;
+    rr:subjectMap sm:SubMap_103.
+
+pom:POM0001 rr:predicate <http://gisinternational.net/ontology/OEMNumber>;
+            rr:objectMap [
+              rml:reference "OEM Number"
+            ].
+
+pom:POM0002 rr:predicate <http://gisinternational.net/ontology/ManufacturerCode>;
+            rr:objectMap [
+              rml:reference "Manufacturer Code"
+            ].
+
+pom:POM0003 rr:predicate <http://purl.org/goodrelations/v1#deliveryLeadTime>;
+            rr:objectMap [
+              rml:reference "Lead Time Calculation"
+            ].
+
+pom:POM0004 rr:predicate <http://dbpedia.org/ontology/category>;
+            rr:objectMap [
+              rml:reference "Item Category Code"
+            ].
+
+pom:POM0005 rr:predicate <http://gisinternational.net/ontology/ProductGroupCode>;
+            rr:objectMap [
+              rml:reference "Product Group Code"
+            ].
+
+pom:POM0008 rr:predicate <http://def.seegrid.csiro.au/isotc211/iso19103/2005/basic#uom>;
+            rr:objectMap [
+              rml:reference "Base Unit of Measure"
+            ].
+
+pom:POM0010 rr:predicate <http://comicmeta.org/cbo/price>;
+            rr:objectMap [
+              rml:reference "Unit Price"
+            ].
+
+pom:POM0011 rr:predicate <http://schema.org/vendor>;
+            rr:objectMap [
+              rr:parentTriplesMap tm:TriplesMap_103;
+              rr:joinCondition [
+                rr:child "No.";
+                rr:parent "Vendor No."
+              ]
+            ].
+
+ls:LogicalSource_2 rml:referenceFormulation ql:CSV;
+    rml:source "csv-extensive-1/PurchaseOrder.csv";
+    a rml:LogicalSource.
+
+tm:TriplesMap_PurchaseOrder 
+  rml:logicalSource ls:LogicalSource_2;
+  rr:subjectMap [
+    rr:template "http://gis.international.net/PurchaseOrder/{Document No.}";
+    rr:class <http://purl.org/cerif/frapo/PurchaseOrder>;
+    rr:termType rr:IRI
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate <http://rdfs.co/bevon/quantity>;
+    rr:objectMap [
+      rml:reference "Quantity"
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate <http://gisinternational.net/ontology/itemVendor>;
+    rr:objectMap [
+      rr:parentTriplesMap tm:TriplesMap_ItemVendor;
+      rr:joinCondition [
+        rr:child "Buy-from Vendor No.";
+        rr:parent "Vendor n"
+      ];
+      rr:joinCondition [
+        rr:child "Unit Cost";
+        rr:parent "Direct Unit Cost"
+      ];
+      rr:joinCondition [
+        rr:child "No.";
+        rr:parent "No."
+      ]
+    ]
+  ].
+
+ls:LogicalSource_3 rml:referenceFormulation ql:CSV;
+    rml:source "csv-extensive-1/ItemVendor.csv";
+    a rml:LogicalSource.
+
+tm:TriplesMap_ItemVendor
+  rml:logicalSource ls:LogicalSource_3;
+  rr:subjectMap [
+    rr:template "http://gis.international.net/ItemVendor/{Item n}{Vendor n}{Minimum Quantity}";
+    rr:class <http://gisinternational.net/ontology/ItemVendor>;
+    rr:termType rr:IRI
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate <http://dbpedia.org/ontology/unitCost>;
+    rr:objectMap [
+      rml:reference "Direct Unit Cost"
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate <http://gisinternational.net/ontology/MinimumOrderQuantity>;
+    rr:objectMap [
+      rml:reference "Minimum Quantity"
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate <http://gisinternational.net/ontology/OrderMultiple>;
+    rr:objectMap [
+      rml:reference "Order Multiple"
+    ]
+  ].
+
+ls:LogicalSource_1 rml:referenceFormulation ql:CSV;
+    rml:source "csv-extensive-1/SalesOrder.csv";
+    a rml:LogicalSource.
+om:Class_cn_1 rr:constant <http://gisinternational.net/ontology/SalesOrder>.
+om:ObjMap_11 rr:template "{Currency Code}";
+    rr:termType rr:Literal.
+om:ObjMap_2 rr:template "{Client Order No.}";
+    rr:termType rr:Literal.
+om:ObjMap_5 rr:datatype <http://www.w3.org/2001/XMLSchema#integer>;
+    rr:template "{Quantity}";
+    rr:termType rr:Literal.
+om:ObjMap_8 rr:template "{Unit Price Excl. VAT}";
+    rr:termType rr:Literal.
+pom:PredObjMap_11 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_11;
+    rr:predicateMap pm:PreMap_12.
+pom:PredObjMap_2 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_2;
+    rr:predicateMap pm:PreMap_3.
+pom:PredObjMap_5 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_5;
+    rr:predicateMap pm:PreMap_6.
+pom:PredObjMap_8 a rr:PredicateObjectMap;
+    rr:objectMap om:ObjMap_8;
+    rr:predicateMap pm:PreMap_9.
+pom:RefPredObjMap_11 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_12.
+pom:RefPredObjMap_2 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_3.
+pom:RefPredObjMap_5 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_6.
+pom:RefPredObjMap_8 a rr:PredicateObjectMap;
+    rr:predicateMap pm:PreMap_9.
+pom:RefPredObjMap_cn_1 a rr:PredicateObjectMap;
+    rr:objectMap om:Class_cn_1;
+    rr:predicateMap pm:PreMap_ce_1.
+pm:PreMap_12 a rr:PredicateMap;
+    rr:constant <http://aims.fao.org/aos/geopolitical.owl#codeCurrency>.
+pm:PreMap_3 a rr:PredicateMap;
+    rr:constant <http://salt.semanticauthoring.org/ontologies/sdo#hasOrderNumber>.
+pm:PreMap_6 a rr:PredicateMap;
+    rr:constant <http://rdfs.co/bevon/quantity>.
+pm:PreMap_9 a rr:PredicateMap;
+    rr:constant <http://comicmeta.org/cbo/price>.
+pm:PreMap_ce_1 a rr:PredicateMap;
+    rr:constant rdf:type.
+sm:SubMap_1 a rr:SubjectMap;
+    rr:template "http://gisinternational.net/salesorder/{Document No.}";
+    rr:termType rr:IRI.
+tm:TriplesMap_1 rml:logicalSource ls:LogicalSource_1;
+    a rr:TriplesMap;
+    rr:predicateObjectMap pom:PredObjMap_11, pom:PredObjMap_2, pom:PredObjMap_5, pom:PredObjMap_8, pom:RefPredObjMap_11, pom:RefPredObjMap_2, pom:RefPredObjMap_5, pom:RefPredObjMap_8, pom:RefPredObjMap_cn_1, pom:POM0101, pom:POM0102, pom:POM0103;
+    rr:subjectMap sm:SubMap_1.
+
+pom:POM0101 rr:predicate <http://gisinternational.net/ontology/purchaseOrder>;
+            rr:objectMap [
+              rr:parentTriplesMap tm:TriplesMap_PurchaseOrder;
+              rr:joinCondition [
+                rr:child "Purchase Order No.";
+                rr:parent "Document No."
+              ]
+            ].
+
+pom:POM0102 rr:predicate <http://gisinternational.net/ontology/item>;
+            rr:objectMap [
+              rr:parentTriplesMap tm:TriplesMap_103;
+              rr:joinCondition [
+                rr:child "No.";
+                rr:parent "No."
+              ]
+            ].
+
+pom:POM0103 rr:predicate <http://gisinternational.net/ontology/customer>;
+            rr:objectMap [
+              rr:parentTriplesMap tm1:TriplesMap_0;
+              rr:joinCondition [
+                rr:child "Sell-to Customer No.";
+                rr:parent "No."
+              ]
+            ].
+
+
+ls1:LogicalSource_0 rml:referenceFormulation ql:CSV;
+    rml:source "csv-extensive-1/customer.csv";
+    a rml:LogicalSource.
+om1:Class_cn_0 rr:constant <http://gisinternational.net/ontology/Customer>.
+om1:ObjMap_11 rr:template "{Address} {Address 2}";
+    rr:termType rr:Literal.
+om1:ObjMap_17 rr:template "{VAT Registration No.}";
+    rr:termType rr:Literal.
+om1:ObjMap_26 rr:datatype <http://www.w3.org/2001/XMLSchema#integer>;
+    rr:template "{Phone No.}";
+    rr:termType rr:Literal.
+om1:ObjMap_5 rr:template "{Name} {Name 2}";
+    rr:termType rr:Literal.
+pom1:PredObjMap_11 a rr:PredicateObjectMap;
+    rr:objectMap om1:ObjMap_11;
+    rr:predicateMap pm1:PreMap_12.
+pom1:PredObjMap_17 a rr:PredicateObjectMap;
+    rr:objectMap om1:ObjMap_17;
+    rr:predicateMap pm1:PreMap_18.
+pom1:PredObjMap_26 a rr:PredicateObjectMap;
+    rr:objectMap om1:ObjMap_26;
+    rr:predicateMap pm1:PreMap_27.
+pom1:PredObjMap_5 a rr:PredicateObjectMap;
+    rr:objectMap om1:ObjMap_5;
+    rr:predicateMap pm1:PreMap_6.
+pom1:RefPredObjMap_11 a rr:PredicateObjectMap;
+    rr:predicateMap pm1:PreMap_12.
+pom1:RefPredObjMap_17 a rr:PredicateObjectMap;
+    rr:predicateMap pm1:PreMap_18.
+pom1:RefPredObjMap_26 a rr:PredicateObjectMap;
+    rr:predicateMap pm1:PreMap_27.
+pom1:RefPredObjMap_5 a rr:PredicateObjectMap;
+    rr:predicateMap pm1:PreMap_6.
+pom1:RefPredObjMap_cn_0 a rr:PredicateObjectMap;
+    rr:objectMap om1:Class_cn_0;
+    rr:predicateMap pm1:PreMap_ce_0.
+pm1:PreMap_12 a rr:PredicateMap;
+    rr:constant <http://sw-portal.deri.org/ontologies/swportal#hasAddress>.
+pm1:PreMap_18 a rr:PredicateMap;
+    rr:constant <http://schema.org/vatID>.
+pm1:PreMap_27 a rr:PredicateMap;
+    rr:constant <http://ogp.me/ns#phone_number>.
+pm1:PreMap_6 a rr:PredicateMap;
+    rr:constant <http://purl.org/ontology/wo/name>.
+pm1:PreMap_ce_0 a rr:PredicateMap;
+    rr:constant rdf:type.
+sm1:SubMap_0 a rr:SubjectMap;
+    rr:template "http://gisinternational.net/customer/{No.}";
+    rr:termType rr:IRI.
+tm1:TriplesMap_0 rml:logicalSource ls1:LogicalSource_0;
+    a rr:TriplesMap;
+    rr:predicateObjectMap pom1:PredObjMap_11, pom1:PredObjMap_17, pom1:PredObjMap_26, pom1:PredObjMap_5, pom1:RefPredObjMap_11, pom1:RefPredObjMap_17, pom1:RefPredObjMap_26, pom1:RefPredObjMap_5, pom1:RefPredObjMap_cn_0;
+    rr:subjectMap sm1:SubMap_0.

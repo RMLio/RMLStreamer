@@ -1,12 +1,17 @@
 package io.rml.framework.flink.source
 
 import java.nio.file.Paths
+import java.util.Properties
 
+import io.rml.framework.core.model.KafkaStream
 import io.rml.framework.flink.item.{Item, RowItem}
 import io.rml.framework.flink.item.csv.{CSVHeader, CSVItem}
+import io.rml.framework.flink.item.json.JSONItem
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.api.scala._
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
+import org.apache.flink.streaming.util.serialization.SimpleStringSchema
 import org.apache.flink.table.api.{Table, TableEnvironment, Types}
 import org.apache.flink.table.api.scala.StreamTableEnvironment
 import org.apache.flink.table.sources.CsvTableSource
@@ -21,6 +26,19 @@ object CSVStream {
     val stream = env.socketTextStream(hostName, port)
                     .flatMap(item => CSVItem(item, delimiter, headers))
                     .map(item => item.asInstanceOf[Item])
+    CSVStream(stream, headers)
+  }
+
+  def fromKafkaStream(kafkaStream: KafkaStream, headers: Array[String])(implicit env: StreamExecutionEnvironment) : CSVStream = {
+    val delimiter = ','
+    val properties = new Properties()
+    val brokersCommaSeparated = kafkaStream.brokers.reduce((a,b) => a + ", " + b)
+    properties.setProperty("bootstrap.servers", brokersCommaSeparated)
+    val zookeepersCommaSeparated = kafkaStream.zookeepers.reduce((a,b) => a + ", " + b)
+    properties.setProperty("zookeepers.connect", zookeepersCommaSeparated)
+    properties.setProperty("group.id", kafkaStream.groupId)
+    val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer08[String](kafkaStream.topic, new SimpleStringSchema(), properties))
+                                      .map(item => CSVItem(item, delimiter, headers).asInstanceOf[Item])
     CSVStream(stream, headers)
   }
 

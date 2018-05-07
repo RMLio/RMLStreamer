@@ -18,6 +18,8 @@ object CSVDataSet {
 
   def apply(name: String, path: String, delimiter: String)(implicit tEnv: BatchTableEnvironment): CSVDataSet = {
 
+    println("Creating CSVDataset from " + path)
+
     // extract header
     val header: Option[Array[String]] = CSVHeader(Paths.get(path),delimiter.charAt(0))
 
@@ -36,7 +38,7 @@ object CSVDataSet {
     // create the table
     val table: Table = tEnv
       .scan(name)
-      .select(convertToSelection(header.get))
+      .select("*")
 
 
     // create the header->index map
@@ -51,10 +53,6 @@ object CSVDataSet {
     // create the CSV DataSet
     new CSVDataSet(dataSet, headersMap)
 
-  }
-
-  private def convertToSelection(headers: Array[String]): String = {
-    headers.reduce((a,b) => a + ", " + b)
   }
 
   private def convertToIndexMap(headers: Array[String]): Map[String, Int] = {

@@ -1,0 +1,710 @@
+Document Type,Document No.,Line No.,OK,Buy-from Vendor No.,Purchasing Code,Type,No.,Item Category Code,OEM No.,Manufacturer Code,Product Group Code,Cross-Reference No.,Currency Code,Outstanding Quantity,Description,Drop Shipment,Location Code,Bin Code,Quantity,Unit of Measure Code,Unit of Measure,Tariff No.,Net Weight,Unit Cost (LCY),Unit Price (LCY),Unit Cost,Qty. to Receive,Quantity Received,Qty. to Invoice,Quantity Invoiced,Qty. to Assign,Qty. Assigned,Order Date,Order Confirmation Date,Expected Receipt Date,Overdue Code,Lead Time Calculation,Prod. Order No.,Prod. Order Line No.,PO Reference,Sales Order Line No.,Sales Order No.,Special Order,Special Order Sales No.,Special Order Sales Line No.,Last Modification Date,Shortcut Dimension 8 Code,Sales Quote No.,Status Sales Quote
+Order,POPT00000001,10000,No,GV52610,1,Item,NIPT0000007,MECHANICAL,MANDRIL,NO BRAND,HANDTOOLS,,,0,Mandril OD 17 x WT 0.75,Yes,WHS-DS,,2,PCS,piece,82032000,0,"165,50",,"165,50",,2,,2,,,09/10/17,18/10/17,31/10/17,SBD,21D,,0,,0,,No,,0,02/01/18,,,Open
+Order,POPT00000001,20000,No,,,      ,,,,,,,,0,"M1C-04-17-0.75-1 , OD 17 x WT 0.75BALL MANDREL, ST",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000001,30000,No,,,      ,,,,,,,,0,"D, TSC, SHANK: 15.3 mm , LG: 120mm, THREAD: M10",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000001,40000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000001,50000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000002,10000,No,GV52761,1,Item,NIPT0000048,PACKAGING,OVR1,NO BRAND,TAPE,,,0,ETIQUETA REDONDA 50MM - 1 ATE,Yes,WHS-DS,,200,PCS,piece,39191019,0,"0,15",,"0,15",,200,200,,,,06/10/17,23/10/17,27/10/17,SBD,21D,,0,,0,,No,,0,30/11/17,,,Open
+Order,POPT00000002,20000,No,,,      ,,,,,,,,0,ETIQUETA REDONDA 50MM - 1 ATE 200,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000002,30000,No,GV52761,1,Item,NIPT0000049,PACKAGING,OVR2,NO BRAND,TAPE,,,0,ETIQUETA REDONDA 50MM - TPM,Yes,WHS-DS,,200,PCS,piece,39191019,0,"0,15",,"0,15",,200,200,,,,06/10/17,23/10/17,27/10/17,SBD,21D,,0,,0,,No,,0,30/11/17,,,Open
+Order,POPT00000002,40000,No,,,      ,,,,,,,,0,ETIQUETA REDONDA 50MM - TPM,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000003,10000,No,GV52861,1,Item,NIPT0000057,ELECTRICAL,,NO BRAND,CIRCUIT PR,,,0,Pack c/ 50 Bobinas SPOLL-2-ST,Yes,WHS-DS,,1,PCS,piece,85361010,0,"490,00",,"490,00",,1,,1,,,19/10/17,26/10/17,06/11/17,SBD,21D,,0,,0,,No,,0,30/11/17,,,Open
+Order,POPT00000003,20000,No,GV52861,1,Item,NIPT0000058,ELECTRICAL,,NO BRAND,CIRCUIT PR,,,0,Tri-hole Stripper (Millers),Yes,WHS-DS,,1,PCS,piece,85361010,0,"100,00",,"100,00",,1,,1,,,19/10/17,26/10/17,06/11/17,SBD,21D,,0,,0,,No,,0,30/11/17,,,Open
+Order,POPT00000003,30000,No,GV52861,1,Item,NIPT0000059,ELECTRICAL,,NO BRAND,CIRCUIT PR,,,0,Fuse Connector LC-SF-APC-09,Yes,WHS-DS,,100,PCS,piece,85361010,0,"8,85",,"8,85",,100,,100,,,19/10/17,26/10/17,06/11/17,SBD,21D,,0,,0,,No,,0,30/11/17,,,Open
+Order,POPT00000004,10000,No,GV52718,,Item,NIPT0000029,T&M,,NO BRAND,CALIBRAT.,27651,GBP,0,In House Standard,No,,,1,PCS,piece,99999999,0,"405,75724",,"360,00",,1,1,,,,27/10/17,10/01/18,15/01/18,SBD,30D,,0,,0,,No,,0,10/01/18,,,Open
+Order,POPT00000004,20000,No,,,      ,,,,,,,,0,"HHPC-6 Hand Held Particle Counter,",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,18/12/17,,,Open
+Order,POPT00000004,30000,No,,,      ,,,,,,,,0,SN:050509013.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000005,10000,No,GV02486,1,Item,NIPT0000080,ELECTRONIC,,NO BRAND,PCB,,,2,Dura Glide Blade-SS Coated,Yes,,,2,PCS,piece,85340011,0,221482,,221482,,,,,,,27/10/17,,24/11/17,,28D,,0,,10000,SOPT00000008,No,,0,19/12/17,,,Open
+Order,POPT00000005,20000,No,,,      ,,,,,,,,0,Transport included,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000005,30000,No,GV02486,1,Item,NIPT0000081,ELECTRONIC,,NO BRAND,PCB,,,4,EForm Blade (min order 4 sets),Yes,,,4,PCS,piece,85340011,0,221482,,221482,,,,,,,27/10/17,,24/11/17,,28D,,0,,20000,SOPT00000008,No,,0,19/12/17,,,Open
+Order,POPT00000005,40000,No,,,      ,,,,,,,,0,Transport included,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000005,50000,No,GV02486,1,Item,NIPT0000082,ELECTRONIC,,NO BRAND,PCB,,,2,OEM Blade,Yes,,,2,PCS,piece,85340011,0,"85,1966",,"85,1966",,,,,,,27/10/17,,24/11/17,,28D,,0,,30000,SOPT00000008,No,,0,19/12/17,,,Open
+Order,POPT00000005,60000,No,,,      ,,,,,,,,0,Transport included,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000006,10000,No,GV00297,2,Item,NIPT0000080,ELECTRONIC,,NO BRAND,PCB,,,0,Dura Glide Blade-SS Coated,No,WHS-EIND,,2,PCS,piece,85340011,0,221482,,221482,,2,2,,,,29/09/17,02/01/18,22/11/18,SBD,28D,,0,,0,,Yes,SOPT00000008,10000,29/01/18,,,Open
+Order,POPT00000006,20000,No,,,      ,,,,,,,,0,Transport included,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000006,30000,No,GV00297,2,Item,NIPT0000081,ELECTRONIC,,NO BRAND,PCB,,,0,EForm Blade (min order 4 sets),No,WHS-EIND,,4,PCS,piece,85340011,0,221482,,221482,,4,4,,,,29/09/17,02/01/18,22/11/18,SBD,28D,,0,,0,,Yes,SOPT00000008,20000,29/01/18,,,Open
+Order,POPT00000006,40000,No,,,      ,,,,,,,,0,Transport included,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,29/01/18,,,Open
+Order,POPT00000006,50000,No,GV00297,2,Item,NIPT0000082,ELECTRONIC,,NO BRAND,PCB,,,0,OEM Blade,No,WHS-EIND,,2,PCS,piece,85340011,0,"85,1966",,"85,1966",,2,2,,,,29/09/17,02/01/18,22/11/18,SBD,28D,,0,,0,,Yes,SOPT00000008,30000,29/01/18,,,Open
+Order,POPT00000006,60000,No,,,      ,,,,,,,,0,Transport included,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000007,10000,No,GV53003,,Item,NIPT0000092,MECHANICAL,,NO BRAND,MECHDRIVE,,,0,Apertador  DESTACO,No,WHS-DS,,2,PCS,piece,87149300,0,"19,62",,"19,62",,2,,2,,,20/10/17,10/11/17,10/11/17,SBD,21D,,0,,0,,No,,0,28/11/17,,,Open
+Order,POPT00000008,10000,No,GV53034,1,Item,NIPT0000096,MECHANICAL,,NO BRAND,SPRING,,,0,Molas para Cassetes,Yes,WHS-DS,,5,PCS,piece,73209090,0,"0,0773",,"0,0773",,5,,5,,,24/10/17,30/10/17,30/10/17,SBD,21D,,0,,0,,No,,0,30/10/17,,,Open
+Order,POPT00000008,20000,No,,,      ,,,,,,,,0,"Molas para cassetes Arame � 0,80mm Inox EN 10270-3",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000008,30000,No,,,      ,,,,,,,,0, Aisi-302,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000008,40000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000010,10000,No,GV52960,1,Item,NIPT0000113,MECHANICAL,,NO BRAND,MAKE PART,39044003,,0,TUBO CHAPA ZINCO SPIRO 125MM,Yes,WHS-DS,,12,PCS,piece,76169990,0,"3,52833",,"3,52833",,12,,12,,,16/11/17,30/10/17,31/10/17,SBD,,,0,,0,,No,,0,15/11/17,,,Open
+Order,POPT00000010,20000,No,GV52960,1,Item,NIPT0000114,MECHANICAL,,NO BRAND,MAKE PART,39144082,,0,CURVA SPIRO 125X90�,Yes,WHS-DS,,8,PCS,piece,76169990,0,"6,09",,"6,09",,8,,8,,,16/11/17,30/10/17,31/10/17,SBD,,,0,,0,,No,,0,15/11/17,,,Open
+Order,POPT00000010,30000,No,GV52960,1,Item,NIPT0000115,MECHANICAL,,NO BRAND,MAKE PART,39144042,,0,CURVA SPIRO 125X45�,Yes,WHS-DS,,4,PCS,piece,76169990,0,"4,90",,"4,90",,4,,4,,,16/11/17,30/10/17,31/10/17,SBD,,,0,,0,,No,,0,15/11/17,,,Open
+Order,POPT00000010,40000,No,GV52960,1,Item,NIPT0000116,MECHANICAL,,NO BRAND,MAKE PART,39144151,,0,REDUCOES SPIRO 200X125,Yes,WHS-DS,,4,PCS,piece,76169990,0,"6,49",,"6,49",,4,,4,,,16/11/17,30/10/17,31/10/17,SBD,,,0,,0,,No,,0,15/11/17,,,Open
+Order,POPT00000011,10000,No,GV52861,1,Item,NIPT0000069,MECHANICAL,,NO BRAND,MAKE PART,,,0,FSM-70S M�quina de Fus�o,Yes,WHS-DS,,1,PCS,piece,76169990,0,"4.490,00",,"4.490,00",,1,,1,,,09/11/17,06/11/17,06/11/17,SBD,21D,,0,,0,,No,,0,30/11/17,,,Open
+Order,POPT00000011,20000,No,,,      ,,,,,,,,0,DCC-18 Cabo de Liga��o,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000011,30000,No,,,      ,,,,,,,,0,CT-30A M�quina de Corte,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000011,40000,No,,,      ,,,,,,,,0,DCC-12 Cabo de isqueiro (12V),No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,10000,No,GV52668,,Item,NIPT0000044,CAPITAL,CONSTRUCAO,NO BRAND,CONSTRUCT,,,0,Cobertura em estrutura met�lic,No,WHS-DS,,1,PCE,,99999999,0,"20.980,00",,"20.980,00",,1,,1,,,30/10/17,08/11/17,29/12/17,SBD,30D,,0,,0,,No,,0,08/01/18,,,Open
+Order,POPT00000012,20000,No,,,      ,,,,,,,,0,Quantidade 4 :FORNECIMENTO E MONTAGEM DE ESTRUTURA,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,30000,No,,,      ,,,,,,,,0,MET�LICA COM COBERTURA EM TELA PVC DE,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,40000,No,,,      ,,,,,,,,0,"9,60X4,90m",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,50000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,60000,No,,,      ,,,,,,,,0,Quantidade 3:FORNECIMENTO E MONTAGEM DE ESTRUTURAS,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,70000,No,,,      ,,,,,,,,0,MET�LICAS COM COBERTURA EM TELA PVC DE,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,80000,No,,,      ,,,,,,,,0,"7,30x4,90m",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,90000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,100000,No,,,      ,,,,,,,,0,Quantidade 60: Caleiras junto ao muro,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,110000,No,,,      ,,,,,,,,0,do lado do vizinho,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,120000,No,,,      ,,,,,,,,0,Estrutura galvanizada a quente,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,130000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,140000,No,,,      ,,,,,,,,0,Lona 650g m2,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,150000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,160000,No,,,      ,,,,,,,,0,Quantidade 60m caleiras e tubos de,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,170000,No,,,      ,,,,,,,,0,descarga do lado contrario as que vamos aplicar,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000012,180000,No,,,      ,,,,,,,,0,*Lona m2 s� h� cor branca e cinza claro,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000014,10000,No,GV00297,2,Item,NIPT0000119,MECHANICAL,,NO BRAND,MAKE PART,,,0,Arta Teknoloji - Coating Syste,No,WHS-EIND,,1,PCS,piece,76169990,0,"1.740,00",,"1.740,00",,1,,1,,,15/11/17,13/11/17,15/12/17,SBD,30D,,0,,0,,Yes,SOPT00000015,10000,09/01/18,,,Open
+Order,POPT00000014,20000,No,,,      ,,,,,,,,0,The quotation for manual dip coating tank. See the,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000014,30000,No,,,      ,,,,,,,,0, cotation in the attachment.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000015,10000,No,GV52896,1,Item,NIPT0000061,ELECTRICAL,TEC-1091,NO BRAND,AUTOMATION,,,0,PID CONTROLLER,Yes,WHS-DS,,5,PCS,piece,85371091,0,"197,40",,"197,40",,5,,5,,,06/11/17,07/11/17,20/11/17,SBD,14D,,0,,0,,No,,0,10/01/18,,,Open
+Order,POPT00000015,20000,No,,,      ,,,,,,,,0,TEC-1091Small OEM Precision Peltier Temperature Co,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000015,30000,No,,,      ,,,,,,,,0,ntroller (�4 A / �21 V),No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000016,10000,No,GV53222,1,Item,NIPT0000136,MECHANICAL,,NO BRAND,MAKE PART,,,0,SSRIV161R360P,Yes,WHS-DS,,2,PCS,piece,76169990,0,"645,12",,"645,12",,2,,2,,,14/11/17,07/11/17,27/11/17,SBD,21D,,0,,10000,SOPT00000017,No,,0,18/12/17,,,Open
+Order,POPT00000016,20000,No,,,      ,,,,,,,,0,WIPEWASHHEAT component,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000016,30000,No,GV53222,1,Item,NIPT0000137,MECHANICAL,,NO BRAND,MAKE PART,,,0,RSJ18C,Yes,WHS-DS,,4,PCS,piece,76169990,0,"45,93",,"45,93",,4,,4,,,14/11/17,07/11/17,27/11/17,SBD,21D,,0,,20000,SOPT00000017,No,,0,18/12/17,,,Open
+Order,POPT00000016,40000,No,,,      ,,,,,,,,0,WIPEWASHHEAT component,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000016,50000,No,GV53222,1,Item,NIPT0000138,MECHANICAL,,NO BRAND,MAKE PART,,,0,RSJ18DE,Yes,WHS-DS,,2,PCS,piece,76169990,0,"50,28",,"50,28",,2,,2,,,14/11/17,07/11/17,27/11/17,SBD,21D,,0,,0,,No,,0,18/12/17,,,Open
+Order,POPT00000016,60000,No,,,      ,,,,,,,,0,WIPEWASHHEAT component,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000016,70000,No,GV53222,1,Item,NIPT0000140,MECHANICAL,,NO BRAND,MAKE PART,,,0,SSP07W9T28,Yes,WHS-DS,,2,PCS,piece,76169990,0,"99,00",,"99,00",,2,,2,,,14/11/17,07/11/17,27/11/17,SBD,21D,,0,,40000,SOPT00000017,No,,0,18/12/17,,,Open
+Order,POPT00000016,80000,No,,,      ,,,,,,,,0,WIPEWASHHEAT component,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000018,10000,No,GV53108,1,Item,NIPT0000117,SERVICES,,NO BRAND,REPAIR2,,,0,Repair Reference: PTP08DDMOXB,Yes,WHS-DS,,1,PCS,piece,99999999,0,"267,84",,"267,84",,1,,1,,,27/10/17,30/11/17,08/12/17,SBD,42D,,0,,0,,No,,0,31/12/17,,,Open
+Order,POPT00000018,20000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000021,10000,No,GV52984,,Item,NIPT0000083,SERVICES,,NO BRAND,INSTAL.1,,,0,HORA DESLOCA�AO,No,WHS-DS,,4,PCS,piece,99999999,0,"36,00",,"36,00",,4,,4,,,14/10/17,04/12/17,05/12/17,SBD,42D,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000021,20000,No,,,      ,,,,,,,,0,Hora de desloca��o do t�cnico,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000021,30000,No,GV52984,,Item,NIPT0000084,SERVICES,,NO BRAND,INSTAL.1,,,0,HORA TECNICO,No,WHS-DS,,4,PCS,piece,99999999,0,"72,00",,"72,00",,4,,4,,,14/10/17,04/12/17,05/12/17,SBD,42D,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000021,40000,No,,,      ,,,,,,,,0,Custo Hora do t�cnico Falex/Eurotherm.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000021,50000,No,GV52984,,Item,NIPT0000085,SERVICES,,NO BRAND,INSTAL.1,,,0,RFULL,No,WHS-DS,,1,PCS,piece,99999999,0,"385,00",,"385,00",,1,,1,,,14/10/17,04/12/17,05/12/17,SBD,42D,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000021,60000,No,,,      ,,,,,,,,0,M�dulo de software Review FULL da Eurothermpr�prio,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000021,70000,No,,,      ,,,,,,,,0, para visualiza��o gr�fica de dados hist�ricosadqu,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000021,80000,No,,,      ,,,,,,,,0,iridos e armazenamento na mem�ria deregistadores d,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000021,90000,No,,,      ,,,,,,,,0,e equipamentos similares daEurotherm.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000022,10000,No,GV53035,1,Item,NIPT0000099,T&M,,NO BRAND,CALIBRAT.,,,0,Luximetro kONICA MINOLTA CL-20,Yes,WHS-DS,,1,PCS,piece,99999999,0,"657,14",,"657,14",,1,,1,,,27/10/17,27/11/17,24/11/17,SBD,31D,,0,,0,,No,,0,19/01/18,,,Open
+Order,POPT00000022,20000,No,,,      ,,,,,,,,0,calibra��o de Equipamento de medi��o,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,19/01/18,,,Open
+Order,POPT00000022,30000,No,,,      ,,,,,,,,0,Luximetro kONICA MINOLTA CL-201,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000022,40000,No,,,      ,,,,,,,,0,Transporte incluso,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000023,10000,No,GV00297,2,Item,NIPT0000053,MECHANICAL,,NO BRAND,MAKE PART,,,0,Nebuizer Assembly,No,WHS-EIND,,3,PCS,piece,76169990,0,"60,00",,"60,00",,3,3,,,,03/11/17,01/02/18,01/02/18,SBD,21D,,0,,0,,Yes,SOPT00000006,10000,01/02/18,,,Open
+Order,POPT00000023,20000,No,GV00297,2,Item,NIPT0000054,MECHANICAL,,NO BRAND,MAKE PART,,,0,Nebuizer Housing,No,WHS-EIND,,3,PCS,piece,76169990,0,"60,00",,"60,00",,3,3,,,,03/11/17,01/02/18,01/02/18,SBD,21D,,0,,0,,Yes,SOPT00000006,20000,01/02/18,,,Open
+Order,POPT00000023,30000,No,GV00297,2,Item,NIPT0000055,MECHANICAL,,NO BRAND,MAKE PART,,,0,Nebuizer Reservoir,No,WHS-EIND,,3,PCS,piece,76169990,0,"35,00",,"35,00",,3,3,,,,03/11/17,01/02/18,01/02/18,SBD,21D,,0,,0,,Yes,SOPT00000006,30000,01/02/18,,,Open
+Order,POPT00000024,10000,No,GV53158,1,Item,NIPT0000120,ELECTRICAL,,NO BRAND,AUTOMATION,,,0,Polariscope,Yes,WHS-DS,,1,PCS,piece,85371091,0,"925,00",,"925,00",,1,,1,,,22/11/17,22/11/17,22/11/17,SBD,30D,,0,,0,,No,,0,31/12/17,,,Open
+Order,POPT00000024,20000,No,,,      ,,,,,,,,0,-Housing coated in colour RAL7035-LED light source,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000024,30000,No,,,      ,,,,,,,,0," 4,0 Watt - 230V-Polarizer plate made of high-qual",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000024,40000,No,,,      ,,,,,,,,0,ity glass-Analyzer plate made of PMMA-Test surface,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000024,50000,No,,,      ,,,,,,,,0,: 200 x 200 x 200 mm,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000024,60000,No,GV53158,1,Item,NIPT0000121,ELECTRICAL,,NO BRAND,AUTOMATION,,,0,Polariscope camera holder,Yes,WHS-DS,,1,PCS,piece,85371091,0,"205,00",,"205,00",,1,,1,,,22/11/17,22/11/17,22/11/17,SBD,30D,,0,,0,,No,,0,31/12/17,,,Open
+Order,POPT00000024,70000,No,,,      ,,,,,,,,0,(without camera)height adjustable+swivelable,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000026,10000,No,GV53156,1,Item,NIPT0000118,MECHANICAL,,NO BRAND,MAKE PART,,,0,Equipamento remover pelicula,Yes,WHS-DS,,1,PCS,piece,76169990,0,"1.280,51",,"1.280,51",,1,,1,,,08/11/17,19/02/18,19/02/18,SBD,30D,,0,,0,,No,,0,19/02/18,,,Open
+Order,POPT00000026,20000,No,,,      ,,,,,,,,0,"O equipamento, permite segurar atrav�s de uma vent",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,06/02/18,,,Open
+Order,POPT00000026,30000,No,,,      ,,,,,,,,0,"osas pneum�ticas, um painel que tem um autocolante",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000026,40000,No,,,      ,,,,,,,,0,.Esse autocolante � depois retirado de uma s� vez ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000026,50000,No,,,      ,,,,,,,,0,"pela operadora, n�o deixando manchas.",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000026,60000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000026,70000,No,,,      ,,,,,,,,0,Transport included,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000027,10000,No,GV53324,1,Item,NIPT0000156,SERVICES,,NO BRAND,OTHERS,,,0,Aluguer de balan�as,Yes,WHS-DS,,1,PCS,piece,99999999,0,"3.790,00",,"3.790,00",,1,,1,,,10/11/17,13/11/17,20/12/17,SBD,42D,,0,,0,,No,,0,02/01/18,,,Open
+Order,POPT00000028,10000,No,,,Item,,,,,,,,0,Canceled,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000029,10000,No,GV53350,1,Item,NIPT0000157,ELECTRICAL,,NO BRAND,SENSOR,1,,0,Detetor DI SORIC typ OGU 050 P,Yes,WHS-DS,,1,PCS,piece,85322400,0,"131,02",,"131,02",,1,,1,,,01/12/17,28/11/17,30/11/17,SBD,,,0,,0,,No,,0,30/11/17,,,Open
+Order,POPT00000029,20000,No,,,      ,,,,,,,,0,detetor DI-SORIC typ OGU 050 P3K-TSSL1915,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,30/11/17,,,Open
+Order,POPT00000030,10000,No,GV53424,1,Item,NIPT0000176,MATERIALS,,NO BRAND,PLASTICS,,,0,Parafina liquida,Yes,WHS-DS,,2,PCS,piece,38123080,0,"76,87",,"76,87",,2,,2,,,14/11/17,04/12/17,30/11/17,SBD,21D,,0,,0,,No,,0,30/11/17,,,Open
+Order,POPT00000030,20000,No,,,      ,,,,,,,,0,"S09992paraffinum perliquid Pharma PB402,5 litre ca",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000030,30000,No,,,      ,,,,,,,,0,nister,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000030,40000,No,,,      ,,,,,,,,0,Transport included,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000031,10000,No,GV53420,1,Item,NIPT0000174,OFFICE SUP,,NO BRAND,STATIONERY,,,0,Pr�mios da Qualidade,Yes,WHS-DS,,5,PCS,piece,48173000,0,"122,85",,"122,85",,5,5,,,,15/11/17,11/12/17,30/11/17,SBD,14D,,0,,0,,No,,0,11/12/17,,,Open
+Order,POPT00000031,20000,No,,,      ,,,,,,,,0,"5 trof�us personalizados. Or�amento j� em anexo, j",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,11/12/17,,,Open
+Order,POPT00000031,30000,No,,,      ,,,,,,,,0,� dei indica��o para iniciarem a produ��o dos 5 ar,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000031,40000,No,,,      ,,,,,,,,0,"tigos, uma vez que t�m que ser entregues no dia 30",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000031,50000,No,,,      ,,,,,,,,0,.11.2017 na Bosch em Ovar. Pessoa de contato: mart,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000031,60000,No,,,      ,,,,,,,,0,asalvador@vistaalegre.com,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000032,10000,No,GV53225,1,Item,NIPT0000135,T&M,,NO BRAND,TEMPERAT.,,,2,FG100-04 da Hakko,Yes,WHS-DS,,2,PCS,piece,84849000,0,"285,70",,"285,70",2,,2,,,,15/11/17,28/11/17,15/12/17,,30D,,0,,10000,SOPT00000030,No,,0,09/01/18,,,Open
+Order,POPT00000032,20000,No,,,      ,,,,,,,,0,Modelo: FG100 da HakkoPara uso de thermocoupler:  ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000032,30000,No,,,      ,,,,,,,,0,TYPE K    Range of measurement:  0 � 700�C,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000032,40000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000033,10000,No,GV52687,1,Item,NIES001395,SERVICES,,NO BRAND,ICT 1,,,0,Mtto. eq. videoconfer. Avaya R,Yes,WHS-DS,,1,PCS,piece,99999999,0,"358,40",,"358,40",,1,,1,,,13/12/18,11/12/17,27/12/18,SBD,14D,,0,,0,,No,,0,20/12/17,,,Open
+Order,POPT00000033,20000,No,,,      ,,,,,,,,0,Mantenimiento con Soporte Remoto 8x5 y actualizaci,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000033,30000,No,,,      ,,,,,,,,0,"�n de firmware.BOSCH SERVICE SOLUTIONS, S.A.U. (Av",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000033,40000,No,,,      ,,,,,,,,0,. Infante D. Henrique Lt 2E e 3E 1800-220 LISBOA)S,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000033,50000,No,,,      ,,,,,,,,0,istema            SCOPIA XT4000MAC Address   00:03,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000033,60000,No,,,      ,,,,,,,,0,:D6:01:C5:32N�mero de serie           1238280229Ve,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000033,70000,No,,,      ,,,,,,,,0,rsi�n de software      03.02.01.0010 V3_2_1_10Vers,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000033,80000,No,,,      ,,,,,,,,0,i�n actual de licencia         03.02.xxxx,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000033,90000,No,GV52687,1,Item,NIPT0000103,SERVICES,,NO BRAND,REPAIR1,2,,0,Coste reinicio mantenimiento,Yes,WHS-DS,,1,PCS,piece,99999999,0,"588,01",,"588,01",,1,,1,,,27/12/18,11/12/17,27/12/18,SBD,,,0,,0,,No,,0,20/12/17,,,Open
+Order,POPT00000034,10000,No,GV53400,1,Item,NIPT0000158,MECHANICAL,,NO BRAND,VALVE,,,0,valvula anti retorno ref.MONDE,Yes,WHS-DS,,4,PCS,piece,84814010,0,"26,40",,"26,40",,4,,4,,,16/11/17,22/11/17,07/12/17,SBD,21D,,0,,0,,No,,0,16/01/18,,,Open
+Order,POPT00000034,20000,No,,,      ,,,,,,,,0,valvula anti retorno ref.MONDEO  DN 16   3/4  3041,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,02/01/18,,,Open
+Order,POPT00000034,30000,No,,,      ,,,,,,,,0,914,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000035,10000,No,GV53224,1,Item,NIPT0000155,ELECTRONIC,5010171008,NO BRAND,PCB,,,0,"CONN PLUG 100POS 0.4MM SMD, 50",Yes,WHS-DS,,10,PCS,piece,85340011,0,"5,47",,"5,47",,10,,10,,,21/11/17,20/11/17,12/12/17,SBD,21D,,0,,0,,No,,0,08/12/17,,,Open
+Order,POPT00000035,20000,No,,,      ,,,,,,,,0,"CONN PLUG 100POS 0.4MM SMD, 5010171008100 Position",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000035,30000,No,,,      ,,,,,,,,0," Connector Plug, Outer Shroud Contacts Surface Mou",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000035,40000,No,,,      ,,,,,,,,0,nt Gold,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000036,10000,No,GV53413,1,Item,NIPT0000172,MECHANICAL,,NO BRAND,MAKE PART,,,0,LEISTER HOT-JET S S/TOBERA,Yes,WHS-DS,,1,PCS,piece,76169990,0,"468,90",,"468,90",,1,,1,,,16/11/17,29/11/17,11/12/17,SBD,21D,,0,,0,,No,,0,11/12/17,,,Open
+Order,POPT00000036,20000,No,,,      ,,,,,,,,0,Esta��o soldadura analogica Reparador,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,04/12/17,,,Open
+Order,POPT00000036,30000,No,,,      ,,,,,,,,0,Transport included,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000037,10000,No,GV53227,1,Item,NIPT0000141,MECHANICAL,,NO BRAND,TAPE,,,0,silicone adhesive,Yes,WHS-DS,,1,PCS,piece,39191080,0,"80,00",,"80,00",,1,,1,,,27/11/17,30/11/17,18/12/17,SBD,21D,,0,,0,,No,,0,14/12/17,,,Open
+Order,POPT00000037,20000,No,,,      ,,,,,,,,0,1 cartridge of the Silicone based Thermal Adhesive,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,12/12/17,,,Open
+Order,POPT00000037,30000,No,,,      ,,,,,,,,0, TAD-P-SI-1C,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000037,40000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000038,10000,No,GV52960,1,Item,NIPT0000107,MECHANICAL,,NO BRAND,MAKE PART,12005465,,0,"MEIA JUNCAO 1""x25MM LATAO",Yes,WHS-DS,,20,PCS,piece,76169990,0,3848,,3848,,20,,20,,,25/11/17,29/11/17,28/11/17,SBD,,,0,,0,,No,,0,29/11/17,,,Open
+Order,POPT00000038,20000,No,GV52960,1,Item,NIPT0000109,MECHANICAL,,NO BRAND,MAKE PART,10001145,,0,"ABRAC.NORMA 1"" 25-40mm ZINCADA",Yes,WHS-DS,,40,PCS,piece,76169990,0,624,,624,,40,,40,,,25/11/17,29/11/17,28/11/17,SBD,,,0,,0,,No,,0,29/11/17,,,Open
+Order,POPT00000038,30000,No,GV52960,1,Item,NIPT0000110,MECHANICAL,,NO BRAND,MAKE PART,12005123,,0,"CASQ.DUPLO 1"" LATAO",Yes,WHS-DS,,10,PCS,piece,76169990,0,1589,,1589,,10,,10,,,25/11/17,29/11/17,28/11/17,SBD,,,0,,0,,No,,0,29/11/17,,,Open
+Order,POPT00000038,40000,No,GV52960,1,Item,NIPT0000075,MECHANICAL,,NO BRAND,VALVE,12005122,,0,"CASQ.DUPLO 3/4"" LATAO",Yes,WHS-DS,,10,PCS,piece,84814010,0,1211,,1211,,10,,10,,,25/11/17,29/11/17,28/11/17,SBD,,,0,,0,,No,,0,29/11/17,,,Open
+Order,POPT00000038,50000,No,GV52960,1,Item,NIPT0000111,MECHANICAL,,NO BRAND,MAKE PART,54062158,,0,"PORCA PP-R/THERM 1""X1 1/4""C",Yes,WHS-DS,,12,PCS,piece,76169990,0,"8,63833",,"8,63833",,12,,12,,,25/11/17,29/11/17,28/11/17,SBD,,,0,,0,,No,,0,29/11/17,,,Open
+Order,POPT00000038,60000,No,GV52960,1,Item,NIPT0000112,MECHANICAL,,NO BRAND,MAKE PART,54062155,,0,"PORCA PP-R/THERM 3/4""X1"" C/",Yes,WHS-DS,,12,PCS,piece,76169990,0,"3,75167",,"3,75167",,12,,12,,,25/11/17,29/11/17,28/11/17,SBD,,,0,,0,,No,,0,29/11/17,,,Open
+Order,POPT00000039,10000,No,GV52969,1,Item,NIPT0000079,SERVICES,,NO BRAND,REPAIR1,,,0,rebobinagem de freio de,Yes,WHS-DS,,1,PCS,piece,99999999,0,"115,46",,"115,46",,1,,1,,,20/11/17,28/11/17,29/11/17,SBD,3W,,0,,0,,No,,0,15/12/17,,,Open
+Order,POPT00000039,20000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,23/11/17,,,Open
+Order,POPT00000040,10000,No,,,Item,,,,,,,,0,Canceled,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000041,10000,No,GV52960,1,Item,NIPT0000087,MECHANICAL,TOP3 GM,NO BRAND,PUMP,,,0,Bomba submers�vel recolha �gua,Yes,WHS-DS,,2,PCS,piece,84139100,0,"186,00",,"186,00",,2,,2,,,04/11/17,29/11/17,28/11/17,SBD,21D,,0,,0,,No,,0,29/11/17,,,Open
+Order,POPT00000041,20000,No,,,      ,,,,,,,,0,Bomba de drenagem de �guas submers�vel.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000041,30000,No,,,      ,,,,,,,,0,ELECT.SUBM. TOP/3 - GM 230V,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000041,40000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000042,10000,No,GV52960,1,Item,NIPT0000075,MECHANICAL,,NO BRAND,VALVE,12005122,,0,"CASQ.DUPLO 3/4"" LATAO",Yes,WHS-DS,,30,PCS,piece,84814010,0,1211,,1211,,30,,30,,,25/11/17,29/11/17,28/11/17,SBD,,,0,,0,,No,,0,06/12/17,,,Open
+Order,POPT00000042,20000,No,GV52960,1,Item,NIPT0000076,MECHANICAL,,NO BRAND,VALVE,12005143,,0,"CASQ.D.RED.3/4""X1/2"" LATAO",Yes,WHS-DS,,30,PCS,piece,84814010,0,1246,,1246,,30,,30,,,25/11/17,29/11/17,28/11/17,SBD,,,0,,0,,No,,0,06/12/17,,,Open
+Order,POPT00000042,30000,No,GV52960,1,Item,NIPT0000077,MECHANICAL,,NO BRAND,VALVE,52060103,,0,"VALV.ESF.BASIC S211 FF 3/4"" MC",Yes,WHS-DS,,8,PCS,piece,84814010,0,"7,83",,"7,83",,8,,8,,,25/11/17,29/11/17,28/11/17,SBD,,,0,,0,,No,,0,06/12/17,,,Open
+Order,POPT00000042,40000,No,GV52960,1,Item,NIPT0000078,MECHANICAL,,NO BRAND,VALVE,47153304,,0,"VALV.SEGURAN�A F/F 3/4""x1""",Yes,WHS-DS,,10,PCS,piece,84814010,0,9002,,9002,,10,,10,,,25/11/17,29/11/17,28/11/17,SBD,,,0,,0,,No,,0,06/12/17,,,Open
+Order,POPT00000042,50000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000042,60000,No,,,Item,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,29/11/17,,,Open
+Order,POPT00000043,10000,No,GV52918,1,Item,NIPT0000063,MECHANICAL,,NO BRAND,SPRING,9200601042,,0,Mola compress�o Inox,Yes,WHS-DS,,2,PCS,piece,73209090,0,"3,80",,"3,80",,2,,2,,,25/11/17,31/12/17,12/12/17,SBD,,,0,,0,,No,,0,10/01/18,,,Open
+Order,POPT00000043,20000,No,GV52918,1,Item,NIPT0000064,MECHANICAL,,NO BRAND,SPRING,9256907075,,0,Femea de Face Plana,Yes,WHS-DS,,3,PCS,piece,73209090,0,"32,00",,"32,00",,3,,3,,,25/11/17,31/12/17,25/11/17,SBD,,,0,,0,,No,,0,31/12/17,,,Open
+Order,POPT00000043,30000,No,,,      ,,,,,,,,0,carruagem,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000044,10000,No,GV52762,1,Item,NIPT0000050,T&M,17541,NO BRAND,CALIBRAT.,,,0,Recalibracao registrador,Yes,WHS-DS,,1,PCS,piece,99999999,0,"945,00",,"945,00",,1,,1,,,04/11/17,04/12/17,15/12/17,SBD,21D,,0,,0,,No,,0,08/02/18,,,Open
+Order,POPT00000044,20000,No,,,      ,,,,,,,,0,"Registador de temperaturas DATAPAQ, n/ ref. N2548P",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000044,30000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000045,10000,No,,,Item,,,,,,,,0,Canceled,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000046,10000,No,GV53464,1,Item,NIPT0000179,OFFICE SUP,,NO BRAND,FURNITURE,,,0,Almofada anti escaras de ar RO,Yes,WHS-DS,,1,PCS,piece,94039090,0,"482,50",,"482,50",,1,,1,,,04/11/17,22/11/17,05/01/18,SBD,21D,,0,,0,,No,,0,05/01/18,,,Open
+Order,POPT00000046,20000,No,,,      ,,,,,,,,0,"Almofada anti escaras de ar ROHO, V�lvula dupla41x",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000046,30000,No,,,      ,,,,,,,,0,41x10 cm,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000047,10000,No,GV42623,1,Item,NIPT0000188,MECHANICAL,A-5000-8663,NO BRAND,MAKE PART,,GBP,0,Probe for CMM - M2 �1,Yes,WHS-DS,,3,PCS,piece,76169990,0,"79,07953",,"70,33333",,3,3,,,,02/11/17,14/12/17,14/12/17,SBD,3W,,0,,0,,No,,0,18/12/17,,,Open
+Order,POPT00000047,20000,No,,,      ,,,,,,,,0,"M2 �1 mm Rubinkugel, Hartmetallschaft, L 27,5 mm, ",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,18/12/17,,,Open
+Order,POPT00000047,30000,No,,,      ,,,,,,,,0,"EAL 20,5 mm",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000048,10000,No,GV53324,1,Item,NIPT0000180,SERVICES,,NO BRAND,OTHERS,,,0,aluguer balan�as,Yes,WHS-DS,,4,PCS,piece,99999999,0,"266,00",,"266,00",,4,,4,,,22/12/17,22/11/17,05/01/18,SBD,14D,,0,,0,,No,,0,31/01/18,,,Open
+Order,POPT00000048,20000,No,,,      ,,,,,,,,0,aluguer de 4 balan�as com as seguintes especifica�,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,31/01/18,,,Open
+Order,POPT00000048,30000,No,,,      ,,,,,,,,0,�es:- pesagem com contador de pe�as atrav�s da rel,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,31/01/18,,,Open
+Order,POPT00000048,40000,No,,,      ,,,,,,,,0,a��o direta ( regra de tr�s simples)- limite de ba,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000048,50000,No,,,      ,,,,,,,,0,lan�as m�ximo 4kg,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000048,60000,No,,,      ,,,,,,,,0,Duracao: 4 dias. 6/12 until 11/12,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000049,10000,No,GV53456,1,Item,NIPT0000178,CAPITAL,,NO BRAND,CONSTRUCT,,,0,Vidro transparente Compact 4,Yes,WHS-DS,,1,PCS,piece,99999999,0,"194,00",,"194,00",,1,1,,,,20/11/17,21/11/17,29/11/17,SBD,21D,,0,,0,,No,,0,30/11/17,,,Open
+Order,POPT00000049,20000,No,,,      ,,,,,,,,0,Vitroceramico: 2 unidades 490*250mm,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000049,30000,No,,,      ,,,,,,,,0,2 unidades 390*250mmc/ furacao,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000049,40000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000050,10000,No,GV53233,1,Item,NIPT0000148,OFFICE SUP,,NO BRAND,MACHINERY,,,0,Smartwatch Moto 360 2nd Gen,Yes,WHS-DS,,3,PCS,piece,84729070,0,"238,41667",,"238,41667",,3,3,,,,01/12/17,24/11/17,22/12/17,,21D,,0,,0,,No,,0,03/01/18,,,Open
+Order,POPT00000050,20000,No,,,      ,,,,,,,,0,Black LeatherRef: SM4318AN7T1,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,03/01/18,,,Open
+Order,POPT00000050,30000,No,,,      ,,,,,,,,0,Transport included in the item,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,03/01/18,,,Open
+Order,POPT00000051,10000,No,GV53288,1,Item,NIPT0000153,OFFICE SUP,,NO BRAND,MACHINERY,,,0,Gechic On Lap 1303I,Yes,WHS-DS,,6,PCS,piece,84729070,0,"370,49",,"370,49",,6,6,,,,01/12/17,14/12/17,22/12/17,SBD,21D,,0,,0,,No,,0,11/01/18,,,Open
+Order,POPT00000051,20000,No,,,      ,,,,,,,,0,https://store.gechic.com/on-lap-1303i/?setCurrency,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000051,30000,No,,,      ,,,,,,,,0,Id=2,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000052,10000,No,GV52927,,Item,NIPT0000066,OFFICE SUP,,NO BRAND,FURNITURE,V 350,,0,Malette aluminium standard,No,WHS-DS,,1,PCS,piece,94039090,0,"112,80",,"112,80",,1,1,,,,24/11/17,11/01/18,11/01/18,SBD,21D,,0,,0,,No,,0,11/01/18,,,Open
+Order,POPT00000052,20000,No,,,      ,,,,,,,,0,"plaque de calibrage 350mmx250mmx0,02mm",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,11/01/18,,,Open
+Order,POPT00000052,30000,No,,,      ,,,,,,,,0,http://www.bagalu.fr/valises-standard-15.html,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000052,40000,No,,,      ,,,,,,,,0,Item V350,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000053,10000,No,GV53639,1,Item,NIPT0000202,SERVICES,,NO BRAND,REPAIR1,,,0,Testes de Fiabilidade Rotor,Yes,WHS-DS,,1,PCE,,99999999,0,"300,00",,"300,00",,1,1,,,,14/12/17,08/01/18,04/01/18,SBD,21D,,0,,0,,No,,0,08/01/18,,,Open
+Order,POPT00000053,20000,No,,,      ,,,,,,,,0,Testes de fiabilidade para rotorEmpresa: Sermec2 -,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000053,30000,No,,,      ,,,,,,,,0," Maia, PortugalContacto: marioduarte@sermec2.pt",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000054,10000,No,GV52969,1,Item,NIPT0000199,SERVICES,,NO BRAND,REPAIR1,,,0,Repara�ao Servomotro Famup,Yes,WHS-DS,,1,PCS,piece,99999999,0,"319,98",,"319,98",,1,,1,,,29/11/17,28/11/17,29/11/17,SBD,5D,,0,,0,,No,,0,12/01/18,,,Open
+Order,POPT00000054,20000,No,,,      ,,,,,,,,0,Repara��o,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000054,30000,No,,,      ,,,,,,,,0,Servi�o de soldadura especial,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000054,40000,No,,,      ,,,,,,,,0,Desloca��o,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000055,10000,No,GV53657,1,Item,NIPT0000207,SERVICES,,NO BRAND,LEGALSERV.,,,0,Acesso a uma base de dados jur,Yes,WHS-DS,,1,PCS,piece,99999999,0,"539,00",,"539,00",,1,,1,,,14/12/17,29/11/17,29/11/17,SBD,21D,,0,,0,,No,,0,29/11/17,,,Open
+Order,POPT00000055,20000,No,,,      ,,,,,,,,0,Acesso � plataforma LegiX. L�der do mercado das ba,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000055,30000,No,,,      ,,,,,,,,0,ses de dados jur�dicas,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000055,40000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000055,50000,No,,,      ,,,,,,,,0,"A1 - Legisla��o, Jurisprud�ncia",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000055,60000,No,,,      ,,,,,,,,0, e Doutrina portuguesas,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000055,70000,No,,,      ,,,,,,,,0,Numero de utilizadores: 1,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000055,80000,No,,,      ,,,,,,,,0,Anual,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000056,10000,No,GV53754,1,Item,NIPT0000222,OFFICE SUP,,NO BRAND,FURNITURE,,,0,Cercadura (metro),Yes,WHS-DS,,8,PCS,piece,94039090,0,"1,05",,"1,05",,8,8,,,,28/11/17,07/12/17,05/12/17,SBD,1W,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000056,20000,No,GV53754,1,Item,NIPT0000224,OFFICE,,NO BRAND,FURNITURE,,,0,Saco Pedra 2/4,Yes,WHS-DS,,13,PCS,piece,94039090,0,"5,46",,"5,46",,13,13,,,,14/11/17,07/12/17,05/12/17,SBD,21D,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000056,30000,No,GV53754,1,Item,NIPT0000223,OFFICE,,NO BRAND,FURNITURE,,,0,Saco pedra 3/6,Yes,WHS-DS,,4,PCS,piece,94039090,0,"5,46",,"5,46",,4,4,,,,14/11/17,07/12/17,05/12/17,SBD,21D,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000056,40000,No,GV53754,1,Item,NIPT0000225,OFFICE,,NO BRAND,FURNITURE,,,0,Olea Europaea-Oliveira prato,Yes,WHS-DS,,1,PCS,piece,94039090,0,"200,00",,"200,00",,1,1,,,,14/11/17,07/12/17,05/12/17,SBD,21D,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000056,50000,No,GV53754,1,Item,NIPT0000226,OFFICE,,NO BRAND,FURNITURE,,,0,Siro-Decor 25-40MM (70 Litros),Yes,WHS-DS,,2,PCS,piece,94039090,0,"4,00",,"4,00",,2,2,,,,14/11/17,07/12/17,05/12/17,SBD,21D,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000056,60000,No,GV53754,1,Item,NIPT0000227,OFFICE,,NO BRAND,FURNITURE,,,0,Siro-Decor 15-25 MM (70 Litros,Yes,WHS-DS,,1,PCS,piece,94039090,0,"4,00",,"4,00",,1,1,,,,14/11/17,07/12/17,05/12/17,SBD,21D,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000056,70000,No,GV53754,1,Item,NIPT0000228,OFFICE,,NO BRAND,FURNITURE,,,0,Placas Cimento 60x40,Yes,WHS-DS,,17,PCS,piece,94039090,0,"1,93",,"1,93",,17,17,,,,14/11/17,07/12/17,05/12/17,SBD,21D,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000056,80000,No,GV53754,1,Item,NIPT0000229,OFFICE,,NO BRAND,FURNITURE,,,0,Tela de Solo 3.25 larg,Yes,WHS-DS,,6,PCS,piece,94039090,0,"1,37",,"1,37",,6,6,,,,14/11/17,07/12/17,05/12/17,SBD,21D,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000056,90000,No,GV53754,1,Item,NIPT0000230,OFFICE,,NO BRAND,FURNITURE,,,0,Suculentas V.14,Yes,WHS-DS,,9,PCS,piece,94039090,0,"2,50",,"2,50",,9,9,,,,14/11/17,07/12/17,05/12/17,SBD,21D,,0,,0,,No,,0,07/12/17,,,Open
+Order,POPT00000057,10000,No,GV53037,1,Item,NIPT0000221,T&M,,NO BRAND,CALIBRAT.,,,1,Optpmeter / radiometric detect,Yes,WHS-DS,,1,PCS,piece,99999999,0,"576,50",,"576,50",1,,1,,,,10/11/17,,01/12/17,,3W,,0,9200056883,10000,SOPT00000056,No,,0,19/02/18,,,Open
+Order,POPT00000057,20000,No,,,      ,,,,,,,,0,Calibra��o Optpmeter / radiometric detector model:,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,19/02/18,,,Open
+Order,POPT00000057,30000,No,,,      ,,,,,,,,0, K-P9710-Ccom  RW-3705-2 detector e  VL-3701-2 det,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,19/02/18,,,Open
+Order,POPT00000057,40000,No,,,      ,,,,,,,,0,ector,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,10000,No,GV53795,1,Item,NIPT0000234,OFFICE SUP,,NO BRAND,FURNITURE,,,0,Arm�rios,Yes,WHS-DS,,1,PCS,piece,94039090,0,"1.376,00",,"1.376,00",,1,1,,,,21/11/17,23/01/18,10/02/18,PPI PAID,2W,,0,,0,,No,,0,23/01/18,,,Open
+Order,POPT00000058,20000,No,,,      ,,,,,,,,0,"Boa tarde,o imobili�rio � para entregar na Associa",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,30000,No,,,      ,,,,,,,,0,��o de Pais do Infant�rio e Jardim de Inf�ncia da ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,40000,No,,,      ,,,,,,,,0,Escola Preparat�ria de Ovar.O material a encomenda,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,50000,No,,,      ,,,,,,,,0,"r est� na proposta em anexo, contudo passo a descr",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,60000,No,,,      ,,,,,,,,0,iminar:Mobili�rio 1:1 - Escaparate Equipado com 1 ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,70000,No,,,      ,,,,,,,,0,"Prateleira, 1 Pio 400x400x250mm2 Laterais e Portas",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,80000,No,,,      ,,,,,,,,0, de CorrerConstru��o em a�o inox - Dimens�es: 1800,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,90000,No,,,      ,,,,,,,,0,x600x900mmMobili�rio 2:1 - Escaparate Equipado com,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,100000,No,,,      ,,,,,,,,0," 2 Prateleiras, 2 Laterais e Portas de Correr: htt",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,110000,No,,,      ,,,,,,,,0,p://remper.net/escaparate-fechado-1.htmlConstru��o,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,120000,No,,,      ,,,,,,,,0, em a�o inox - Dimens�es: 1000x600x900mmMobili�rio,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,130000,No,,,      ,,,,,,,,0, 3:1 - Armario Mural com Portas de Correr: http://,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,140000,No,,,      ,,,,,,,,0,remper.net/armario-mural-1200.htmlConstru��o em a�,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,150000,No,,,      ,,,,,,,,0,o inox - Dimens�es: 1200x400x700mma proposta em an,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000058,160000,No,,,      ,,,,,,,,0,exo contempla custo de transporte.Obrigado,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000059,10000,No,GV53721,1,Item,NIPT0000217,MECHANICAL,1108953 / 1108973,NO BRAND,MAKE PART,,,0,Seeding particles for PIV,Yes,WHS-DS,,1,BOX,box,76169990,0,"385,00",,"385,00",,1,,1,,,29/11/17,30/11/17,15/12/17,SBD,21D,,0,,0,,No,,0,12/12/17,,,Open
+Order,POPT00000060,10000,No,GV53050,1,Item,NIPT0000184,MECHANICAL,,NO BRAND,MAKE PART,,,0, Bot�o Weber,Yes,WHS-DS,,2,PCS,piece,76169990,0,27085,,27085,,2,,2,,,30/11/17,13/12/17,14/12/17,SBD,21D,,0,,0,,No,,0,19/12/17,,,Open
+Order,POPT00000060,20000,No,,,      ,,,,,,,,0,Bot�o parafuso p/ bra�o vasculante de aparafusador,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000060,30000,No,,,      ,,,,,,,,0,a Weber,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000060,40000,No,,,      ,,,,,,,,0,TORNILLO ESPECIAL M8 x 22,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000061,10000,No,GV53125,1,Item,NINL019925,ELECTRICAL,,NO BRAND,AUTOMATION,,,0,ECAL/S/1400,Yes,WHS-DS,,1,PCS,piece,85371091,0,"372,50",,"372,50",,1,1,,,,04/12/17,18/12/17,21/01/18,SBD,30D,,0,,0,,No,,0,02/02/18,,,Open
+Order,POPT00000061,20000,No,GV53125,1,Item,NINL019926,ELECTRICAL,,NO BRAND,AUTOMATION,,,0,OCAL/S/PIR,Yes,WHS-DS,,1,PCS,piece,85371091,0,"479,50",,"479,50",,1,1,,,,04/12/17,18/12/17,21/01/18,SBD,30D,,0,,0,,No,,0,02/02/18,,,Open
+Order,POPT00000061,30000,No,,,      ,,,,,,,,0,Calibracao Medidor Potencia UV,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,24/01/18,,,Open
+Order,POPT00000062,10000,No,GV53224,,Item,NIPT0000133,OFFICE SUP,,NO BRAND,MACHINERY,,,0,CIMX6Q-SDB - SABRE Board,No,,,,PCS,piece,84729070,0,"0,00",,"0,00",,,,,,,01/12/17,05/12/17,22/12/17,CASE GIS,21D,,0,47205088,10000,SOPT00000061,No,,0,31/12/17,,,Open
+Order,POPT00000062,20000,No,,,      ,,,,,,,,0,"CIMX6Q-SDB - SABRE Board, Hardware, i.MX 6Quad/6Du",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000062,30000,No,,,      ,,,,,,,,0,"al, No Display, No Camera https://www.nxp.com/supp",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000062,40000,No,,,      ,,,,,,,,0,ort/developer-resources/hardware-development-tools,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000062,50000,No,,,      ,,,,,,,,0,/sabre-development-system/sabre-board-for-smart-de,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000062,60000,No,,,      ,,,,,,,,0,vices-based-on-the-i.mx-6quad-applications-process,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000062,70000,No,,,      ,,,,,,,,0,ors:RD-IMX6Q-SABRE,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000063,10000,No,GV34635,,Item,NIPT0000252,OFFICE SUP,MAGICWHITE,NO BRAND,FILING,,,0,Magic Whiteboard,No,WHS-DS,,,ROL,rol,83040000,0,"0,00",,"0,00",,,,,,,23/11/17,,07/12/17,,2W,,0,9200057255,10000,SOPT00000062,No,,0,08/01/18,,,Open
+Order,POPT00000063,20000,No,,,      ,,,,,,,,0,"25 A1 SheetsSticks to any hard, flat surface witho",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000063,30000,No,,,      ,,,,,,,,0,"ut drawing pins, tape or bluetac. It's magic!Use w",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000063,40000,No,,,      ,,,,,,,,0,"ith normal dry whiteboard markers, wipe clean & RE",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000063,50000,No,,,      ,,,,,,,,0,USE each sheet*ReuseableSheets are really easy to ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000063,60000,No,,,      ,,,,,,,,0,tear off & measure exactly the same size as flipch,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000063,70000,No,,,      ,,,,,,,,0,art paper,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000064,10000,No,GV34635,,Item,NIPT0000252,OFFICE SUP,MAGICWHITE,NO BRAND,FILING,,GBP,0,Magic Whiteboard,Yes,WHS-DS,,1,ROL,rol,83040000,0,"56,9279",,"49,94",,1,,1,,,07/12/17,19/12/17,21/12/17,SBD,2W,,0,,0,,No,,0,31/01/18,,,Open
+Order,POPT00000064,20000,No,,,      ,,,,,,,,0,"25 A1 SheetsSticks to any hard, flat surface witho",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000064,30000,No,,,      ,,,,,,,,0,"ut drawing pins, tape or bluetac. It's magic!Use w",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000064,40000,No,,,      ,,,,,,,,0,"ith normal dry whiteboard markers, wipe clean & RE",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000064,50000,No,,,      ,,,,,,,,0,USE each sheet*ReuseableSheets are really easy to ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000064,60000,No,,,      ,,,,,,,,0,tear off & measure exactly the same size as flipch,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000064,70000,No,,,      ,,,,,,,,0,art paper,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000065,10000,No,GV53541,1,Item,NIPT0000185,MECHANICAL,12631245,NO BRAND,FILTER,,,0,Unidade filtrante FilterCart W,Yes,WHS-DS,,1,PCS,piece,84148080,0,"3.472,00",,"3.472,00",,1,,1,,,27/11/17,18/12/17,12/01/18,SBD,21D,,0,,0,,No,,0,18/01/18,,,Open
+Order,POPT00000065,20000,No,,,      ,,,,,,,,0,Unidade filtrante FilterCart W3 Nederman- Unidade ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000065,30000,No,,,      ,,,,,,,,0,filtrante m�vel FilterCart W3 para fumos de soldad,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000065,40000,No,,,      ,,,,,,,,0,"ura, que cumpre a legisla��o W3 da BGIA.- Ref. 126",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000065,50000,No,,,      ,,,,,,,,0,"31245 (com bra�o de 2m). Vendor: Nederman Ib�rica,",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000065,60000,No,,,      ,,,,,,,,0, SA - Sucursal em Portugal Mobile: Int + 351 91 72,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000065,70000,No,,,      ,,,,,,,,0,1 84 60  www..nederman.pt,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000066,10000,No,GV53360,1,Item,NIPT0000160,ELECTRONIC,,NO BRAND,PCB,,,0,ProDSP LVDS Box,Yes,WHS-DS,,1,PCS,piece,85340011,0,"655,00",,"655,00",,1,,1,,,14/12/17,30/11/17,11/01/18,SBD,28D,,0,,0,,No,,0,09/01/18,,,Open
+Order,POPT00000066,20000,No,,,      ,,,,,,,,0,www.prodsp.hu,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000067,10000,No,GV00297,2,Item,NIPT0000159,MECHANICAL,ART-DKS2,NO BRAND,MAKE PART,,,1,Dip Coating System,No,WHS-EIND,,1,PCS,piece,76169990,0,"27.000,00",,"27.000,00",1,,1,,,,23/12/17,08/12/17,31/03/18,,14W,,0,,0,,Yes,SOPT00000065,10000,08/12/17,,,Open
+Order,POPT00000067,20000,No,,,      ,,,,,,,,0,Dip Coating System for the final assembly Line,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000068,10000,No,GV53964,1,Item,NIPT0000261,SERVICES,,NO BRAND,SEMINAR,,,0,Forma��o AOI MEK,Yes,WHS-DS,,1,PCS,piece,99999999,0,"2.102,50",,"2.102,50",,1,,1,,,27/11/17,19/12/17,22/01/18,SBD,2W,,0,,0,,No,,0,16/02/18,,,Open
+Order,POPT00000068,20000,No,,,      ,,,,,,,,0,"Forma��o AOI MEK conforme proposta em anexo, forma",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,16/02/18,,,Open
+Order,POPT00000068,30000,No,,,      ,,,,,,,,0,��o a realizar de 22 a 26 de Janeiro de 2018.Siste,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000068,40000,No,,,      ,,,,,,,,0,"mas de Produ��o Eletr�nica, Lda",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000069,10000,No,GV53505,1,Item,NIPT0000181,T&M,,NO BRAND,T&M WEIGHT,,,0,Balan�a para SPC,Yes,WHS-DS,,1,PCS,piece,84238190,0,"1.791,90",,"1.791,90",,1,,1,,,02/12/17,08/12/17,11/01/18,SBD,21D,,0,,0,,No,,0,18/01/18,,,Open
+Order,POPT00000069,20000,No,,,      ,,,,,,,,0,Balan�a de precis�o para SPC,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000069,30000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000069,40000,No,,,      ,,,,,,,,0,*Alternativa METME203T,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000069,50000,No,,,      ,,,,,,,,0,*MET11101051,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000070,10000,No,GV53917,1,Item,NIPT0000233,ELECTRICAL,,NO BRAND,TRANSFORM,,,0,Kistler charge amplifier,Yes,WHS-DS,,1,PCS,piece,85043180,0,"894,00",,"894,00",,1,,1,,,08/12/17,14/12/17,07/02/18,SBD,2W,,0,,0,,No,,0,30/01/18,,,Open
+Order,POPT00000071,10000,No,GV53675,1,Item,NIPT0000211,MECHANICAL,,NO BRAND,POWERTRANS,,,0,Motor 7.5kw,Yes,WHS-DS,,1,PCS,piece,85011099,0,"264,72",,"264,72",,1,,1,,,08/12/17,11/12/17,11/12/17,SBD,21D,,0,,0,,No,,0,18/01/18,,,Open
+Order,POPT00000071,20000,No,,,      ,,,,,,,,0,HE31  132M-4 7.5Kw 4Polos 400/690V 50/60Hz F IM100,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000071,30000,No,,,      ,,,,,,,,0,1 IE,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000072,10000,No,GV53172,1,Item,NIPT0000183,MECHANICAL,,NO BRAND,MAKE PART,,CHF,1,1499 Cilindro Rotativo Meto-Fe,Yes,WHS-DS,,1,PCS,piece,76169990,0,"1.012,82051",,"1.185,00",1,,1,,,,08/12/17,04/01/18,11/01/18,CASE GIS,14D,,0,8200003567,10000,SOPT00000070,No,,0,13/02/18,,,Open
+Order,POPT00000072,20000,No,,,      ,,,,,,,,0,Cilindro Rotativo Meto-Fer CH2540,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,13/02/18,,,Open
+Order,POPT00000072,30000,No,,,      ,,,,,,,,0,MD 32/180B1,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000072,40000,No,,,      ,,,,,,,,0,+one of KOB50,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000072,50000,No,,,      ,,,,,,,,0,+two of OB15/10L,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000073,10000,No,GV53976,1,Item,NIPT0000262,ELECTRONIC,,NO BRAND,CONNECTORS,,,0,RS232 Optical Isolator,Yes,WHS-DS,,1,PCS,piece,85369010,0,"52,87",,"52,87",,1,,1,,,08/12/17,08/01/18,12/01/18,SBD,4W,,0,,0,,No,,0,06/02/18,,,Open
+Order,POPT00000074,10000,No,GV53900,1,Item,NIPT0000244,T&M,,NO BRAND,TEMPERAT.,,,0,Mexas para camara Climatica Es,Yes,WHS-DS,,2,PAKKET,parcel,84849000,0,"50,00",,"50,00",,2,2,,,,17/11/17,08/01/18,22/01/18,SBD,4W,,0,,0,,No,,0,06/02/18,,,Open
+Order,POPT00000074,20000,No,,,      ,,,,,,,,0,2 caixas de mexas (encomenda minima): WET BULB WIC,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,06/02/18,,,Open
+Order,POPT00000074,30000,No,,,      ,,,,,,,,0,KS (BOX 24) 165FW-4H,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000075,10000,No,GV54041,1,Item,NIPT0000263,ELECTRICAL,,NO BRAND,CIRCUIT PR,,,0,NTC Boards V03,Yes,WHS-DS,,12,PCS,piece,85361010,0,"7,50",,"7,50",,12,,12,,,08/12/17,14/12/17,14/12/17,SBD,1W,,0,,0,,No,,0,08/01/18,,,Open
+Order,POPT00000075,20000,No,,,      ,,,,,,,,0,NTC Boards V03:Order 3 units of each board enclose,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000075,30000,No,,,      ,,,,,,,,0,d (total=12 boards).Delivery in 3 days,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000076,10000,No,GV53425,1,Item,NIPT0000175,T&M,,NO BRAND,CALIBRAT.,,,0,TCU CoP-Prufung,Yes,WHS-DS,,1,PCS,piece,99999999,0,"3.578,40",,"3.578,40",,1,,1,,,29/11/17,30/11/17,20/12/17,SBD,2W,,0,,0,,No,,0,29/01/18,,,Open
+Order,POPT00000076,20000,No,,,      ,,,,,,,,0,TCU CoP-Prufung,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000077,10000,No,GV54041,1,Item,NIPT0000266,ELECTRICAL,,NO BRAND,CIRCUIT PR,,,0,PCBs EcoComfort_Turbine_V01,Yes,WHS-DS,,6,PCS,piece,85361010,0,"35,00",,"35,00",,6,,6,,,17/12/17,18/12/17,18/12/17,SBD,1W,,0,,0,,No,,0,02/01/18,,,Open
+Order,POPT00000077,20000,No,,,      ,,,,,,,,0,PCB Prototyping,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000078,10000,No,GV53572,1,Item,NIPT0000189,ELECTRICAL,,NO BRAND,AUTOMATION,,,0,KIO RTLS system,Yes,WHS-DS,,1,PCS,piece,85371091,0,"2.050,00",,"2.050,00",,1,1,,,,18/12/17,20/12/17,23/12/17,SBD,1W,,0,,0,,No,,0,21/12/17,,,Open
+Order,POPT00000078,20000,No,,,      ,,,,,,,,0,"Kio RTLS Evaluation Kit, containing 4anchors, 1 ta",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000078,30000,No,,,      ,,,,,,,,0,g and evaluation softwarefor coordinate calculatio,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000078,40000,No,,,      ,,,,,,,,0,n. Every additional tag or anchors Delivery to Bra,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000078,50000,No,,,      ,,,,,,,,0,"ga, Portugal",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000079,10000,No,GV54140,1,Item,NIPT0000270,SERVICES,1248/2017,NO BRAND,REPAIR1,,,0,Servi�o,Yes,WHS-DS,,1,PCS,piece,99999999,0,"110,00",,"110,00",,1,,1,,,15/12/17,04/01/18,04/01/18,SBD,1W,,0,,0,,No,,0,18/01/18,,,Open
+Order,POPT00000079,20000,No,,,      ,,,,,,,,0,inspec��o peri�dica do sistema do manipulador por ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000079,30000,No,,,      ,,,,,,,,0,v�cuo instalado nas vossas instala��es em Ovar,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000080,10000,No,GV54139,1,Item,NIPT0000269,PACKAGING,,NO BRAND,BAG,,,0,Big Bag em tela PP normal 160,Yes,WHS-DS,,100,PCS,piece,48193000,0,"9,95",,"9,95",,100,,100,,,18/12/17,20/12/17,29/12/17,SBD,15D,,0,,0,,No,,0,06/02/18,,,Open
+Order,POPT00000080,20000,No,,,      ,,,,,,,,0,Big Bag Dim.: 90x90x115 saco plast. interiorSWL.: ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,06/02/18,,,Open
+Order,POPT00000080,30000,No,,,      ,,,,,,,,0,1.000 Kgs.S.F.: 5:1,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000081,10000,No,GV54091,,Item,NIPT0000265,T&M,,NO BRAND,CALIBRAT.,,,0,Calibra��o de fugas de refer�n,Yes,WHS-DS,,1,PCS,piece,99999999,0,"300,00",,"300,00",,1,,1,,,18/12/17,22/12/17,08/01/18,SBD,21D,,0,,0,,No,,0,23/01/18,,,Open
+Order,POPT00000081,20000,No,,,Item,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000082,10000,No,GV54133,1,Item,NIPT0000268,ELECTRICAL,LFP-1001-020,NO BRAND,CABLE,,,0,Fibras �pticas Contrinex LFP-1,Yes,WHS-DS,,30,PCS,piece,85444991,0,"40,80",,"40,80",,30,30,,,,21/12/17,20/12/17,18/01/18,SBD,4W,,0,,0,,No,,0,22/01/18,,,Open
+Order,POPT00000082,20000,No,,,      ,,,,,,,,0,Fornecedor: ContrinexRefer�ncia: LFP-1001-020,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000082,30000,No,GV54133,,G/L Account,704100,,,,,,,1,Transport,No,WHS-DS,,1,PCS,piece,,0,"10,00",,"10,00",1,,1,,,,19/12/17,20/12/17,19/12/17,,,,0,,0,,No,,0,22/01/18,,,Open
+Order,POPT00000083,10000,No,GV53050,1,Item,NIPT0000102,MECHANICAL,,NO BRAND,INSULTATOR,,,0,Sinoblocos,Yes,WHS-DS,,3,PCS,piece,85479000,0,"31,72333",,"31,72333",,3,,3,,,02/12/17,03/01/18,17/01/18,SBD,21D,,0,,0,,No,,0,12/02/18,,,Open
+Order,POPT00000083,20000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,12/02/18,,,Open
+Order,POPT00000084,10000,No,GV53157,1,Item,NIPT0000122,MECHANICAL,,NO BRAND,VALVE,,,0,Membraba para valvula ASCO -SC,Yes,WHS-DS,,4,PCS,piece,84814010,0,"34,50",,"34,50",,4,,4,,,09/12/17,21/12/17,03/01/18,SBD,14D,,0,,0,,No,,0,08/01/18,,,Open
+Order,POPT00000084,20000,No,,,      ,,,,,,,,0,Membraba para valvula ASCO -SCG238C017,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000084,30000,No,,,      ,,,,,,,,0,KIT MEMBRANA EM NITRILO (NBR),No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000084,40000,No,,,      ,,,,,,,,0,"P/238 NF Y NA 11/2"" 2""",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000085,10000,No,GV52969,1,Item,NIPT0000201,SERVICES,,NO BRAND,REPAIR1,,,0,Servi�o de Repara�ao Ventilado,Yes,WHS-DS,,2,PCS,piece,99999999,0,"134,24",,"134,24",,2,,2,,,29/11/17,20/12/17,20/12/17,SBD,5D,,0,,0,,No,,0,20/12/17,,,Open
+Order,POPT00000086,10000,No,GV54179,1,Item,NIPT0000280,OFFICE SUP,,NO BRAND,FURNITURE,,,0,Saleae Logic Pro 8,Yes,WHS-DS,,1,PCS,piece,94039090,0,"579,00",,"579,00",,1,1,,,,20/12/17,31/01/18,02/02/18,SBD,21D,,0,,0,,No,,0,12/02/18,,,Open
+Order,POPT00000086,20000,No,,,      ,,,,,,,,0,Logic analyser 8 channelshttps://www.antratek.com/,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,12/02/18,,,Open
+Order,POPT00000086,30000,No,,,      ,,,,,,,,0,saleae-logic-pro-8-logic-analyzerhttps://www.zeite,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,12/02/18,,,Open
+Order,POPT00000086,40000,No,,,      ,,,,,,,,0,ch.de/Saleae-Logic-Pro-8-Logic-Analyzer-mit-8-Kana,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000086,50000,No,,,      ,,,,,,,,0,elen-100-MHzhttps://www.batronix.com/versand/logik,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000086,60000,No,,,      ,,,,,,,,0,-analyser/Saleae-Logic-pro-8.html,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000087,10000,No,GV54180,1,Item,NIPT0000281,OFFICE SUP,,NO BRAND,FURNITURE,,,0,amplificador + microfone,Yes,WHS-DS,,1,PCS,piece,94039090,0,"737,15",,"737,15",,1,1,,,,20/12/17,08/01/18,08/01/18,SBD,14D,,0,,0,,No,,0,12/01/18,,,Open
+Order,POPT00000087,20000,No,,,      ,,,,,,,,0,Necessito do materail conforme or�amento anexo + 2,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000087,30000,No,,,      ,,,,,,,,0,00mts de cabo.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000088,10000,No,GV54180,1,Item,NIPT0000282,MECHANICAL,,NO BRAND,MAKE PART,,,0,Coluna dupla,Yes,WHS-DS,,7,PCS,piece,76169990,0,"114,60",,"114,60",,7,7,,,,20/12/17,08/01/18,08/01/18,SBD,14D,,0,,0,,No,,0,12/01/18,,,Open
+Order,POPT00000089,10000,No,GV54185,1,Item,NIPT0000286,MECHANICAL,,NO BRAND,MAKE PART,,,0,6 Pecas para carro em a�o inox,Yes,WHS-DS,,1,PCS,piece,76169990,0,"227,60",,"227,60",,1,,1,,,22/12/17,24/01/18,24/01/18,SBD,21D,,0,,0,,No,,0,24/01/18,,,Open
+Order,POPT00000089,20000,No,,,      ,,,,,,,,0,"6 Pe�as para carro, feitas em chapa de a�o inox AI",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,24/01/18,,,Open
+Order,POPT00000089,30000,No,,,      ,,,,,,,,0,"SI 304 de 1,2mm de espessura.",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000090,10000,No,GV53915,1,Item,NIPT0000243,OFFICE SUP,,NO BRAND,FURNITURE,,,0,Frigorifico com congelador,Yes,WHS-DS,,1,PCS,piece,94039090,0,"174,64",,"174,64",,1,1,,,,05/01/18,02/02/18,10/02/18,SBD,21D,,0,,0,,No,,0,09/02/18,,,Open
+Order,POPT00000090,20000,No,,,      ,,,,,,,,0,Frigorifico Candy-cctos-542-xh,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000091,10000,No,GV53541,1,Item,NIPT0000264,MECHANICAL,,NO BRAND,FILTER,,,0,FilterCart Carbon 230V,Yes,WHS-DS,,1,PCS,piece,84148080,0,"3.588,00",,"3.588,00",,1,,1,,,02/01/18,17/01/18,17/01/18,SBD,4W,,0,,0,,No,,0,05/02/18,,,Open
+Order,POPT00000091,20000,No,,,      ,,,,,,,,0,FilterCart Carbon 230V - 12641245,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,05/02/18,,,Open
+Order,POPT00000092,10000,No,GV54139,1,Item,NIPT0000292,OFFICE SUP,,NO BRAND,FURNITURE,,,0,Big Bags,Yes,WHS-DS,,200,PCS,piece,94039090,0,"8,50",,"8,50",,200,,200,,,08/01/18,03/01/18,22/01/18,SBD,14D,,0,,0,,No,,0,06/02/18,,,Open
+Order,POPT00000092,20000,No,,,      ,,,,,,,,0,BIG BAGS com Logo BOSCH,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000093,10000,No,GV54209,,G/L Account,704100,,,,,,,0,Transport,No,,,,,,,0,"60,00",,"60,00",,,,,,,31/12/17,,31/12/17,,,,0,,0,,No,,0,09/01/18,,,Open
+Order,POPT00000093,20000,No,GV54209,,Item,NIPT0000288,MECHANICAL,,NO BRAND,MAKE PART,,,0,2008 QEM controler - QEM,No,,,,PCS,piece,76169990,0,"0,00",,"0,00",,,,,,,10/12/17,,31/12/17,,21D,,0,8200003846,10000,SOPT00000088,No,,0,11/01/18,,,Open
+Order,POPT00000093,30000,No,,,      ,,,,,,,,0,HB548.05/T021/C/E/110Vac,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000094,10000,No,GV52918,1,Item,NIPT0000271,SERVICES,,NO BRAND,MAINT.1,,,0,Repara��o 2 Carruagens,Yes,WHS-DS,,1,PCE,,99999999,0,"540,00",,"540,00",,1,,1,,,02/01/17,06/02/18,06/02/18,SBD,42D,,0,,0,,No,,0,07/02/18,,,Open
+Order,POPT00000094,20000,No,,,      ,,,,,,,,0,Uma com fuga de �leo num cilindro e outra com uma ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000094,30000,No,,,      ,,,,,,,,0,mola partida.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000095,10000,No,GV54276,1,Item,NIPT0000303,RETAIL,,NO BRAND,,,,0,SEM analysis,Yes,WHS-DS,,1,PCS,piece,99999999,0,"60,00",,"60,00",,1,,1,,,10/01/18,08/01/18,08/01/18,SBD,21D,,0,,0,,No,,0,08/01/18,,,Open
+Order,POPT00000096,10000,No,GV54041,1,Item,NIPT0000320,ELECTRONIC,,NO BRAND,PCB,,,0,9234 HMI LPP,Yes,WHS-DS,,6,PCS,piece,85340011,0,"35,00",,"35,00",,6,,6,,,02/01/18,05/01/18,06/01/18,SBD,14D,,0,,0,,No,,0,05/01/18,,,Open
+Order,POPT00000096,20000,No,,,      ,,,,,,,,0,PCB's para 9234 HMI LPP,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000097,10000,No,GV53924,1,Item,NIPT0000249,SERVICES,,NO BRAND,REPAIR1,,,0,repara��o reclamo luminoso,Yes,WHS-DS,,1,PCS,piece,99999999,0,"85,00",,"85,00",,1,,1,,,07/01/18,08/01/18,08/01/18,SBD,15D,,0,,0,,No,,0,09/01/18,,,Open
+Order,POPT00000097,20000,No,,,      ,,,,,,,,0,desloca��o dos tecnicos para repara��o do reclamo ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000097,30000,No,,,      ,,,,,,,,0,luminoso,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000098,10000,No,GV54233,1,Item,NIPT0000293,MECHANICAL,,NO BRAND,MAKE PART,,,0,OJ3164M-000 1600C - Orajet Tra,Yes,WHS-DS,,1,PCS,piece,76169990,0,"123,76",,"123,76",,1,1,,,,08/01/18,04/01/18,10/01/18,SBD,14D,,0,,0,,No,,0,31/12/17,,,Open
+Order,POPT00000098,20000,No,,,Item,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000099,10000,No,GV54327,1,Item,NIPT0000321,SERVICES,,NO BRAND,MAINT.1,,,0,Manuten��o Preventiva Equip. M,Yes,WHS-DS,,1,PCS,piece,99999999,0,"484,00",,"484,00",,1,,1,,,03/01/18,14/02/18,14/02/18,SBD,14W,,0,,0,,No,,0,14/02/18,,,Open
+Order,POPT00000100,10000,No,GV16417,1,Item,NIPT0000317,OFFICE SUP,,NO BRAND,POSTROOM,,,0,"Rolo Fita Magn�tica 10mmx1,5mm",Yes,WHS-DS,,21,PCS,piece,48172000,0,"13,50",,"13,50",,21,,21,,,03/01/18,09/01/18,09/01/18,SBD,14D,,0,,0,,No,,0,10/01/18,,,Open
+Order,POPT00000100,20000,No,,,      ,,,,,,,,0,Bosch Security Systems S.A. OVAR Rolo de fita magn,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000100,30000,No,,,      ,,,,,,,,0,�tica com  cola de um dos lados dentro destas medi,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000100,40000,No,,,      ,,,,,,,,0,"das  10 mm x 1,5 my x �30 metros� ( os metros pode",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000100,50000,No,,,      ,,,,,,,,0,m variar),No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000101,10000,No,GV53798,1,Item,NIPT0000238,T&M,SOLAIR 3100,NO BRAND,CALIBRAT.,,,0,Calibr Contador  particulas So,Yes,WHS-DS,,1,PCS,piece,99999999,0,"850,00",,"850,00",,1,1,,,,18/12/17,08/01/18,02/02/18,SBD,4W,,0,,0,,No,,0,02/02/18,,,Open
+Order,POPT00000101,20000,No,,,      ,,,,,,,,0,Calibra��o Contador de particulas Lighthouse Solai,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,02/02/18,,,Open
+Order,POPT00000101,30000,No,,,      ,,,,,,,,0,r 3100. Com transporte inclu�do,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000102,10000,No,GV54267,1,Item,NIPT0000299,MECHANICAL,,NO BRAND,MAKE PART,,,0,CAM LEVER K0005_0501105x40,Yes,WHS-DS,,1,PCS,piece,76169990,0,"36,32",,"36,32",,1,1,,,,09/01/18,,30/01/18,PPI PAID,21D,,0,,0,,No,,0,11/01/18,,,Open
+Order,POPT00000102,20000,No,,,      ,,,,,,,,0,CAM LEVER K0005_0501105x40 da KIPP,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000103,10000,No,GV54417,1,Item,NIPT0000340,SERVICES,21840,NO BRAND,MAINT.2,,,0,Calibra��o chave dinamom�trica,Yes,WHS-DS,,1,PCS,piece,99999999,0,"53,00",,"53,00",,1,,1,,,22/03/18,18/01/18,18/01/18,SBD,4W,,0,,0,,No,,0,18/01/18,,,Open
+Order,POPT00000103,20000,No,,,      ,,,,,,,,0,Vendor name TAP Maintenance & Engineering (laborat,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000103,30000,No,,,      ,,,,,,,,0,�rio de calibra��es) Calibra��o de chave dinamom�t,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000103,40000,No,,,      ,,,,,,,,0,"rica 34 - 340 Nm, ref. X558, conforme or�amento TA",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000103,50000,No,,,      ,,,,,,,,0,P 21840,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000104,10000,No,GV54412,1,Item,NIPT0000324,T&M,,NO BRAND,OPTICAL,,,0,Controlador de acessos,Yes,WHS-DS,,2,PCS,piece,90029000,0,"613,50",,"613,50",,2,,2,,,10/01/18,11/01/18,31/01/18,SBD,21D,,0,,0,,No,,0,02/02/18,,,Open
+Order,POPT00000104,20000,No,,,      ,,,,,,,,0,AX200  2 Door kit ref� 105-202- AXP- BK-K,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,02/02/18,,,Open
+Order,POPT00000104,30000,No,GV54412,,G/L Account,704100,,,,,,,0,Transport,No,WHS-DS,,1,,,,0,"208,57",,"208,57",,1,,1,,,31/01/18,,31/01/18,SBD,,,0,,0,,No,,0,02/02/18,,,Open
+Order,POPT00000105,10000,No,GV54265,1,Item,NIPT0000301,MECHANICAL,,NO BRAND,MAKE PART,,,0,2001 Pressostato marca DUNGS,Yes,WHS-DS,,2,PCS,piece,76169990,0,"59,72",,"59,72",,2,,2,,,11/01/18,12/01/18,15/01/18,SBD,14D,,0,,0,,No,,0,18/01/18,,,Open
+Order,POPT00000105,20000,No,,,      ,,,,,,,,0,req#2001Pressostato marca DUNGS ref�LGW10 A2     1,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000105,30000,No,,,      ,,,,,,,,0,-10mbar,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000106,10000,No,GV53233,1,Item,NIPT0000325,OFFICE SUP,,NO BRAND,STATIONERY,,,0,iPhone 7 Plus tempered glass,Yes,WHS-DS,,10,PCS,piece,48173000,0,"10,73",,"10,73",,10,,10,,,12/01/18,15/01/18,28/01/18,SBD,16D,,0,,0,,No,,0,02/02/18,,,Open
+Order,POPT00000106,20000,No,GV53233,,G/L Account,704100,,,,,,,0,Transport,No,WHS-DS,,1,PCS,piece,,0,"5,00",,"5,00",,1,,1,,,12/01/18,,12/01/18,,,,0,,0,,No,,0,12/01/18,,,Open
+Order,POPT00000107,10000,No,GV53573,1,Item,NIPT0000193,T&M,,NO BRAND,CALIBRAT.,,GBP,1,Luxmeter with data logger,Yes,WHS-DS,,1,PCS,piece,99999999,0,"296,12398",,"263,50",1,,1,,,,15/01/18,20/02/18,28/02/18,PPI PAID,30D,,0,47208342,10000,SOPT00000104,No,,0,20/02/18,,,Open
+Order,POPT00000107,20000,No,,,      ,,,,,,,,0,Luxmeter with data loggerLux Meter PCE-174 from PC,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,19/02/18,,,Open
+Order,POPT00000107,30000,No,,,      ,,,,,,,,0,E Instruments including the Calibration Certificat,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000107,40000,No,,,      ,,,,,,,,0,eURL: https://www.pce-instruments.com/english/meas,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000107,50000,No,,,      ,,,,,,,,0,uring-instruments/test-meters/lux-meter-pce-instru,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000107,60000,No,,,      ,,,,,,,,0,ments-lux-meter-pce-174-det_60937.htm,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000108,10000,No,GV54390,1,Item,NIPT0000328,MECHANICAL,,NO BRAND,MAKE PART,,,0,DT8472-DEW-LAMINA S/FITA 22,Yes,WHS-DS,,4,PCS,piece,76169990,0,"48,51",,"48,51",,4,4,,,,07/01/18,18/01/18,18/01/18,SBD,3W,,0,,0,,No,,0,29/01/18,,,Open
+Order,POPT00000108,20000,No,,,      ,,,,,,,,0,VENDOR Lusavouga-maquinas e acess�rios Industriais,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,29/01/18,,,Open
+Order,POPT00000108,30000,No,,,      ,,,,,,,,0,",saL�minas serra fita DT8472-DEWALT-LAMINA S/FITA ",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000108,40000,No,,,      ,,,,,,,,0,2215X10,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000109,10000,No,GV52969,1,Item,NIPT0000337,SERVICES,,NO BRAND,MAINT.1,,,0,Beneficia�ao Motor 35 kw,Yes,WHS-DS,,1,PCS,piece,99999999,0,"1.645,50",,"1.645,50",,1,,1,,,14/01/18,15/01/18,15/01/18,SBD,42D,,0,,0,,No,,0,15/01/18,,,Open
+Order,POPT00000110,10000,No,GV52969,1,Item,NIPT0000336,SERVICES,2180003,NO BRAND,MAINT.1,,,0,Servi�o de Montagem Motores Pr,Yes,WHS-DS,,1,PCS,piece,99999999,0,"504,00",,"504,00",,1,,1,,,11/01/18,15/01/18,15/01/18,SBD,2W,,0,,0,,No,,0,15/01/18,,,Open
+Order,POPT00000111,10000,No,GV52969,1,Item,NIPT0000305,RETAIL,,NO BRAND,,,,0,Repara�ao Motor Serra EUROMEC,Yes,WHS-DS,,1,PCS,piece,,0,"127,72",,"127,72",,1,,1,,,16/01/18,16/01/18,16/01/18,SBD,15D,,0,8200003986,10000,SOPT00000108,No,,0,16/01/18,,,Open
+Order,POPT00000111,20000,No,,,      ,,,,,,,,0,REPARA�AO DO MOTOR EUROMEC CORTE DE SERRA,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000111,30000,No,,,      ,,,,,,,,0,Rif: Proposta n� 2170231- 26/12/17,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000111,40000,No,,,      ,,,,,,,,0,Entrega: imediata,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000112,10000,No,GV54420,1,Item,NIPT0000343,MECHANICAL,,NO BRAND,MAKE PART,,,0,Cabo PA.TR.CY-CY 10x2x0.25,Yes,WHS-DS,,14,M,Meter,76169990,0,"6,8258",,"6,8258",,14,,14,,,23/01/18,31/01/18,31/01/18,,14D,,0,,0,,No,,0,31/01/18,,,Open
+Order,POPT00000112,20000,No,,,      ,,,,,,,,0,Cabo PA.TR.CY-CY 10x2x0.25,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000112,30000,No,GV54420,1,Item,NIPT0000344,MECHANICAL,,NO BRAND,MAKE PART,,,0,Taxa de Corte em F�brica,Yes,WHS-DS,,1,PCS,piece,76169990,0,"15,00",,"15,00",,1,,1,,,16/01/18,31/01/18,31/01/18,,21D,,0,,0,,No,,0,31/01/18,,,Open
+Order,POPT00000112,40000,No,,,      ,,,,,,,,0,Taxa de Corte em F�brica (<100mt),No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000112,50000,No,GV54420,,G/L Account,704100,,,,,,,0,Transport,No,WHS-DS,,1,,,,0,"8,00",,"8,00",,1,,1,,,16/01/18,,16/01/18,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000113,10000,No,GV54461,1,Item,NIPT0000347,SERVICES,,NO BRAND,MAINT.1,,,1,Diagnostico ETARI,Yes,WHS-DS,,1,PCE,,99999999,0,"3.490,00",,"3.490,00",1,,1,,,,03/01/18,02/02/18,21/02/18,,4W,,0,9200059212,10000,SOPT00000110,No,,0,02/02/18,,,Open
+Order,POPT00000113,20000,No,,,      ,,,,,,,,0,Diagn�stico processual e eletromec�nico da ETARI,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000114,10000,No,GV54480,1,Item,NIPT0000357,OFFICE SUP,,NO BRAND,FURNITURE,,,0,Armario 2600x2260x400 Melamina,Yes,WHS-DS,,1,PCS,piece,94039090,0,"880,00",,"880,00",,1,,1,,,18/01/18,07/02/18,07/02/18,SBD,4W,,0,,0,,No,,0,07/02/18,,,Open
+Order,POPT00000114,20000,No,,,      ,,,,,,,,0,Armario 2600x2260x400 com 6 portas de abrir com fe,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000114,30000,No,,,      ,,,,,,,,0,chadura em Melamina cinza soft. Interior todo forr,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000114,40000,No,,,      ,,,,,,,,0,"ado em Melamina cinza soft, conforme desenho em an",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000114,50000,No,,,      ,,,,,,,,0,exo,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000115,10000,No,GV54650,1,Item,NIPT0000401,ELECTRICAL,,NO BRAND,CIRCUIT PR,,,0,Jig HMI FP LN,Yes,WHS-DS,,1,PCS,piece,85361010,0,"700,00",,"700,00",,1,,1,,,17/01/18,23/01/18,23/01/18,SBD,2W,,0,,0,,No,,0,23/01/18,,,Open
+Order,POPT00000115,20000,No,,,      ,,,,,,,,0,Jig de programa��o para HMI FP Low NOx.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,23/01/18,,,Open
+Order,POPT00000116,10000,No,GV54399,1,Item,NIPT0000329,CAPITAL,,NO BRAND,CAPITAL G,,,1,Quisoque Multim�dia,Yes,WHS-DS,,1,PCS,piece,99999999,0,"2.196,70",,"2.196,70",1,,1,,,,29/11/17,22/01/18,23/03/18,,9W,,0,8200004061,10000,SOPT00000114,No,,0,24/01/18,,,Open
+Order,POPT00000117,10000,No,GV54589,1,Item,NIPT0000373,MECHANICAL,,NO BRAND,MAKE PART,,,1,Kit P / cabe�a de rebordear,Yes,WHS-DS,,1,PCS,piece,76169990,0,"404,30",,"404,30",1,,1,,,,22/01/18,24/01/18,12/02/18,CASE GIS,3W,,0,8200004067,10000,SOPT00000115,No,,0,02/02/18,,,Open
+Order,POPT00000117,20000,No,,,Item,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,02/02/18,,,Open
+Order,POPT00000118,10000,No,GV54581,1,Item,NIPT0000366,MECHANICAL,,NO BRAND,MAKE PART,,,0,painel e acessorios,Yes,WHS-DS,,1,PCS,piece,76169990,0,"340,00",,"340,00",,1,1,,,,25/01/18,06/02/18,06/02/18,SBD,3W,,0,,0,,No,,0,06/02/18,,,Open
+Order,POPT00000118,20000,No,,,      ,,,,,,,,0,"Fornecimento e montagem de painel e acessorios,Sub",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000118,30000,No,,,      ,,,,,,,,0,stitui��o do painel do port�o do edif�cio Brg104,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000119,10000,No,GV54493,1,Item,NIPT0000351,ELECTRICAL,,NO BRAND,CIRCUIT PR,,,2,2 Chave dinamom�tricas com sin,Yes,WHS-DS,,2,PCS,piece,85361010,0,"781,30",,"781,30",2,,2,,,,13/01/18,22/01/18,23/02/18,,4W,,0,8200004088,10000,SOPT00000117,No,,0,02/02/18,,,Open
+Order,POPT00000119,20000,No,,,      ,,,,,,,,0,"Chave dinamom�trica para produ��o TBN 10, regula��",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000119,30000,No,,,      ,,,,,,,,0,"o �mplitude 1 - 10Nm, com sistema de envio de sina",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000119,40000,No,,,      ,,,,,,,,0,"l, Chave de boca aberta de 8mm,",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000120,10000,No,GV54709,1,Item,NIPT0000425,MECHANICAL,,NO BRAND,MAKE PART,,,0,ROTAMETRO Modelo A,Yes,WHS-DS,,3,PCS,piece,76169990,0,"222,00",,"222,00",,3,,3,,,23/01/18,29/01/18,15/02/18,SBD,3W,,0,,0,,No,,0,13/02/18,,,Open
+Order,POPT00000120,20000,No,,,Item,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000121,10000,No,GV52969,1,Item,NIPT0000362,SERVICES,,NO BRAND,MAINT.1,,,0,Beneficia�ao Motor 45KW,Yes,WHS-DS,,1,PCS,piece,99999999,0,"1.645,50",,"1.645,50",,1,,1,,,22/01/18,23/01/18,23/01/18,SBD,21D,,0,,0,,No,,0,23/01/18,,,Open
+Order,POPT00000121,20000,No,,,      ,,,,,,,,0,Beneficia��o Motor 45kw,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000122,10000,No,GV54601,1,Item,NIPT0000374,SERVICES,,NO BRAND,MAINT.1,,,2,Calibra��o 3051SMV,Yes,WHS-DS,,2,PCS,piece,99999999,0,"567,60",,"567,60",2,,2,,,,29/12/17,,26/01/18,,4W,,0,47209348,10000,SOPT00000121,No,,0,19/02/18,,,Open
+Order,POPT00000122,20000,No,,,      ,,,,,,,,0,Recalibra��o em f�brica do equipamento 3051SMVProp,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,19/02/18,,,Open
+Order,POPT00000122,30000,No,,,      ,,,,,,,,0,osta Nr.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000122,40000,No,GV54601,,G/L Account,704100,,,,,,,1,Transport,No,WHS-DS,,1,PCS,piece,,0,"150,00",,"150,00",1,,1,,,,23/01/18,,23/01/18,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000123,10000,No,GV54386,1,Item,NIPT0000326,OFFICE SUP,,NO BRAND,FURNITURE,,,0,Chaveiro Key-cabinet Beaumont,Yes,WHS-DS,,1,PCS,piece,94039090,0,"98,42",,"98,42",,1,,1,,,23/01/18,23/01/18,26/01/18,SBD,21D,,0,,0,,No,,0,23/01/18,,,Open
+Order,POPT00000123,20000,No,,,      ,,,,,,,,0,MFE3 Chaveiro Key-cabinet,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000123,30000,No,,,      ,,,,,,,,0, Beaumont - BS46 - 07.11.E46,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000123,40000,No,GV54386,,G/L Account,704100,,,,,,,0,Transport,No,WHS-DS,,1,PCS,piece,,0,"25,00",,"25,00",,1,,1,,,23/01/18,,23/01/18,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000124,10000,No,GV54690,1,Item,NIPT0000421,SERVICES,,NO BRAND,MAINT.1,,,1,Manuten��o 2018 NetAPP FAs2020,Yes,WHS-DS,,1,PCS,piece,99999999,0,"729,66",,"729,66",1,,1,,,,23/01/18,,20/02/18,,4W,,0,9200059432,10000,SOPT00000123,No,,0,,,,Open
+Order,POPT00000124,20000,No,,,      ,,,,,,,,0,Annual maintenance fee for HW and services on NetA,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000124,30000,No,,,      ,,,,,,,,0,PP FAS2020,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000125,10000,No,GV52969,1,Item,NIPT0000364,SERVICES,,NO BRAND,MAINT.1,,,0,Repara�ao Ventilador Pintura,Yes,WHS-DS,,1,PCS,piece,99999999,0,"145,26",,"145,26",,1,1,,,,22/01/18,23/01/18,23/01/18,SBD,14D,,0,,0,,No,,0,23/01/18,,,Open
+Order,POPT00000125,20000,No,,,      ,,,,,,,,0,Repara��o Ventilador Pintura,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000126,10000,No,GV54580,1,Item,NIPT0000365,MECHANICAL,,NO BRAND,POWERTRANS,,,0,Motor SEW,Yes,WHS-DS,,1,PCS,piece,85011099,0,"245,10",,"245,10",,1,1,,,,04/01/18,30/01/18,25/01/18,SBD,3W,,0,,0,,No,,0,31/01/18,,,Open
+Order,POPT00000126,20000,No,GV54580,,G/L Account,704100,,,,,,,1,Transport,No,WHS-DS,,1,PCS,piece,,0,"14,16",,"14,16",1,,1,,,,23/01/18,,23/01/18,,,,0,,0,,No,,0,30/01/18,,,Open
+Order,POPT00000127,10000,No,GV53902,1,Item,NIPT0000356,ELECTRICAL,,NO BRAND,CIRCUIT PR,,,1,Quadro el�trico SmartPress (80,Yes,WHS-DS,,1,PCS,piece,85361010,0,"960,00",,"960,00",1,,1,,,,23/01/18,20/02/18,28/02/18,,3W,,0,8200004099,10000,SOPT00000126,No,,0,20/02/18,,,Open
+Order,POPT00000127,20000,No,,,      ,,,,,,,,0,Quadro el�trico SmartPress (800x400x300),No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000128,10000,No,GV53037,1,Item,NIPT0000100,T&M,,NO BRAND,CALIBRAT.,,,1,Calibration,Yes,WHS-DS,,1,PCS,piece,99999999,0,"576,50",,"576,50",1,,1,,,,23/01/18,,13/02/18,,21D,,0,9200054791,10000,SOPT00000127,No,,0,20/02/18,,,Open
+Order,POPT00000128,20000,No,,,      ,,,,,,,,0, K-P9710-C;  RW-3705-2 detector and  VL-3701-2,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000128,30000,No,,,      ,,,,,,,,0,New equipament to be calibrated.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000128,40000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000129,10000,No,GV54683,1,Item,NIPT0000408,SERVICES,,NO BRAND,MAINT.1,,,1,servi�o de   ensaio,Yes,WHS-DS,,1,PCS,piece,99999999,0,"2.650,00",,"2.650,00",1,,1,,,,24/01/18,20/02/18,27/02/18,,3W,,0,47209457,10000,SOPT00000128,No,,0,20/02/18,,,Open
+Order,POPT00000129,20000,No,,,      ,,,,,,,,0,servi�o de   ensaio  as m�q. conf. anexo,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000130,10000,No,GV54793,1,Item,NIPT0000437,CAPITAL,,NO BRAND,CAPITAL G,,,0,Flor de Sal EN,Yes,WHS-DS,,61,PCS,piece,99999999,0,"8,00",,"8,00",,61,,61,,,24/01/18,26/01/18,26/01/18,SBD,4W,,0,,0,,No,,0,29/01/18,,,Open
+Order,POPT00000130,20000,No,,,Item,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,10000,No,GV54799,1,Item,NIPT0000431,SERVICES,,NO BRAND,SEMINAR,,,0,Feira Emprego JORTEC,Yes,WHS-DS,,1,PCE,,99999999,0,"350,00",,"350,00",,1,1,,,,10/03/18,29/01/18,19/02/18,PPI PAID,3W,,0,8200004163,10000,SOPT00000131,No,,0,19/02/18,,,Open
+Order,POPT00000131,20000,No,,,      ,,,,,,,,0,Vendor :JORTEC Associa��o Estudantes da Faculdade ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,30000,No,,,      ,,,,,,,,0,Ci�ncias e Tecnologia da Universidade Nova de Lisb,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,40000,No,,,      ,,,,,,,,0,"oa  Pretendemos participar no Evento �JORTEC�, din",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,50000,No,,,      ,,,,,,,,0,amizada pela Associa��o Estudantes da Faculdade Ci,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,60000,No,,,      ,,,,,,,,0,�ncias e Tecnologia da Universidade Nova de Lisboa,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,70000,No,,,      ,,,,,,,,0,.O mais comum nas feiras de emprego � que a univer,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,80000,No,,,      ,,,,,,,,0,sidade dinamizadora coloque � disposi��o das empre,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,90000,No,,,      ,,,,,,,,0,"sas v�rios pacotes de participa��o, cada um com um",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,100000,No,,,      ,,,,,,,,0, pre�o definido e que dar� acesso a determinadas a,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,110000,No,,,      ,,,,,,,,0,"tividades (ex. stand, entrevistas aos alunos, conf",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,120000,No,,,      ,,,,,,,,0,"er�ncias, etc.).Neste caso, opt�mos pelo pacote de",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,130000,No,,,      ,,,,,,,,0," 350�, que inclui: Publicidade, Stand e Apresenta�",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,140000,No,,,      ,,,,,,,,0,�o.A feira ir� decorrer nos dias 5 de Fevereiro.Es,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,150000,No,,,      ,,,,,,,,0,te � um processo que poder� repetir-se para v�rias,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000131,160000,No,,,      ,,,,,,,,0," participa��es em feiras de emprego, visto que a p",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000132,10000,No,GV54841,1,Item,NIPT0000443,MECHANICAL,,NO BRAND,MAKE PART,,,1,Pe�as para repara��o,Yes,WHS-DS,,1,PCS,piece,76169990,0,"145,96",,"145,96",1,,1,,,,26/01/18,,23/02/18,,4W,,0,47209697,10000,SOPT00000132,No,,0,,,,Open
+Order,POPT00000132,20000,No,,,      ,,,,,,,,0,Pe�as para reparar a Envelopadora DS63Or�amento 20,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000132,30000,No,,,      ,,,,,,,,0,18/5,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000133,10000,No,GV54462,1,Item,NIPT0000350,SERVICES,,NO BRAND,MAINT.1,,,1,Contrato de Manuten��o e Repar,Yes,WHS-DS,,1,PCS,piece,99999999,0,"756,50",,"756,50",1,,1,,,,09/02/18,,23/03/18,,42D,,0,47209696,10000,SOPT00000133,No,,0,,,,Open
+Order,POPT00000133,20000,No,,,      ,,,,,,,,0,Modalidade Contrato de Manuten��o e Repara��o da E,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000133,30000,No,,,      ,,,,,,,,0,nvelopadora DS 63 + Leitura �tica (OMR) para o ano,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000133,40000,No,,,      ,,,,,,,,0, 2018.Fornecedor: amaKpostOr�amento: 14FN2446,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000134,10000,No,GV54234,1,Item,NIPT0000294,MECHANICAL,N_ORCAMENTO N 1403/17,NO BRAND,MAKE PART,,,1,Atuador linear com movimento d,Yes,WHS-DS,,1,PCS,piece,76169990,0,"3.850,00",,"3.850,00",1,,1,,,,02/02/18,,23/02/18,,21D,,0,47209789,10000,SOPT00000134,No,,0,,,,Open
+Order,POPT00000134,20000,No,,,      ,,,,,,,,0,"Manufacturer :EMILIO DE AZEVEDO CAMPOS, S.A.Atuado",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000134,30000,No,,,      ,,,,,,,,0,r linear com movimento de precis�oO atuador linear,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000134,40000,No,,,      ,,,,,,,,0, est� equipado com man�pulo que permite ao operado,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000134,50000,No,,,      ,,,,,,,,0,r imprimir movimento no sentido ascendente � haste,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000134,60000,No,,,      ,,,,,,,,0, do comparador.Na extremidade da haste do comparad,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000134,70000,No,,,      ,,,,,,,,0,or encontra-se fixo o PCB. O movimento descendente,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000134,80000,No,,,      ,,,,,,,,0, � efetuado por a��o da gravidade.A coluna do atua,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000134,90000,No,,,      ,,,,,,,,0,dor est� fixa a uma flange de acoplamento feita em,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000134,100000,No,,,      ,,,,,,,,0, Celeron. O eixodo atuador atravessa a flange ao c,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000134,110000,No,,,      ,,,,,,,,0,entro,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000135,10000,No,GV52984,1,Item,NIPT0000371,MECHANICAL,,NO BRAND,HANDTOOLS,,,1,Multi-Cross Cutter,Yes,WHS-DS,,1,PCS,piece,82032000,0,"515,00",,"515,00",1,,1,,,,26/01/18,,02/03/18,,5W,,0,47209790,10000,SOPT00000135,No,,0,,,,Open
+Order,POPT00000135,20000,No,,,      ,,,,,,,,0,"Multi-Cross Cutter 295/IX ErichsenCortador, Erichs",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000135,30000,No,,,      ,,,,,,,,0,"en, com eixo girat�rio livre entre o punho e a cab",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000135,40000,No,,,      ,,,,,,,,0,"e�a de corte, 6 bordas, dist�ncia de corte de 1 mm",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000135,50000,No,,,      ,,,,,,,,0,", para Grid Cutting Tests, de acordo com EN ISO, I",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000135,60000,No,,,      ,,,,,,,,0,"SO, VDA e EN, incl. lupa, escova de cerdas de poli",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000135,70000,No,,,      ,,,,,,,,0,amida e estojo de pl�stico,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000136,10000,No,GV54908,1,Item,NIPT0000436,MECHANICAL,EMVY160GDA332MMH0S,NO BRAND,MAKE PART,,,3.1,"SMD ELCO MH0, EMVY160GDA332MMH",Yes,WHS-DS,,3.1,PCS,piece,76169990,0,"0,75",,"0,75",3.1,,3.1,,,,18/01/18,29/01/18,10/05/18,,16W,,0,47209815,10000,SOPT00000136,No,,0,29/01/18,,,Open
+Order,POPT00000136,20000,No,,,      ,,,,,,,,0,Components to be supplied on standard Tape & Reel,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000136,30000,No,,,G/L Account,,,,,,,,1,,No,,,1,PCS,piece,,0,"28,00",,"28,00",1,,1,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000137,10000,No,GV54494,1,Item,NIPT0000451,MECHANICAL,,NO BRAND,MAKE PART,,,0,Espelho,Yes,WHS-DS,,1,PCS,piece,76169990,0,"471,00",,"471,00",,1,1,,,,29/01/18,20/02/18,05/02/18,SBD,3W,,0,9200059955,10000,SOPT00000137,No,,0,20/02/18,,,Open
+Order,POPT00000137,20000,No,,,      ,,,,,,,,0,"NRC-75K00ER.3 - Utility BB Metallic Mirror, 190.5x",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000137,30000,No,,,      ,,,,,,,,0,"190.5 mm�, 400nm-10�m (QTY: 1)NRC-CPP-C-6 Precisio",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000137,40000,No,,,      ,,,,,,,,0,"n Carbide Pads, Cone, pack of 6 (QTY: 1)NRC-CPP-F-",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000137,50000,No,,,      ,,,,,,,,0,"6 Precision Carbide Pads, Flat, pack of 6 (QTY: 1)",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000137,60000,No,,,      ,,,,,,,,0,"NRC-CPP-V-6 Precision Carbide Pads, ""V"" Groove, pa",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000137,70000,No,,,      ,,,,,,,,0,ck of 6 (QTY: 1)NRC-AJS100-02H-V6 Vacuum Compatibl,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000137,80000,No,,,      ,,,,,,,,0,"e Hex Adj.Screw, 100TPI, 6.35mm,Lock (QTY: 3)",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000138,10000,No,GV54647,1,Item,NIPT0000399,MECHANICAL,,NO BRAND,MAKE PART,,,5,Correia Antiestatica TN 525 X,Yes,WHS-DS,,5,PCS,piece,76169990,0,"43,47",,"43,47",5,,5,,,,29/01/18,06/02/18,25/02/18,,3W,,0,9200059969,10000,SOPT00000138,No,,0,06/02/18,,,Open
+Order,POPT00000138,20000,No,,,      ,,,,,,,,0,"Correia Antiestatica TN 525 X 2,5",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000138,30000,No,GV54647,1,Item,NIPT0000398,MECHANICAL,,NO BRAND,MAKE PART,,,5,Correia Antiestatica - TN 445,Yes,WHS-DS,,5,PCS,piece,76169990,0,"41,26",,"41,26",5,,5,,,,29/01/18,06/02/18,25/02/18,,3W,,0,9200059969,20000,SOPT00000138,No,,0,06/02/18,,,Open
+Order,POPT00000138,40000,No,,,      ,,,,,,,,0,"Correia Antiestatica - TN 445 X 2,5",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000139,10000,No,GV54920,1,Item,NIPT0000461,SERVICES,,NO BRAND,SEMINAR,,,1,Forma��o SCHEMA,Yes,WHS-DS,,1,PCS,piece,99999999,0,"5.835,00",,"5.835,00",1,,1,,,,30/01/18,,13/02/18,,2W,,0,9200059977,10000,SOPT00000139,No,,0,,,,Open
+Order,POPT00000139,20000,No,,,      ,,,,,,,,0,Forma��o em aplica��o inform�tica especifica para ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000139,30000,No,,,      ,,,,,,,,0,"documenta��o t�cnica, conforme proposta enviada em",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000139,40000,No,,,      ,,,,,,,,0, anxo.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000140,10000,No,GV54605,1,Item,NIPT0000370,SERVICES,,NO BRAND,SEMINAR,,,1,Training on Polyspace Bug Find,Yes,WHS-DS,,1,PCS,piece,99999999,0,"10.500,00",,"10.500,00",1,,1,,,,30/01/18,,20/02/18,,21D,,0,47210075,10000,SOPT00000140,No,,0,,,,Open
+Order,POPT00000140,20000,No,,,      ,,,,,,,,0,Quotations for both trainings: Polyspace Bug Finde,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000140,30000,No,,,      ,,,,,,,,0,r for C/C++ Cod & Polyspace for C/C++ Code Verific,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000140,40000,No,,,      ,,,,,,,,0,ation,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000140,50000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000140,60000,No,,,      ,,,,,,,,0,The training will last for 3 days.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000140,70000,No,,,      ,,,,,,,,0,The maximum number of participants will be 10.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000140,80000,No,,,      ,,,,,,,,0,- We need the training from 5th of March.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000140,90000,No,,,      ,,,,,,,,0,We would like to have one fix number for costs.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000141,10000,No,GV54795,1,Item,NIPT0000434,CAPITAL,,NO BRAND,CAPITAL G,,,1,Estantes para ferramentas,Yes,WHS-DS,,1,PCS,piece,99999999,0,"7.372,01",,"7.372,01",1,,1,,,,30/01/18,05/02/18,06/03/18,,5W,,0,8200004241,10000,SOPT00000141,No,,0,05/02/18,,,Open
+Order,POPT00000141,20000,No,,,      ,,,,,,,,0,"Estantes para ferramentas para S831, Racks KD pesa",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000141,30000,No,,,      ,,,,,,,,0,do,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000141,40000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000141,50000,No,,,      ,,,,,,,,0,REF-401 8-1404.A2,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000142,10000,No,GV54795,1,Item,NIPT0000433,SERVICES,,NO BRAND,MAINT.1,,,1,Manuten��o Estantes Kind,Yes,WHS-DS,,1,PCE,,99999999,0,"2.349,48",,"2.349,48",1,,1,,,,30/01/18,05/02/18,06/03/18,,5W,,0,8200004249,10000,SOPT00000142,No,,0,05/02/18,,,Open
+Order,POPT00000142,20000,No,,,      ,,,,,,,,0,REF-401 8-0059.A1,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000143,10000,No,GV53979,1,Item,NIPT0000213,MECHANICAL,,NO BRAND,MAKE PART,,,1,Kit V-coil M4 x 0.7 Art.-No. 0,Yes,WHS-DS,,1,PCS,piece,76169990,0,"20,01",,"20,01",1,,1,,,,30/01/18,,20/02/18,,21D,,0,8200004252,10000,SOPT00000143,No,,0,,,,Open
+Order,POPT00000143,20000,No,GV53979,1,Item,NIPT0000214,MECHANICAL,,NO BRAND,MAKE PART,,,1,Kit V-coil Art.-No. 04081  M5,Yes,WHS-DS,,1,PCS,piece,76169990,0,"129,57",,"129,57",1,,1,,,,30/01/18,,20/02/18,,21D,,0,8200004252,20000,SOPT00000143,No,,0,,,,Open
+Order,POPT00000144,10000,No,GV54655,1,Item,NIPT0000404,ELECTRICAL,,NO BRAND,AUTOMATION,,,2,Controladores Temperatura,Yes,WHS-DS,,2,PCS,piece,85371091,0,175389,,175389,2,,2,,,,30/01/18,31/01/18,05/03/18,,5W,,0,8200004260,10000,SOPT00000144,No,,0,31/01/18,,,Open
+Order,POPT00000144,20000,No,,,      ,,,,,,,,0,A0303306100015303,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000144,30000,No,,,      ,,,,,,,,0,LC 300 702034/8-3400-23/061,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000145,10000,No,GV52969,1,Item,NIPT0000428,MECHANICAL,,NO BRAND,MAKE PART,,,0,Repara�ao Ventilador Pintura-2,Yes,WHS-DS,,1,PCS,piece,76169990,0,"154,97",,"154,97",,1,,1,,,30/01/18,02/02/18,02/02/18,SBD,8D,,0,,0,,No,,0,02/02/18,,,Open
+Order,POPT00000145,20000,No,,,      ,,,,,,,,0,Proposta n� 2180018,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000146,10000,No,GV53224,1,Item,NIPT0000469,ELECTRICAL,TPS61024DRCR,NO BRAND,CONVERTER,,,0,Conversor DC/DC,Yes,WHS-DS,,20,PCS,piece,85024000,0,"1,50",,"1,50",,20,,20,,,31/01/18,05/02/18,14/02/18,SBD,2W,,0,,0,,No,,0,09/02/18,,,Open
+Order,POPT00000146,20000,No,,,      ,,,,,,,,0,Switching Voltage Regulators 3.0-V Otp 1.5-A Swit ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000146,30000,No,,,      ,,,,,,,,0,Boost Converter,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000146,40000,No,GV53224,,G/L Account,704100,,,,,,,0,Transport,No,WHS-DS,,1,PCS,piece,,0,"20,00",,"20,00",,1,,1,,,31/01/18,,31/01/18,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000147,10000,No,GV53389,1,Item,NIPT0000154,OFFICE SUP,,NO BRAND,PAPER,,,0,Magic charter,Yes,WHS-DS,,1,PCS,piece,48239040,0,"24,25",,"24,25",,1,,1,,,01/02/18,05/02/18,15/02/18,,14D,,0,,0,,No,,0,05/02/18,,,Open
+Order,POPT00000147,20000,No,,,      ,,,,,,,,0, link:https://www.amazon.de/Legamaster-,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000147,30000,No,,,      ,,,,,,,,0,Magic-Flipchartfolie-verschiedene-Oberfl%C3%A4chen,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000147,40000,No,,,      ,,,,,,,,0,/dp/B000O1M6TI,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000147,50000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000147,60000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000147,70000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000147,80000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000147,90000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000147,100000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000148,10000,No,GV54199,1,Item,NIPT0000287,SERVICES,,NO BRAND,MAINT.1,,,0,stamp star,Yes,WHS-DS,,1,PCE,,99999999,0,"503,40",,"503,40",,1,1,,,,01/02/18,12/02/18,12/02/18,SBD,14D,,0,,0,,No,,0,13/02/18,,,Open
+Order,POPT00000148,20000,No,,,      ,,,,,,,,0,manuten��o anual ao sistema de incendio que faz a ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,13/02/18,,,Open
+Order,POPT00000148,30000,No,,,      ,,,,,,,,0,liga��o aos bombeiros,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000149,10000,No,GV54515,1,Item,NIPT0000360,SERVICES,,NO BRAND,MAINT.1,,,0,Manut. Plantas interiores do e,Yes,WHS-DS,,12,PCS,piece,99999999,0,"198,96",,"198,96",,12,,12,,,22/01/18,06/02/18,06/02/18,SBD,14D,,0,,0,,No,,0,06/02/18,,,Open
+Order,POPT00000149,20000,No,,,      ,,,,,,,,0,Manuten��o anual das plantas do edificio.Este serv,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000149,30000,No,,,      ,,,,,,,,0,"i�o comporta a uma visita semanal p/limpar, regar ",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000149,40000,No,,,      ,,,,,,,,0,e fazer tratamento �s plantas interiores assim com,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000149,50000,No,,,      ,,,,,,,,0,o a substitui��o das mesmas sempre que necess�rio(,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000149,60000,No,,,      ,,,,,,,,0,esta substitui��o n�o tem custos)Serv. de Jan. a D,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000149,70000,No,,,      ,,,,,,,,0,ezembro 2018Valor mensal  - 198.96,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,10000,No,GV52984,1,Item,NIPT0000375,T&M,,NO BRAND,TEMPERAT.,,,4,Indicator local Modbus TCP/IP,Yes,WHS-DS,,4,PCS,piece,84849000,0,"439,00",,"439,00",4,,4,,,,31/01/18,,21/02/18,,3W,,0,47210198,10000,SOPT00000150,No,,0,,,,Open
+Order,POPT00000150,20000,No,,,      ,,,,,,,,0,Indicator local com comunica��es Modbus TCP/IP par,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,30000,No,,,      ,,,,,,,,0,a registo dos sinais de caudal dos caudal�metros d,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,40000,No,,,      ,,,,,,,,0,a Emerson.Novo controlador de temperatura Eurother,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,50000,No,,,      ,,,,,,,,0,m com ecr� de 2 linhas de d�gitos LCD verdes em mo,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,60000,No,,,      ,,,,,,,,0,strador de 48x48mm orlado a preto. Entrada univers,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,70000,No,,,      ,,,,,,,,0,"al incluindo Pt100, T/C, mA e mV. 2 Sa�das de cont",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,80000,No,,,      ,,,,,,,,0,rolo/alarmes a rel�. Porta de comunica�ao Ethernet,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,90000,No,,,      ,,,,,,,,0, com protocolo Modbus TCP/IP.Alimenta��o a 230Vac.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,100000,No,GV52984,1,Item,NIPT0000376,T&M,,NO BRAND,TEMPERAT.,,,1,Upgrade de Registador - Bridge,Yes,WHS-DS,,1,PCS,piece,84849000,0,"178,00",,"178,00",1,,1,,,,31/01/18,,21/02/18,,3W,,0,47210198,20000,SOPT00000150,No,,0,,,,Open
+Order,POPT00000150,110000,No,,,      ,,,,,,,,0,Upgrade de licenciamento para operacionalidadetota,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,120000,No,,,      ,,,,,,,,0,l com o software Bridge FULL.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,130000,No,,,      ,,,,,,,,0,"al incluindo Pt100, T/C, mA e mV. 2 Sa�das de cont",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,140000,No,,,      ,,,,,,,,0,rolo/alarmes a rel�. Porta de comunica�ao Ethernet,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,150000,No,,,      ,,,,,,,,0, com protocolo Modbus TCP/IP.Alimenta��o a 230Vac.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,160000,No,GV52984,1,Item,NIPT0000377,T&M,,NO BRAND,TEMPERAT.,,,1,Upgrade do Registador - TCP IP,Yes,WHS-DS,,1,PCS,piece,84849000,0,"512,00",,"512,00",1,,1,,,,31/01/18,,21/02/18,,3W,,0,47210198,30000,SOPT00000150,No,,0,,,,Open
+Order,POPT00000150,170000,No,,,      ,,,,,,,,0,Upgrade para ter Master Comunications ModbusTCP/IP,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,180000,No,,,      ,,,,,,,,0, protocol para comunica��es at� 16 slaves.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,190000,No,,,      ,,,,,,,,0,"al incluindo Pt100, T/C, mA e mV. 2 Sa�das de cont",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,200000,No,,,      ,,,,,,,,0,rolo/alarmes a rel�. Porta de comunica�ao Ethernet,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,210000,No,,,      ,,,,,,,,0, com protocolo Modbus TCP/IP.Alimenta��o a 230Vac.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000150,220000,No,GV52984,1,Item,NIPT0000444,SERVICES,,NO BRAND,INSTAL.1,1,,1,Hora deslocacao + hora tecnico,Yes,WHS-DS,,1,PCS,piece,99999999,0,"592,00",,"592,00",1,,1,,,,31/01/18,,21/02/18,,3W,,0,47210198,50000,SOPT00000150,No,,0,,,,Open
+Order,POPT00000151,10000,No,GV54917,1,Item,NIPT0000457,MECHANICAL,,NO BRAND,MAKE PART,,,1,Testchart,Yes,WHS-DS,,1,PCS,piece,76169990,0,"992,10",,"992,10",1,,1,,,,31/01/18,09/02/18,25/03/18,,8W,,0,9200060092,10000,SOPT00000152,No,,0,09/02/18,,,Open
+Order,POPT00000151,20000,No,,,      ,,,,,,,,0,"- Customized Testchart - Cusomer's layout,chart-si",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000151,30000,No,,,      ,,,,,,,,0,"ze 500x600mmthickness: 4,6mmQTY: 1- Shipping, insu",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000151,40000,No,,,      ,,,,,,,,0,rance and handling costs aredepending on the shipp,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000151,50000,No,,,      ,,,,,,,,0,ing method usedQTY: 1,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000152,10000,No,GV53596,1,Item,NIPT0000200,SERVICES,,NO BRAND,REPAIR1,,,0,Troca de Resinas,Yes,WHS-DS,,1,PCS,piece,99999999,0,"107,00",,"107,00",,1,1,,,,31/01/18,20/02/18,20/02/18,SBD,14D,,0,8200004286,10000,SOPT00000155,No,,0,20/02/18,,,Open
+Order,POPT00000153,10000,No,GV54417,1,Item,NIPT0000479,SERVICES,,NO BRAND,MAINT.1,,,1,Calibra��o Chave dinamom�trica,Yes,WHS-DS,,1,PCS,piece,99999999,0,"53,00",,"53,00",1,,1,,,,25/01/18,,15/02/18,,3W,,0,8200004301,10000,SOPT00000156,No,,0,,,,Open
+Order,POPT00000153,20000,No,,,      ,,,,,,,,0,n/ ref. X557,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000154,10000,No,GV54938,1,Item,NIPT0000468,ELECTRICAL,,NO BRAND,AUTOMATION,,,0,Shunt 50A IETLabs DCCS-0.0001,Yes,WHS-DS,,1,PCS,piece,85371091,0,"1.610,00",,"1.610,00",,1,,1,,,01/02/18,05/02/18,08/03/18,SBD,5W,,0,47210221,10000,SOPT00000153,No,,0,20/02/18,,,Open
+Order,POPT00000154,20000,No,,,      ,,,,,,,,0,Shunt 50A IETLabs REf� DCCS-0.0001,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000155,10000,No,GV53034,1,Item,NIPT0000462,MECHANICAL,,NO BRAND,SPRING,,,7,Molas de Compress�o,Yes,WHS-DS,,7,PCS,piece,73209090,0,"23,00",,"23,00",7,,7,,,,01/02/18,,22/02/18,,3W,,0,9200060183,10000,SOPT00000154,No,,0,,,,Open
+Order,POPT00000155,20000,No,,,      ,,,,,,,,0,Arame �1.00mm Inox EN 10270-3 Aisi-302,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000156,10000,No,GV54893,1,Item,NIPT0000448,SERVICES,,NO BRAND,MAINT.1,,,1,Preven��o e controlo Legionell,Yes,WHS-DS,,1,PCS,piece,99999999,0,"5.700,00",,"5.700,00",1,,1,,,,31/01/18,05/02/18,10/02/18,,3W,,0,8200004300,10000,SOPT00000161,No,,0,05/02/18,,,Open
+Order,POPT00000156,20000,No,,,      ,,,,,,,,0,Controlo Trimestral de LegionellaV/PROPOSTA P.37/2,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000156,30000,No,,,      ,,,,,,,,0,17,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000157,10000,No,GV54743,1,Item,NIPT0000426,ELECTRICAL,,NO BRAND,SENSOR,,,0,Sensores de velocidade do ar,Yes,WHS-DS,,1,PCS,piece,85322400,0,"276,00",,"276,00",,1,1,,,,01/02/18,20/02/18,20/02/18,SBD,3W,,0,8200004272,10000,SOPT00000157,No,,0,20/02/18,,,Open
+Order,POPT00000157,20000,No,,,      ,,,,,,,,0,"EE650 Air flow sensor, remote probe, duct � 400mm,",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000157,30000,No,,,      ,,,,,,,,0," probe length 300mm, cable lenght 5 m",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000157,40000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000157,50000,No,,,      ,,,,,,,,0,PR 2018/2180001,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000158,10000,No,GV54897,1,Item,NIPT0000455,OFFICE SUP,,NO BRAND,WRITING,,,100,imanes redondos,Yes,WHS-DS,,100,PCS,piece,96099090,0,"0,20",,"0,20",100,,100,,,,01/02/18,,06/02/18,,5D,,0,47210342,10000,SOPT00000158,No,,0,,,,Open
+Order,POPT00000158,20000,No,,,      ,,,,,,,,0,"imanes redondos, cores sortidas",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000159,10000,No,GV54897,1,Item,NIPT0000450,OFFICE SUP,,NO BRAND,WRITING,,,6,cx clips,Yes,WHS-DS,,6,PCS,piece,96099090,0,1835,,1835,6,,6,,,,01/02/18,06/02/18,08/02/18,,1W,,0,47210341,10000,SOPT00000159,No,,0,06/02/18,,,Open
+Order,POPT00000159,20000,No,,,      ,,,,,,,,0,cx clips 100x25mm,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000160,10000,No,GV54897,1,Item,NIPT0000449,OFFICE SUP,,NO BRAND,WRITING,,,10,pasta plasticas,Yes,WHS-DS,,10,PCS,piece,96099090,0,659,,659,10,,10,,,,01/02/18,06/02/18,09/02/18,,1W,,0,47210344,10000,SOPT00000160,No,,0,06/02/18,,,Open
+Order,POPT00000160,20000,No,,,      ,,,,,,,,0,"pastas pl�sticas, abertura em L",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000161,10000,No,GV55022,1,Item,NIPT0000439,T&M,,NO BRAND,CALIBRAT.,,,1,G772 - Calibra��o paquimetro 1,Yes,WHS-DS,,1,PCS,piece,99999999,0,"39,20",,"39,20",1,,1,,,,27/01/18,,10/02/18,,2W,,0,8200004345,10000,SOPT00000162,No,,0,,,,Open
+Order,POPT00000161,20000,No,,,      ,,,,,,,,0,LIQ - Laborat�rio Industrial da Qualidade Rua do P,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000161,30000,No,,,      ,,,,,,,,0,ortinho n� 14313750-320 �gueda,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000162,10000,No,GV55011,1,Item,NIPT0000476,SERVICES,,NO BRAND,OTHERS,,,0,Patrocinio Jo�o Correia,Yes,WHS-DS,,1,PCE,,99999999,0,"2.000,00",,"2.000,00",,1,1,,,,05/02/18,05/02/18,05/02/18,SBD,3W,,0,,0,,No,,0,05/02/18,,,Open
+Order,POPT00000163,10000,No,GV54967,1,Item,NIPT0000474,MECHANICAL,,NO BRAND,MAKE PART,,,1,ExpoFix Kit,Yes,WHS-DS,,1,PCS,piece,76169990,0,"117,00",,"117,00",1,,1,,,,05/02/18,,12/02/18,,1W,,0,8200004355,10000,SOPT00000164,No,,0,,,,Open
+Order,POPT00000163,20000,No,,,      ,,,,,,,,0,expofix kit. ref. 40200029,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000164,10000,No,GV55022,1,Item,NIPT0000440,T&M,,NO BRAND,CALIBRAT.,,,1,Calibra��es temperaturas e  pa,Yes,WHS-DS,,1,PCS,piece,99999999,0,"364,80",,"364,80",1,,1,,,,01/02/18,,15/02/18,,2W,,0,8200004360,10000,SOPT00000165,No,,0,,,,Open
+Order,POPT00000164,20000,No,,,      ,,,,,,,,0,LIQ - Laborat�rio Industrial da QualidadeRua do Po,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000164,30000,No,,,      ,,,,,,,,0,"rtinho, n� 14313750-320 �gueda",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000165,10000,No,GV55077,1,Item,NIPT0000481,MECHANICAL,,NO BRAND,STEELPIPE,,,2,Tubo Viega Standpipe,Yes,WHS-DS,,2,PCS,piece,59090010,0,"27,79",,"27,79",2,,2,,,,07/02/18,,28/02/18,PPI REQUESTED,3W,,0,8200004348,10000,SOPT00000166,No,,0,21/02/18,,,Open
+Order,POPT00000165,20000,No,,,      ,,,,,,,,0,Marca - Viega,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,21/02/18,,,Open
+Order,POPT00000165,30000,No,,,      ,,,,,,,,0,Modelo - Standpipe 45.1-603,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000165,40000,No,,,      ,,,,,,,,0,N� Artigo- 240 554,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000165,50000,No,GV55077,,G/L Account,704100,,,,,,,1,Transport,No,WHS-DS,,1,PCS,piece,,0,"35,00",,"35,00",1,,1,,,,07/02/18,,07/02/18,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000166,10000,No,GV55094,1,Item,NIPT0000493,OFFICE SUP,,NO BRAND,PAPER,,,1,091301006_Papel poster 135grs,Yes,WHS-DS,,1,PCS,piece,48239040,0,"60,24",,"60,24",1,,1,,,,07/02/18,,14/02/18,,1W,,0,9200060392,10000,SOPT00000167,No,,0,,,,Open
+Order,POPT00000166,20000,No,,,      ,,,,,,,,0,3 posters com 1420X800mm,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000167,10000,No,GV55041,1,Item,NIPT0000483,MECHANICAL,,NO BRAND,MAKE PART,,,0,HWPT-2P-G-T,Yes,WHS-DS,,3.6,PCS,piece,76169990,0,"0,52",,"0,52",,3.6,3.6,,,,15/02/18,08/02/18,24/02/18,SBD,2W,,0,47211022,10000,SOPT00000168,No,,0,19/02/18,,,Open
+Order,POPT00000167,20000,No,,,      ,,,,,,,,0,"HWPT-2P-G-T, Mac8, RoHS",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000167,30000,No,GV55041,1,Item,NIPT0000484,MECHANICAL,,NO BRAND,MAKE PART,,,0,HWP-3P-G-T,Yes,WHS-DS,,1.2,PCS,piece,76169990,0,"0,70",,"0,70",,1.2,1.2,,,,08/02/18,08/02/18,24/02/18,SBD,21D,,0,47211022,20000,SOPT00000168,No,,0,19/02/18,,,Open
+Order,POPT00000167,40000,No,,,      ,,,,,,,,0,"HWP-3P-G-T, MAC8, RoHS",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000168,10000,No,GV55007,1,Item,NIPT0000475,SERVICES,,NO BRAND,MAINT.1,,,1,Assistencias Tecnica,Yes,WHS-DS,,1,PCS,piece,99999999,0,"767,40",,"767,40",1,,1,,,,01/02/18,,15/02/18,,2W,,0,8200004417,10000,SOPT00000169,No,,0,,,,Open
+Order,POPT00000168,20000,No,,,      ,,,,,,,,0,Assistencia T�cnica Centros de maquina��o,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000169,10000,No,GV54041,1,Item,NIPT0000520,ELECTRONIC,,NO BRAND,PCB,,,0,8738717642_V02,Yes,WHS-DS,,6,PCS,piece,85340011,0,"35,00",,"35,00",,6,,6,,,01/02/18,15/02/18,15/02/18,SBD,2W,,0,8200004436,10000,SOPT00000171,No,,0,15/02/18,,,Open
+Order,POPT00000169,20000,No,,,      ,,,,,,,,0,PCB 8738717642_V02,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000170,10000,No,GV54738,1,Item,NIPT0000397,CAPITAL,,NO BRAND,CONSTRUCT,,,0,Orcamento Laje deposito ar liq,Yes,WHS-DS,,1,PCS,piece,99999999,0,"2.200,00",,"2.200,00",,1,1,,,,09/02/18,13/02/18,22/02/18,SBD,3W,,0,9200060685,10000,SOPT00000172,No,,0,20/02/18,,,Open
+Order,POPT00000170,20000,No,,,      ,,,,,,,,0,Or�amento Laje pavimento deposito ar liquidoVitor ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000170,30000,No,,,      ,,,,,,,,0,"MirandaTlm: 962 683 218Rua Tenente Loureiro Cruz, ",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000170,40000,No,,,      ,,,,,,,,0,N� 8563880-800 S. Jo�o Ovarvitormiranda71@gmail.co,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000171,10000,No,GV54668,1,Item,NIPT0000379,SERVICES,,NO BRAND,MAINT.1,,,1,Repara��o de cadeiras,Yes,WHS-DS,,1,PCS,piece,99999999,0,"300,00",,"300,00",1,,1,,,,09/02/18,12/02/18,02/03/18,,3W,,0,47211157,10000,SOPT00000173,No,,0,12/02/18,,,Open
+Order,POPT00000171,20000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000171,30000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000171,40000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000172,10000,No,GV55200,1,Item,NIPT0000517,MECHANICAL,,NO BRAND,MAKE PART,,,1,Film disk 500 pulsos para TG25,Yes,WHS-DS,,1,PCS,piece,76169990,0,"127,00",,"127,00",1,,1,,,,09/02/18,13/02/18,02/03/18,,21D,,0,8200004441,10000,SOPT00000174,No,,0,13/02/18,,,Open
+Order,POPT00000172,20000,No,,,      ,,,,,,,,0,Film Disk com 500 pulsos da marca Ritter.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000173,10000,No,GV04866,1,Item,NIPT0000435,MECHANICAL,,NO BRAND,MAKE PART,,,0,Beamsplitter Plate,Yes,WHS-DS,,1,PCS,piece,76169990,0,"228,00",,"228,00",,1,1,,,,23/01/18,12/02/18,12/02/18,SBD,21D,,0,,0,,No,,0,13/02/18,,,Open
+Order,POPT00000173,20000,No,,,      ,,,,,,,,0,Plate Beamsplitter for near infrared (NIR) with re,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000173,30000,No,,,      ,,,,,,,,0,flection/transmission ratios of 50/50.The dimensio,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000173,40000,No,,,      ,,,,,,,,0,ns of the beamsplitter plate are 50 x 75 mm.This i,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000173,50000,No,,,      ,,,,,,,,0,s the item I am looking for:https://www.edmundopti,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000173,60000,No,,,      ,,,,,,,,0,cs.com/optics/beamsplitters/plate-beamsplitters/50,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000173,70000,No,,,      ,,,,,,,,0,-x-75mm-50r50t-nir-plate-beamsplitter/,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000174,10000,No,GV53224,1,Item,NIPT0000463,ELECTRONIC,EEEFK1V470FJ,NO BRAND,CONNECTORS,,,0,Panasonic EEEFK1V470FJ,Yes,WHS-DS,,1,PCS,piece,85369010,0,101,,101,,1,,1,,,15/01/18,12/02/18,19/02/18,SBD,5W,,0,,0,,No,,0,13/02/18,,,Open
+Order,POPT00000174,20000,No,,,      ,,,,,,,,0,Please supply quotation for 1000 units (2 Reels) o,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000174,30000,No,,,      ,,,,,,,,0,f EEEFK1V470FJ Panasonic electrolytic capacitors,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000174,40000,No,GV53224,1,Item,NIPT0000464,ELECTRONIC,EEEFK1V470FJ,NO BRAND,CONNECTORS,,,0,Panasonic EEE-TG2A330P,Yes,WHS-DS,,500,PCS,piece,85369010,0,354,,354,,500,,500,,,15/01/18,12/02/18,19/02/18,SBD,5W,,0,,0,,No,,0,13/02/18,,,Open
+Order,POPT00000174,50000,No,,,      ,,,,,,,,0,Please supply quotation for 500 units (1 Reel) of ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000174,60000,No,,,      ,,,,,,,,0,Panasonic EEETG2A330P electrolytic capacitors.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000175,10000,No,GV32715,1,Item,NIPT0000521,MECHANICAL,,NO BRAND,MAKE PART,,,1,Calibra��o FCO560,Yes,WHS-DS,,1,PCS,piece,76169990,0,"255,00",,"255,00",1,,1,,,,09/02/18,,02/03/18,,21D,,0,8200004452,10000,SOPT00000177,No,,0,,,,Open
+Order,POPT00000175,20000,No,,,      ,,,,,,,,0,Calibrador de press�o FCO560 -200 � 200Pa (-2 � 2 ,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000175,30000,No,,,      ,,,,,,,,0,"mbar),�Pontos de calibra��o: 20 pontos ao longo de",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000175,40000,No,,,      ,,,,,,,,0, toda a escala,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000176,10000,No,GV55128,1,Item,NIPT0000471,MECHANICAL,90413,NO BRAND,VALVE,,,10,Adaptador com depressor SAE,Yes,WHS-DS,,10,PCS,piece,84814010,0,4613,,4613,10,,10,,,,14/02/18,,07/03/18,PPI PAID,3W,,0,8200004471,10000,SOPT00000179,No,,0,22/02/18,,,Open
+Order,POPT00000176,20000,No,,,      ,,,,,,,,0,Adaptador com depressor Mastercool 90413,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000176,30000,No,GV55128,,G/L Account,704100,,,,,,,1,Transport,No,WHS-DS,,1,PCS,piece,,0,"7,00",,"7,00",1,,1,,,,14/02/18,,14/02/18,,,,0,,0,,No,,0,14/02/18,,,Open
+Order,POPT00000177,10000,No,GV55198,1,Item,NIPT0000511,MECHANICAL,,NO BRAND,MAKE PART,,,1,Material ROT_PS,Yes,WHS-DS,,1,PCS,piece,76169990,0,"8.210,00",,"8.210,00",1,,1,,,,15/02/18,,22/03/18,,5W,,0,47211957,10000,SOPT00000180,No,,0,,,,Open
+Order,POPT00000177,20000,No,,,      ,,,,,,,,0,Material ROT_PS - According Angebot 0656-01-18,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000177,30000,No,,,      ,,,,,,,,0,,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000177,40000,No,,,      ,,,,,,,,0,Transporte included,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000178,10000,No,GV55266,1,Item,NIPT0000526,SERVICES,,NO BRAND,SEMINAR,,,0,renova��o do contrato com a Ma,Yes,WHS-DS,,1,PCE,,99999999,0,"1.985,40",,"1.985,40",,1,1,,,,15/02/18,16/02/18,16/02/18,SBD,2W,,0,9200061001,10000,SOPT00000182,No,,0,21/02/18,,,Open
+Order,POPT00000178,20000,No,,,      ,,,,,,,,0,renova��o do contrato com a ManWinWin,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,19/02/18,,,Open
+Order,POPT00000179,10000,No,GV53541,1,Item,NIPT0000548,MECHANICAL,,NO BRAND,FILTER,,,1,Filter FC-Carbon,Yes,WHS-DS,,1,PCS,piece,84148080,0,"745,00",,"745,00",1,,1,,,,29/01/18,,19/02/18,,3W,,0,9200061002,10000,SOPT00000183,No,,0,16/02/18,,,Open
+Order,POPT00000179,20000,No,,,      ,,,,,,,,0,12374025 - Filter FC-Carbon,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000180,10000,No,GV55253,1,Item,NIPT0000524,CHEMICALS,,NO BRAND,CHEMICALS,,,5,Multiwall Carbon Nanotubes NC,Yes,WHS-DS,,5,KG,Kilogram,37079090,0,"95,00",,"95,00",5,,5,,,,15/02/18,21/02/18,28/02/18,,21D,,0,47211999,10000,SOPT00000184,No,,0,21/02/18,,,Open
+Order,POPT00000180,20000,No,,,      ,,,,,,,,0,Quotation for Nanocyl NC7000 Multiwall Carbon Nano,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000180,30000,No,,,      ,,,,,,,,0,tubes,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000180,40000,No,GV55253,,G/L Account,704100,,,,,,,1,Transport,No,WHS-DS,,1,,,,0,"95,00",,"95,00",1,,1,,,,15/02/18,,15/02/18,,,,0,,0,,No,,0,19/02/18,,,Open
+Order,POPT00000181,10000,No,GV52960,1,Item,NIPT0000527,MECHANICAL,,NO BRAND,MAKE PART,,,15,V�lvula de esfera - 1/2 macho,Yes,WHS-DS,,15,PCS,piece,76169990,0,"5,7825",,"5,7825",15,,15,,,,11/02/18,,25/02/18,,2W,,0,8200004501,10000,SOPT00000185,No,,0,16/02/18,,,Open
+Order,POPT00000181,20000,No,,,      ,,,,,,,,0,V�lvula de esfera - 1/2 macho,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000181,30000,No,GV52960,1,Item,NIPT0000528,MECHANICAL,,NO BRAND,MAKE PART,,,20,T� 3/4 de lat�o (Femea),Yes,WHS-DS,,20,PCS,piece,76169990,0,2457,,2457,20,,20,,,,11/02/18,,25/02/18,,2W,,0,8200004501,20000,SOPT00000185,No,,0,,,,Open
+Order,POPT00000181,40000,No,,,      ,,,,,,,,0,T� 3/4 de lat�o (Femea),No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000181,50000,No,GV52960,1,Item,NIPT0000529,MECHANICAL,,NO BRAND,MAKE PART,,,30,"Casquilho duplo 1/2"" lat�o f�m",Yes,WHS-DS,,30,PCS,piece,76169990,0,1064,,1064,30,,30,,,,11/02/18,,25/02/18,,2W,,0,8200004501,30000,SOPT00000185,No,,0,,,,Open
+Order,POPT00000181,60000,No,,,      ,,,,,,,,0,"Casquilho duplo 1/2"" lat�o f�mea",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000181,70000,No,GV52960,1,Item,NIPT0000530,MECHANICAL,,NO BRAND,MAKE PART,,,30,"Casquilho duplo 1/2"" lat�o mac",Yes,WHS-DS,,30,PCS,piece,76169990,0,1246,,1246,30,,30,,,,11/02/18,,25/02/18,,2W,,0,8200004501,40000,SOPT00000185,No,,0,,,,Open
+Order,POPT00000181,80000,No,,,      ,,,,,,,,0,"Casquilho duplo 1/2"" lat�o macho",No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000182,10000,No,GV53360,1,Item,NIPT0000525,MECHANICAL,,NO BRAND,MAKE PART,,,1,ProDSP LVDS Box,Yes,WHS-DS,,1,PCS,piece,76169990,0,"655,00",,"655,00",1,,1,,,,20/02/18,20/02/18,27/03/18,,5W,,0,47212110,10000,SOPT00000186,No,,0,20/02/18,,,Open
+Order,POPT00000183,10000,No,GV55228,1,Item,NIPT0000509,SERVICES,,NO BRAND,OTHERS,,,1,Video qualidade MFV,Yes,WHS-DS,,1,PCS,piece,99999999,0,"790,00",,"790,00",1,,1,,,,02/02/18,,23/02/18,,3W,,0,8200004571,10000,SOPT00000188,No,,0,,,,Open
+Order,POPT00000184,10000,No,GV52960,,Item,NIPT0000515,MECHANICAL,,NO BRAND,MAKE PART,,,0,Caixa met�lica 800x400x300 com,No,WHS-DS,,,PCS,piece,76169990,0,"125,70",,"125,70",,,,,,,20/02/18,,06/03/18,,2W,,0,8200004567,10000,SOPT00000187,No,,0,20/02/18,,,Open
+Order,POPT00000184,20000,No,,,      ,,,,,,,,0,Caixa met�lica 800x400x300 com platineRef. MAS0804,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000184,30000,No,,,      ,,,,,,,,0,30,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000185,10000,No,GV53902,1,Item,NIPT0000515,MECHANICAL,,NO BRAND,MAKE PART,,,1,Caixa met�lica 800x400x300 com,Yes,WHS-DS,,1,PCS,piece,76169990,0,"125,70",,"125,70",1,,1,,,,06/03/18,,06/03/18,,,,0,8200004567,10000,SOPT00000187,No,,0,,,,Open
+Order,POPT00000185,20000,No,,,      ,,,,,,,,0,Caixa met�lica 800x400x300 com platineRef. MAS0804,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000185,30000,No,,,      ,,,,,,,,0,30,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000186,10000,No,GV54065,1,Item,NIPT0000446,MECHANICAL,,NO BRAND,MAKE PART,,,1,Fluke 54200,Yes,WHS-DS,,1,PCS,piece,76169990,0,"1.430,00",,"1.430,00",1,,1,,,,14/02/18,21/02/18,07/03/18,,3W,,0,47212428,10000,SOPT00000189,No,,0,21/02/18,,,Open
+Order,POPT00000186,20000,No,,,      ,,,,,,,,0,Fluke 54200TV Signal Generator,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000187,10000,No,GV55480,1,Item,NIPT0000593,SERVICES,,NO BRAND,MAINT.1,,,1,Manuten��o do Gerador El�trico,Yes,WHS-DS,,1,PCS,piece,99999999,0,"650,00",,"650,00",1,,1,,,,08/02/18,,22/02/18,,2W,,0,8200004577,10000,SOPT00000190,No,,0,,,,Open
+Order,POPT00000187,20000,No,,,      ,,,,,,,,0,Renova��o de contrato de manuten��o de gerador el�,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000187,30000,No,,,      ,,,,,,,,0,trico para o ano de 2018.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000188,10000,No,GV54182,1,Item,NIPT0000556,OFFICE SUP,,NO BRAND,FURNITURE,,,1,Estantes para Sala de Apoio,Yes,WHS-DS,,1,PCS,piece,94039090,0,"3.800,00",,"3.800,00",1,,1,,,,20/02/18,,13/03/18,,21D,,0,8200004590,10000,SOPT00000191,No,,0,,,,Open
+Order,POPT00000189,10000,No,GV53902,1,Item,NIPT0000550,ELECTRICAL,,NO BRAND,AUTOMATION,,,1,Router com antena,Yes,WHS-DS,,1,PCS,piece,85371091,0,"599,90",,"599,90",1,,1,,,,08/02/18,,22/02/18,,2W,,0,8200004588,10000,SOPT00000192,No,,0,,,,Open
+Order,POPT00000190,10000,No,GV54993,1,Item,NIPT0000458,MECHANICAL,,NO BRAND,MAKE PART,,,1,Belt - 8930961001,Yes,WHS-DS,,1,PCS,piece,76169990,0,"520,00",,"520,00",1,,1,,,,29/01/18,,26/02/18,,4W,,0,9200061305,10000,SOPT00000193,No,,0,,,,Open
+Order,POPT00000190,20000,No,,,      ,,,,,,,,0,item - Belt - 8930961001supplier - CAB Produkttech,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000190,30000,No,,,      ,,,,,,,,0,nik GmbH & Co. KG.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000190,40000,No,GV54993,1,Item,NIPT0000459,MECHANICAL,,NO BRAND,MAKE PART,,,1,Blade 4M 70  8933933001,Yes,WHS-DS,,1,PCS,piece,76169990,0,"35,00",,"35,00",1,,1,,,,29/01/18,,26/02/18,,4W,,0,9200061305,20000,SOPT00000193,No,,0,,,,Open
+Order,POPT00000190,50000,No,,,      ,,,,,,,,0,ITem - Blade 4M/70 � 8933933001supplier - CAB Prod,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open
+Order,POPT00000190,60000,No,,,      ,,,,,,,,0,ukttechnik GmbH & Co. KG.,No,,,,,,,0,"0,00",,"0,00",,,,,,,,,,,,,0,,0,,No,,0,,,,Open

@@ -5,9 +5,9 @@ import org.apache.flink.types.Row
 class RowItem(row: Row, headers: Map[String, Int]) extends Item {
 
   override def refer(reference: String) = {
-    val index = headers(reference)
-    val value = row.getField(index).toString
-    if(value.nonEmpty) Some(value) else None
+    val index = headers.get(reference)
+    if(index.nonEmpty) Some(row.getField(index.get).toString)
+    else None
   }
 
   override def toString: String = {

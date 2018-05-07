@@ -48,6 +48,7 @@ object FileDataSource {
         StdFileDataSource(Uri(file.getAbsolutePath))
       } else {
         val url = ClassLoader.getSystemResource(uri.toString)
+        if (url == null) throw new IllegalArgumentException(uri.toString + " can't be found.")
         val file_2 = new File(url.toURI)
         StdFileDataSource(Uri(file_2.getAbsolutePath))
       }
