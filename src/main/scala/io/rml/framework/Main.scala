@@ -135,7 +135,7 @@ object Main {
     * @param senv The execution environment needs to be given implicitly
     * @return
     */
-  private def createStreamFromFormattedMapping(formattedMapping: FormattedRMLMapping)
+  def createStreamFromFormattedMapping(formattedMapping: FormattedRMLMapping)
                                               (implicit env: ExecutionEnvironment,
                                                senv: StreamExecutionEnvironment): DataStream[String] = {
 
@@ -164,7 +164,7 @@ object Main {
         val engine = entry._2
         // link the different steps in each pipeline
         source.stream // this will generate a stream of items
-
+                .map(item => item)
               // process every item by a processor with a loaded engine
               .map(new StdProcessor(engine))
               .name("Execute statements on items.")

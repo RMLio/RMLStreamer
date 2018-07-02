@@ -7,7 +7,7 @@ import io.rml.framework.core.model.FormattedRMLMapping
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 
-object Test extends App{
+object Test extends App {
 
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment

@@ -76,7 +76,7 @@ object RMLVoc {
     val ZOOKEEPER = Namespaces("rmls", "zookeeper")
     val BROKER = Namespaces("rmls", "broker")
     val GROUPID = Namespaces("rmls", "groupId")
-    val TOPIC = Namespaces("rlms", "topic")
+    val TOPIC = Namespaces("rmls", "topic")
 
     ///////////////////////////////////////////////////////////////////////////
     // FNML

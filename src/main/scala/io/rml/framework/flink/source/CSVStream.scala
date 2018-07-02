@@ -16,13 +16,15 @@ import org.apache.flink.table.api.{Table, TableEnvironment, Types}
 import org.apache.flink.table.api.scala.StreamTableEnvironment
 import org.apache.flink.table.sources.CsvTableSource
 import org.apache.flink.types.Row
+import org.apache.flink.api.scala._
 
 case class CSVStream(stream: DataStream[Item], headers: Array[String]) extends Stream
 
 object CSVStream {
 
   def apply(source:StreamDataSource): Stream = {
-
+    // TODO
+    null
   }
 
   def fromTCPSocketStream(hostName: String, port: Int, headers: Array[String])(implicit env: StreamExecutionEnvironment) : CSVStream = {

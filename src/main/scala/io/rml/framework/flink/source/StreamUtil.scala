@@ -4,6 +4,7 @@ package io.rml.framework.flink.source
 import io.rml.framework.core.model.TCPSocketStream
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.streaming.connectors.netty.example.TcpReceiverSource
+import org.apache.flink.api.scala._
 
 object StreamUtil {
 

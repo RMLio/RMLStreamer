@@ -35,12 +35,13 @@ object StreamDataSource {
   //TODO: this belongs in the io.rml.framework.flink package!
   //TODO: this package should now nothing about the io.rml.framework.flink package
   def fromLogicalSource(logicalSource: LogicalSource)(implicit env: StreamExecutionEnvironment): Stream = {
+    val iterator = if(logicalSource.iterator.isDefined) logicalSource.iterator.get.value else null
     logicalSource.source match {
       case source : StreamDataSource =>
         logicalSource.referenceFormulation match {
           case Uri(RMLVoc.Class.CSV) => CSVStream(source)
-          case Uri(RMLVoc.Class.XPATH) => XMLStream(source, logicalSource.iterator.get.value)
-          case Uri(RMLVoc.Class.JSONPATH) => JSONStream(source, logicalSource.iterator.get.value)
+          case Uri(RMLVoc.Class.XPATH) => XMLStream(source, iterator)
+          case Uri(RMLVoc.Class.JSONPATH) => JSONStream(source, iterator)
         }
     }
   }
