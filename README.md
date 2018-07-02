@@ -22,7 +22,7 @@ bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Soc
 
 ##### Processing a stream
 
-An example of how to define the generation of an RDF stream from a stream in an RML Mapping.
+An example of how to define the generation of an RDF stream from a stream in an RML Mapping via TCP.
 ```
  <#TripleMap>
 
@@ -31,6 +31,7 @@ An example of how to define the generation of an RDF stream from a stream in an 
         rml:source [
             rdf:type rmls:TCPSocketStream ;
             rmls:hostName "localhost";
+            rmls:type "PULL" ;
             rmls:port "5005"
         ];
         rml:referenceFormulation ql:JSONPath;
@@ -72,6 +73,25 @@ bash run.sh -p /home/wmaroy/framework/src/main/resources/json_stream_data_mappin
 Whenever data is written (every data object needs to end with `\r\n`) to the socket, this data will be processed by the RML Framework.
 
 The repository contains node.js scripts for setting up stream input and output. The readme can be found in the `scripts` folder.
+
+##### Generating a stream from a Kafka Source
+
+An example of how to define the generation of an RDF stream from a stream in an RML Mapping via Kafka.
+```
+ <#TripleMap>
+
+    a rr:TriplesMap;
+    rml:logicalSource [
+        rml:source [
+            rdf:type rmls:KafkaStream ;
+            rmls:zookeeper "zookeeper";
+            rmls:broker "broker" ;
+            rmls:groupid "groupid";
+            rmls:topic "topic";
+        ];
+        rml:referenceFormulation ql:JSONPath;
+    ];
+```
 
 ##### Generating a stream from a file
 ```
