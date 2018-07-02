@@ -4,7 +4,7 @@ import java.util.Properties
 
 import com.ximpleware.extended.AutoPilotHuge
 import com.ximpleware.{AutoPilot, VTDGen}
-import io.rml.framework.core.model.KafkaStream
+import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.json.JSONItem
 import io.rml.framework.flink.item.xml.XMLItem
@@ -20,9 +20,19 @@ case class XMLStream(stream: DataStream[Item]) extends Stream
 
 object XMLStream {
 
-  def fromTCPSocketStream(hostName: String, port: Int)(implicit env: StreamExecutionEnvironment) : XMLStream = {
-    val stream = env.socketTextStream(hostName, port)
-                    .map(item => XMLItem.fromString(item).asInstanceOf[Item])
+  def apply(source:StreamDataSource, iterator : String)(implicit env: StreamExecutionEnvironment)  : Stream = {
+    source match {
+      case tcpStream : TCPSocketStream  => fromTCPSocketStream(tcpStream)
+      case fileStream : FileStream => fromFileStream(fileStream.path, iterator)
+      case kafkaStream : KafkaStream => fromKafkaStream(kafkaStream)
+    }
+  }
+
+  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream)(implicit env: StreamExecutionEnvironment) : XMLStream = {
+    val stream: DataStream[Item] = StreamUtil.createTcpSocketSource(tCPSocketStream)
+      .flatMap(item => {
+        XMLItem.fromStringOptionable(item)
+      }).map((item) => item.asInstanceOf[Item])
     XMLStream(stream)
   }
 
@@ -39,7 +49,7 @@ object XMLStream {
     properties.setProperty("zookeepers.connect", zookeepersCommaSeparated)
     properties.setProperty("group.id", kafkaStream.groupId)
     val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer08[String](kafkaStream.topic, new SimpleStringSchema(), properties))
-      .map(item => { JSONItem.fromString(item)})
+      .map(item => { XMLItem.fromString(item).asInstanceOf[Item]})
     XMLStream(stream)
   }
 

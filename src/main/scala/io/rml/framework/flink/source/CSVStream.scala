@@ -3,7 +3,7 @@ package io.rml.framework.flink.source
 import java.nio.file.Paths
 import java.util.Properties
 
-import io.rml.framework.core.model.KafkaStream
+import io.rml.framework.core.model.{KafkaStream, StreamDataSource}
 import io.rml.framework.flink.item.{Item, RowItem}
 import io.rml.framework.flink.item.csv.{CSVHeader, CSVItem}
 import io.rml.framework.flink.item.json.JSONItem
@@ -20,6 +20,10 @@ import org.apache.flink.types.Row
 case class CSVStream(stream: DataStream[Item], headers: Array[String]) extends Stream
 
 object CSVStream {
+
+  def apply(source:StreamDataSource): Stream = {
+
+  }
 
   def fromTCPSocketStream(hostName: String, port: Int, headers: Array[String])(implicit env: StreamExecutionEnvironment) : CSVStream = {
     val delimiter = ','

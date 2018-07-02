@@ -6,9 +6,8 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/scala" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/scala" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/scala" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -27,12 +26,15 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.6" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.9" level="project" />
     <orderEntry type="library" name="Maven: com.github.jsonld-java:jsonld-java:0.10.0" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient-cache:4.5.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.thrift:libthrift:0.9.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-csv:1.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.4" level="project" />
+    <orderEntry type="library" name="Maven: com.jayway.jsonpath:json-path:2.3.0" level="project" />
+    <orderEntry type="library" name="Maven: net.minidev:json-smart:2.3" level="project" />
+    <orderEntry type="library" name="Maven: net.minidev:accessors-smart:1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.0.4" level="project" />
     <orderEntry type="library" name="Maven: com.ximpleware:vtd-xml:2.11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-hadoop-compatibility_2.10:1.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-shaded-hadoop2:1.3.2" level="project" />
@@ -65,6 +67,7 @@
     <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.7" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-table_2.10:1.3-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.java-websocket:Java-WebSocket:1.3.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.mahout:mahout-integration:0.13.2-SNAPSHOT" level="project" />
@@ -136,11 +139,13 @@
     </orderEntry>
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.8.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.8.2" level="project" />
-    <orderEntry type="library" name="Maven: org.scalatest:scalatest_2.10:3.2.0-SNAP5" level="project" />
-    <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.10.6" level="project" />
-    <orderEntry type="library" name="Maven: org.scalactic:scalactic_2.10:3.2.0-SNAP5" level="project" />
-    <orderEntry type="library" name="Maven: org.scala-lang:scala-reflect:2.10.6" level="project" />
+    <orderEntry type="library" name="Maven: org.scalatest:scalatest_2.10:3.2.0-SNAP10" level="project" />
+    <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.10.7" level="project" />
+    <orderEntry type="library" name="Maven: org.scalactic:scalactic_2.10:3.2.0-SNAP10" level="project" />
+    <orderEntry type="library" name="Maven: org.scala-lang:scala-reflect:2.10.7" level="project" />
     <orderEntry type="library" name="Maven: org.apache.directory.studio:org.apache.commons.io:2.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.scalacheck:scalacheck_2.10:1.13.5" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.scala-sbt:test-interface:1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:1.10.19" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-scala_2.10:1.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-core:1.3.2" level="project" />
@@ -172,6 +177,13 @@
     <orderEntry type="library" name="Maven: com.twitter:chill_2.10:0.7.4" level="project" />
     <orderEntry type="library" name="Maven: com.twitter:chill-java:0.7.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-optimizer_2.10:1.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.flink:flink-connector-kafka-0.8_2.10:1.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.flink:flink-connector-kafka-base_2.10:1.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.kafka:kafka_2.10:0.8.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.kafka:kafka-clients:0.8.2.2" level="project" />
+    <orderEntry type="library" name="Maven: net.jpountz.lz4:lz4:1.2.0" level="project" />
+    <orderEntry type="library" name="Maven: com.yammer.metrics:metrics-core:2.2.0" level="project" />
+    <orderEntry type="library" name="Maven: com.101tec:zkclient:0.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
   </component>

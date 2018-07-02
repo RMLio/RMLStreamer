@@ -2,10 +2,9 @@ package io.rml.framework.flink.source
 
 import java.util.Properties
 
-import io.rml.framework.core.model.KafkaStream
+import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.json.JSONItem
-import org.apache.flink.api.common.io.FileInputFormat
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
@@ -14,8 +13,17 @@ import org.apache.flink.streaming.util.serialization.SimpleStringSchema
 case class JSONStream(stream: DataStream[Item]) extends Stream
 
 object JSONStream {
-  def fromTCPSocketStream(hostName: String, port: Int)(implicit env: StreamExecutionEnvironment) : JSONStream = {
-    val stream: DataStream[Item] = env.socketTextStream(hostName, port)
+
+  def apply(source:StreamDataSource, iterator : String)(implicit env: StreamExecutionEnvironment)  : Stream = {
+    source match {
+      case tcpStream : TCPSocketStream  => fromTCPSocketStream(tcpStream)
+      case fileStream : FileStream => fromFileStream(fileStream.path, iterator)
+      case kafkaStream : KafkaStream => fromKafkaStream(kafkaStream)
+    }
+  }
+
+  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream)(implicit env: StreamExecutionEnvironment) : JSONStream = {
+    val stream: DataStream[Item] = StreamUtil.createTcpSocketSource(tCPSocketStream)
                                       .flatMap(item => {
                                         JSONItem.fromStringOptionable(item)
                                       })
@@ -24,6 +32,7 @@ object JSONStream {
                                       })
     JSONStream(stream)
   }
+
   def fromFileStream(path: String, jsonPath: String)(implicit env: StreamExecutionEnvironment) : JSONStream = {
     val stream: DataStream[Item] = env.createInput(new JSONInputFormat(path, jsonPath))
     JSONStream(stream)

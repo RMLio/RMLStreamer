@@ -22,7 +22,7 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.DataSourceExtractor
+import io.rml.framework.core.extractors.{DataSourceExtractor, ExtractorUtil}
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.vocabulary.{RDFVoc, RMLVoc}
@@ -62,6 +62,7 @@ class StdDataSourceExtractor extends DataSourceExtractor {
       case classResource: RDFResource => classResource.uri match {
         case Uri(RMLVoc.Class.TCPSOCKETSTREAM) => extractTCPSocketStream(resource)
         case Uri(RMLVoc.Class.FILESTREAM) => extractFileStream(resource)
+        case Uri(RMLVoc.Class.KAFKASTREAM) => extractKafkaStream(resource)
       }
       case literal: Literal => throw new RMLException(literal.value + ": type must be a resource.")
     }
@@ -70,11 +71,24 @@ class StdDataSourceExtractor extends DataSourceExtractor {
   private def extractFileStream(resource: RDFResource) : StreamDataSource = {
     val pathProperties = resource.listProperties(RMLVoc.Property.PATH)
     require(pathProperties.length == 1, "exactly 1 path needed.")
-    val path = pathProperties.head match {
-      case literal : Literal => literal.value
-      case res: RDFResource => throw new RMLException(res.uri + ": must be a literal.")
-    }
-    FileStream(resource.uri, path)
+    val path = ExtractorUtil.matchLiteral(pathProperties.head)
+    FileStream(resource.uri, path.value)
+  }
+
+  private def extractKafkaStream(resource: RDFResource) : StreamDataSource = {
+    val zookeeperProperties = resource.listProperties(RMLVoc.Property.ZOOKEEPER)
+    require(zookeeperProperties.length == 1, "exactly 1 zookeeper needed")
+    val brokerProperties = resource.listProperties(RMLVoc.Property.BROKER)
+    require(brokerProperties.length == 1, "exactly 1 broker needed")
+    val groupIdProperties = resource.listProperties(RMLVoc.Property.GROUPID)
+    require(groupIdProperties.length == 1, "exactly 1 groupID needed")
+    val topicProperties = resource.listProperties(RMLVoc.Property.TOPIC)
+    require(topicProperties.length == 1, "exactly 1 topic needed")
+    val zookeeper = ExtractorUtil.matchLiteral(zookeeperProperties.head)
+    val broker = ExtractorUtil.matchLiteral(brokerProperties.head)
+    val groupId = ExtractorUtil.matchLiteral(groupIdProperties.head)
+    val topic = ExtractorUtil.matchLiteral(topicProperties.head)
+    KafkaStream(resource.uri, List(zookeeper.value), List(broker.value), groupId.value, topic.value)
   }
 
   private def extractTCPSocketStream(resource: RDFResource) : StreamDataSource = {
@@ -82,6 +96,9 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     require(hostNameProperties.length == 1, resource.uri.toString + ": exactly 1 hostname needed.")
     val portProperties = resource.listProperties(RMLVoc.Property.PORT)
     require(portProperties.length == 1, resource.uri.toString + ": exactly 1 port needed.")
+    val typeProperties = resource.listProperties(RMLVoc.Property.TYPE)
+    require(typeProperties.length == 1)
+
     val hostName = hostNameProperties.head match {
       case resource: RDFResource => throw new RMLException(resource.uri + ": hostname must be a literal.")
       case literal: Literal => literal.value
@@ -90,6 +107,8 @@ class StdDataSourceExtractor extends DataSourceExtractor {
       case resource: RDFResource => throw new RMLException(resource.uri + ": port must be a literal.")
       case literal: Literal => literal.value
     }
-    TCPSocketStream(resource.uri, hostName, port.toInt)
+
+    val _type = ExtractorUtil.matchLiteral(typeProperties.head)
+    TCPSocketStream(resource.uri, hostName, port.toInt, _type.value)
   }
 }

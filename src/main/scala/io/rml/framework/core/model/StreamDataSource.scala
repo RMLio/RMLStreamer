@@ -31,32 +31,17 @@ import org.apache.flink.api.scala._
 trait StreamDataSource extends DataSource
 
 object StreamDataSource {
+
+  //TODO: this belongs in the io.rml.framework.flink package!
+  //TODO: this package should now nothing about the io.rml.framework.flink package
   def fromLogicalSource(logicalSource: LogicalSource)(implicit env: StreamExecutionEnvironment): Stream = {
-    val source = logicalSource.source match {
-      case tcpStream : TCPSocketStream =>
-        val hostName = tcpStream.hostName
-        val port = tcpStream.port
+    logicalSource.source match {
+      case source : StreamDataSource =>
         logicalSource.referenceFormulation match {
-          case Uri(RMLVoc.Class.CSV) => CSVStream.fromTCPSocketStream(hostName, port, Array(""))
-          case Uri(RMLVoc.Class.XPATH) => XMLStream.fromTCPSocketStream(hostName, port)
-          case Uri(RMLVoc.Class.JSONPATH) => JSONStream.fromTCPSocketStream(hostName, port)
+          case Uri(RMLVoc.Class.CSV) => CSVStream(source)
+          case Uri(RMLVoc.Class.XPATH) => XMLStream(source, logicalSource.iterator.get.value)
+          case Uri(RMLVoc.Class.JSONPATH) => JSONStream(source, logicalSource.iterator.get.value)
         }
-      case fileStream : FileStream =>
-        val path = fileStream.path
-        val iterator = logicalSource.iterator.get.value
-        logicalSource.referenceFormulation match {
-          case Uri(RMLVoc.Class.CSV) => CSVStream.fromFileStream(path)
-          case Uri(RMLVoc.Class.XPATH) => XMLStream.fromFileStream(path, iterator)
-          case Uri(RMLVoc.Class.JSONPATH) => JSONStream.fromFileStream(path, iterator)
-        }
-      case kafkaStream: KafkaStream => {
-        logicalSource.referenceFormulation match {
-          case Uri(RMLVoc.Class.CSV) => CSVStream.fromKafkaStream(kafkaStream, null) //TODO headers!
-          case Uri(RMLVoc.Class.XPATH) => XMLStream.fromKafkaStream(kafkaStream)
-          case Uri(RMLVoc.Class.JSONPATH) => JSONStream.fromKafkaStream(kafkaStream)
-        }
-      }
     }
-    source
   }
 }

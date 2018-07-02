@@ -61,12 +61,22 @@ object RMLVoc {
     val SOURCE = Namespaces("rml", "source")
 
     ///////////////////////////////////////////////////////////////////////////
-    // RMLS
+    // RMLS: TCP Source
     ///////////////////////////////////////////////////////////////////////////
 
     val HOSTNAME = Namespaces("rmls", "hostName")
     val PORT = Namespaces("rmls", "port")
-    val PATH= Namespaces("rmls", "path")
+    val PATH = Namespaces("rmls", "path")
+    val TYPE = Namespaces("rmls", "type")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // RMLS: Kafka Source
+    ///////////////////////////////////////////////////////////////////////////
+
+    val ZOOKEEPER = Namespaces("rmls", "zookeeper")
+    val BROKER = Namespaces("rmls", "broker")
+    val GROUPID = Namespaces("rmls", "groupId")
+    val TOPIC = Namespaces("rlms", "topic")
 
     ///////////////////////////////////////////////////////////////////////////
     // FNML
@@ -108,6 +118,7 @@ object RMLVoc {
 
     val TCPSOCKETSTREAM = Namespaces("rmls", "TCPSocketStream")
     val FILESTREAM = Namespaces("rmls", "FileStream")
+    val KAFKASTREAM = Namespaces("rmls", "KafkaStream")
 
     ///////////////////////////////////////////////////////////////////////////
     // FNML

@@ -1,10 +1,7 @@
 package io.rml.framework.core.model
 
-class KafkaStream(val zookeepers: List[String],
-                  val brokers: List[String],
-                  val groupId: String,
-                  val topic: String) {
-
-
-
-}
+case class KafkaStream( uri: Uri,
+                        zookeepers: List[String],
+                        brokers: List[String],
+                        groupId: String,
+                        topic: String) extends StreamDataSource
