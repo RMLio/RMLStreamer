@@ -42,7 +42,7 @@ trait ObjectMap extends TermMap {
 case class JoinCondition(child: Literal, parent: Literal) // TODO: make this a trait?
 
 object ObjectMap {
-  def apply(uri: Uri,
+  def apply(identifier: TermNode,
             constant: Option[Value] = None,
             reference: Option[Literal] = None,
             template: Option[Literal] = None,
@@ -52,7 +52,7 @@ object ObjectMap {
             parentTriplesMap: Option[TripleMap] = None,
             joinCondition: Option[JoinCondition] = None) : ObjectMap  =
 
-    StdObjectMap(uri,
+    StdObjectMap(identifier,
       constant,
       reference,
       template,

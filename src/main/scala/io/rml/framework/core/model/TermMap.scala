@@ -39,8 +39,10 @@ package io.rml.framework.core.model
   * Spec: http://rml.io/spec.html#term-map
   *
   */
-trait TermMap extends Resource {
+trait TermMap extends Node {
 
+
+  def identifier : TermNode
   /**
     *
     * @return

@@ -46,7 +46,7 @@ object SubjectMap {
 
   /**
     *
-    * @param uri
+    * @param identifier
     * @param `class`
     * @param constant
     * @param reference
@@ -54,14 +54,14 @@ object SubjectMap {
     * @param termType
     * @return
     */
-  def apply(uri: Uri,
+  def apply(identifier: TermNode,
             `class`: List[Uri],
             constant: Option[Value],
             reference: Option[Literal],
             template: Option[Literal],
             termType: Option[Uri]): SubjectMap = {
 
-    StdSubjectMap(uri, `class`, constant, reference, template, termType)
+    StdSubjectMap(identifier, `class`, constant, reference, template, termType)
   }
 
 }

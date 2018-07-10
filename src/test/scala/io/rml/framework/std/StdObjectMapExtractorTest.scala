@@ -70,12 +70,12 @@ class StdObjectMapExtractorTest extends FunSuite with Matchers {
     objectMaps.length shouldNot be (0)
 
     objectMaps
-      .exists(objectMap => objectMap.uri == Blank()) should be (true)
+      .exists(objectMap => objectMap.identifier == Blank()) should be (true)
 
     objectMaps
       .exists(objectMap =>
           objectMap.constant.isDefined
-          && objectMap.uri == Uri("#ObjectMap")) should be (true)
+          && objectMap.identifier == Uri("#ObjectMap")) should be (true)
   }
 
 }

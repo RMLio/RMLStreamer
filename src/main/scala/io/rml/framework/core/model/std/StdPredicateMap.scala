@@ -22,9 +22,9 @@
 
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{Literal, PredicateMap, Uri, Value}
+import io.rml.framework.core.model._
 
-case class StdPredicateMap(uri: Uri,
+case class StdPredicateMap(identifier: TermNode,
                            constant: Option[Value],
                            reference: Option[Literal],
                            template: Option[Literal],

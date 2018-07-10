@@ -22,9 +22,9 @@
 
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{Literal, SubjectMap, Uri, Value}
+import io.rml.framework.core.model._
 
-case class StdSubjectMap(uri: Uri,
+case class StdSubjectMap(identifier: TermNode,
                          `class`: List[Uri],
                          constant: Option[Value],
                          reference: Option[Literal],

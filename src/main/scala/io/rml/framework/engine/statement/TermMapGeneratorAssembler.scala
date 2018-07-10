@@ -47,7 +47,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     } else if(termMap.hasTermType && termMap.termType.get == Uri(RMLVoc.Class.BLANKNODE)) {
       blankNodeGenerator()
     } else {
-      if(isWarnEnabled) logWarning(termMap.uri.toString + ": no constant, template or reference present.")
+      if(isWarnEnabled) logWarning(termMap.toString + ": no constant, template or reference present.")
       (item: Item) => None
     }
   }

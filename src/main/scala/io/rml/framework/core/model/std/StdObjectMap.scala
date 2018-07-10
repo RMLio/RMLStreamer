@@ -24,7 +24,7 @@ package io.rml.framework.core.model.std
 
 import io.rml.framework.core.model._
 
-case class StdObjectMap(uri: Uri,
+case class StdObjectMap(identifier: TermNode,
                         constant: Option[Value],
                         reference: Option[Literal],
                         template: Option[Literal],

@@ -36,13 +36,13 @@ import io.rml.framework.core.vocabulary.RMLVoc
 trait PredicateMap extends TermMap
 
 object PredicateMap {
-  def apply(uri: Uri,
+  def apply(identifier: TermNode,
             constant: Option[Value] = None,
             reference: Option[Literal] = None,
             template: Option[Literal] = None,
             termType: Option[Uri] = None) : PredicateMap =
 
-    StdPredicateMap(uri,
+    StdPredicateMap(identifier,
                     constant,
                     reference,
                     template,
