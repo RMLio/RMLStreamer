@@ -1,10 +1,6 @@
 package io.rml.framework.flink.util
 
-import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.Reader
+import java.io.{File, FileInputStream, InputStreamReader}
 
 object XMLNamespace {
 
@@ -23,7 +19,7 @@ object XMLNamespace {
       }) {
         val char = reader.read().asInstanceOf[Char]
         buffer += char
-        if(char == '>') bracketCounter += 1
+        if (char == '>') bracketCounter += 1
       }
 
     } finally {

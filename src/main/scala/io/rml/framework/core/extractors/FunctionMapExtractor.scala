@@ -1,7 +1,7 @@
 package io.rml.framework.core.extractors
 
-import io.rml.framework.core.model.{FunctionMap, Uri}
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
+import io.rml.framework.core.model.{FunctionMap, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
@@ -18,15 +18,15 @@ case class FunctionMapExtractor() extends ResourceExtractor[List[FunctionMap]] {
   override def extract(node: RDFResource): List[FunctionMap] = {
     val properties = node.listProperties(RMLVoc.Property.OBJECTMAP)
     properties.flatMap {
-      case literal : RDFLiteral =>
+      case literal: RDFLiteral =>
         throw new RMLException(literal.toString +
           ": A literal cannot be converted to a predicate object map")
 
-      case resource : RDFResource =>
+      case resource: RDFResource =>
         resource.getType match {
-        case Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP)) => Some(extractFunctionMap(resource))
-        case _ => None
-      }
+          case Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP)) => Some(extractFunctionMap(resource))
+          case _ => None
+        }
 
     }
   }

@@ -35,22 +35,24 @@ trait MappingReader {
 
   /**
     * Reads a file and converts it to an RMLMapping.
+    *
     * @param file File to be read.
     * @throws ReadException Exception when an error occurred while reading.
     * @return
     */
   @throws(classOf[ReadException])
-  def read(file : File) : RMLMapping
+  def read(file: File): RMLMapping
 
   /**
     * Reads a dump and converts it to an RMLMapping
-    * @param dump Dump to be read.
+    *
+    * @param dump     Dump to be read.
     * @param graphUri Graph URI of the RMLMapping.
     * @throws ReadException Exception when an error occurred while reading.
     * @return
     */
   @throws(classOf[ReadException])
-  def read(dump : String, graphUri : Uri) : RMLMapping
+  def read(dump: String, graphUri: Uri): RMLMapping
 
 }
 

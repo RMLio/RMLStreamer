@@ -24,8 +24,8 @@ package io.rml.framework.core.model.rdf.jena
 
 import java.io.File
 
-import io.rml.framework.core.model.rdf._
 import io.rml.framework.core.model._
+import io.rml.framework.core.model.rdf._
 import io.rml.framework.shared.ReadException
 import org.apache.jena.rdf.model.{Model, ModelFactory}
 
@@ -43,33 +43,33 @@ import org.apache.jena.rdf.model.{Model, ModelFactory}
 class JenaFactory extends RDFFactory {
 
   // used for creating statements so not always a new instance is created
-  private val _factoryModel : Model = ModelFactory.createDefaultModel()
+  private val _factoryModel: Model = ModelFactory.createDefaultModel()
 
-  override def createGraph(uri: Option[Uri]) : RDFGraph = {
+  override def createGraph(uri: Option[Uri]): RDFGraph = {
     JenaGraph(ModelFactory.createDefaultModel())
       .withUri(uri.orNull)
   }
 
   @throws(classOf[ReadException])
-  override def createGraph(file: File) : RDFGraph = {
+  override def createGraph(file: File): RDFGraph = {
     val model = JenaGraph(ModelFactory.createDefaultModel())
-                  .withUri(Uri(file.getName))
+      .withUri(Uri(file.getName))
     model.read(file)
     model
   }
 
   override def createTriple(subject: TermNode,
                             predicate: Uri,
-                            _object: Value) : RDFTriple = {
+                            _object: Value): RDFTriple = {
     val stringRepresentation = subject match {
-      case  uri: Uri => uri.toString
+      case uri: Uri => uri.toString
       case _ => null
     }
     val subjectNode = _factoryModel.createResource(stringRepresentation)
     val predicateNode = _factoryModel.createProperty(predicate.toString)
     val objectNode = _object match {
-      case o : Literal => _factoryModel.createLiteral(o.toString)
-      case o : Uri => _factoryModel.createResource(o.toString)
+      case o: Literal => _factoryModel.createLiteral(o.toString)
+      case o: Uri => _factoryModel.createResource(o.toString)
     }
     val statement = _factoryModel.createStatement(subjectNode, predicateNode, objectNode)
     JenaTriple(statement)

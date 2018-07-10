@@ -27,7 +27,7 @@ package io.rml.framework.core.vocabulary
   */
 object Namespaces {
 
-  private val _namespaces : Map[String, String] = Map(
+  private val _namespaces: Map[String, String] = Map(
     "rdf" -> "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs" -> "http://www.w3.org/2000/01/rdf-schema#",
     "rr" -> "http://www.w3.org/ns/r2rml#",
@@ -40,6 +40,7 @@ object Namespaces {
 
   /**
     * Retrieves the Uri in string format that is associated with the given prefix.
+    *
     * @param prefix Prefix to get the associated Uri string from.
     * @return
     */
@@ -48,6 +49,7 @@ object Namespaces {
   /**
     * Retrieves the Uri in string format that is associated with the given prefix
     * and appends the given suffix.
+    *
     * @param prefix Prefix to get the associated Uri string from.
     * @param suffix Suffix to append to the retrieved Uri.
     * @return

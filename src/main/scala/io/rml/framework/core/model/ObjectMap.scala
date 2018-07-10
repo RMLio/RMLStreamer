@@ -50,7 +50,7 @@ object ObjectMap {
             datatype: Option[Uri] = None,
             language: Option[Literal] = None,
             parentTriplesMap: Option[TripleMap] = None,
-            joinCondition: Option[JoinCondition] = None) : ObjectMap  =
+            joinCondition: Option[JoinCondition] = None): ObjectMap =
 
     StdObjectMap(identifier,
       constant,

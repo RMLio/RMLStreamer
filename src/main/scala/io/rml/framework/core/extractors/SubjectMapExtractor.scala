@@ -23,7 +23,6 @@
 package io.rml.framework.core.extractors
 
 import io.rml.framework.core.extractors.std.{StdSubjectMapExtractor, TermMapExtractor}
-import io.rml.framework.core.extractors.std.{StdSubjectMapExtractor, TermMapExtractor}
 import io.rml.framework.core.model.SubjectMap
 
 trait SubjectMapExtractor extends TermMapExtractor[SubjectMap]

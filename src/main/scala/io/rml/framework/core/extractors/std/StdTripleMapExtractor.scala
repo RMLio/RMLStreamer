@@ -23,9 +23,9 @@
 package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors._
-import io.rml.framework.core.internal.{Debug, Logging, Off}
-import io.rml.framework.core.model.{ParentTriplesMap, TripleMap, Uri}
-import io.rml.framework.core.model.rdf.{RDFGraph, RDFLiteral, RDFResource}
+import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.model.rdf.{RDFGraph, RDFResource}
+import io.rml.framework.core.model.{TripleMap, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
@@ -42,10 +42,11 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
   /**
     * Extracts a set of triple maps from a graph.
     * If extraction for a triple map fails, this triple map will be skipped.
+    *
     * @param graph Graph to extract an Array of triple maps from.
     * @return
     */
-  override def extract(graph: RDFGraph) : List[TripleMap] = {
+  override def extract(graph: RDFGraph): List[TripleMap] = {
 
     val tripleMapResources = filterTripleMaps(graph)
 
@@ -65,11 +66,11 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     // filter all triple map resources from the graph
     val typeUri = Uri(RMLVoc.Class.TRIPLEMAP)
     val tripleMapResources = (graph.filterResources(typeUri) ++
-                             graph.filterProperties(Uri(RMLVoc.Property.LOGICALSOURCE))).distinct
+      graph.filterProperties(Uri(RMLVoc.Property.LOGICALSOURCE))).distinct
 
 
     // debug log, inside check for performance
-    if(isDebugEnabled) {
+    if (isDebugEnabled) {
       logDebug(graph.uri + ": Extracting triple maps from graph.")
       logDebug(graph.uri + ": Triple maps found: " +
         tripleMapResources.size + ", " + tripleMapResources)
@@ -83,22 +84,22 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     * @param resource
     * @return
     */
-  def extractTripleMapProperties(resource: RDFResource) : Option[TripleMap] = {
+  def extractTripleMapProperties(resource: RDFResource): Option[TripleMap] = {
     // errors can occur during extraction of sub structures
     try {
 
       // create a new triple map by extracting all sub structures
-      val  tripleMap = TripleMap(predicateObjectMapExtractor.extract(resource),
-                                 logicalSourceExtractor.extract(resource),
-                                 subjectMapExtractor.extract(resource),
-                                 resource.uri,
-                                 graphMapExtractor.extract(resource)
-                                 )
+      val tripleMap = TripleMap(predicateObjectMapExtractor.extract(resource),
+        logicalSourceExtractor.extract(resource),
+        subjectMapExtractor.extract(resource),
+        resource.uri,
+        graphMapExtractor.extract(resource)
+      )
       Some(tripleMap)
 
     } catch {
       // in case of an error, skip this triple map and log warnings
-      case e : RMLException =>
+      case e: RMLException =>
         e.printStackTrace()
         logWarning(e.getMessage)
         logWarning(resource.uri + ": Skipping triple map.")

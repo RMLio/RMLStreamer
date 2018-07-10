@@ -27,21 +27,19 @@ import io.rml.framework.flink.item.Item
 
 class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGeneratorAssembler,
                                         objectGeneratorAssembler: ObjectGeneratorAssembler,
-                                        functionMapGeneratorAssembler: FunctionMapGeneratorAssembler)
-{
+                                        functionMapGeneratorAssembler: FunctionMapGeneratorAssembler) {
 
   def assemble(predicateObjectMap: PredicateObjectMap)
-  : List[(Item => Option[Uri], Item => Option[Value])] =
-  {
+  : List[(Item => Option[Uri], Item => Option[Value])] = {
     predicateObjectMap.predicateMaps.flatMap(predicateMap => {
       predicateObjectMap.objectMaps.map(objectMap => {
         (predicateGeneratorAssembler.assemble(predicateMap),
           objectGeneratorAssembler.assemble(objectMap))
       }) ++
-      predicateObjectMap.functionMaps.map(fnMap => {
-        (predicateGeneratorAssembler.assemble(predicateMap),
-          functionMapGeneratorAssembler.assemble(fnMap))
-      })
+        predicateObjectMap.functionMaps.map(fnMap => {
+          (predicateGeneratorAssembler.assemble(predicateMap),
+            functionMapGeneratorAssembler.assemble(fnMap))
+        })
     })
   }
 }
@@ -53,6 +51,6 @@ object PredicateObjectGeneratorAssembler {
             functionMapGeneratorAssembler: FunctionMapGeneratorAssembler = FunctionMapGeneratorAssembler())
 
   : PredicateObjectGeneratorAssembler = new PredicateObjectGeneratorAssembler(predicateGeneratorAssembler,
-                                                                              objectGeneratorAssembler,
-                                                                              functionMapGeneratorAssembler)
+    objectGeneratorAssembler,
+    functionMapGeneratorAssembler)
 }

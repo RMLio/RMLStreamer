@@ -37,5 +37,5 @@ trait Blank extends TermNode
 object Blank {
   def apply(): Blank = StdBlank()
 
-  def apply(id:String): Blank = StdBlank(id)
+  def apply(id: String): Blank = StdBlank(id)
 }

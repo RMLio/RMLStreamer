@@ -39,8 +39,9 @@ object TripleMapExtractor {
 
   /**
     * Creates a TripleMapExtractor through dependency-injection.
-    * @param logicalSourceExtractor Extractor for logical sources.
-    * @param subjectMapExtractor Extractor for subject maps.
+    *
+    * @param logicalSourceExtractor      Extractor for logical sources.
+    * @param subjectMapExtractor         Extractor for subject maps.
     * @param predicateObjectMapExtractor Extractor for predicate object maps.
     * @return
     */
@@ -52,10 +53,10 @@ object TripleMapExtractor {
   : TripleMapExtractor = {
 
     lazy val extractor = new StdTripleMapExtractor(
-                              logicalSourceExtractor,
-                              subjectMapExtractor,
-                              graphMapExtractor,
-                              predicateObjectMapExtractor)
+      logicalSourceExtractor,
+      subjectMapExtractor,
+      graphMapExtractor,
+      predicateObjectMapExtractor)
     extractor
   }
 

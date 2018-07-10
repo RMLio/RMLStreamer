@@ -25,7 +25,6 @@ package io.rml.framework.engine.statement
 import io.rml.framework.core.model._
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.sink.{FlinkRDFBlank, FlinkRDFLiteral, FlinkRDFResource, FlinkRDFTriple}
-import io.rml.framework.shared.TermTypeException
 
 /**
   * Represents a potential triple. A statement potentially generates a triple
@@ -120,7 +119,6 @@ object Statement {
                             predicate: Item => Option[Uri],
                             `object`: Item => Option[Value])
   : Statement[JoinedItem] = new ParentStatement(subject, predicate, `object`)
-
 
 
   def generateTriple(subject: TermNode, predicate: Uri, _object: Value): Option[FlinkRDFTriple] = {

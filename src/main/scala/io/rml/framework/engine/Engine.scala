@@ -22,10 +22,8 @@
 
 package io.rml.framework.engine
 
-import io.rml.framework.core.extractors.std.TermMapExtractor
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{Literal, Uri}
-import io.rml.framework.core.model.rdf.RDFTriple
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.sink.FlinkRDFTriple
 
@@ -34,7 +32,7 @@ import io.rml.framework.flink.sink.FlinkRDFTriple
   */
 trait Engine[T] extends Serializable {
 
-  def process(item: T) : List[FlinkRDFTriple]
+  def process(item: T): List[FlinkRDFTriple]
 
 }
 
@@ -43,40 +41,43 @@ object Engine extends Logging {
 
   /**
     * Retrieve reference included in a template from the given item.
+    *
     * @param template
     * @param item
     * @return
     */
-  def processTemplate(template: Literal, item: Item, encode: Boolean = false) : Option[String] = {
+  def processTemplate(template: Literal, item: Item, encode: Boolean = false): Option[String] = {
     val regex = "(\\{[^\\{\\}]*\\})".r
     val replaced = template.value.replaceAll("\\$", "#")
     val result = regex.replaceAllIn(replaced, m => {
-      val reference = removeBrackets(m.toString()).replaceAll("#","\\$")
-      val referred = if(encode) item.refer(reference).flatMap(referred => Some(Uri.encode(referred))) else item.refer(reference) // if encode, this means this is an Uri
-      if(referred.isDefined) referred.get
+      val reference = removeBrackets(m.toString()).replaceAll("#", "\\$")
+      val referred = if (encode) item.refer(reference).flatMap(referred => Some(Uri.encode(referred))) else item.refer(reference) // if encode, this means this is an Uri
+      if (referred.isDefined) referred.get
       else m.toString()
     })
-    if(regex.findFirstIn(result).isEmpty) Some(result) else None
+    if (regex.findFirstIn(result).isEmpty) Some(result) else None
   }
 
   /**
     * Retrieve the value of a reference from a given item.
+    *
     * @param reference
     * @param item
     * @return
     */
-  def processReference(reference: Literal, item: Item, encode: Boolean = false) : Option[String] = {
-    if(encode) item.refer(reference.toString).flatMap(referred => Some(Uri.encode(referred))) else item.refer(reference.toString)
+  def processReference(reference: Literal, item: Item, encode: Boolean = false): Option[String] = {
+    if (encode) item.refer(reference.toString).flatMap(referred => Some(Uri.encode(referred))) else item.refer(reference.toString)
   }
 
   /**
     * Private util method for removing brackets from a template string.
+    *
     * @param s
     * @return
     */
-  private def removeBrackets(s : String) : String = {
-    s.replace("{","")
-     .replace("}","")
+  private def removeBrackets(s: String): String = {
+    s.replace("{", "")
+      .replace("}", "")
   }
 
 }

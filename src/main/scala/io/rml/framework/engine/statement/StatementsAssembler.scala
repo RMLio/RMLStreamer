@@ -30,26 +30,27 @@ import io.rml.framework.flink.item.{Item, JoinedItem}
   * Creates statements from triple maps.
   */
 class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectGeneratorAssembler(),
-                             predicateObjectAssembler: PredicateObjectGeneratorAssembler = PredicateObjectGeneratorAssembler()) {
+                          predicateObjectAssembler: PredicateObjectGeneratorAssembler = PredicateObjectGeneratorAssembler()) {
 
   /**
     * Creates statements from a triple map.
+    *
     * @param tripleMap
     * @return
     */
   def assembleStatements(tripleMap: TripleMap): List[((Item) => Option[TermNode], (Item) => Option[Uri], (Item) => Option[Value])] = {
-      // assemble subject
-      val subjectGenerator = subjectAssembler.assemble(tripleMap.subjectMap)
-      // check for class mappings (rr:class)
-      val classMappings = getClassMappingStatements(subjectGenerator, tripleMap.subjectMap.`class`)
-      // assemble predicate and object
-      val predicateObjects = tripleMap.predicateObjectMaps.flatMap(predicateObjectMap => {
-        predicateObjectAssembler.assemble(predicateObjectMap)
-      })
-      // create the statements
-      predicateObjects.map(predicateObject => {
-        (subjectGenerator, predicateObject._1, predicateObject._2)
-      }) ++ classMappings // add class mappings
+    // assemble subject
+    val subjectGenerator = subjectAssembler.assemble(tripleMap.subjectMap)
+    // check for class mappings (rr:class)
+    val classMappings = getClassMappingStatements(subjectGenerator, tripleMap.subjectMap.`class`)
+    // assemble predicate and object
+    val predicateObjects = tripleMap.predicateObjectMaps.flatMap(predicateObjectMap => {
+      predicateObjectAssembler.assemble(predicateObjectMap)
+    })
+    // create the statements
+    predicateObjects.map(predicateObject => {
+      (subjectGenerator, predicateObject._1, predicateObject._2)
+    }) ++ classMappings // add class mappings
 
   }
 
@@ -74,7 +75,7 @@ object StatementsAssembler {
     triples.map(triple => Statement.createStandardStatement(triple._1, triple._2, triple._3))
   }
 
-  def assembleChildStatements(joinedTripleMap: JoinedTripleMap) : List[Statement[JoinedItem]] = {
+  def assembleChildStatements(joinedTripleMap: JoinedTripleMap): List[Statement[JoinedItem]] = {
     val triples = new StatementsAssembler()
       .assembleStatements(joinedTripleMap)
     triples.map(triple => Statement.createChildStatement(triple._1, triple._2, triple._3))

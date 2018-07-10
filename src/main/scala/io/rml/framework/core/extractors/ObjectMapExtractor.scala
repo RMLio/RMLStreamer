@@ -23,11 +23,10 @@
 package io.rml.framework.core.extractors
 
 import io.rml.framework.core.extractors.std.{StdObjectMapExtractor, TermMapExtractor}
-import io.rml.framework.core.extractors.std.TermMapExtractor
 import io.rml.framework.core.model.ObjectMap
 
 trait ObjectMapExtractor extends TermMapExtractor[List[ObjectMap]]
 
 object ObjectMapExtractor {
-  def apply() : ObjectMapExtractor = new StdObjectMapExtractor
+  def apply(): ObjectMapExtractor = new StdObjectMapExtractor
 }

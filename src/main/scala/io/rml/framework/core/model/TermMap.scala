@@ -42,65 +42,66 @@ package io.rml.framework.core.model
 trait TermMap extends Node {
 
 
-  def identifier : TermNode
-  /**
-    *
-    * @return
-    */
-  def constant : Option[Value]
+  def identifier: TermNode
 
   /**
     *
     * @return
     */
-  def datatype : Option[Uri] = None
+  def constant: Option[Value]
 
   /**
     *
     * @return
     */
-  def language : Option[Literal] = None
+  def datatype: Option[Uri] = None
 
   /**
     *
     * @return
     */
-  def reference : Option[Literal]
+  def language: Option[Literal] = None
 
   /**
     *
     * @return
     */
-  def template : Option[Literal]
+  def reference: Option[Literal]
 
   /**
     *
     * @return
     */
-  def termType : Option[Uri]
+  def template: Option[Literal]
 
   /**
     *
     * @return
     */
-  def hasConstant : Boolean = constant.isDefined
+  def termType: Option[Uri]
 
   /**
     *
     * @return
     */
-  def hasReference : Boolean = reference.isDefined
+  def hasConstant: Boolean = constant.isDefined
 
   /**
     *
     * @return
     */
-  def hasTemplate : Boolean = template.isDefined
+  def hasReference: Boolean = reference.isDefined
 
   /**
     *
     * @return
     */
-  def hasTermType : Boolean = termType.isDefined
+  def hasTemplate: Boolean = template.isDefined
+
+  /**
+    *
+    * @return
+    */
+  def hasTermType: Boolean = termType.isDefined
 
 }

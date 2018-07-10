@@ -1,7 +1,7 @@
 package io.rml.framework.core.extractors
 
-import io.rml.framework.core.model.{GraphMap, Literal}
 import io.rml.framework.core.model.rdf.{RDFNode, RDFResource}
+import io.rml.framework.core.model.{GraphMap, Literal}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 

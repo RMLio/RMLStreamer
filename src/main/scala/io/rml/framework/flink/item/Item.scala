@@ -29,7 +29,7 @@ import org.apache.jena.graph.BlankNodeId
   */
 trait Item extends Serializable {
 
-  def refer(reference : String) : Option[String]
+  def refer(reference: String): Option[String]
 
   val blankNodeId: BlankNodeId = BlankNodeId.create()
 

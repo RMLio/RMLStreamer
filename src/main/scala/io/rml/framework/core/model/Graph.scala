@@ -25,4 +25,4 @@ package io.rml.framework.core.model
 /**
   * Marker trait for graphs.
   */
-trait Graph extends Resource
+trait Graph extends Node

@@ -40,10 +40,11 @@ class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtracto
 
   /**
     * Extracts predicate object maps from a resource.
+    *
     * @param node Node to extract from.
     * @return
     */
-  override def extract(node: RDFResource) : List[PredicateObjectMap] = {
+  override def extract(node: RDFResource): List[PredicateObjectMap] = {
 
     logDebug(node.uri + ": Extracting predicate object maps.")
 
@@ -52,21 +53,22 @@ class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtracto
 
     // iterate over all found predicate object map resources
     properties.map {
-      case literal : RDFLiteral =>
+      case literal: RDFLiteral =>
         throw new RMLException(literal.toString +
           ": A literal cannot be converted to a predicate object map")
 
-      case resource : RDFResource => extractPredicateObjectMap(resource)
+      case resource: RDFResource => extractPredicateObjectMap(resource)
     }
 
   }
 
   /**
     * Extracts predicate object map properties from a predicate object map resource.
+    *
     * @param resource Resource that represents a predicate object map.
     * @return
     */
-  private def extractPredicateObjectMap(resource: RDFResource) : PredicateObjectMap = {
+  private def extractPredicateObjectMap(resource: RDFResource): PredicateObjectMap = {
     val objectMaps = objectMapExtractor.extract(resource)
     val functionMaps = functionMapExtractor.extract(resource)
     val predicateMaps = predicateMapExtractor.extract(resource)

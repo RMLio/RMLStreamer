@@ -41,37 +41,37 @@ import io.rml.framework.core.model.std.StdTriplesMap
   */
 trait TripleMap extends Node {
 
-  def identifier:TermNode
+  def identifier: TermNode
 
   /**
     *
     * @return
     */
-  def predicateObjectMaps : List[PredicateObjectMap]
+  def predicateObjectMaps: List[PredicateObjectMap]
 
   /**
     *
     * @return
     */
-  def logicalSource : LogicalSource
+  def logicalSource: LogicalSource
 
   /**
     *
     * @return
     */
-  def subjectMap : SubjectMap
+  def subjectMap: SubjectMap
 
   /**
     *
     * @return
     */
-  def graphMap : Option[GraphMap]
+  def graphMap: Option[GraphMap]
 
   /**
     *
     * @return
     */
-  def containsParentTripleMap : Boolean
+  def containsParentTripleMap: Boolean
 
 }
 
@@ -85,18 +85,18 @@ object TripleMap {
     * @param termNode
     * @return
     */
-  def apply(predicateObjectMaps : List[PredicateObjectMap],
+  def apply(predicateObjectMaps: List[PredicateObjectMap],
             logicalSource: LogicalSource,
             subjectMap: SubjectMap,
             termNode: TermNode,
             graphMap: Option[GraphMap] = None
-            ) : TripleMap = {
+           ): TripleMap = {
 
-      StdTriplesMap(predicateObjectMaps,
-                    logicalSource,
-                    subjectMap,
-                    graphMap,
-                    termNode)
+    StdTriplesMap(predicateObjectMaps,
+      logicalSource,
+      subjectMap,
+      graphMap,
+      termNode)
 
   }
 

@@ -23,7 +23,7 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.{JoinedTripleMap, RMLMapping, TripleMap}
+import io.rml.framework.core.model.{JoinedTripleMap, TripleMap}
 import io.rml.framework.engine.Engine
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.sink.FlinkRDFTriple
@@ -37,9 +37,10 @@ import io.rml.framework.flink.sink.FlinkRDFTriple
   * the start after loading the RML mapping document. This way, the engine avoids
   * iterating over the RML mapping model objects each time an item is being referred and
   * only needs to iterate over the prepared statements (which will be maximally equal in amount).
+  *
   * @param statements
   */
-class StatementEngine[T](val statements : List[Statement[T]]) extends Engine[T] {
+class StatementEngine[T](val statements: List[Statement[T]]) extends Engine[T] {
 
   /**
     * Process an item.
@@ -68,7 +69,7 @@ object StatementEngine extends Logging {
     val statements = tripleMaps.flatMap(StatementsAssembler.assembleStatements)
 
     // do some logging
-    if(isDebugEnabled) logDebug(statements.size + " statements were generated.")
+    if (isDebugEnabled) logDebug(statements.size + " statements were generated.")
     println(statements.size + " statements were generated.")
     // create the engine instance
     new StatementEngine(statements)
@@ -76,14 +77,15 @@ object StatementEngine extends Logging {
 
   /**
     * Assumes that the triple map only contains predicate object maps with the same PTM and join conditions (JoinedTripleMap).
+    *
     * @param tripleMap
     * @return
     */
-  def fromJoinedTriplesMap(tripleMap: JoinedTripleMap) : StatementEngine[JoinedItem] = {
+  def fromJoinedTriplesMap(tripleMap: JoinedTripleMap): StatementEngine[JoinedItem] = {
     val childStatements = StatementsAssembler.assembleChildStatements(tripleMap)
     val parentStatements = StatementsAssembler.assembleParentStatements(tripleMap)
     // do some logging
-    if(isDebugEnabled) logDebug((childStatements.size + parentStatements.size) + " statements were generated.")
+    if (isDebugEnabled) logDebug((childStatements.size + parentStatements.size) + " statements were generated.")
     new StatementEngine(childStatements ++ parentStatements)
   }
 

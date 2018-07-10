@@ -39,17 +39,17 @@ object Uri {
     * @param uri
     * @return
     */
-  def apply(uri: String) : Uri = {
-      if(uri != null) StdUri(Value.clean(uri)) else Uri("")
+  def apply(uri: String): Uri = {
+    if (uri != null) StdUri(Value.clean(uri)) else Uri("")
   }
 
   def unapply(arg: Uri): Option[String] = Some(arg.toString)
 
-  def encoded(uri: String) : Uri = {
-    if(uri != null) StdUri(encode(Value.clean(uri))) else Uri("")
+  def encoded(uri: String): Uri = {
+    if (uri != null) StdUri(encode(Value.clean(uri))) else Uri("")
   }
 
-  def encode(s: String) : String = {
+  def encode(s: String): String = {
     URLEncoder.encode(s, "UTF-8").replace("+", "%20") // https://stackoverflow.com/questions/4737841/urlencoder-not-able-to-translate-space-character
   }
 

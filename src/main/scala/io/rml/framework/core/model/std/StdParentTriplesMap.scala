@@ -22,7 +22,8 @@ case class StdParentTriplesMap(triplesMap: TripleMap) extends ParentTriplesMap {
   override def subjectMap = triplesMap.subjectMap
 
   /**
-    *cd f
+    * cd f
+    *
     * @return
     */
   override def containsParentTripleMap = triplesMap.containsParentTripleMap

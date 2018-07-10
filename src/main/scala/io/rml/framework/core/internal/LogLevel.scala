@@ -23,6 +23,9 @@
 package io.rml.framework.core.internal
 
 sealed trait LogLevel
+
 case object Debug extends LogLevel
+
 case object Info extends LogLevel
+
 case object Off extends LogLevel

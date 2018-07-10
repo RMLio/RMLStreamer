@@ -23,8 +23,7 @@
 package io.rml.framework.core.extractors
 
 import io.rml.framework.core.extractors.std.StdDataSourceExtractor
-import io.rml.framework.core.model.{DataSource, Uri}
-import io.rml.framework.core.model.rdf.RDFResource
+import io.rml.framework.core.model.DataSource
 
 trait DataSourceExtractor extends ResourceExtractor[DataSource]
 
@@ -34,9 +33,10 @@ object DataSourceExtractor {
     * Creates a data source extractor.
     * Per default, only file data sources are supported. Other sources their extraction
     * functionalities must be injected.
+    *
     * @return
     */
-  def apply() : DataSourceExtractor = {
+  def apply(): DataSourceExtractor = {
     lazy val extractor = new StdDataSourceExtractor()
     extractor
   }

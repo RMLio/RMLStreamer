@@ -32,7 +32,7 @@ trait RDFLiteral extends Literal with RDFNode
 
 object RDFLiteral {
 
-  def apply(literal: String)(implicit graph: RDFGraph) : RDFLiteral = {
+  def apply(literal: String)(implicit graph: RDFGraph): RDFLiteral = {
     graph.createLiteral(Literal(literal))
   }
 

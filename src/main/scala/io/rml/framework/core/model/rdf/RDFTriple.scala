@@ -30,11 +30,11 @@ import io.rml.framework.core.model.{TermNode, Uri, Value}
   */
 trait RDFTriple {
 
-  def subject : RDFResource
+  def subject: RDFResource
 
-  def predicate : RDFResource
+  def predicate: RDFResource
 
-  def `object` : RDFNode
+  def `object`: RDFNode
 
 }
 

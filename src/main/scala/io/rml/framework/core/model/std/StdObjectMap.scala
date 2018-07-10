@@ -30,6 +30,6 @@ case class StdObjectMap(identifier: TermNode,
                         template: Option[Literal],
                         termType: Option[Uri],
                         override val datatype: Option[Uri],
-                        override val language : Option[Literal],
+                        override val language: Option[Literal],
                         parentTriplesMap: Option[TripleMap],
                         joinCondition: Option[JoinCondition]) extends ObjectMap

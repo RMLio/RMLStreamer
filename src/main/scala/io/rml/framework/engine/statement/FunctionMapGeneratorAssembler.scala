@@ -16,16 +16,16 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
     (item: Item) => {
       val triples: List[FlinkRDFTriple] = functionEngine.process(item)
       val parameters: Map[Uri, String] = triples.filter(triple => triple.predicate.uri != Uri(RMLVoc.Property.EXECUTES))
-             .map(triple => {
-               val parameterName = triple.predicate.uri
-               val parameterValue = triple.`object`.value.toString
-               parameterName -> parameterValue
-             })
-             .toMap
+        .map(triple => {
+          val parameterName = triple.predicate.uri
+          val parameterValue = triple.`object`.value.toString
+          parameterName -> parameterValue
+        })
+        .toMap
 
-      val name : Uri = Uri(triples.filter(triple => triple.predicate.uri == Uri(RMLVoc.Property.EXECUTES))
-                                  .head.`object`.value
-                                  .toString)
+      val name: Uri = Uri(triples.filter(triple => triple.predicate.uri == Uri(RMLVoc.Property.EXECUTES))
+        .head.`object`.value
+        .toString)
 
       require(RMLEnvironment.hasTransformationRegistered(name), "Transformation " + name + " is not registered.")
       RMLEnvironment.getTransformation(name).get.execute(Parameters(parameters))

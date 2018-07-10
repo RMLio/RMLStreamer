@@ -33,13 +33,16 @@ import io.rml.framework.core.model.std.StdRMLMapping
   */
 trait RMLMapping extends Graph {
 
+
+  def identifier: TermNode
+
   /**
     *
     * @return
     */
-  def triplesMaps : List[TripleMap]
+  def triplesMaps: List[TripleMap]
 
-  def containsParentTripleMaps : Boolean
+  def containsParentTripleMaps: Boolean
 
 }
 
@@ -48,10 +51,10 @@ object RMLMapping {
   /**
     *
     * @param tripleMaps
-    * @param uri
+    * @param identifier
     * @return
     */
-  def apply(tripleMaps: List[TripleMap], uri: Uri): RMLMapping = {
+  def apply(tripleMaps: List[TripleMap], identifier: TermNode): RMLMapping = {
     // separating triple maps that contain parent triple maps
     val tmWithParentTripleMaps = tripleMaps.filter(tm => tm.containsParentTripleMap)
     val parentTriplesMaps = tmWithParentTripleMaps.flatMap(tm =>
@@ -62,7 +65,7 @@ object RMLMapping {
     // filter out all triple maps that are not parent triple maps themselves
     val nonPTMTripleMaps = tripleMaps.filter(tm => !transformedPTM.contains(ParentTriplesMap(tm)))
 
-    StdRMLMapping(nonPTMTripleMaps, uri)
+    StdRMLMapping(nonPTMTripleMaps, identifier)
   }
 
 }

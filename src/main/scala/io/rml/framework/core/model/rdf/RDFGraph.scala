@@ -24,7 +24,7 @@ package io.rml.framework.core.model.rdf
 
 import java.io.File
 
-import io.rml.framework.core.model.rdf.jena.{JenaFactory, JenaGraph}
+import io.rml.framework.core.model.rdf.jena.JenaFactory
 import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.util.Format
 import io.rml.framework.shared.ReadException
@@ -44,19 +44,19 @@ trait RDFGraph extends RDFNode {
     *
     * @param triple
     */
-  def addTriple(triple: RDFTriple) : Unit
+  def addTriple(triple: RDFTriple): Unit
 
   /**
     *
     * @param triples
     */
-  def addTriples(triples: List[RDFTriple]) : Unit
+  def addTriples(triples: List[RDFTriple]): Unit
 
   /**
     *
     * @return
     */
-  def listTriples : List[RDFTriple]
+  def listTriples: List[RDFTriple]
 
   /**
     * Filters the resources that are contained in the RDFGraph on the given
@@ -68,26 +68,26 @@ trait RDFGraph extends RDFNode {
     * @param resourceTypeUri Type uri to filter resources on.
     * @return A filtered set of RDFResource instances.
     */
-  def filterResources(resourceTypeUri : Uri) : List[RDFResource]
+  def filterResources(resourceTypeUri: Uri): List[RDFResource]
 
   /**
     * Filters the resources that are contained in the RDFGraph on the given
     * property uri. Thus, only subjects (as resources) are returned that are
     * present in triples of the following pattern:
     *
-    *  resourceUri <b> propertyUri </b> objectUri
+    * resourceUri <b> propertyUri </b> objectUri
     *
     * @param propertyUri Type uri to filter resources on.
     * @return A filtered set of RDFResource instances.
     */
-  def filterProperties(propertyUri: Uri) : List[RDFResource]
+  def filterProperties(propertyUri: Uri): List[RDFResource]
 
   /**
     *
     * @param format Output format
     * @return
     */
-  def write(format: Format) : String
+  def write(format: Format): String
 
   /**
     *
@@ -95,7 +95,7 @@ trait RDFGraph extends RDFNode {
     * @throws io.rml.framework.shared.ReadException
     */
   @throws(classOf[ReadException])
-  def read(file: File) : Unit
+  def read(file: File): Unit
 
   /**
     *
@@ -103,14 +103,15 @@ trait RDFGraph extends RDFNode {
     * @throws io.rml.framework.shared.ReadException
     */
   @throws(classOf[ReadException])
-  def read(dump: String, format: String = "TURTLE") : Unit
+  def read(dump: String, format: String = "TURTLE"): Unit
 
   /**
     * Creates an RDFResource instance from a uri.
+    *
     * @param uri Uri that represents the resource.
     * @return RDFResource instance.
     */
-  def createResource(uri: Uri) : RDFResource
+  def createResource(uri: Uri): RDFResource
 
   /**
     * Creates an RDFLiteral instance from a Literal instance.
@@ -120,10 +121,11 @@ trait RDFGraph extends RDFNode {
     * RDFLiterals are used for RDF model representations,
     * Literals are used for representing models in the RML Mapping.
     * =============================================================================================
+    *
     * @param literal Literal to generate an RDFLiteral from.
     * @return RDFLiteral instance.
     */
-  def createLiteral(literal: Literal) : RDFLiteral
+  def createLiteral(literal: Literal): RDFLiteral
 
 }
 

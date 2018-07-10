@@ -33,19 +33,19 @@ trait LogicalSource extends Node {
     *
     * @return
     */
-  def iterator : Option[Literal]
+  def iterator: Option[Literal]
 
   /**
     *
     * @return
     */
-  def source : DataSource
+  def source: DataSource
 
   /**
     *
     * @return
     */
-  def referenceFormulation : Uri
+  def referenceFormulation: Uri
 
 }
 
@@ -55,14 +55,14 @@ trait LogicalSource extends Node {
 object LogicalSource {
 
   def apply(
-            referenceFormulation: Uri,
-            iterator: Option[Literal],
-            source: DataSource) : LogicalSource = {
+             referenceFormulation: Uri,
+             iterator: Option[Literal],
+             source: DataSource): LogicalSource = {
 
-  StdLogicalSource(
-                   referenceFormulation,
-                   iterator,
-                   source)
+    StdLogicalSource(
+      referenceFormulation,
+      iterator,
+      source)
 
   }
 

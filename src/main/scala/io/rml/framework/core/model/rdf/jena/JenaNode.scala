@@ -27,8 +27,8 @@ import org.apache.jena.rdf.model.{RDFNode => JNode}
 
 object JenaNode {
 
-  def apply(node : JNode) : RDFNode = {
-    if(node.isLiteral) JenaLiteral(node.asLiteral())
+  def apply(node: JNode): RDFNode = {
+    if (node.isLiteral) JenaLiteral(node.asLiteral())
     else JenaResource(node.asResource())
   }
 

@@ -22,23 +22,23 @@
 
 package io.rml.framework.core.model.rdf.jena
 
-import java.net.URLEncoder
-
 import io.rml.framework.core.model.rdf.{RDFNode, RDFResource, RDFTriple}
 import org.apache.jena.rdf.model.Statement
 
 class JenaTriple(statement: Statement) extends RDFTriple {
 
   override def subject: RDFResource = JenaResource(statement.getSubject)
+
   override def predicate: RDFResource = JenaResource(statement.getPredicate)
+
   override def `object`: RDFNode = JenaNode(statement.getObject)
 
-  override def toString : String = {
+  override def toString: String = {
 
     statement.toString
 
-    /**"<" + URLEncoder.encode(subject.toString,"UTF-8") + "> <" + URLEncoder.encode(predicate.toString, "UTF-8") + "> <" +
-      URLEncoder.encode(`object`.toString, "UTF-8") + "> ."**/
+    /** "<" + URLEncoder.encode(subject.toString,"UTF-8") + "> <" + URLEncoder.encode(predicate.toString, "UTF-8") + "> <" +
+      *URLEncoder.encode(`object`.toString, "UTF-8") + "> ." **/
   }
 
 }

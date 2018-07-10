@@ -1,6 +1,6 @@
 package io.rml.framework.core.model
 
-import io.rml.framework.core.model.std.{StdStreamTripleMap, StdTriplesMap}
+import io.rml.framework.core.model.std.StdStreamTripleMap
 
 abstract class StreamTripleMap(tripleMap: TripleMap) extends TripleMap {
 

@@ -38,20 +38,21 @@ object FileDataSource {
 
   /**
     * Factory method for creating a file data source.
+    *
     * @param uri Uri that represents the path of the source.
     * @return An instance of DataSource.
     */
-  def apply(uri: Uri) : DataSource = {
-      val file = new File(uri.toString)
-      if(file.isAbsolute) {
-        println(Uri(file.getAbsolutePath))
-        StdFileDataSource(Uri(file.getAbsolutePath))
-      } else {
-        val url = ClassLoader.getSystemResource(uri.toString)
-        if (url == null) throw new IllegalArgumentException(uri.toString + " can't be found.")
-        val file_2 = new File(url.toURI)
-        StdFileDataSource(Uri(file_2.getAbsolutePath))
-      }
+  def apply(uri: Uri): DataSource = {
+    val file = new File(uri.toString)
+    if (file.isAbsolute) {
+      println(Uri(file.getAbsolutePath))
+      StdFileDataSource(Uri(file.getAbsolutePath))
+    } else {
+      val url = ClassLoader.getSystemResource(uri.toString)
+      if (url == null) throw new IllegalArgumentException(uri.toString + " can't be found.")
+      val file_2 = new File(url.toURI)
+      StdFileDataSource(Uri(file_2.getAbsolutePath))
+    }
   }
 
 }

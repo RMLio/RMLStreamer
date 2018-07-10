@@ -24,8 +24,8 @@ package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.SubjectMapExtractor
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.{Literal, SubjectMap, Uri}
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
+import io.rml.framework.core.model.{Literal, SubjectMap, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
@@ -37,6 +37,7 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
   /**
     * Extracts a SubjectMap from a resource.
     * It is assumed that the resource is a TriplesMap.
+    *
     * @param node Resource to extract a subject map from.
     * @throws RMLException Thrown when invalid resources/literals are found.
     * @return
@@ -49,13 +50,13 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
     val property = RMLVoc.Property.SUBJECTMAP
     val subjectMapResources = node.listProperties(property)
 
-    if(subjectMapResources.size != 1)
+    if (subjectMapResources.size != 1)
       throw new RMLException(node.uri + ": invalid amount of subject maps.")
 
     val subjectMapResource = subjectMapResources.head
     subjectMapResource match {
-      case resource : RDFResource => extractSubjectMapFromResource(resource)
-      case literal : RDFLiteral =>
+      case resource: RDFResource => extractSubjectMapFromResource(resource)
+      case literal: RDFLiteral =>
         throw new RMLException(literal.value + ": subject map must be a resource.")
     }
 
@@ -70,7 +71,7 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
     * @return Instance of SubjectMap.
     */
   @throws(classOf[RMLException])
-  private def extractSubjectMapFromResource(resource: RDFResource) : SubjectMap = {
+  private def extractSubjectMapFromResource(resource: RDFResource): SubjectMap = {
 
     val _class = extractClass(resource)
     val reference = extractReference(resource)
@@ -79,18 +80,18 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
     val termType = extractTermType(resource)
 
     logDebug(resource.uri + ": Extracted from subject map" +
-                                ": reference -> " + reference +
-                                ", constant -> " + constant +
-                                ", template -> " + template +
-                                ", termType -> " + termType +
-                                ", class -> " + _class)
+      ": reference -> " + reference +
+      ", constant -> " + constant +
+      ", template -> " + template +
+      ", termType -> " + termType +
+      ", class -> " + _class)
 
     SubjectMap(resource.uri, _class, constant, reference, template, termType)
   }
 
   override def extractTermType(resource: RDFResource): Option[Uri] = {
     val result = super.extractTermType(resource)
-    if(result.isDefined) result else Some(Uri(RMLVoc.Class.IRI))
+    if (result.isDefined) result else Some(Uri(RMLVoc.Class.IRI))
   }
 
   /**
@@ -101,12 +102,12 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
     * @return A set containing all class Uri's.
     */
   @throws(classOf[RMLException])
-  private def extractClass(resource: RDFResource) : List[Uri] = {
+  private def extractClass(resource: RDFResource): List[Uri] = {
     val property = RMLVoc.Property.CLASS
     val classResources = resource.listProperties(property)
     classResources.map {
-      case resource : RDFResource => resource.uri
-      case literal : Literal =>
+      case resource: RDFResource => resource.uri
+      case literal: Literal =>
         throw new RMLException(literal.value + ": not a valid subject map class resource.")
     }
   }

@@ -41,19 +41,19 @@ object CSVHeader {
     CSVHeader(line, delimiter)
   }
 
-  def apply(csvLine: String, delimiter : Char) : Option[Array[String]] = {
+  def apply(csvLine: String, delimiter: Char): Option[Array[String]] = {
     try {
       val in = IOUtils.toInputStream(csvLine, "UTF-8")
       val reader = new InputStreamReader(in, "UTF-8")
       val parser = CSVFormat.newFormat(delimiter)
-                            .withQuote('"')
-                            .withTrim()
-                            .parse(reader)
+        .withQuote('"')
+        .withTrim()
+        .parse(reader)
 
       Some(parser.getRecords.get(0).iterator().asScala.toArray)
     } catch {
-      case e : IOException => None
-      case e : IndexOutOfBoundsException => None
+      case e: IOException => None
+      case e: IndexOutOfBoundsException => None
     }
 
   }

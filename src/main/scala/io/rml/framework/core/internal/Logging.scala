@@ -31,7 +31,7 @@ trait Logging {
 
   private val logger = LogManager.getLogger(this.getClass.getName)
 
-  def logDebug(log : String): Unit = logger.debug(log)
+  def logDebug(log: String): Unit = logger.debug(log)
 
   def logInfo(log: String): Unit = logger.info(log)
 
@@ -39,18 +39,18 @@ trait Logging {
 
   def logWarning(log: String): Unit = logger.warn(log)
 
-  def isDebugEnabled : Boolean = logger.isDebugEnabled
+  def isDebugEnabled: Boolean = logger.isDebugEnabled
 
-  def isWarnEnabled : Boolean = logger.isWarnEnabled()
+  def isWarnEnabled: Boolean = logger.isWarnEnabled()
 
 }
 
 object Logging {
 
-  private[this] var _level : LogLevel = Debug
+  private[this] var _level: LogLevel = Debug
 
   @deprecated
-  def setLogLevel(level : LogLevel): Unit = _level = level
+  def setLogLevel(level: LogLevel): Unit = _level = level
 
   @deprecated
   def logLevel: LogLevel = _level

@@ -40,11 +40,11 @@ object PredicateMap {
             constant: Option[Value] = None,
             reference: Option[Literal] = None,
             template: Option[Literal] = None,
-            termType: Option[Uri] = None) : PredicateMap =
+            termType: Option[Uri] = None): PredicateMap =
 
     StdPredicateMap(identifier,
-                    constant,
-                    reference,
-                    template,
-                    Some(Uri(RMLVoc.Class.IRI)))
+      constant,
+      reference,
+      template,
+      Some(Uri(RMLVoc.Class.IRI)))
 }

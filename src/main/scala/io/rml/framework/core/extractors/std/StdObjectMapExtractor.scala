@@ -41,6 +41,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
 
   /**
     * Extract objects. These are shortcuts for object maps with constants.
+    *
     * @param resource
     * @return
     */
@@ -59,6 +60,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
 
   /**
     * Extract object maps.
+    *
     * @param resource
     * @return
     */
@@ -80,10 +82,11 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
 
   /**
     * Extract a single object map.
+    *
     * @param resource
     * @return
     */
-  private def extractObjectMap(resource: RDFResource) : ObjectMap = {
+  private def extractObjectMap(resource: RDFResource): ObjectMap = {
 
     require(resource != null, "Resource can't be null.")
 
@@ -99,13 +102,13 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     ObjectMap(resource.uri, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition)
   }
 
-  def extractDatatype(resource: RDFResource) : Option[Uri] = {
+  def extractDatatype(resource: RDFResource): Option[Uri] = {
     val property = RMLVoc.Property.DATATYPE
     val properties = resource.listProperties(property)
 
-    if(properties.size > 1)
+    if (properties.size > 1)
       throw new RMLException(resource.uri + ": invalid amount of reference properties.")
-    if(properties.isEmpty) return None
+    if (properties.isEmpty) return None
 
     properties.head match {
       case literal: Literal => throw new RMLException(resource.uri + ": invalid data type.")
@@ -115,13 +118,13 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
 
   override def extractTermType(resource: RDFResource): Option[Uri] = {
     val result = super.extractTermType(resource)
-    if(result.isDefined) result else {
+    if (result.isDefined) result else {
       // if this is a reference-based term map or contains an referenceFormulation or has a datatype property the
       // term type is a literal
       val elements = resource.listProperties(RMLVoc.Property.REFERENCE) ++
         resource.listProperties(RMLVoc.Property.REFERENCEFORMULATION) ++
         resource.listProperties(RMLVoc.Property.DATATYPE)
-      if(elements.nonEmpty) Some(Uri(RMLVoc.Class.LITERAL))
+      if (elements.nonEmpty) Some(Uri(RMLVoc.Class.LITERAL))
       else Some(Uri(RMLVoc.Class.IRI))
     }
   }
@@ -130,9 +133,9 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     val property = RMLVoc.Property.LANGUAGE
     val properties = resource.listProperties(property)
 
-    if(properties.size > 1)
+    if (properties.size > 1)
       throw new RMLException(resource.uri + ": invalid amount of language properties.")
-    if(properties.isEmpty) return None
+    if (properties.isEmpty) return None
 
     properties.head match {
       case literal: Literal => Some(literal)
@@ -140,31 +143,31 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     }
   }
 
-  private def extractParentTriplesMap(resource: RDFResource) : Option[TripleMap] = {
+  private def extractParentTriplesMap(resource: RDFResource): Option[TripleMap] = {
 
     val property = RMLVoc.Property.PARENTTRIPLESMAP
     val properties = resource.listProperties(property)
 
-    if(properties.size > 1)
+    if (properties.size > 1)
       throw new RMLException(resource.uri + ": invalid amount of parent triple maps.")
-    if(properties.isEmpty) return None
+    if (properties.isEmpty) return None
 
     properties.head match {
       case resource: RDFResource => TripleMapExtractor().extractTripleMapProperties(resource)
-                                                        .flatMap(tm => Some(ParentTriplesMap(tm))) // transform to PTM
+        .flatMap(tm => Some(ParentTriplesMap(tm))) // transform to PTM
       case literal: Literal =>
         throw new RMLException(literal.toString + ": invalid parent triple map.")
     }
 
   }
 
-  private def extractJoinCondition(resource: RDFResource) : Option[JoinCondition] = {
+  private def extractJoinCondition(resource: RDFResource): Option[JoinCondition] = {
     val property = RMLVoc.Property.JOINCONDITION
     val properties = resource.listProperties(property)
 
-    if(properties.size > 1)
+    if (properties.size > 1)
       throw new RMLException(resource.uri + ": invalid amount of join conditions (amount=" + properties.size + ").")
-    if(properties.isEmpty) return None
+    if (properties.isEmpty) return None
 
     properties.head match {
       case resource: RDFResource => JoinConditionExtractor().extract(resource)

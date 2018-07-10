@@ -6,7 +6,7 @@ class RowItem(row: Row, headers: Map[String, Int]) extends Item {
 
   override def refer(reference: String) = {
     val index = headers.get(reference)
-    if(index.nonEmpty) Some(row.getField(index.get).toString)
+    if (index.nonEmpty) Some(row.getField(index.get).toString)
     else None
   }
 

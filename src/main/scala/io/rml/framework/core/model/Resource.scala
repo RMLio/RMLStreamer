@@ -28,7 +28,7 @@ package io.rml.framework.core.model
   */
 trait Resource extends Node {
 
-  def uri : Uri
+  def uri: Uri
 
   override def toString: String = uri.toString
 

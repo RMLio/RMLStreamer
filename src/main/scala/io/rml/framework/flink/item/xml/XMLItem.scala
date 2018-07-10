@@ -10,7 +10,7 @@ import org.w3c.dom.{Document, NodeList}
 
 import scala.util.control.NonFatal
 
-class XMLItem(xml: Document, namespaces: Map[String,String]) extends Item {
+class XMLItem(xml: Document, namespaces: Map[String, String]) extends Item {
 
   private val xPath = XPathFactory.newInstance().newXPath()
 
@@ -25,29 +25,29 @@ class XMLItem(xml: Document, namespaces: Map[String,String]) extends Item {
   })
   private val content = toString()
 
-  override def refer(reference: String) : Option[String] = {
+  override def refer(reference: String): Option[String] = {
     val xpath = "/" + xml.getFirstChild.getNodeName + "/" + reference
     // the node name is added as a little hack such that the node itself does not need to be in the reference (e.g. "/note/@day" vs "@day")
     val nodes =
       try {
-        xPath.compile(xpath).evaluate(xml, XPathConstants.NODESET).asInstanceOf[NodeList]}
+        xPath.compile(xpath).evaluate(xml, XPathConstants.NODESET).asInstanceOf[NodeList]
+      }
       catch {
         case NonFatal(e) => return None
       }
 
-    if(nodes.getLength > 0) {
+    if (nodes.getLength > 0) {
       val text = nodes.item(0).getTextContent.trim
-      if(text == null) None
+      if (text == null) None
       Some(text)
     } else None
   }
 
-  override def toString : String = {
-    import javax.xml.transform.OutputKeys
-    import javax.xml.transform.TransformerFactory
+  override def toString: String = {
+    import java.io.StringWriter
     import javax.xml.transform.dom.DOMSource
     import javax.xml.transform.stream.StreamResult
-    import java.io.StringWriter
+    import javax.xml.transform.{OutputKeys, TransformerFactory}
     val tf = TransformerFactory.newInstance
     val transformer = tf.newTransformer
     transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
@@ -62,8 +62,7 @@ class XMLItem(xml: Document, namespaces: Map[String,String]) extends Item {
 object XMLItem {
 
 
-
-  def fromString(xml:String, namespaces : Map[String,String] = Map()): XMLItem = {
+  def fromString(xml: String, namespaces: Map[String, String] = Map()): XMLItem = {
     val documentBuilderFactory = DocumentBuilderFactory.newInstance()
     documentBuilderFactory.setNamespaceAware(true)
     val documentBuilder = documentBuilderFactory.newDocumentBuilder()

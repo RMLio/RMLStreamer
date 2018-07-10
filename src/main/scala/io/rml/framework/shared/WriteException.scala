@@ -25,4 +25,4 @@ package io.rml.framework.shared
 /**
   * Exception to be thrown when a fault occurs during writing of an RML mapping file.
   */
-class WriteException(msg : String) extends RMLException(msg)
+class WriteException(msg: String) extends RMLException(msg)

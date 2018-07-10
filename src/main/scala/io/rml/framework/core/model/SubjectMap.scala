@@ -23,7 +23,6 @@
 package io.rml.framework.core.model
 
 import io.rml.framework.core.model.std.StdSubjectMap
-import io.rml.framework.core.vocabulary.RMLVoc
 
 /**
   * This trait defines a subject map. A subject map is a term map.
@@ -38,7 +37,7 @@ trait SubjectMap extends TermMap {
     *
     * @return
     */
-  def `class` : List[Uri]
+  def `class`: List[Uri]
 
 }
 

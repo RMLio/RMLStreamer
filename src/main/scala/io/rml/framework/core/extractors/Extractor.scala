@@ -27,6 +27,7 @@ import io.rml.framework.shared.RMLException
 
 /**
   * Marker trait for extractors.
+  *
   * @tparam T RDFNode to extract from.
   * @tparam R Return type of extract.
   */
@@ -34,10 +35,11 @@ trait Extractor[T <: RDFNode, R] {
 
   /**
     * Extract.
+    *
     * @param node Node to extract from.
     * @return
     */
   @throws(classOf[RMLException])
-  def extract(node : T) : R
+  def extract(node: T): R
 
 }

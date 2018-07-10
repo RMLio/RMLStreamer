@@ -23,7 +23,7 @@ object RMLEnvironment {
 
   def executeTriplesMap(): Unit = ???
 
-  def registerTransformation(transformation : Transformation): Unit = {
+  def registerTransformation(transformation: Transformation): Unit = {
     transformations.put(transformation.name, transformation)
   }
 
@@ -32,15 +32,15 @@ object RMLEnvironment {
     sources.put(uri, iterable)
   }
 
-  def getSource(uri: Uri) : Option[Iterable[Item]] = {
+  def getSource(uri: Uri): Option[Iterable[Item]] = {
     sources.get(uri)
   }
 
-  def getTransformation(uri: Uri) : Option[Transformation] = {
+  def getTransformation(uri: Uri): Option[Transformation] = {
     transformations.get(uri)
   }
 
-  def hasTransformationRegistered(uri: Uri) : Boolean = {
+  def hasTransformationRegistered(uri: Uri): Boolean = {
     transformations.contains(uri)
   }
 

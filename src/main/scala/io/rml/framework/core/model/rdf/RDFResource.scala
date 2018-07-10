@@ -23,48 +23,49 @@
 package io.rml.framework.core.model.rdf
 
 import io.rml.framework.core.model.{Resource, Uri}
+
 /**
   * This trait represents a resource that is able to query an underlying RDF model.
   * Different third-party libraries can be used by implementing implicits.
   */
 trait RDFResource extends Resource with RDFNode {
 
-  def getType : Option[Uri]
+  def getType: Option[Uri]
 
   /**
     *
     * @param property
     * @return
     */
-  def listProperties(property: String) : List[RDFNode]
+  def listProperties(property: String): List[RDFNode]
 
   /**
     *
     * @param property
     * @param resource
     */
-  def addProperty(property: String, resource: String) : RDFResource
+  def addProperty(property: String, resource: String): RDFResource
 
   /**
     *
     * @param property
     * @param resource
     */
-  def addProperty(property: String, resource: RDFResource) : RDFResource
+  def addProperty(property: String, resource: RDFResource): RDFResource
 
   /**
     *
     * @param property
     * @param literal
     */
-  def addLiteral(property: String, literal: String) : RDFResource
+  def addLiteral(property: String, literal: String): RDFResource
 
   /**
     *
     * @param property
     * @param literal
     */
-  def addLiteral(property: String, literal: RDFLiteral) : RDFResource
+  def addLiteral(property: String, literal: RDFLiteral): RDFResource
 
 }
 
@@ -74,7 +75,8 @@ object RDFResource {
     * Creates instances of RDFResources and adds these automatically to the given graph.
     * If the graph is not given, the compiler will automatically look for an implicit
     * instance of a graph. If no graph can be found, this method will fail.
-    * @param uri Uri of the resource that will be created.
+    *
+    * @param uri   Uri of the resource that will be created.
     * @param graph An implicit instance of graph must be in scope!
     * @return
     */
@@ -86,7 +88,8 @@ object RDFResource {
     * Creates instances of RDFResources and adds these automatically to the given graph.
     * If the graph is not given, the compiler will automatically look for an implicit
     * instance of a graph. If no graph can be found, this method will fail.
-    * @param uri Uri of the resource that will be created.
+    *
+    * @param uri   Uri of the resource that will be created.
     * @param graph An implicit instance of graph must be in scope!
     * @return
     */

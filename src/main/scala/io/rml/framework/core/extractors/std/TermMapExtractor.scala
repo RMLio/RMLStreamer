@@ -23,8 +23,8 @@
 package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.ResourceExtractor
-import io.rml.framework.core.model.{Literal, TermMap, Uri, Value}
 import io.rml.framework.core.model.rdf.RDFResource
+import io.rml.framework.core.model.{Literal, Uri, Value}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
@@ -32,29 +32,31 @@ import scala.util.matching.Regex
 
 /**
   * Abstract extractor for extracting common properties of term maps.
+  *
   * @tparam T
   */
 abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
 
   /**
     * Extracts template property from a resource.
+    *
     * @param resource Resource to extract from.
     * @throws RMLException thrown when an invalid template is found.
     * @return
     */
   @throws(classOf[RMLException])
-  protected def extractTemplate(resource: RDFResource) : Option[Literal] = {
+  protected def extractTemplate(resource: RDFResource): Option[Literal] = {
     val property = RMLVoc.Property.TEMPLATE
     val properties = resource.listProperties(property)
 
-    if(properties.size > 1)
+    if (properties.size > 1)
       throw new RMLException(resource.uri + ": invalid amount of template properties.")
-    if(properties.isEmpty) return None
+    if (properties.isEmpty) return None
 
     properties.head match {
       case literal: Literal => {
         // check if a template is found
-        if(TermMapExtractor.isCorrectTemplate(literal)) Some(literal)
+        if (TermMapExtractor.isCorrectTemplate(literal)) Some(literal)
         else throw new RMLException(literal.toString + ": No template found.")
       }
       case resource: RDFResource =>
@@ -64,18 +66,19 @@ abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
 
   /**
     * Extracts reference property from a resource.
+    *
     * @param resource Resource to extract from.
     * @throws RMLException thrown when an invalid reference is found.
     * @return
     */
   @throws(classOf[RMLException])
-  protected def extractReference(resource: RDFResource) : Option[Literal] = {
+  protected def extractReference(resource: RDFResource): Option[Literal] = {
     val property = RMLVoc.Property.REFERENCE
     val properties = resource.listProperties(property)
 
-    if(properties.size > 1)
+    if (properties.size > 1)
       throw new RMLException(resource.uri + ": invalid amount of reference properties.")
-    if(properties.isEmpty) return None
+    if (properties.isEmpty) return None
 
     properties.head match {
       case literal: Literal => Some(literal)
@@ -86,18 +89,19 @@ abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
 
   /**
     * Extracts constant property from a resource.
+    *
     * @param resource Resource to extract from.
     * @throws RMLException thrown when an invalid constant is found.
     * @return
     */
   @throws(classOf[RMLException])
-  protected def extractConstant(resource: RDFResource) : Option[Value] = {
+  protected def extractConstant(resource: RDFResource): Option[Value] = {
     val property = RMLVoc.Property.CONSTANT
     val properties = resource.listProperties(property)
 
-    if(properties.size > 1)
+    if (properties.size > 1)
       throw new RMLException(resource.uri + ": invalid amount of constant properties.")
-    if(properties.isEmpty) return None
+    if (properties.isEmpty) return None
 
     properties.head match {
       case literal: Literal => Some(literal)
@@ -107,18 +111,19 @@ abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
 
   /**
     * Extracts term type property from a resource.
+    *
     * @param resource Resource to extract from.
     * @throws RMLException thrown when an invalid term type is found.
     * @return
     */
   @throws(classOf[RMLException])
-  protected def extractTermType(resource: RDFResource) : Option[Uri] = {
+  protected def extractTermType(resource: RDFResource): Option[Uri] = {
     val property = RMLVoc.Property.TERMTYPE
     val properties = resource.listProperties(property)
 
-    if(properties.size > 1)
+    if (properties.size > 1)
       throw new RMLException(resource.uri + ": invalid amount of term type properties.")
-    if(properties.isEmpty) return None
+    if (properties.isEmpty) return None
 
     properties.head match {
       case resource: RDFResource => Some(resource.uri)
@@ -136,10 +141,11 @@ object TermMapExtractor {
 
   /**
     * Check if given literal is a correct template.
+    *
     * @param literal
     * @return
     */
-  def isCorrectTemplate(literal: Literal) : Boolean = {
+  def isCorrectTemplate(literal: Literal): Boolean = {
     literal.toString match {
       case TermMapExtractor.TEMPLATE_REGEX(prefix, reference, suffix) => true
       case _ => false

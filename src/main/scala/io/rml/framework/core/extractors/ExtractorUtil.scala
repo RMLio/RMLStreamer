@@ -8,7 +8,7 @@ object ExtractorUtil {
 
   def matchLiteral(node: RDFNode): Literal = {
     node match {
-      case literal : Literal => literal
+      case literal: Literal => literal
       case res: RDFResource => throw new RMLException(res.uri + ": must be a literal.")
     }
   }

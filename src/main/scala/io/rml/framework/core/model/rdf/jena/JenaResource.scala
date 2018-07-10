@@ -24,19 +24,18 @@ package io.rml.framework.core.model.rdf.jena
 
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFNode, RDFResource}
-import io.rml.framework.core.vocabulary.{RDFVoc, RMLVoc}
+import io.rml.framework.core.vocabulary.RDFVoc
 import org.apache.jena.rdf.model.Resource
 
 import scala.collection.JavaConverters._
-import scala.collection.immutable
 
-class JenaResource(val resource: Resource) extends RDFResource{
+class JenaResource(val resource: Resource) extends RDFResource {
 
   private val model = resource.getModel
 
   override def uri: Uri = {
     val _uri = resource.getURI // this can be null if it's a blank node
-    if(_uri == null) Uri(resource.getId.getLabelString) // use the internal id as Uri if it's a blank node
+    if (_uri == null) Uri(resource.getId.getLabelString) // use the internal id as Uri if it's a blank node
     else Uri(_uri)
   }
 
@@ -48,7 +47,7 @@ class JenaResource(val resource: Resource) extends RDFResource{
 
   override def addProperty(property: String, resource: String): RDFResource = {
     this.resource.addProperty(model.createProperty(property),
-                              model.createResource(resource))
+      model.createResource(resource))
     this
   }
 
@@ -58,19 +57,21 @@ class JenaResource(val resource: Resource) extends RDFResource{
     * @param that a scala object
     * @return
     */
-  override def equals(that:  Any): Boolean = {
-    that match{
-      case that: JenaResource =>  this.resource == that.resource
-      case _  => false
+  override def equals(that: Any): Boolean = {
+    that match {
+      case that: JenaResource => this.resource == that.resource
+      case _ => false
     }
   }
 
   /**
     * HashCode of the JenaResource should be equal to the hasCode of the containing resource and model
+    *
     * @return
     */
 
   override def hashCode(): Int = this.resource.hashCode() + this.model.hashCode()
+
   /**
     *
     * @param property
@@ -78,7 +79,7 @@ class JenaResource(val resource: Resource) extends RDFResource{
     */
   override def addProperty(property: String, resource: RDFResource): RDFResource = {
     this.resource.addProperty(model.createProperty(property),
-                              model.createResource(resource.uri.toString))
+      model.createResource(resource.uri.toString))
     this
   }
 
@@ -105,7 +106,7 @@ class JenaResource(val resource: Resource) extends RDFResource{
   override def getType: Option[Uri] = {
     val types: Seq[RDFNode] = listProperties(RDFVoc.Property.TYPE)
     // check if there are type statements, or else return None
-    if(types.size != 1) return None
+    if (types.size != 1) return None
     // if there is a type statement, make sure this is a Resource and that there is only one in total
     require(types.head.isInstanceOf[RDFResource], "Type must be a resource.")
 

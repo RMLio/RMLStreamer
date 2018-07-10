@@ -22,8 +22,8 @@
 
 package io.rml.framework.core.model.rdf.jena
 
-import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.model.rdf.RDFLiteral
+import io.rml.framework.core.model.{Literal, Uri}
 import org.apache.jena.rdf.model.{Literal => JLiteral}
 
 case class JenaLiteral(value: String, `type`: Option[Uri], override val language: Option[Literal]) extends RDFLiteral

@@ -1,10 +1,9 @@
 package io.rml.framework.flink.source
 
 import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.xpath.XPathFactory
 
+import com.ximpleware.VTDNav
 import com.ximpleware.extended.{AutoPilotHuge, VTDNavHuge}
-import com.ximpleware.{AutoPilot, VTDNav}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.xml.XMLItem
@@ -20,7 +19,7 @@ import scala.collection.mutable
   * @param ap
   * @param vn
   */
-class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,String]) extends Iterator[Option[Item]] with Logging {
+class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String, String]) extends Iterator[Option[Item]] with Logging {
 
   private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
   documentBuilderFactory.setNamespaceAware(true)
@@ -33,6 +32,7 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
 
   /**
     * Checks if another element can be taken.
+    *
     * @return
     */
   override def hasNext: Boolean = {
@@ -41,6 +41,7 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
 
   /**
     * Takes the next XML element.
+    *
     * @return
     */
   override def next(): Option[Item] = {
@@ -55,7 +56,7 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
     LOG.info("Node = " + node)
 
     // if node != -1: there is a match
-    if(node != -1) {
+    if (node != -1) {
 
       LOG.info("RAW STRING?: " + vn.toString(node))
 
@@ -99,23 +100,24 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
       val map = new mutable.HashMap[String, String]()
 
       // navigate to the first child
-      if(vn.toElement(VTDNav.FIRST_CHILD)) {
+      if (vn.toElement(VTDNav.FIRST_CHILD)) {
         // if first child has a direct value, add to map
         // if not, skip this one
         val node = vn.toString(vn.getCurrentIndex)
-        if(vn.getText != -1) {
+        if (vn.getText != -1) {
           val attribute = vn.toString(vn.getText - 1)
           val value = vn.toString(vn.getText)
           map.put(attribute, value)
-           //document.createElement(attribute)
-           val element = if (node.contains(':')) {
+          //document.createElement(attribute)
+          val element = if (node.contains(':')) {
             val regex = "(.*):".r
             val matches = regex.findAllIn(node).matchData map {
               m => m.group(1)
             }
             val namespaceKey = matches.toList.head
             val namespace = namespaces.get(namespaceKey).orNull
-            document.createElementNS(namespace, node)} else document.createElement(node)
+            document.createElementNS(namespace, node)
+          } else document.createElement(node)
 
           element.appendChild(document.createTextNode(value))
           firstElement.appendChild(element)
@@ -123,9 +125,9 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
 
         // navigate to the siblings of the first child, if there are:
         // add the attribute and value to the map
-        while(vn.toElement(VTDNav.NEXT_SIBLING)) {
+        while (vn.toElement(VTDNav.NEXT_SIBLING)) {
           val node = vn.toString(vn.getCurrentIndex)
-          if(vn.getText != -1) {
+          if (vn.getText != -1) {
             // if current sibling has a direct value, add to map
             // if not, skip this one
             val value = vn.toString(vn.getText)
@@ -137,7 +139,8 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
               }
               val namespaceKey = matches.toList.head
               val namespace = namespaces.get(namespaceKey).orNull
-              document.createElementNS(namespace, node)}
+              document.createElementNS(namespace, node)
+            }
             else document.createElement(node)
             element.appendChild(document.createTextNode(value))
             firstElement.appendChild(element)
@@ -153,11 +156,10 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
 
       // return the item
       //Some(item)
-      import javax.xml.transform.OutputKeys
-      import javax.xml.transform.TransformerFactory
+      import java.io.StringWriter
       import javax.xml.transform.dom.DOMSource
       import javax.xml.transform.stream.StreamResult
-      import java.io.StringWriter
+      import javax.xml.transform.{OutputKeys, TransformerFactory}
       val xmlString = try {
         val sw = new StringWriter
         val tf = TransformerFactory.newInstance
@@ -187,7 +189,7 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
 }
 
 object XMLIterator {
-  def apply(ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,String]): XMLIterator = new XMLIterator(ap, vn, namespaces)
+  def apply(ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String, String]): XMLIterator = new XMLIterator(ap, vn, namespaces)
 }
 
 

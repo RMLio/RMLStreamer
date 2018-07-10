@@ -32,6 +32,7 @@ class StdDataSourceExtractor extends DataSourceExtractor {
 
   /**
     * Extracts a data source from a resource.
+    *
     * @param node Resource to extract data source from.
     * @return
     */
@@ -40,24 +41,25 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     val property = RMLVoc.Property.SOURCE
     val properties = node.listProperties(property)
 
-    if(properties.size != 1) throw new RMLException(node.uri + ": only one data source allowed.")
+    if (properties.size != 1) throw new RMLException(node.uri + ": only one data source allowed.")
 
     properties.head match {
-      case literal : Literal => FileDataSource(Uri(literal.toString)) // the literal represents a path uri
-      case resource : RDFResource => extractDataSourceFromResource(resource)
+      case literal: Literal => FileDataSource(Uri(literal.toString)) // the literal represents a path uri
+      case resource: RDFResource => extractDataSourceFromResource(resource)
     }
 
   }
 
   /**
     * Retrieves data source properties from a resource that represents a data source.
+    *
     * @param resource Resource that represents a data source.
     * @return
     */
-  private def extractDataSourceFromResource(resource: RDFResource) : DataSource = {
+  private def extractDataSourceFromResource(resource: RDFResource): DataSource = {
     val property = RDFVoc.Property.TYPE
     val properties = resource.listProperties(property)
-    if(properties.size != 1) throw new RMLException(resource.uri + ": type must be given.")
+    if (properties.size != 1) throw new RMLException(resource.uri + ": type must be given.")
     properties.head match {
       case classResource: RDFResource => classResource.uri match {
         case Uri(RMLVoc.Class.TCPSOCKETSTREAM) => extractTCPSocketStream(resource)
@@ -68,14 +70,14 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     }
   }
 
-  private def extractFileStream(resource: RDFResource) : StreamDataSource = {
+  private def extractFileStream(resource: RDFResource): StreamDataSource = {
     val pathProperties = resource.listProperties(RMLVoc.Property.PATH)
     require(pathProperties.length == 1, "exactly 1 path needed.")
     val path = ExtractorUtil.matchLiteral(pathProperties.head)
     FileStream(resource.uri, path.value)
   }
 
-  private def extractKafkaStream(resource: RDFResource) : StreamDataSource = {
+  private def extractKafkaStream(resource: RDFResource): StreamDataSource = {
     val zookeeperProperties = resource.listProperties(RMLVoc.Property.ZOOKEEPER)
     require(zookeeperProperties.length == 1, "exactly 1 zookeeper needed")
     val brokerProperties = resource.listProperties(RMLVoc.Property.BROKER)
@@ -91,7 +93,7 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     KafkaStream(resource.uri, List(zookeeper.value), List(broker.value), groupId.value, topic.value)
   }
 
-  private def extractTCPSocketStream(resource: RDFResource) : StreamDataSource = {
+  private def extractTCPSocketStream(resource: RDFResource): StreamDataSource = {
     val hostNameProperties = resource.listProperties(RMLVoc.Property.HOSTNAME)
     require(hostNameProperties.length == 1, resource.uri.toString + ": exactly 1 hostname needed.")
     val portProperties = resource.listProperties(RMLVoc.Property.PORT)

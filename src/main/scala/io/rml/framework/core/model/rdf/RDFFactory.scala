@@ -34,6 +34,7 @@ trait RDFFactory {
 
   /**
     * Creates an empty instance of RDFGraph with an optional uri.
+    *
     * @param uri Optional uri which represents the uri of the graph.
     * @return RDFGraph instance.
     */
@@ -41,6 +42,7 @@ trait RDFFactory {
 
   /**
     * Creates an instance of RDFGraph by loading a file. The file must be in a valid RDF format.
+    *
     * @param file RDF file to create an RDFGraph from.
     * @throws ReadException Thrown when a fault occurred whilst loading the file.
     * @return RDFGraph instance.
@@ -50,11 +52,12 @@ trait RDFFactory {
 
   /**
     * Creates a RDFTriple instance from a given subject, predicate and object.
-    * @param subject Subject uri of the triple.
+    *
+    * @param subject   Subject uri of the triple.
     * @param predicate Predicate uri of the triple.
-    * @param _object Object value of the triple. This can be either a Literal or a Uri.
+    * @param _object   Object value of the triple. This can be either a Literal or a Uri.
     * @return A RDFTriple instance.
     */
-  def createTriple(subject: TermNode, predicate: Uri, _object: Value) : RDFTriple
+  def createTriple(subject: TermNode, predicate: Uri, _object: Value): RDFTriple
 
 }

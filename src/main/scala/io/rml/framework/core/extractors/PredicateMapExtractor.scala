@@ -23,7 +23,6 @@
 package io.rml.framework.core.extractors
 
 import io.rml.framework.core.extractors.std.{StdPredicateMapExtractor, TermMapExtractor}
-import io.rml.framework.core.extractors.std.StdPredicateMapExtractor
 import io.rml.framework.core.model.PredicateMap
 
 trait PredicateMapExtractor extends TermMapExtractor[List[PredicateMap]]

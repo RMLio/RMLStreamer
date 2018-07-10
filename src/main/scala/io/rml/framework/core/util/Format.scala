@@ -23,5 +23,7 @@
 package io.rml.framework.core.util
 
 sealed trait Format
+
 case object Turtle extends Format
+
 case object NTriples extends Format

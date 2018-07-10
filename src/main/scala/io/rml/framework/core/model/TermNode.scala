@@ -1,5 +1,5 @@
 package io.rml.framework.core.model
 
-trait TermNode extends Value{
+trait TermNode extends Value {
 
 }

@@ -6,8 +6,7 @@ import io.rml.framework.flink.item.csv.CSVHeader
 import io.rml.framework.flink.item.{Item, RowItem}
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala.DataSet
-import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
-import org.apache.flink.table.api.scala.{BatchTableEnvironment, StreamTableEnvironment}
+import org.apache.flink.table.api.scala.BatchTableEnvironment
 import org.apache.flink.table.api.{Table, Types}
 import org.apache.flink.table.sources.CsvTableSource
 import org.apache.flink.types.Row
@@ -21,7 +20,7 @@ object CSVDataSet {
     println("Creating CSVDataset from " + path)
 
     // extract header
-    val header: Option[Array[String]] = CSVHeader(Paths.get(path),delimiter.charAt(0))
+    val header: Option[Array[String]] = CSVHeader(Paths.get(path), delimiter.charAt(0))
 
     // create table source, tables are use for dynamically assigning headers
     val airplaneSource = CsvTableSource.builder()
@@ -30,7 +29,7 @@ object CSVDataSet {
       .fieldDelimiter(delimiter)
 
     // assign headers dynamically
-    val builder = header.get.foldLeft(airplaneSource)((a,b) => a.field(b, Types.STRING)).build()
+    val builder = header.get.foldLeft(airplaneSource)((a, b) => a.field(b, Types.STRING)).build()
 
     // register the table to the table environment
     tEnv.registerTableSource(name, builder)

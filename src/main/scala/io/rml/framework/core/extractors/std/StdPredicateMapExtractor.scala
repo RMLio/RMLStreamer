@@ -23,9 +23,8 @@
 package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.PredicateMapExtractor
-import io.rml.framework.core.extractors.PredicateMapExtractor
-import io.rml.framework.core.model.{Blank, PredicateMap, Uri}
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
+import io.rml.framework.core.model.{PredicateMap, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
@@ -42,6 +41,7 @@ class StdPredicateMapExtractor extends PredicateMapExtractor {
 
   /**
     * Extract predicates. These are shortcuts for predicate maps with constants.
+    *
     * @param resource
     * @return
     */
@@ -60,6 +60,7 @@ class StdPredicateMapExtractor extends PredicateMapExtractor {
 
   /**
     * Extract predicate maps.
+    *
     * @param resource
     * @return
     */
@@ -78,10 +79,11 @@ class StdPredicateMapExtractor extends PredicateMapExtractor {
 
   /**
     * Extract a single predicate map.
+    *
     * @param resource
     * @return
     */
-  private def extractPredicateMap(resource: RDFResource) : PredicateMap = {
+  private def extractPredicateMap(resource: RDFResource): PredicateMap = {
     val termType = Some(Uri(RMLVoc.Class.IRI)) // this is always the case as defined by the spec
     val template = extractTemplate(resource)
     val constant = extractConstant(resource)

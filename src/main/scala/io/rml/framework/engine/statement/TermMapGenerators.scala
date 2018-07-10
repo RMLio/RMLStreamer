@@ -31,22 +31,22 @@ import io.rml.framework.flink.item.Item
   */
 object TermMapGenerators {
 
-  def constantUriGenerator(constant: Value) : Item => Option[Uri] = {
+  def constantUriGenerator(constant: Value): Item => Option[Uri] = {
     // return a function that just returns the constant
     (item: Item) => {
       Some(Uri(constant.toString))
     }
   }
 
-  def constantLiteralGenerator(constant: Value, datatype: Option[Uri] = None, language: Option[Literal]) : Item => Option[Literal] = {
-      // return a function that just returns the constant
-      (item: Item) => {
-        Some(Literal(constant.toString, datatype, language))
-      }
+  def constantLiteralGenerator(constant: Value, datatype: Option[Uri] = None, language: Option[Literal]): Item => Option[Literal] = {
+    // return a function that just returns the constant
+    (item: Item) => {
+      Some(Literal(constant.toString, datatype, language))
+    }
 
   }
 
-  def templateUriGenerator(termMap: TermMap) : Item => Option[Uri] = {
+  def templateUriGenerator(termMap: TermMap): Item => Option[Uri] = {
     // return a function that processes the template
     (item: Item) => {
       for {
@@ -56,7 +56,7 @@ object TermMapGenerators {
     }
   }
 
-  def templateLiteralGenerator(termMap: TermMap) : Item => Option[Literal] = {
+  def templateLiteralGenerator(termMap: TermMap): Item => Option[Literal] = {
     // return a function that processes the template
     (item: Item) => {
       for {
@@ -66,7 +66,7 @@ object TermMapGenerators {
     }
   }
 
-  def templateBlankNodeGenerator(termMap: TermMap) : Item => Option[Blank]  = {
+  def templateBlankNodeGenerator(termMap: TermMap): Item => Option[Blank] = {
     (item: Item) => {
       for {
         value <- Engine.processTemplate(termMap.template.get, item, encode = true)
@@ -75,7 +75,7 @@ object TermMapGenerators {
     }
   }
 
-  def referenceLiteralGenerator(termMap: TermMap) : Item => Option[Literal] = {
+  def referenceLiteralGenerator(termMap: TermMap): Item => Option[Literal] = {
     // return a function that processes a reference
     (item: Item) => {
       for {
@@ -85,7 +85,7 @@ object TermMapGenerators {
     }
   }
 
-  def referenceUriGenerator(termMap: TermMap) : Item => Option[Uri] = {
+  def referenceUriGenerator(termMap: TermMap): Item => Option[Uri] = {
     // return a function that processes a reference
     (item: Item) => {
       for {

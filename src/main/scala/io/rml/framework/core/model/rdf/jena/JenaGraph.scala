@@ -26,8 +26,8 @@ import java.io.{ByteArrayInputStream, File}
 import java.nio.charset.StandardCharsets
 
 import io.rml.framework.core.internal.{Debug, Logging}
-import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFLiteral, RDFResource, RDFTriple}
+import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.util.{Format, JenaUtil, Turtle}
 import io.rml.framework.core.vocabulary.RDFVoc
 import io.rml.framework.shared.{RMLException, ReadException}
@@ -38,8 +38,8 @@ import scala.collection.JavaConverters._
 
 class JenaGraph(model: Model) extends RDFGraph with Logging {
 
-  def withUri(uri: Uri) : RDFGraph = {
-    if(uri == null) { // deprecated check
+  def withUri(uri: Uri): RDFGraph = {
+    if (uri == null) { // deprecated check
       throw new RMLException("Conversion to RDFGraph not allowed without a set URI.")
     }
     _uri = uri
@@ -61,7 +61,7 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   }
 
   override def addTriples(triples: List[RDFTriple]): Unit = {
-    val statements : java.util.List[Statement] = triples.map(extractStatementFromTriple).asJava
+    val statements: java.util.List[Statement] = triples.map(extractStatementFromTriple).asJava
     model.add(statements)
   }
 
@@ -72,7 +72,7 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   override def write(format: Format): String = ??? //TODO
 
   @throws(classOf[ReadException])
-  override def read(dump: String, format : String = "TURTLE"): Unit = {
+  override def read(dump: String, format: String = "TURTLE"): Unit = {
     val stream = new ByteArrayInputStream(dump.getBytes(StandardCharsets.UTF_8))
     try {
       model.read(stream, null, format)
@@ -87,9 +87,9 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   @throws(classOf[ReadException])
   override def read(file: File): Unit = {
     try {
-      val protocol = "file://"    // needed for loading from a file
+      val protocol = "file://" // needed for loading from a file
       model.read(protocol + file.getAbsolutePath, JenaUtil.format(Turtle))
-      withUri(Uri(file.getName))  // overwrite the graph uri with the file path
+      withUri(Uri(file.getName)) // overwrite the graph uri with the file path
       logModelWhenDebugEnabled()
     } catch {
       case jenaException: JenaException =>
@@ -105,7 +105,7 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
     * @param uri Uri that represents the resource.
     * @return RDFResource instance.
     */
-  override def createResource(uri: Uri) : RDFResource = {
+  override def createResource(uri: Uri): RDFResource = {
     val resource = model.createResource(uri.toString)
     JenaResource(resource)
   }
@@ -122,7 +122,7 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
     * @param literal Literal to generate an RDFLiteral from.
     * @return RDFLiteral instance.
     */
-  override def createLiteral(literal: Literal) : RDFLiteral = {
+  override def createLiteral(literal: Literal): RDFLiteral = {
     val _literal = model.createLiteral(literal.toString)
     JenaLiteral(_literal)
   }
@@ -148,9 +148,9 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   ////////////////////////////////////////////////
 
   // uri can change state
-  private var _uri : Uri = _
+  private var _uri: Uri = _
 
-  private def extractStatementFromTriple(triple: RDFTriple) : Statement = {
+  private def extractStatementFromTriple(triple: RDFTriple): Statement = {
     val subject = model.createResource(triple.subject.uri.toString)
     val predicate = model.createProperty(triple.predicate.uri.toString)
     val _object = model.createResource(triple.`object`.toString)
@@ -158,7 +158,7 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   }
 
   private def logModelWhenDebugEnabled(): Unit = {
-    if(Logging.logLevel == Debug) {
+    if (Logging.logLevel == Debug) {
       logDebug("Loading triples into model:")
       val statements = model.listStatements().asScala.toSet
       statements.foreach(statement => logDebug(statement.toString))

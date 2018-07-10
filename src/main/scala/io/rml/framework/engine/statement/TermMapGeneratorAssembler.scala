@@ -38,21 +38,21 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @return
     */
   def assemble(termMap: TermMap): (Item) => Option[Value] = {
-    if(termMap.hasConstant) {
+    if (termMap.hasConstant) {
       constantGenerator(termMap)
-    } else if(termMap.hasTemplate) {
+    } else if (termMap.hasTemplate) {
       templateGenerator(termMap)
-    } else if(termMap.hasReference) {
+    } else if (termMap.hasReference) {
       referenceGenerator(termMap)
-    } else if(termMap.hasTermType && termMap.termType.get == Uri(RMLVoc.Class.BLANKNODE)) {
+    } else if (termMap.hasTermType && termMap.termType.get == Uri(RMLVoc.Class.BLANKNODE)) {
       blankNodeGenerator()
     } else {
-      if(isWarnEnabled) logWarning(termMap.toString + ": no constant, template or reference present.")
+      if (isWarnEnabled) logWarning(termMap.toString + ": no constant, template or reference present.")
       (item: Item) => None
     }
   }
 
-  private def blankNodeGenerator() : Item => Option[TermNode] = {
+  private def blankNodeGenerator(): Item => Option[TermNode] = {
     (item: Item) => {
       Some(Blank())
     }
@@ -75,7 +75,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  private def templateGenerator(termMap: TermMap) : Item => Option[Value] = {
+  private def templateGenerator(termMap: TermMap): Item => Option[Value] = {
     termMap.termType.get.toString match {
       case RMLVoc.Class.IRI => TermMapGenerators.templateUriGenerator(termMap)
       case RMLVoc.Class.LITERAL => TermMapGenerators.templateLiteralGenerator(termMap)
@@ -88,7 +88,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  private def referenceGenerator(termMap: TermMap) : Item => Option[Value] = {
+  private def referenceGenerator(termMap: TermMap): Item => Option[Value] = {
     termMap.termType.get.toString match {
       case RMLVoc.Class.IRI => TermMapGenerators.referenceUriGenerator(termMap)
       case RMLVoc.Class.LITERAL => TermMapGenerators.referenceLiteralGenerator(termMap)

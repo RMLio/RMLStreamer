@@ -24,7 +24,7 @@ package io.rml.framework.core.model.std
 
 import io.rml.framework.core.model._
 
-case class StdTriplesMap(predicateObjectMaps : List[PredicateObjectMap],
+case class StdTriplesMap(predicateObjectMaps: List[PredicateObjectMap],
                          logicalSource: LogicalSource,
                          subjectMap: SubjectMap,
                          graphMap: Option[GraphMap],
