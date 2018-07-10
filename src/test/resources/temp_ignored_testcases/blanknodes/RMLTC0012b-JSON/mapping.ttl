@@ -11,7 +11,7 @@
   a rr:TriplesMap;
 
   rml:logicalSource [
-    rml:source "rml-testcases/RMLTC0012b-JSON/persons.json";
+    rml:source "tem_ignored_testcases/blanknodes/RMLTC0012b-JSON/persons.json";
     rml:referenceFormulation ql:JSONPath;
     rml:iterator "$.persons[*]"
   ];
@@ -34,7 +34,7 @@
   a rr:TriplesMap;
 
   rml:logicalSource [
-    rml:source "rml-testcases/RMLTC0012b-JSON/lives.json";
+    rml:source "tem_ignored_testcases/blanknodes/RMLTC0012b-JSON/lives.json";
     rml:referenceFormulation ql:JSONPath;
     rml:iterator "$.lives[*]"
 ];

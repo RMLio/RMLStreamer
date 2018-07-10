@@ -20,7 +20,7 @@ class OutputGenerationTest extends FlatSpec with Matchers {
 
   }
 
-  it should "throw TripleTypeException if the termType of the subject is a Literal" in {
+  it should "throw TermTypeException if the termType of the subject is a Literal" in {
     
     assertThrows[TermTypeException] {
       test(failing, checkForTermTypeException)
@@ -29,8 +29,12 @@ class OutputGenerationTest extends FlatSpec with Matchers {
   }
 
 
-
-
+  /**
+    * Check for thrown TermTypeException when reading invalid term typed subjects.
+    *
+    *
+    * @param testFolderPath
+    */
   def checkForTermTypeException(testFolderPath: String): Unit = {
     val catcher = Exception.catching(classOf[TermTypeException])
     val eitherGenerated = catcher.either(TripleGeneratorTestHelper.processFilesInTestFolder(testFolderPath).flatten)
@@ -83,6 +87,13 @@ class OutputGenerationTest extends FlatSpec with Matchers {
   }
 
 
+  /**
+    * Helper method for looping through the root folder and iterating over each test case folder.
+    * The given checkFunc will be evaluated for each test case folder.
+    *
+    * @param rootDir
+    * @param checkFunc
+    */
   def test(rootDir: String, checkFunc: String => Unit): Unit = {
     var checkedTestCases = Array("")
     for (pathString <- OutputTestHelper.getTestCaseFolders(rootDir).map(_.toString)) {
