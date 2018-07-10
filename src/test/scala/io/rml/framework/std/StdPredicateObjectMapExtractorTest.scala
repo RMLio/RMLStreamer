@@ -67,7 +67,7 @@ class StdPredicateObjectMapExtractorTest extends FunSuite with Matchers {
 
     predicateObjectMaps shouldNot be (empty)
     predicateObjectMaps
-      .exists(pom => pom.uri == Uri("#PredicateObjectMap")) should be (true)
+      .exists(pom => pom.identifier == Uri("#PredicateObjectMap")) should be (true)
 
 
   }

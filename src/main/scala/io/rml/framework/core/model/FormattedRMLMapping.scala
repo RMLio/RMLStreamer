@@ -89,7 +89,7 @@ object FormattedRMLMapping {
 
                                                               // create new poms from these grouped poms by parent triple maps
                                                               .flatMap(item => {
-                                                                item._2.map(item => PredicateObjectMap(item._1.uri, List(item._2) ,item._1.functionMaps,item._1.predicateMaps))
+                                                                item._2.map(item => PredicateObjectMap(item._1.identifier, List(item._2) ,item._1.functionMaps,item._1.predicateMaps))
                                                               })
     // every new pom will have exactly one parent triple map, create a JoinedTripleMap from these poms
     newPoms.map(pom => {
@@ -109,7 +109,7 @@ object FormattedRMLMapping {
                       .filter(item => item._1.isEmpty)
                       .flatMap(item => {
                         item._2.map(item => {
-                          PredicateObjectMap(item._1.uri, List(item._2), item._1.functionMaps,  item._1.predicateMaps)
+                          PredicateObjectMap(item._1.identifier, List(item._2), item._1.functionMaps,  item._1.predicateMaps)
                         })
                       })
     TripleMap(newPoms.toList, tripleMap.logicalSource, tripleMap.subjectMap, tripleMap.identifier)

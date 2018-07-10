@@ -80,7 +80,7 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
         ", referenceFormulation -> " + referenceFormulation)
     }
 
-    LogicalSource(resource.uri, referenceFormulation, iterator, source)
+    LogicalSource(referenceFormulation, iterator, source)
 
   }
 

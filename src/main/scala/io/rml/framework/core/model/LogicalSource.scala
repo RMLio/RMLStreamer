@@ -27,7 +27,7 @@ import io.rml.framework.core.model.std.StdLogicalSource
 /**
   * Info : ...
   */
-trait LogicalSource extends Resource {
+trait LogicalSource extends Node {
 
   /**
     *
@@ -54,12 +54,12 @@ trait LogicalSource extends Resource {
   */
 object LogicalSource {
 
-  def apply(uri:  Uri,
+  def apply(
             referenceFormulation: Uri,
             iterator: Option[Literal],
             source: DataSource) : LogicalSource = {
 
-  StdLogicalSource(uri,
+  StdLogicalSource(
                    referenceFormulation,
                    iterator,
                    source)
