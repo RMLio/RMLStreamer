@@ -51,9 +51,9 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     // iterates over predicates, converts these to predicate maps as blanks
     properties.map {
       case literal: RDFLiteral =>
-        ObjectMap(Blank(), constant = Some(Literal(literal.value)), termType = Some(Uri(RMLVoc.Class.LITERAL)))
+        ObjectMap(Uri(""), constant = Some(Literal(literal.value)), termType = Some(Uri(RMLVoc.Class.LITERAL)))
       case resource: RDFResource =>
-        ObjectMap(Blank(), constant = Some(resource.uri), termType = Some(Uri(RMLVoc.Class.IRI)))
+        ObjectMap(Uri(""), constant = Some(resource.uri), termType = Some(Uri(RMLVoc.Class.IRI)))
     }
   }
 

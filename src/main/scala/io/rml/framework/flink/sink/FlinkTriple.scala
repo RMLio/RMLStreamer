@@ -1,20 +1,20 @@
 package io.rml.framework.flink.sink
 
-import io.rml.framework.core.model.{Blank, Literal, Uri, Value}
+import io.rml.framework.core.model._
 
 /**
   * RDF Nodes for Flink that are serializable. These are used as output nodes.
   * @param value
   */
 abstract class FlinkRDFNode(val value: Value) extends Serializable
-abstract class FlinkRDFNonLiteral(val value1:Value) extends FlinkRDFNode(value1)
+abstract class FlinkRDFTermNode(val termNode:TermNode) extends FlinkRDFNode(termNode)
 
-case class FlinkRDFBlank(blank: Blank) extends FlinkRDFNonLiteral(blank){
+case class FlinkRDFBlank(blank: Blank) extends FlinkRDFTermNode(blank){
   override def toString: String = {
     "_:" + blank.toString
   }
 }
-case class FlinkRDFResource(uri: Uri) extends FlinkRDFNonLiteral(uri) {
+case class FlinkRDFResource(uri: Uri) extends FlinkRDFTermNode(uri) {
 
   override def toString: String = {
     val base = "<" + uri.toString + ">"
@@ -35,7 +35,7 @@ case class FlinkRDFLiteral(literal: Literal) extends FlinkRDFNode(literal) {
   }
 }
 
-case class FlinkRDFTriple(subject: FlinkRDFNonLiteral, predicate: FlinkRDFResource, `object`: FlinkRDFNode) extends Serializable {
+case class FlinkRDFTriple(subject: FlinkRDFTermNode, predicate: FlinkRDFResource, `object`: FlinkRDFNode) extends Serializable {
   override def toString: String = {
     subject + "  " + predicate + "  " + `object` + " ."
   }

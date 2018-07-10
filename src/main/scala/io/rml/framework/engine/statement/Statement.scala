@@ -22,7 +22,7 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.model.{Blank, Literal, Uri, Value}
+import io.rml.framework.core.model._
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.sink.{FlinkRDFBlank, FlinkRDFLiteral, FlinkRDFResource, FlinkRDFTriple}
 import io.rml.framework.shared.TermTypeException
@@ -38,7 +38,7 @@ trait Statement[T] {
   def process(item: T): Option[FlinkRDFTriple]
 }
 
-class ChildStatement(subjectGenerator: Item => Option[Uri],
+class ChildStatement(subjectGenerator: Item => Option[TermNode],
                      predicateGenerator: Item => Option[Uri],
                      objectGenerator: Item => Option[Value]) extends Statement[JoinedItem] with Serializable {
 
@@ -56,7 +56,7 @@ class ChildStatement(subjectGenerator: Item => Option[Uri],
   }
 }
 
-class ParentStatement(subjectGenerator: Item => Option[Uri],
+class ParentStatement(subjectGenerator: Item => Option[TermNode],
                       predicateGenerator: Item => Option[Uri],
                       objectGenerator: Item => Option[Value]) extends Statement[JoinedItem] with Serializable {
 
@@ -74,7 +74,7 @@ class ParentStatement(subjectGenerator: Item => Option[Uri],
   }
 }
 
-class StdStatement(subjectGenerator: Item => Option[Uri],
+class StdStatement(subjectGenerator: Item => Option[TermNode],
                    predicateGenerator: Item => Option[Uri],
                    objectGenerator: Item => Option[Value]) extends Statement[Item] with Serializable {
 
@@ -123,7 +123,7 @@ object Statement {
 
 
 
-  def generateTriple(subject: Uri, predicate: Uri, _object: Value): Option[FlinkRDFTriple] = {
+  def generateTriple(subject: TermNode, predicate: Uri, _object: Value): Option[FlinkRDFTriple] = {
 
     val subjectResource = subject match {
       case blank: Blank => FlinkRDFBlank(blank)

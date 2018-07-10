@@ -29,15 +29,8 @@ import io.rml.framework.core.model.std.StdUri
 /**
   * This trait represents a Uri.
   */
-trait Uri extends Value {
+trait Uri extends TermNode
 
-  /**
-    *
-    * @return
-    */
-  override def toString: String
-
-}
 
 object Uri {
 

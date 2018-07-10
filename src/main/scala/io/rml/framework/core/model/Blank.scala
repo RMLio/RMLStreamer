@@ -32,7 +32,7 @@ import io.rml.framework.core.model.std.StdBlank
   */
 
 //TODO: Make Blank extend Value and refactor the change.
-trait Blank extends Uri
+trait Blank extends TermNode
 
 object Blank {
   def apply(): Blank = StdBlank()
