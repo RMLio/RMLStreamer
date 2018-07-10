@@ -23,7 +23,7 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.{TermMap, Uri, Value}
+import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
 
@@ -52,9 +52,9 @@ abstract class TermMapGeneratorAssembler extends Logging {
     }
   }
 
-  private def blankNodeGenerator() : Item => Option[Value] = {
+  private def blankNodeGenerator() : Item => Option[TermNode] = {
     (item: Item) => {
-      Some(Uri(item.blankNodeId.toString))
+      Some(Blank())
     }
   }
 
