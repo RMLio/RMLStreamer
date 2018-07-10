@@ -37,7 +37,7 @@ class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectG
     * @param tripleMap
     * @return
     */
-  def assembleStatements(tripleMap: TripleMap): List[((Item) => Option[Uri], (Item) => Option[Uri], (Item) => Option[Value])] = {
+  def assembleStatements(tripleMap: TripleMap): List[((Item) => Option[TermNode], (Item) => Option[Uri], (Item) => Option[Value])] = {
       // assemble subject
       val subjectGenerator = subjectAssembler.assemble(tripleMap.subjectMap)
       // check for class mappings (rr:class)
@@ -54,8 +54,8 @@ class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectG
   }
 
 
-  private def getClassMappingStatements(subjectGenerator: (Item) => Option[Uri],
-                                        classes: List[Uri]): Seq[((Item) => Option[Uri], (Item) => Some[Uri], (Item) => Some[Uri])] = {
+  private def getClassMappingStatements(subjectGenerator: (Item) => Option[TermNode],
+                                        classes: List[Uri]): Seq[((Item) => Option[TermNode], (Item) => Some[Uri], (Item) => Some[Uri])] = {
     classes.map(_class => {
       val predicateGenerator = (item: Item) => Some(Uri(RDFVoc.Property.TYPE))
       val objectGenerator = (item: Item) => Some(_class)

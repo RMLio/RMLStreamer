@@ -103,20 +103,20 @@ class StdStatement(subjectGenerator: Item => Option[TermNode],
 
 object Statement {
 
-  def createStandardStatement(subject: Item => Option[Uri],
+  def createStandardStatement(subject: Item => Option[TermNode],
                               predicate: Item => Option[Uri],
                               `object`: Item => Option[Value])
 
-  : Statement[Item] = new StdStatement(subject: Item => Option[Uri],
+  : Statement[Item] = new StdStatement(subject: Item => Option[TermNode],
     predicate: Item => Option[Uri],
     `object`: Item => Option[Value])
 
-  def createChildStatement(subject: Item => Option[Uri],
+  def createChildStatement(subject: Item => Option[TermNode],
                            predicate: Item => Option[Uri],
                            `object`: Item => Option[Value])
   : Statement[JoinedItem] = new ChildStatement(subject, predicate, `object`)
 
-  def createParentStatement(subject: Item => Option[Uri],
+  def createParentStatement(subject: Item => Option[TermNode],
                             predicate: Item => Option[Uri],
                             `object`: Item => Option[Value])
   : Statement[JoinedItem] = new ParentStatement(subject, predicate, `object`)
