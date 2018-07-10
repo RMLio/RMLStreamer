@@ -31,7 +31,7 @@ abstract class StreamTripleMap(tripleMap: TripleMap) extends TripleMap {
     */
   override def containsParentTripleMap = tripleMap.containsParentTripleMap
 
-  override def uri = tripleMap.uri
+  override def identifier(): TermNode = tripleMap.identifier
 
   /**
     *

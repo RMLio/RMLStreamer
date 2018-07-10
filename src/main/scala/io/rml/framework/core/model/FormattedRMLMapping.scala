@@ -56,7 +56,7 @@ object FormattedRMLMapping {
     val tmWithParentTM = triplesMaps.filter(_.containsParentTripleMap)
 
     // extract all parent triple maps
-    val ptms: Seq[Uri] = tmWithParentTM.flatMap(tm => tm.predicateObjectMaps.flatMap(pm => pm.objectMaps.flatMap(om => om.parentTriplesMap))).map(item => item.uri)
+    val ptms: Seq[TermNode] = tmWithParentTM.flatMap(tm => tm.predicateObjectMaps.flatMap(pm => pm.objectMaps.flatMap(om => om.parentTriplesMap))).map(item => item.identifier)
 
     // extract all triple maps with streamed data source
     val streamTripleMaps = triplesMaps.filter(_.logicalSource.source.isInstanceOf[StreamDataSource])
@@ -72,7 +72,7 @@ object FormattedRMLMapping {
                            streamTripleMaps,
                            mapping.uri,
                            mapping.containsParentTripleMaps,
-                           extractedStandardTripleMaps ++ standardTripleMaps.filter(tm => !ptms.contains(tm.uri)),
+                           extractedStandardTripleMaps ++ standardTripleMaps.filter(tm => !ptms.contains(tm.identifier)),
                            joinedTripleMaps)
   }
 
@@ -93,7 +93,7 @@ object FormattedRMLMapping {
                                                               })
     // every new pom will have exactly one parent triple map, create a JoinedTripleMap from these poms
     newPoms.map(pom => {
-      JoinedTripleMap(TripleMap(List(pom), tripleMap.logicalSource, tripleMap.subjectMap, tripleMap.uri))
+      JoinedTripleMap(TripleMap(List(pom), tripleMap.logicalSource, tripleMap.subjectMap, tripleMap.identifier))
     }).toList
 
   }
@@ -112,7 +112,7 @@ object FormattedRMLMapping {
                           PredicateObjectMap(item._1.uri, List(item._2), item._1.functionMaps,  item._1.predicateMaps)
                         })
                       })
-    TripleMap(newPoms.toList, tripleMap.logicalSource, tripleMap.subjectMap, tripleMap.uri)
+    TripleMap(newPoms.toList, tripleMap.logicalSource, tripleMap.subjectMap, tripleMap.identifier)
   }
 
 }

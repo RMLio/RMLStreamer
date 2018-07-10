@@ -1,6 +1,6 @@
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{ParentTriplesMap, TripleMap}
+import io.rml.framework.core.model.{ParentTriplesMap, TermNode, TripleMap}
 
 case class StdParentTriplesMap(triplesMap: TripleMap) extends ParentTriplesMap {
   /**
@@ -27,7 +27,7 @@ case class StdParentTriplesMap(triplesMap: TripleMap) extends ParentTriplesMap {
     */
   override def containsParentTripleMap = triplesMap.containsParentTripleMap
 
-  override def uri = triplesMap.uri
+  override def identifier(): TermNode = triplesMap.identifier
 
   /**
     *

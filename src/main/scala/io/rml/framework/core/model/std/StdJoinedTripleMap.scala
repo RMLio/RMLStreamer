@@ -1,6 +1,6 @@
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{JoinedTripleMap, TripleMap}
+import io.rml.framework.core.model.{JoinedTripleMap, TermNode, TripleMap}
 
 case class StdJoinedTripleMap(tripleMap: TripleMap) extends JoinedTripleMap(tripleMap) {
   /**
@@ -27,7 +27,7 @@ case class StdJoinedTripleMap(tripleMap: TripleMap) extends JoinedTripleMap(trip
     */
   override def containsParentTripleMap = tripleMap.containsParentTripleMap
 
-  override def uri = tripleMap.uri
+  override def identifier(): TermNode = tripleMap.identifier
 
   /**
     *

@@ -11,10 +11,10 @@ abstract class JoinedTripleMap(tripleMap: TripleMap) extends TripleMap {
     })
   })
 
-  if(parentTriplesMaps.isEmpty) throw new RMLException(tripleMap.uri +
+  if(parentTriplesMaps.isEmpty) throw new RMLException(tripleMap.identifier +
     ": Can only create JoinedTripleMap from triple map with parent triple maps.")
 
-  if(parentTriplesMaps.exists(_ != parentTriplesMaps.head)) throw new RMLException(tripleMap.uri +
+  if(parentTriplesMaps.exists(_ != parentTriplesMaps.head)) throw new RMLException(tripleMap.identifier +
     ": Can only create JoinedTripleMap from triple map with one general parent triple map.")
 
   private val joinConditions: List[JoinCondition] = tripleMap.predicateObjectMaps.flatMap(pom => {
@@ -22,7 +22,7 @@ abstract class JoinedTripleMap(tripleMap: TripleMap) extends TripleMap {
       om.joinCondition
     })})
 
-  if(joinConditions.exists(_ != joinConditions.head)) throw new RMLException(tripleMap.uri +
+  if(joinConditions.exists(_ != joinConditions.head)) throw new RMLException(tripleMap.identifier +
     ": Can only create JoinedTripleMap from triple map with one general join condition.")
 
   val parentTriplesMap: TripleMap = parentTriplesMaps.head

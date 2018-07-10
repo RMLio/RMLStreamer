@@ -39,7 +39,9 @@ import io.rml.framework.core.model.std.StdTriplesMap
   * Spec: http://rml.io/spec.html#triples-map
   *
   */
-trait TripleMap extends Resource {
+trait TripleMap extends Node {
+
+  def identifier:TermNode
 
   /**
     *
@@ -80,13 +82,13 @@ object TripleMap {
     * @param predicateObjectMaps
     * @param logicalSource
     * @param subjectMap
-    * @param uri
+    * @param termNode
     * @return
     */
   def apply(predicateObjectMaps : List[PredicateObjectMap],
             logicalSource: LogicalSource,
             subjectMap: SubjectMap,
-            uri: Uri,
+            termNode: TermNode,
             graphMap: Option[GraphMap] = None
             ) : TripleMap = {
 
@@ -94,7 +96,7 @@ object TripleMap {
                     logicalSource,
                     subjectMap,
                     graphMap,
-                    uri)
+                    termNode)
 
   }
 
