@@ -25,7 +25,7 @@ package io.rml.framework.core.model.rdf.jena
 import java.io.File
 
 import io.rml.framework.core.model.rdf._
-import io.rml.framework.core.model.{Literal, Uri, Value}
+import io.rml.framework.core.model._
 import io.rml.framework.shared.ReadException
 import org.apache.jena.rdf.model.{Model, ModelFactory}
 
@@ -58,10 +58,14 @@ class JenaFactory extends RDFFactory {
     model
   }
 
-  override def createTriple(subject: Uri,
+  override def createTriple(subject: TermNode,
                             predicate: Uri,
                             _object: Value) : RDFTriple = {
-    val subjectNode = _factoryModel.createResource(subject.toString)
+    val stringRepresentation = subject match {
+      case  uri: Uri => uri.toString
+      case _ => null
+    }
+    val subjectNode = _factoryModel.createResource(stringRepresentation)
     val predicateNode = _factoryModel.createProperty(predicate.toString)
     val objectNode = _object match {
       case o : Literal => _factoryModel.createLiteral(o.toString)

@@ -24,7 +24,7 @@ package io.rml.framework.core.model.rdf
 
 import java.io.File
 
-import io.rml.framework.core.model.{Uri, Value}
+import io.rml.framework.core.model.{TermNode, Uri, Value}
 import io.rml.framework.shared.ReadException
 
 /**
@@ -55,6 +55,6 @@ trait RDFFactory {
     * @param _object Object value of the triple. This can be either a Literal or a Uri.
     * @return A RDFTriple instance.
     */
-  def createTriple(subject: Uri, predicate: Uri, _object: Value) : RDFTriple
+  def createTriple(subject: TermNode, predicate: Uri, _object: Value) : RDFTriple
 
 }
