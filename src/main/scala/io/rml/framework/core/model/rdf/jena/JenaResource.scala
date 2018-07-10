@@ -30,7 +30,7 @@ import org.apache.jena.rdf.model.Resource
 import scala.collection.JavaConverters._
 import scala.collection.immutable
 
-class JenaResource(resource: Resource) extends RDFResource{
+class JenaResource(val resource: Resource) extends RDFResource{
 
   private val model = resource.getModel
 
@@ -52,6 +52,25 @@ class JenaResource(resource: Resource) extends RDFResource{
     this
   }
 
+  /**
+    * Two JenaResource objects are only equal if the resource member of the objects are equal.
+    *
+    * @param that a scala object
+    * @return
+    */
+  override def equals(that:  Any): Boolean = {
+    that match{
+      case that: JenaResource =>  this.resource == that.resource
+      case _  => false
+    }
+  }
+
+  /**
+    * HashCode of the JenaResource should be equal to the hasCode of the containing resource and model
+    * @return
+    */
+
+  override def hashCode(): Int = this.resource.hashCode() + this.model.hashCode()
   /**
     *
     * @param property

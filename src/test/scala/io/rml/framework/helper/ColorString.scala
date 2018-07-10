@@ -1,5 +1,9 @@
 package io.rml.framework.helper
 
+/**
+  * Credits to:
+  * https://github.com/ktoso/scala-rainbow
+  */
 trait ColorString {
   implicit def color(s: String) = new ColoredString(s)
 

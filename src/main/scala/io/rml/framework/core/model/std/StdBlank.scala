@@ -24,4 +24,6 @@ package io.rml.framework.core.model.std
 
 import io.rml.framework.core.model.Blank
 
-case class StdBlank() extends Blank
+case class StdBlank(id:String = "_") extends Blank {
+  override def toString: String = id
+}

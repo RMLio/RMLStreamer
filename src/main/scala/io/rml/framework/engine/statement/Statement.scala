@@ -22,9 +22,10 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.model.{Literal, Uri, Value}
+import io.rml.framework.core.model.{Blank, Literal, Uri, Value}
 import io.rml.framework.flink.item.{Item, JoinedItem}
-import io.rml.framework.flink.sink.{FlinkRDFLiteral, FlinkRDFResource, FlinkRDFTriple}
+import io.rml.framework.flink.sink.{FlinkRDFBlank, FlinkRDFLiteral, FlinkRDFResource, FlinkRDFTriple}
+import io.rml.framework.shared.TermTypeException
 
 /**
   * Represents a potential triple. A statement potentially generates a triple
@@ -34,82 +35,65 @@ import io.rml.framework.flink.sink.{FlinkRDFLiteral, FlinkRDFResource, FlinkRDFT
   */
 
 trait Statement[T] {
-  def process(item : T) : Option[FlinkRDFTriple]
+  def process(item: T): Option[FlinkRDFTriple]
 }
 
-class ChildStatement(subjectGenerator : Item => Option[Uri],
-                      predicateGenerator : Item => Option[Uri],
-                      objectGenerator : Item => Option[Value]) extends Statement[JoinedItem] with Serializable {
+class ChildStatement(subjectGenerator: Item => Option[Uri],
+                     predicateGenerator: Item => Option[Uri],
+                     objectGenerator: Item => Option[Value]) extends Statement[JoinedItem] with Serializable {
 
-  def process(item: JoinedItem) : Option[FlinkRDFTriple] = {
+  def process(item: JoinedItem): Option[FlinkRDFTriple] = {
     for {
       subject <- subjectGenerator(item.child) // try to generate the subject
       predicate <- predicateGenerator(item.child) // try to generate the  predicate
       _object <- objectGenerator(item.parent) // try to generate the object
       triple <- {
-        val subjectResource = FlinkRDFResource(subject)
-        val predicateResource = FlinkRDFResource(predicate)
-        val objectNode = _object match {
-          case literal : Literal => FlinkRDFLiteral(literal)
-          case resource: Uri => FlinkRDFResource(resource)
-        }
         println("TRIPLE PROV")
         println(item)
-        println(Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode)).get.toString)
-        Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode))
+        Statement.generateTriple(subject, predicate, _object)
       } // generate the triple
     } yield triple // this can be Some[RDFTriple] or None
   }
 }
 
-class ParentStatement(subjectGenerator : Item => Option[Uri],
-                     predicateGenerator : Item => Option[Uri],
-                     objectGenerator : Item => Option[Value]) extends Statement[JoinedItem] with Serializable {
+class ParentStatement(subjectGenerator: Item => Option[Uri],
+                      predicateGenerator: Item => Option[Uri],
+                      objectGenerator: Item => Option[Value]) extends Statement[JoinedItem] with Serializable {
 
-  def process(item: JoinedItem) : Option[FlinkRDFTriple] = {
+  def process(item: JoinedItem): Option[FlinkRDFTriple] = {
     for {
       subject <- subjectGenerator(item.parent) // try to generate the subject
       predicate <- predicateGenerator(item.parent) // try to generate the  predicate
       _object <- objectGenerator(item.parent) // try to generate the object
       triple <- {
-        val subjectResource = FlinkRDFResource(subject)
-        val predicateResource = FlinkRDFResource(predicate)
-        val objectNode = _object match {
-          case literal : Literal => FlinkRDFLiteral(literal)
-          case resource: Uri => FlinkRDFResource(resource)
-        }
         println("TRIPLE PROV")
         println(item)
-        println(Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode)).get.toString)
-        Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode))
+        Statement.generateTriple(subject, predicate, _object)
       } // generate the triple
     } yield triple // this can be Some[RDFTriple] or None
   }
 }
 
-class StdStatement(subjectGenerator : Item => Option[Uri],
-                predicateGenerator : Item => Option[Uri],
-                objectGenerator : Item => Option[Value]) extends Statement[Item] with Serializable {
+class StdStatement(subjectGenerator: Item => Option[Uri],
+                   predicateGenerator: Item => Option[Uri],
+                   objectGenerator: Item => Option[Value]) extends Statement[Item] with Serializable {
 
   /**
     * Tries to refer a triple from the given item.
+    *
     * @param item
     * @return
     */
-  def process(item : Item) : Option[FlinkRDFTriple] = {
+  def process(item: Item): Option[FlinkRDFTriple] = {
 
     for {
       subject <- subjectGenerator(item) // try to generate the subject
       predicate <- predicateGenerator(item) // try to generate the  predicate
       _object <- objectGenerator(item) // try to generate the object
       triple <- {
-        val subjectResource = FlinkRDFResource(subject)
-        val predicateResource = FlinkRDFResource(predicate)
-        val objectNode = _object match {
-          case literal : Literal => FlinkRDFLiteral(literal)
-          case resource: Uri => FlinkRDFResource(resource)
-        }
-        Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode))
+        println("TRIPLE PROV")
+        println(item)
+        Statement.generateTriple(subject, predicate, _object)
       } // generate the triple
     } yield triple // this can be Some[RDFTriple] or None
 
@@ -119,21 +103,39 @@ class StdStatement(subjectGenerator : Item => Option[Uri],
 
 object Statement {
 
-  def createStandardStatement(subject : Item => Option[Uri],
-            predicate : Item => Option[Uri],
-            `object` : Item => Option[Value])
+  def createStandardStatement(subject: Item => Option[Uri],
+                              predicate: Item => Option[Uri],
+                              `object`: Item => Option[Value])
 
-  : Statement[Item] = new StdStatement(subject : Item  => Option[Uri],
-                              predicate : Item => Option[Uri],
-                              `object` : Item => Option[Value])
+  : Statement[Item] = new StdStatement(subject: Item => Option[Uri],
+    predicate: Item => Option[Uri],
+    `object`: Item => Option[Value])
 
-  def createChildStatement(subject : Item => Option[Uri],
-                           predicate : Item => Option[Uri],
-                           `object` : Item => Option[Value])
+  def createChildStatement(subject: Item => Option[Uri],
+                           predicate: Item => Option[Uri],
+                           `object`: Item => Option[Value])
   : Statement[JoinedItem] = new ChildStatement(subject, predicate, `object`)
 
-  def createParentStatement(subject : Item => Option[Uri],
-                           predicate : Item => Option[Uri],
-                           `object` : Item => Option[Value])
+  def createParentStatement(subject: Item => Option[Uri],
+                            predicate: Item => Option[Uri],
+                            `object`: Item => Option[Value])
   : Statement[JoinedItem] = new ParentStatement(subject, predicate, `object`)
+
+
+
+  def generateTriple(subject: Uri, predicate: Uri, _object: Value): Option[FlinkRDFTriple] = {
+
+    val subjectResource = subject match {
+      case blank: Blank => FlinkRDFBlank(blank)
+      case resource: Uri => FlinkRDFResource(resource)
+    }
+    val predicateResource = FlinkRDFResource(predicate)
+    val objectNode = _object match {
+      case literal: Literal => FlinkRDFLiteral(literal)
+      case resource: Uri => FlinkRDFResource(resource)
+    }
+    println(Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode)).get.toString)
+    Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode))
+
+  }
 }

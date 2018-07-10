@@ -24,8 +24,18 @@ package io.rml.framework.core.model
 
 import io.rml.framework.core.model.std.StdBlank
 
+/**
+  * Blank is for now a subtype of Uri since the assumption that subjects will always be RDFResource containing Uri
+  * is used in most of the code.
+  *
+  *
+  */
+
+//TODO: Make Blank extend Value and refactor the change.
 trait Blank extends Uri
 
 object Blank {
   def apply(): Blank = StdBlank()
+
+  def apply(id:String): Blank = StdBlank(id)
 }

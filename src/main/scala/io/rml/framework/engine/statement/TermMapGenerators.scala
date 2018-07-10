@@ -22,7 +22,7 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.model.{Literal, TermMap, Uri, Value}
+import io.rml.framework.core.model._
 import io.rml.framework.engine.Engine
 import io.rml.framework.flink.item.Item
 
@@ -63,6 +63,15 @@ object TermMapGenerators {
         value <- Engine.processTemplate(termMap.template.get, item)
         uri <- Some(Literal(value, termMap.datatype, termMap.language))
       } yield uri
+    }
+  }
+
+  def templateBlankNodeGenerator(termMap: TermMap) : Item => Option[Blank]  = {
+    (item: Item) => {
+      for {
+        value <- Engine.processTemplate(termMap.template.get, item, encode = true)
+        blank <- Some(Blank(value))
+      } yield blank
     }
   }
 

@@ -23,12 +23,20 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.model.{TermMap, Uri}
+import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
+import io.rml.framework.shared.TermTypeException
 
 
 class SubjectGeneratorAssembler extends TermMapGeneratorAssembler {
   override def assemble(termMap: TermMap): (Item) => Option[Uri] = {
+    termMap.termType.get.toString match {
+      case  RMLVoc.Class.LITERAL => throw new TermTypeException("Subject cannot be of type Literal!")
+      case _ =>
+
+    }
     super.assemble(termMap).asInstanceOf[(Item) => Option[Uri]]
+
   }
 
 }

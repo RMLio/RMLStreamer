@@ -13,6 +13,7 @@ import scala.util.control.Exception
 class ReadMappingTest extends FlatSpec with Matchers{
 
   var preFailedTestCases: Array[File] =  Array[File]()
+
   "Reading Mapping File" must "not fail if mapping file is valid" in {
 
     val mappingFiles = getMappingFilesInFolder("rml-testcases")
@@ -75,7 +76,9 @@ class ReadMappingTest extends FlatSpec with Matchers{
     for (file <- preFailedTestCases ){
       MappingTestHelper.processFile(file)
       Logger.logInfo("File being manually tested: " + file)
+      Logger.lineBreak()
     }
+
     pending
   }
 

@@ -30,7 +30,6 @@ class StatementEngineTest extends FunSuite with Matchers {
     // compare the results
     val total = readTriplesFromString(result).size
 
-
     total should be (700)
 
   }

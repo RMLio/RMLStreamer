@@ -79,6 +79,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     termMap.termType.get.toString match {
       case RMLVoc.Class.IRI => TermMapGenerators.templateUriGenerator(termMap)
       case RMLVoc.Class.LITERAL => TermMapGenerators.templateLiteralGenerator(termMap)
+      case RMLVoc.Class.BLANKNODE => TermMapGenerators.templateBlankNodeGenerator(termMap)
     }
   }
 
