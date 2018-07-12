@@ -27,9 +27,13 @@ package io.rml.framework.core.model
   * Info: ...
   *
   * Marker trait for Data sources.
+  * The value representing the location/identity of the data source can only be
+  * of type literal or uri.
+  *
   *
   */
 trait DataSource extends Node{
+
   def uri:ExplicitNode
 
   override def identifier: String = this.uri.toString
