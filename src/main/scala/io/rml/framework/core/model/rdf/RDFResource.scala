@@ -22,15 +22,22 @@
 
 package io.rml.framework.core.model.rdf
 
-import io.rml.framework.core.model.{Resource, Uri}
+import io.rml.framework.core.model.Uri
 
 /**
   * This trait represents a resource that is able to query an underlying RDF model.
   * Different third-party libraries can be used by implementing implicits.
   */
-trait RDFResource extends Resource with RDFNode {
+trait RDFResource extends RDFNode {
+
+
+  def uri: Uri
+
+  override def toString: String = uri.toString
 
   override def identifier: String = uri.toString
+
+
   def getType: Option[Uri]
 
   /**
