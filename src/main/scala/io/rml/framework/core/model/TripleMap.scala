@@ -97,13 +97,13 @@ object TripleMap {
     * @param predicateObjectMaps
     * @param logicalSource
     * @param subjectMap
-    * @param termNode
+    * @param identifier
     * @return
     */
   def apply(predicateObjectMaps: List[PredicateObjectMap],
             logicalSource: LogicalSource,
             subjectMap: SubjectMap,
-            termNode: TermNode,
+            identifier: String,
             graphMap: Option[GraphMap] = None
            ): TripleMap = {
 
@@ -111,7 +111,7 @@ object TripleMap {
       logicalSource,
       subjectMap,
       graphMap,
-      termNode)
+      identifier)
 
   }
 

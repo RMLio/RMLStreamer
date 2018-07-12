@@ -28,7 +28,7 @@ case class StdParentTriplesMap(triplesMap: TripleMap) extends ParentTriplesMap {
     */
   override def containsParentTripleMap = triplesMap.containsParentTripleMap
 
-  override def identifier(): TermNode = triplesMap.identifier
+  override def identifier(): String = triplesMap.identifier
 
   /**
     *

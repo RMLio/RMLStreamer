@@ -92,7 +92,7 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
       val tripleMap = TripleMap(predicateObjectMapExtractor.extract(resource),
         logicalSourceExtractor.extract(resource),
         subjectMapExtractor.extract(resource),
-        resource.uri,
+        resource.uri.toString,
         graphMapExtractor.extract(resource)
       )
       Some(tripleMap)
