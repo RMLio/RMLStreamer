@@ -44,7 +44,7 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     if (properties.size != 1) throw new RMLException(node.uri + ": only one data source allowed.")
 
     properties.head match {
-      case literal: Literal => FileDataSource(Uri(literal.toString)) // the literal represents a path uri
+      case literal: Literal => FileDataSource(literal) // the literal represents a path uri
       case resource: RDFResource => extractDataSourceFromResource(resource)
     }
 

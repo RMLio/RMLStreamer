@@ -27,7 +27,7 @@ import io.rml.framework.core.model.std.StdLiteral
 /**
   * This trait represents a Literal.
   */
-trait Literal extends Value {
+trait Literal extends Value  with ExplicitNode{
 
   /**
     *

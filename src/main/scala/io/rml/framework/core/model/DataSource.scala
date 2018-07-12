@@ -29,4 +29,6 @@ package io.rml.framework.core.model
   * Marker trait for Data sources.
   *
   */
-trait DataSource extends Resource
+trait DataSource extends Node{
+  def uri:ExplicitNode
+}

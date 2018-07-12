@@ -29,7 +29,7 @@ import io.rml.framework.core.model.std.StdUri
 /**
   * This trait represents a Uri.
   */
-trait Uri extends TermNode
+trait Uri extends TermNode with ExplicitNode
 
 
 object Uri {

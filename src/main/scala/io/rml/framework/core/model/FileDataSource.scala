@@ -42,7 +42,7 @@ object FileDataSource {
     * @param uri Uri that represents the path of the source.
     * @return An instance of DataSource.
     */
-  def apply(uri: Uri): DataSource = {
+  def apply(uri: ExplicitNode): DataSource = {
     val file = new File(uri.toString)
     if (file.isAbsolute) {
       println(Uri(file.getAbsolutePath))
