@@ -25,6 +25,7 @@ package io.rml.framework.core.model.rdf.jena
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFNode, RDFResource}
 import io.rml.framework.core.vocabulary.RDFVoc
+import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.apache.jena.rdf.model.Resource
 
 import scala.collection.JavaConverters._
@@ -59,7 +60,7 @@ class JenaResource(val resource: Resource) extends RDFResource {
     */
   override def equals(that: Any): Boolean = {
     that match {
-      case that: JenaResource => this.resource == that.resource
+      case that: JenaResource => this.resource == that.resource && this.model == that.model
       case _ => false
     }
   }
@@ -70,7 +71,13 @@ class JenaResource(val resource: Resource) extends RDFResource {
     * @return
     */
 
-  override def hashCode(): Int = this.resource.hashCode() + this.model.hashCode()
+  override def hashCode(): Int =    {
+
+    new HashCodeBuilder(7,31)
+      .append(this.resource)
+      .append(this.model)
+      .toHashCode
+  }
 
   /**
     *

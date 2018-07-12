@@ -59,7 +59,7 @@ object FormattedRMLMapping {
     val tmWithParentTM = triplesMaps.filter(_.containsParentTripleMap)
 
     // extract all parent triple maps
-    val ptms: Seq[TermNode] = tmWithParentTM.flatMap(tm => tm.predicateObjectMaps.flatMap(pm => pm.objectMaps.flatMap(om => om.parentTriplesMap))).map(item => item.identifier)
+    val ptms: Seq[TripleMap] = tmWithParentTM.flatMap(tm => tm.predicateObjectMaps.flatMap(pm => pm.objectMaps.flatMap(om => om.parentTriplesMap)))
 
     // extract all triple maps with streamed data source
     val streamTripleMaps = triplesMaps.filter(_.logicalSource.source.isInstanceOf[StreamDataSource])
@@ -75,7 +75,7 @@ object FormattedRMLMapping {
       streamTripleMaps,
       mapping.identifier,
       mapping.containsParentTripleMaps,
-      extractedStandardTripleMaps ++ standardTripleMaps.filter(tm => !ptms.contains(tm.identifier)),
+      extractedStandardTripleMaps ++ standardTripleMaps.filter(tm => !ptms.contains(tm)),
       joinedTripleMaps)
   }
 

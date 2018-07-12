@@ -23,5 +23,5 @@ object MappingTestHelper extends FileProcessingHelper[FormattedRMLMapping] {
     FormattedRMLMapping.fromRMLMapping(mapping)
   }
 
-  override def candidateFiles: List[String] = List("mapping.ttl", "mapping.rml.ttl")
+  override def candidateFiles: List[String] = List("mapping.ttl", "mapping.rml.ttl", "example.rml.ttl")
 }

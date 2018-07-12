@@ -23,6 +23,7 @@
 package io.rml.framework.core.model
 
 import io.rml.framework.core.model.std.StdTriplesMap
+import org.apache.commons.lang3.builder.HashCodeBuilder
 
 /**
   * This trait represents a triples map.
@@ -42,7 +43,7 @@ import io.rml.framework.core.model.std.StdTriplesMap
 trait TripleMap extends Node {
 
   // TODO: Remove identifiers and override equals and hashcode for equivalence checks
-  def identifier: TermNode
+  def identifier: String
 
   /**
     *
@@ -74,6 +75,19 @@ trait TripleMap extends Node {
     */
   def containsParentTripleMap: Boolean
 
+  override def hashCode(): Int = {
+
+     new HashCodeBuilder(31, 27)
+       .append(this.identifier)
+       .toHashCode
+  }
+
+  override def equals(that: scala.Any): Boolean = {
+    that match {
+      case map : TripleMap  => map.identifier == this.identifier
+      case _ => false
+    }
+  }
 }
 
 object TripleMap {
