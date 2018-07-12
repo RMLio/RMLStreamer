@@ -24,7 +24,7 @@ package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.ResourceExtractor
 import io.rml.framework.core.model.rdf.RDFResource
-import io.rml.framework.core.model.{Literal, Uri, Value}
+import io.rml.framework.core.model.{Literal, Uri, Entity}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
@@ -95,7 +95,7 @@ abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
     * @return
     */
   @throws(classOf[RMLException])
-  protected def extractConstant(resource: RDFResource): Option[Value] = {
+  protected def extractConstant(resource: RDFResource): Option[Entity] = {
     val property = RMLVoc.Property.CONSTANT
     val properties = resource.listProperties(property)
 

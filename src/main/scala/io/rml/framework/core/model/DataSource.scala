@@ -31,4 +31,6 @@ package io.rml.framework.core.model
   */
 trait DataSource extends Node{
   def uri:ExplicitNode
+
+  override def identifier: String = this.uri.toString
 }

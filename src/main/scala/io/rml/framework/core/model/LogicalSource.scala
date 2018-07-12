@@ -47,6 +47,9 @@ trait LogicalSource extends Node {
     */
   def referenceFormulation: Uri
 
+
+  override def identifier: String = source.uri.toString
+
 }
 
 /**

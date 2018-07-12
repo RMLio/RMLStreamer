@@ -37,8 +37,8 @@ import io.rml.framework.core.model.std.StdGraphMap
 trait GraphMap extends TermMap
 
 object GraphMap {
-  def apply(identifier: TermNode,
-            constant: Option[Value],
+  def apply(identifier: String,
+            constant: Option[Entity],
             reference: Option[Literal],
             template: Option[Literal],
             termType: Option[Uri]): GraphMap = StdGraphMap(identifier, constant, reference, template)

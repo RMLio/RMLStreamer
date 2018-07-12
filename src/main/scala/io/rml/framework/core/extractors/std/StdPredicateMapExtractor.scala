@@ -52,9 +52,9 @@ class StdPredicateMapExtractor extends PredicateMapExtractor {
     // iterates over predicates, converts these to predicate maps as blanks
     properties.map {
       case literal: RDFLiteral =>
-        PredicateMap(Uri(""), constant = Some(Uri(literal.value)), termType = Some(Uri(RMLVoc.Class.IRI)))
+        PredicateMap("", constant = Some(Uri(literal.value)), termType = Some(Uri(RMLVoc.Class.IRI)))
       case resource: RDFResource =>
-        PredicateMap(Uri(""), constant = Some(resource.uri), termType = Some(Uri(RMLVoc.Class.IRI)))
+        PredicateMap("", constant = Some(resource.uri), termType = Some(Uri(RMLVoc.Class.IRI)))
     }
   }
 
@@ -88,7 +88,7 @@ class StdPredicateMapExtractor extends PredicateMapExtractor {
     val template = extractTemplate(resource)
     val constant = extractConstant(resource)
     val reference = extractReference(resource)
-    PredicateMap(resource.uri, constant, reference, template, termType)
+    PredicateMap(resource.uri.toString, constant, reference, template, termType)
   }
 
 }

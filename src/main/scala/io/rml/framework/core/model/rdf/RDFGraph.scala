@@ -40,6 +40,7 @@ trait RDFGraph extends RDFNode {
     */
   def uri: Uri
 
+  override def identifier: String = this.uri.toString
   /**
     *
     * @param triple

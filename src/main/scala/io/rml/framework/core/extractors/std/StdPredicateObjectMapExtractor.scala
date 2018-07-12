@@ -72,7 +72,7 @@ class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtracto
     val objectMaps = objectMapExtractor.extract(resource)
     val functionMaps = functionMapExtractor.extract(resource)
     val predicateMaps = predicateMapExtractor.extract(resource)
-    PredicateObjectMap(resource.uri, objectMaps, functionMaps, predicateMaps)
+    PredicateObjectMap(resource.uri.toString, objectMaps, functionMaps, predicateMaps)
   }
 
 }

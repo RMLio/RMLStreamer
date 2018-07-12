@@ -52,9 +52,9 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     // iterates over predicates, converts these to predicate maps as blanks
     properties.map {
       case literal: RDFLiteral =>
-        ObjectMap(Uri(""), constant = Some(Literal(literal.value)), termType = Some(Uri(RMLVoc.Class.LITERAL)))
+        ObjectMap("", constant = Some(Literal(literal.value)), termType = Some(Uri(RMLVoc.Class.LITERAL)))
       case resource: RDFResource =>
-        ObjectMap(Uri(""), constant = Some(resource.uri), termType = Some(Uri(RMLVoc.Class.IRI)))
+        ObjectMap("", constant = Some(resource.uri), termType = Some(Uri(RMLVoc.Class.IRI)))
     }
   }
 
@@ -99,7 +99,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     val language = extractLanguage(resource)
     val datatype = extractDatatype(resource)
 
-    ObjectMap(resource.uri, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition)
+    ObjectMap(resource.uri.toString, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition)
   }
 
   def extractDatatype(resource: RDFResource): Option[Uri] = {

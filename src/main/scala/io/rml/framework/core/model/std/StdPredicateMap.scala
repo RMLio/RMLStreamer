@@ -24,8 +24,8 @@ package io.rml.framework.core.model.std
 
 import io.rml.framework.core.model._
 
-case class StdPredicateMap(identifier: TermNode,
-                           constant: Option[Value],
+case class StdPredicateMap(identifier: String,
+                           constant: Option[Entity],
                            reference: Option[Literal],
                            template: Option[Literal],
                            termType: Option[Uri]) extends PredicateMap

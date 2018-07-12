@@ -23,7 +23,7 @@
 package io.rml.framework.core.model.rdf
 
 import io.rml.framework.core.model.rdf.jena.JenaFactory
-import io.rml.framework.core.model.{TermNode, Uri, Value}
+import io.rml.framework.core.model.{TermNode, Uri, Entity}
 
 /**
   * Created by wmaroy on 21.08.17.
@@ -42,7 +42,7 @@ object RDFTriple {
 
   def apply(subjectUri: TermNode,
             predicateUri: Uri,
-            objectValue: Value,
+            objectValue: Entity,
             factory: RDFFactory = new JenaFactory): RDFTriple = {
 
     factory.createTriple(subjectUri, predicateUri, objectValue)

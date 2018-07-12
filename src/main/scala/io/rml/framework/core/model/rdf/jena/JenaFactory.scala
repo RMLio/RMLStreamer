@@ -60,7 +60,7 @@ class JenaFactory extends RDFFactory {
 
   override def createTriple(subject: TermNode,
                             predicate: Uri,
-                            _object: Value): RDFTriple = {
+                            _object: Entity): RDFTriple = {
     val stringRepresentation = subject match {
       case uri: Uri => uri.toString
       case _ => null

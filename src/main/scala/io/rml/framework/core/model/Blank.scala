@@ -31,11 +31,15 @@ import io.rml.framework.core.model.std.StdBlank
   *
   */
 
-//TODO: Make Blank extend Value and refactor the change.
-trait Blank extends TermNode
+trait Blank extends TermNode {
+
+}
 
 object Blank {
   def apply(): Blank = StdBlank()
 
-  def apply(id: String): Blank = StdBlank(id)
+  def apply(id: String): Blank = {
+    StdBlank(Entity.clean(id))
+  }
+
 }

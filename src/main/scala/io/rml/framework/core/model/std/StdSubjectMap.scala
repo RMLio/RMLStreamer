@@ -24,9 +24,9 @@ package io.rml.framework.core.model.std
 
 import io.rml.framework.core.model._
 
-case class StdSubjectMap(identifier: TermNode,
+case class StdSubjectMap(identifier: String,
                          `class`: List[Uri],
-                         constant: Option[Value],
+                         constant: Option[Entity],
                          reference: Option[Literal],
                          template: Option[Literal],
                          termType: Option[Uri]) extends SubjectMap

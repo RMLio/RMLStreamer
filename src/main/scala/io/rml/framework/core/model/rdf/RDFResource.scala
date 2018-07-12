@@ -30,6 +30,7 @@ import io.rml.framework.core.model.{Resource, Uri}
   */
 trait RDFResource extends Resource with RDFNode {
 
+  override def identifier: String = uri.toString
   def getType: Option[Uri]
 
   /**

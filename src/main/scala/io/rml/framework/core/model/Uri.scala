@@ -29,7 +29,12 @@ import io.rml.framework.core.model.std.StdUri
 /**
   * This trait represents a Uri.
   */
-trait Uri extends TermNode with ExplicitNode
+trait Uri extends TermNode with ExplicitNode{
+
+  def uri : String
+
+  override def identifier: String = this.uri
+}
 
 
 object Uri {
@@ -40,13 +45,13 @@ object Uri {
     * @return
     */
   def apply(uri: String): Uri = {
-    if (uri != null) StdUri(Value.clean(uri)) else Uri("")
+    if (uri != null) StdUri(Entity.clean(uri)) else Uri("")
   }
 
   def unapply(arg: Uri): Option[String] = Some(arg.toString)
 
   def encoded(uri: String): Uri = {
-    if (uri != null) StdUri(encode(Value.clean(uri))) else Uri("")
+    if (uri != null) StdUri(encode(Entity.clean(uri))) else Uri("")
   }
 
   def encode(s: String): String = {

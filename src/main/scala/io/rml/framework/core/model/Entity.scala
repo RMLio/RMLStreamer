@@ -25,9 +25,9 @@ package io.rml.framework.core.model
 /**
   *
   */
-trait Value extends Node
+trait Entity extends Node
 
-object Value {
+object Entity {
 
   /**
     * Utility method for cleaning up values with a predefined configuration.

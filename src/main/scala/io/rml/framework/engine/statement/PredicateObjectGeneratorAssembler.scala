@@ -22,7 +22,7 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.model.{PredicateObjectMap, Uri, Value}
+import io.rml.framework.core.model.{PredicateObjectMap, Uri, Entity}
 import io.rml.framework.flink.item.Item
 
 class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGeneratorAssembler,
@@ -30,7 +30,7 @@ class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGe
                                         functionMapGeneratorAssembler: FunctionMapGeneratorAssembler) {
 
   def assemble(predicateObjectMap: PredicateObjectMap)
-  : List[(Item => Option[Uri], Item => Option[Value])] = {
+  : List[(Item => Option[Uri], Item => Option[Entity])] = {
     predicateObjectMap.predicateMaps.flatMap(predicateMap => {
       predicateObjectMap.objectMaps.map(objectMap => {
         (predicateGeneratorAssembler.assemble(predicateMap),

@@ -24,7 +24,7 @@ package io.rml.framework.core.model.std
 
 import io.rml.framework.core.model._
 
-case class StdPredicateObjectMap(identifier: TermNode,
+case class StdPredicateObjectMap(identifier: String,
                                  objectMaps: List[ObjectMap],
                                  functionMaps: List[FunctionMap],
                                  predicateMaps: List[PredicateMap])

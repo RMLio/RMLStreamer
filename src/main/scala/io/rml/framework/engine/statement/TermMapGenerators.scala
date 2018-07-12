@@ -31,14 +31,14 @@ import io.rml.framework.flink.item.Item
   */
 object TermMapGenerators {
 
-  def constantUriGenerator(constant: Value): Item => Option[Uri] = {
+  def constantUriGenerator(constant: Entity): Item => Option[Uri] = {
     // return a function that just returns the constant
     (item: Item) => {
       Some(Uri(constant.toString))
     }
   }
 
-  def constantLiteralGenerator(constant: Value, datatype: Option[Uri] = None, language: Option[Literal]): Item => Option[Literal] = {
+  def constantLiteralGenerator(constant: Entity, datatype: Option[Uri] = None, language: Option[Literal]): Item => Option[Literal] = {
     // return a function that just returns the constant
     (item: Item) => {
       Some(Literal(constant.toString, datatype, language))

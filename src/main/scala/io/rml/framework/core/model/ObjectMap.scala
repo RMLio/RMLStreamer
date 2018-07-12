@@ -42,8 +42,8 @@ trait ObjectMap extends TermMap {
 case class JoinCondition(child: Literal, parent: Literal) // TODO: make this a trait?
 
 object ObjectMap {
-  def apply(identifier: TermNode,
-            constant: Option[Value] = None,
+  def apply(identifier: String,
+            constant: Option[Entity] = None,
             reference: Option[Literal] = None,
             template: Option[Literal] = None,
             termType: Option[Uri] = None,

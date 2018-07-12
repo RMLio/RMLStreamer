@@ -1,6 +1,6 @@
 package io.rml.framework.core.model
 
-case class FunctionMap(identifier: TermNode, functionValue: TripleMap) extends TermMap {
+case class FunctionMap(identifier: String, functionValue: TripleMap) extends TermMap {
 
   /**
     *

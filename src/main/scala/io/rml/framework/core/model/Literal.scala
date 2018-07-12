@@ -27,7 +27,7 @@ import io.rml.framework.core.model.std.StdLiteral
 /**
   * This trait represents a Literal.
   */
-trait Literal extends Value  with ExplicitNode{
+trait Literal extends Entity  with ExplicitNode{
 
   /**
     *
@@ -53,12 +53,14 @@ trait Literal extends Value  with ExplicitNode{
     */
   override def toString: String = value
 
+  override def identifier: String = value
+
 }
 
 object Literal {
 
   def apply(value: String, `type`: Option[Uri] = None, language: Option[Literal] = None): Literal = {
-    StdLiteral(Value.clean(value, replace = false), `type`, language)
+    StdLiteral(Entity.clean(value, replace = false), `type`, language)
   }
 
 }

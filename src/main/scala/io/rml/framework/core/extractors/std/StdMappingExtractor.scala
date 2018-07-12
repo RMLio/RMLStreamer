@@ -41,7 +41,7 @@ class StdMappingExtractor extends MappingExtractor {
   override def extract(graph: RDFGraph): RMLMapping = {
     val tripleMapsExtractor = TripleMapExtractor()
     val triplesMaps = tripleMapsExtractor.extract(graph)
-    RMLMapping(triplesMaps, graph.uri)
+    RMLMapping(triplesMaps, graph.uri.toString)
   }
 
 }

@@ -22,12 +22,12 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.model.{ObjectMap, Value}
+import io.rml.framework.core.model.{ObjectMap, Entity}
 import io.rml.framework.flink.item.Item
 
 class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
 
-  def assemble(objectMap: ObjectMap): (Item) => Option[Value] = {
+  def assemble(objectMap: ObjectMap): (Item) => Option[Entity] = {
 
     // check if it has a parent triple map
     if (objectMap.parentTriplesMap.isDefined) {

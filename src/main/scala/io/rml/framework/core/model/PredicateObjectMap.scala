@@ -38,8 +38,6 @@ import io.rml.framework.core.model.std.StdPredicateObjectMap
   *
   */
 trait PredicateObjectMap extends Node {
-  def identifier: TermNode
-
   def objectMaps: List[ObjectMap]
 
   def functionMaps: List[FunctionMap]
@@ -49,7 +47,7 @@ trait PredicateObjectMap extends Node {
 }
 
 object PredicateObjectMap {
-  def apply(identifier: TermNode, objectMaps: List[ObjectMap], functionMaps: List[FunctionMap], predicateMaps: List[PredicateMap]): PredicateObjectMap = {
+  def apply(identifier: String, objectMaps: List[ObjectMap], functionMaps: List[FunctionMap], predicateMaps: List[PredicateMap]): PredicateObjectMap = {
     StdPredicateObjectMap(identifier, objectMaps, functionMaps, predicateMaps)
   }
 }

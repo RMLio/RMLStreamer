@@ -37,7 +37,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  def assemble(termMap: TermMap): (Item) => Option[Value] = {
+  def assemble(termMap: TermMap): (Item) => Option[Entity] = {
     if (termMap.hasConstant) {
       constantGenerator(termMap)
     } else if (termMap.hasTemplate) {
@@ -63,7 +63,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  private def constantGenerator(termMap: TermMap): Item => Option[Value] = {
+  private def constantGenerator(termMap: TermMap): Item => Option[Entity] = {
     termMap.termType.get.toString match {
       case RMLVoc.Class.IRI => TermMapGenerators.constantUriGenerator(termMap.constant.get)
       case RMLVoc.Class.LITERAL => TermMapGenerators.constantLiteralGenerator(termMap.constant.get, termMap.datatype, termMap.language)
@@ -75,7 +75,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  private def templateGenerator(termMap: TermMap): Item => Option[Value] = {
+  private def templateGenerator(termMap: TermMap): Item => Option[Entity] = {
     termMap.termType.get.toString match {
       case RMLVoc.Class.IRI => TermMapGenerators.templateUriGenerator(termMap)
       case RMLVoc.Class.LITERAL => TermMapGenerators.templateLiteralGenerator(termMap)
@@ -88,7 +88,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  private def referenceGenerator(termMap: TermMap): Item => Option[Value] = {
+  private def referenceGenerator(termMap: TermMap): Item => Option[Entity] = {
     termMap.termType.get.toString match {
       case RMLVoc.Class.IRI => TermMapGenerators.referenceUriGenerator(termMap)
       case RMLVoc.Class.LITERAL => TermMapGenerators.referenceLiteralGenerator(termMap)

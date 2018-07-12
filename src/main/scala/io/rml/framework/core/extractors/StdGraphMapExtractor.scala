@@ -39,7 +39,7 @@ class StdGraphMapExtractor extends GraphMapExtractor {
     val template = extractTemplate(resource)
     val constant = extractConstant(resource)
     val reference = extractReference(resource)
-    GraphMap(resource.uri, constant, reference, template, termType)
+    GraphMap(resource.uri.toString, constant, reference, template, termType)
   }
 
 }

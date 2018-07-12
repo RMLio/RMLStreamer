@@ -53,9 +53,9 @@ object SubjectMap {
     * @param termType
     * @return
     */
-  def apply(identifier: TermNode,
+  def apply(identifier: String,
             `class`: List[Uri],
-            constant: Option[Value],
+            constant: Option[Entity],
             reference: Option[Literal],
             template: Option[Literal],
             termType: Option[Uri]): SubjectMap = {

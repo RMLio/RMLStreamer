@@ -7,7 +7,7 @@ import io.rml.framework.core.model._
   *
   * @param value
   */
-abstract class FlinkRDFNode(val value: Value) extends Serializable
+abstract class FlinkRDFNode(val value: Entity) extends Serializable
 
 abstract class FlinkRDFTermNode(val termNode: TermNode) extends FlinkRDFNode(termNode)
 

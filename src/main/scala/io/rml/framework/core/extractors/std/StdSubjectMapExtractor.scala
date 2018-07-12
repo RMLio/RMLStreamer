@@ -86,7 +86,7 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
       ", termType -> " + termType +
       ", class -> " + _class)
 
-    SubjectMap(resource.uri, _class, constant, reference, template, termType)
+    SubjectMap(resource.uri.toString, _class, constant, reference, template, termType)
   }
 
   override def extractTermType(resource: RDFResource): Option[Uri] = {

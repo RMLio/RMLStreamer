@@ -24,7 +24,7 @@ package io.rml.framework.core.model.std
 
 import io.rml.framework.core.model.{RMLMapping, TermNode, TripleMap}
 
-case class StdRMLMapping(triplesMaps: List[TripleMap], identifier: TermNode) extends RMLMapping {
+case class StdRMLMapping(triplesMaps: List[TripleMap], identifier: String) extends RMLMapping {
   override def containsParentTripleMaps: Boolean = {
     triplesMaps.exists(tm => tm.containsParentTripleMap)
   }

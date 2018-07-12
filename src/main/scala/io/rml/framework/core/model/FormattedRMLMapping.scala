@@ -34,7 +34,7 @@ trait FormattedRMLMapping extends RMLMapping {
 
 case class StdFormattedRMLMapping(triplesMaps: List[TripleMap],
                                   streamTripleMaps: List[StreamTripleMap],
-                                  identifier: TermNode,
+                                  identifier: String,
                                   containsParentTripleMaps: Boolean,
                                   standardTripleMaps: List[TripleMap],
                                   joinedTripleMaps: List[JoinedTripleMap]) extends FormattedRMLMapping() {

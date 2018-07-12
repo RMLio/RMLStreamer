@@ -3,8 +3,8 @@ package io.rml.framework.core.model.std
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RMLVoc
 
-case class StdGraphMap(identifier: TermNode,
-                       constant: Option[Value],
+case class StdGraphMap(identifier: String,
+                       constant: Option[Entity],
                        reference: Option[Literal],
                        template: Option[Literal]) extends GraphMap {
 

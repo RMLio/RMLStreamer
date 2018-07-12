@@ -34,7 +34,7 @@ import io.rml.framework.core.model.std.StdRMLMapping
 trait RMLMapping extends Graph {
 
 
-  def identifier: TermNode
+  def identifier: String
 
   /**
     *
@@ -54,7 +54,7 @@ object RMLMapping {
     * @param identifier
     * @return
     */
-  def apply(tripleMaps: List[TripleMap], identifier: TermNode): RMLMapping = {
+  def apply(tripleMaps: List[TripleMap], identifier: String): RMLMapping = {
     // separating triple maps that contain parent triple maps
     val tmWithParentTripleMaps = tripleMaps.filter(tm => tm.containsParentTripleMap)
     val parentTriplesMaps = tmWithParentTripleMaps.flatMap(tm =>

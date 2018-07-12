@@ -22,6 +22,8 @@
 
 package io.rml.framework.core.model
 
+import org.apache.commons.lang3.builder.HashCodeBuilder
+
 /**
   * This trait defines a term map.
   * Term maps are used to generate the subjects, predicates and
@@ -41,15 +43,12 @@ package io.rml.framework.core.model
   */
 trait TermMap extends Node {
 
-  // TODO: Remove identifiers and override equals and hashcode for equivalence checks
-
-  def identifier: TermNode
 
   /**
     *
     * @return
     */
-  def constant: Option[Value]
+  def constant: Option[Entity]
 
   /**
     *
@@ -104,5 +103,23 @@ trait TermMap extends Node {
     * @return
     */
   def hasTermType: Boolean = termType.isDefined
+
+
+  override def equals(that: scala.Any): Boolean = {
+    that match {
+      case map: TermMap => this.identifier == map.identifier
+      case _ => false
+    }
+  }
+
+  override def hashCode(): Int = {
+    new HashCodeBuilder(13,31)
+      .append(hasConstant)
+      .append(hasReference)
+      .append(hasTermType)
+      .append(hasTemplate)
+      .append(identifier)
+      .toHashCode
+  }
 
 }

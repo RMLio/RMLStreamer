@@ -27,4 +27,8 @@ package io.rml.framework.core.model
   * All traits, classes and case classes that are part of the RML domain model should
   * inherit from Node.
   */
-trait Node extends Serializable
+trait Node extends Serializable{
+  def identifier: String
+
+  override def toString: String = identifier.toString
+}

@@ -39,7 +39,7 @@ trait Statement[T] {
 
 class ChildStatement(subjectGenerator: Item => Option[TermNode],
                      predicateGenerator: Item => Option[Uri],
-                     objectGenerator: Item => Option[Value]) extends Statement[JoinedItem] with Serializable {
+                     objectGenerator: Item => Option[Entity]) extends Statement[JoinedItem] with Serializable {
 
   def process(item: JoinedItem): Option[FlinkRDFTriple] = {
     for {
@@ -57,7 +57,7 @@ class ChildStatement(subjectGenerator: Item => Option[TermNode],
 
 class ParentStatement(subjectGenerator: Item => Option[TermNode],
                       predicateGenerator: Item => Option[Uri],
-                      objectGenerator: Item => Option[Value]) extends Statement[JoinedItem] with Serializable {
+                      objectGenerator: Item => Option[Entity]) extends Statement[JoinedItem] with Serializable {
 
   def process(item: JoinedItem): Option[FlinkRDFTriple] = {
     for {
@@ -75,7 +75,7 @@ class ParentStatement(subjectGenerator: Item => Option[TermNode],
 
 class StdStatement(subjectGenerator: Item => Option[TermNode],
                    predicateGenerator: Item => Option[Uri],
-                   objectGenerator: Item => Option[Value]) extends Statement[Item] with Serializable {
+                   objectGenerator: Item => Option[Entity]) extends Statement[Item] with Serializable {
 
   /**
     * Tries to refer a triple from the given item.
@@ -104,24 +104,24 @@ object Statement {
 
   def createStandardStatement(subject: Item => Option[TermNode],
                               predicate: Item => Option[Uri],
-                              `object`: Item => Option[Value])
+                              `object`: Item => Option[Entity])
 
   : Statement[Item] = new StdStatement(subject: Item => Option[TermNode],
     predicate: Item => Option[Uri],
-    `object`: Item => Option[Value])
+    `object`: Item => Option[Entity])
 
   def createChildStatement(subject: Item => Option[TermNode],
                            predicate: Item => Option[Uri],
-                           `object`: Item => Option[Value])
+                           `object`: Item => Option[Entity])
   : Statement[JoinedItem] = new ChildStatement(subject, predicate, `object`)
 
   def createParentStatement(subject: Item => Option[TermNode],
                             predicate: Item => Option[Uri],
-                            `object`: Item => Option[Value])
+                            `object`: Item => Option[Entity])
   : Statement[JoinedItem] = new ParentStatement(subject, predicate, `object`)
 
 
-  def generateTriple(subject: TermNode, predicate: Uri, _object: Value): Option[FlinkRDFTriple] = {
+  def generateTriple(subject: TermNode, predicate: Uri, _object: Entity): Option[FlinkRDFTriple] = {
 
     val subjectResource = subject match {
       case blank: Blank => FlinkRDFBlank(blank)

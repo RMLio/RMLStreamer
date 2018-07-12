@@ -38,7 +38,7 @@ class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectG
     * @param tripleMap
     * @return
     */
-  def assembleStatements(tripleMap: TripleMap): List[((Item) => Option[TermNode], (Item) => Option[Uri], (Item) => Option[Value])] = {
+  def assembleStatements(tripleMap: TripleMap): List[((Item) => Option[TermNode], (Item) => Option[Uri], (Item) => Option[Entity])] = {
     // assemble subject
     val subjectGenerator = subjectAssembler.assemble(tripleMap.subjectMap)
     // check for class mappings (rr:class)

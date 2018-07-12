@@ -42,8 +42,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder
   */
 trait TripleMap extends Node {
 
-  // TODO: Remove identifiers and override equals and hashcode for equivalence checks
-  def identifier: String
 
   /**
     *
@@ -77,14 +75,16 @@ trait TripleMap extends Node {
 
   override def hashCode(): Int = {
 
-     new HashCodeBuilder(31, 27)
-       .append(this.identifier)
-       .toHashCode
+    new HashCodeBuilder(31, 27)
+      .append(this.identifier)
+      .append(this.logicalSource)
+      .append(this.subjectMap)
+      .toHashCode
   }
 
   override def equals(that: scala.Any): Boolean = {
     that match {
-      case map : TripleMap  => map.identifier == this.identifier
+      case map: TripleMap => map.identifier == this.identifier
       case _ => false
     }
   }
