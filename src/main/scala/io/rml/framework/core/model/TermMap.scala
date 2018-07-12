@@ -105,21 +105,4 @@ trait TermMap extends Node {
   def hasTermType: Boolean = termType.isDefined
 
 
-  override def equals(that: scala.Any): Boolean = {
-    that match {
-      case map: TermMap => this.identifier == map.identifier
-      case _ => false
-    }
-  }
-
-  override def hashCode(): Int = {
-    new HashCodeBuilder(13,31)
-      .append(hasConstant)
-      .append(hasReference)
-      .append(hasTermType)
-      .append(hasTemplate)
-      .append(identifier)
-      .toHashCode
-  }
-
 }
