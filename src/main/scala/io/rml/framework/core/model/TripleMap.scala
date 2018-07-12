@@ -41,6 +41,7 @@ import io.rml.framework.core.model.std.StdTriplesMap
   */
 trait TripleMap extends Node {
 
+  // TODO: Remove identifiers and override equals and hashcode for equivalence checks
   def identifier: TermNode
 
   /**

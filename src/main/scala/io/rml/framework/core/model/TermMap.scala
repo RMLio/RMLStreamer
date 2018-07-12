@@ -41,6 +41,7 @@ package io.rml.framework.core.model
   */
 trait TermMap extends Node {
 
+  // TODO: Remove identifiers and override equals and hashcode for equivalence checks
 
   def identifier: TermNode
 
