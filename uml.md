@@ -13,9 +13,9 @@
 	|		|
 	|	 RDFResource
 	|				     									
-	---------------------------------------------------------------------------------------------------------				     						
-		|		|		|			|			|		|
-	     TermMap	     TripleMap	    PredicateObjectMap	     LogicalSource	      Graph	     DataSource
+	-------------------------------------------------------------------------------------------------				     						
+		|		        |		        |			                |			    |		        |
+	  TermMap	     TripleMap	    PredicateObjectMap	     LogicalSource	      Graph	     DataSource
 		|
 	------------------
    GraphMap  ObjectMap  SubjectMap
@@ -35,7 +35,7 @@
 					 |
 			---------------------------------
 			|				                |
-		      TermNode			   ExplicitNode
+		  TermNode			            ExplicitNode
 		-----------------		-----------------
 		|		|		        |		        |
 	   Uri   BlankNode          |	        Literal
