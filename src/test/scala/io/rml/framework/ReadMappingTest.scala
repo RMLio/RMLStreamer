@@ -26,7 +26,7 @@ class ReadMappingTest extends FlatSpec with Matchers{
 
   it should "throw exceptions if mapping file is not valid (Automated test)" taggedAs MappingReadSeqTest in {
     assertThrows[Exception] {
-      val mappingFiles = getMappingFilesInFolder("failing_test_cases")
+      val mappingFiles = getMappingFilesInFolder("negative_test_cases")
       val testAmt = mappingFiles.length
 
       var failedTestCases = Array[File]()

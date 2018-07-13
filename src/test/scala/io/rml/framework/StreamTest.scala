@@ -3,6 +3,7 @@ package io.rml.framework
 import java.util.concurrent.Executors
 
 import io.rml.framework.flink.source.StreamUtil
+import io.rml.framework.helper.{Logger, TestSink}
 import org.apache.flink.api.common.io.OutputFormat
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.configuration.Configuration
@@ -25,7 +26,7 @@ class StreamTest extends FunSuite with Matchers {
     val formattedMapping = TestUtil.readMapping("stream/stream-1.rml.ttl")
 
     // execute
-    Main.createStreamFromFormattedMapping(formattedMapping).print() //TODO write to collection for assertions
+    Main.createStreamFromFormattedMapping(formattedMapping).addSink(TestSink())//TODO write to collection for assertions
 
     val server = new Runnable{
       override def run(): Unit = {
@@ -42,6 +43,10 @@ class StreamTest extends FunSuite with Matchers {
     Thread.sleep(2000)
     pool.submit(job)
     Thread.sleep(5000)
+
+    for (el <- TestSink.triples) {
+      Logger.logInfo(el)
+    }
 
   }
 

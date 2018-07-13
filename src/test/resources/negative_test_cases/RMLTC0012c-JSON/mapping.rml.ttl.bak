@@ -4,27 +4,29 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+
 @base <http://example.com/base/> .
 
-<TriplesMap1> a rr:TriplesMap;
-    
-  rml:logicalSource [ 
-    rml:source "negative_test_cases/RMLTC0007h-JSON/student.json";
+<TriplesMap1>
+  a rr:TriplesMap;
+
+  rml:logicalSource [
+    rml:source "negative_test_cases/RMLTC0012c-JSON/persons.json";
     rml:referenceFormulation ql:JSONPath;
-    rml:iterator "$.students[*]"
+    rml:iterator "$.persons[*]"
   ];
-
-  rr:subjectMap [ 
-    rr:template "http://example.com/Student/{ID}/{FirstName}";
-    rr:graph [ rml:reference "Name"; rr:termType rr:Literal; ]
-  ];
-
-  rr:predicateObjectMap [ 
-    rr:predicate foaf:name;
+	
+  rr:predicateObjectMap [
+    rr:predicate foaf:name ; 
     rr:objectMap [
-      rml:reference "Name"
+      rr:template "{fname} {lname}";
+      rr:termType rr:Literal ;
+    ]
+  ];
+    
+  rr:predicateObjectMap [ 
+    rr:predicate ex:amount ; 
+    rr:objectMap    [ 
+      rml:reference "amount";
     ]
   ].
-
-
-

@@ -3,7 +3,11 @@ package io.rml.framework.helper.fileprocessing
 import java.io.File
 import java.nio.file.Path
 
+import io.rml.framework.core.model.Uri
+import io.rml.framework.core.model.rdf.RDFGraph
+import io.rml.framework.core.model.rdf.jena.JenaGraph
 import io.rml.framework.helper.Logger
+import org.apache.jena.rdf.model.ModelFactory
 
 import scala.util.Sorting
 
@@ -13,15 +17,15 @@ import scala.util.Sorting
   *
   * It provides an interface to process files with the given type parameter R
   *
-  *
-  *
   * @tparam R type of result from  processing a file
   */
 
 trait TestFilesHelper[R] {
 
-  def getHelperSpecificFiles(path:String): Array[File]
+  def getHelperSpecificFiles(path: String): Array[File]
+
   def processFile(file: File): R
+
   def getFile(path: String): File = {
     val classLoader = getClass.getClassLoader
     val file_1 = new File(path)
@@ -67,7 +71,7 @@ trait TestFilesHelper[R] {
     Logger.lineBreak()
   }
 
-  def processFilesInTestFolder (testFolderPath : String): List[R]  = {
+  def processFilesInTestFolder(testFolderPath: String): List[R] = {
 
     val files = getHelperSpecificFiles(testFolderPath)
     files
@@ -75,5 +79,20 @@ trait TestFilesHelper[R] {
       .map(processFile)
       .toList
   }
+
+  def readTriplesFromString(dump: String): Seq[String] = {
+    val model_1 = JenaGraph(ModelFactory.createDefaultModel()).withUri(Uri(""))
+    model_1.read(dump, "N-TRIPLES")
+    model_1.listTriples.map(item => item.toString).sorted
+  }
+
+  def readTriplesFromFile(absPath: String): Seq[String] = {
+    val model_2 = RDFGraph.fromFile(new File(absPath))
+    model_2.listTriples.map(item => item.toString).sorted
+  }
+
+
+
+
 
 }

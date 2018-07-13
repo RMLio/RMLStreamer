@@ -13,7 +13,7 @@ class StreamingTest  extends  AsyncFlatSpec{
   implicit val env = ExecutionEnvironment.getExecutionEnvironment
   implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
   implicit val executor =  ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
-
+  val passing = "stream"
   def addSoon(addends: Int*) : Future[Int] = Future{addends.sum}
 
   "TCPsource -pull " should "map the incoming statements correctly with a valid mapping file" in {
