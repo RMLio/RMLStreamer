@@ -1,6 +1,6 @@
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{ParentTriplesMap, TermNode, TripleMap}
+import io.rml.framework.core.model.{ParentTriplesMap, TripleMap}
 
 case class StdParentTriplesMap(triplesMap: TripleMap) extends ParentTriplesMap {
   /**

@@ -22,8 +22,6 @@
 
 package io.rml.framework.core.model
 
-import org.apache.commons.lang3.builder.HashCodeBuilder
-
 /**
   * This trait defines a term map.
   * Term maps are used to generate the subjects, predicates and

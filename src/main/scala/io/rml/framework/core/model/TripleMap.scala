@@ -23,7 +23,6 @@
 package io.rml.framework.core.model
 
 import io.rml.framework.core.model.std.StdTriplesMap
-import org.apache.commons.lang3.builder.HashCodeBuilder
 
 /**
   * This trait represents a triples map.

@@ -1,6 +1,6 @@
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{JoinedTripleMap, TermNode, TripleMap}
+import io.rml.framework.core.model.{JoinedTripleMap, TripleMap}
 
 case class StdJoinedTripleMap(tripleMap: TripleMap) extends JoinedTripleMap(tripleMap) {
   /**

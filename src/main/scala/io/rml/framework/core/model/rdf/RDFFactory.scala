@@ -24,7 +24,7 @@ package io.rml.framework.core.model.rdf
 
 import java.io.File
 
-import io.rml.framework.core.model.{TermNode, Uri, Entity}
+import io.rml.framework.core.model.{Entity, TermNode, Uri}
 import io.rml.framework.shared.ReadException
 
 /**

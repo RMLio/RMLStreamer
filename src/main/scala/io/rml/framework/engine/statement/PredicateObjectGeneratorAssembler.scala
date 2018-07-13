@@ -22,7 +22,7 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.model.{PredicateObjectMap, Uri, Entity}
+import io.rml.framework.core.model.{Entity, PredicateObjectMap, Uri}
 import io.rml.framework.flink.item.Item
 
 class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGeneratorAssembler,

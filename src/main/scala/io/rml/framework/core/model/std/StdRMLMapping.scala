@@ -22,7 +22,7 @@
 
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{RMLMapping, TermNode, TripleMap}
+import io.rml.framework.core.model.{RMLMapping, TripleMap}
 
 case class StdRMLMapping(triplesMaps: List[TripleMap], identifier: String) extends RMLMapping {
   override def containsParentTripleMaps: Boolean = {

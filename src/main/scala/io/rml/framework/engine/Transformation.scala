@@ -1,6 +1,6 @@
 package io.rml.framework.engine
 
-import io.rml.framework.core.model.{Parameters, Uri, Entity}
+import io.rml.framework.core.model.{Entity, Parameters, Uri}
 
 trait Transformation {
 

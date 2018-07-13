@@ -23,7 +23,7 @@
 package io.rml.framework.core.model.rdf
 
 import io.rml.framework.core.model.rdf.jena.JenaFactory
-import io.rml.framework.core.model.{TermNode, Uri, Entity}
+import io.rml.framework.core.model.{Entity, TermNode, Uri}
 
 /**
   * Created by wmaroy on 21.08.17.

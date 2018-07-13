@@ -22,7 +22,7 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.model.{ObjectMap, Entity}
+import io.rml.framework.core.model.{Entity, ObjectMap}
 import io.rml.framework.flink.item.Item
 
 class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {

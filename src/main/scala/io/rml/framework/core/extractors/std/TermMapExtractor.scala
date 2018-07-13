@@ -24,7 +24,7 @@ package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.ResourceExtractor
 import io.rml.framework.core.model.rdf.RDFResource
-import io.rml.framework.core.model.{Literal, Uri, Entity}
+import io.rml.framework.core.model.{Entity, Literal, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
