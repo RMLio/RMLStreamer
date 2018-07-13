@@ -131,6 +131,7 @@ object Statement {
     val objectNode = _object match {
       case literal: Literal => FlinkRDFLiteral(literal)
       case resource: Uri => FlinkRDFResource(resource)
+      case blank : Blank => FlinkRDFBlank(blank)
     }
     println(Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode)).get.toString)
     Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode))
