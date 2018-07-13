@@ -1,6 +1,7 @@
 package io.rml.framework
 
 import java.io.File
+import java.nio.file.Path
 
 import io.rml.framework.helper.fileprocessing.{OutputTestHelper, TripleGeneratorTestHelper}
 import io.rml.framework.helper.{Logger, Sanitizer}
@@ -17,14 +18,14 @@ class OutputGenerationTest extends FlatSpec with Matchers {
   val passing = "rml-testcases"
   val temp = "temp_ignored_testcases/blanknodes"
   "Output from the generator" should "match the output from ouput.ttl" in {
-   // test(passing, checkGeneratedOutput)
-    checkGeneratedOutput(OutputTestHelper.getFile("example3").toString)
+    OutputTestHelper.test(passing, checkGeneratedOutput)
+    //checkGeneratedOutput(OutputTestHelper.getFile("example2-object").toString)
   }
 
   it should "throw TermTypeException if the termType of the subject is a Literal" in {
     
     assertThrows[TermTypeException] {
-      test(failing, checkForTermTypeException)
+      OutputTestHelper.test(failing, checkForTermTypeException)
       throw new TermTypeException("")
     }
   }
@@ -87,28 +88,5 @@ class OutputGenerationTest extends FlatSpec with Matchers {
     }
   }
 
-
-  /**
-    * Helper method for looping through the root folder and iterating over each test case folder.
-    * The given checkFunc will be evaluated for each test case folder.
-    *
-    * @param rootDir
-    * @param checkFunc
-    */
-  def test(rootDir: String, checkFunc: String => Unit): Unit = {
-    var checkedTestCases = Array("")
-    for (pathString <- OutputTestHelper.getTestCaseFolders(rootDir).map(_.toString)) {
-
-      checkFunc(pathString)
-      val testCase = new File(pathString).getName
-      Logger.logSuccess("Passed processing: " + testCase)
-      Logger.lineBreak()
-      checkedTestCases :+= testCase
-    }
-
-    Sorting.quickSort(checkedTestCases)
-    Logger.logInfo("Processed test cases: " + checkedTestCases.mkString("\n"))
-    Logger.lineBreak()
-  }
 
 }
