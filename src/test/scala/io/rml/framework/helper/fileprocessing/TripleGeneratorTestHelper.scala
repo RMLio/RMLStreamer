@@ -19,8 +19,8 @@ object TripleGeneratorTestHelper extends TestFilesHelper[List[String]] {
   implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
 
-  override def getHelperSpecificFiles(path: String): Array[File] = {
-    MappingTestHelper.getHelperSpecificFiles(path)
+  override def getHelperSpecificFiles(testCaseFolder: String): Array[File] = {
+    MappingTestHelper.getHelperSpecificFiles(testCaseFolder)
   }
 
 

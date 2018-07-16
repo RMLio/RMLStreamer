@@ -43,6 +43,7 @@ object TestUtil {
           socketChannel.pipeline.addLast(new TCPServerHandler(messages))
         }
       })
+
       val channelFuture = serverBootstrap.bind.sync
       channelFuture.channel.closeFuture.sync
     } catch {

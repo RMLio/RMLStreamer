@@ -22,7 +22,7 @@ import scala.util.Sorting
 
 trait TestFilesHelper[R] {
 
-  def getHelperSpecificFiles(path: String): Array[File]
+  def getHelperSpecificFiles(testCaseFolder: String): Array[File]
 
   def processFile(file: File): R
 

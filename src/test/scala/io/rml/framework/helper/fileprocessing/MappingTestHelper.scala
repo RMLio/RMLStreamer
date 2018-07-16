@@ -13,11 +13,6 @@ import io.rml.framework.core.model.FormattedRMLMapping
 object MappingTestHelper extends FileProcessingHelper[FormattedRMLMapping] {
 
 
-  override def getHelperSpecificFiles(path: String): Array[File] = {
-    candidateFiles.map(f => Paths.get(path, f).toFile).toArray
-
-  }
-
   override def processFile(file: File): FormattedRMLMapping = {
     val mapping = MappingReader().read(file)
     FormattedRMLMapping.fromRMLMapping(mapping)

@@ -3,7 +3,7 @@ package io.rml.framework
 import java.io.File
 import java.nio.file.Path
 
-import io.rml.framework.helper.fileprocessing.{OutputTestHelper, TripleGeneratorTestHelper}
+import io.rml.framework.helper.fileprocessing.{ExpectedOutputTestHelper, TripleGeneratorTestHelper}
 import io.rml.framework.helper.{Logger, Sanitizer}
 import io.rml.framework.shared.{RMLException, TermTypeException}
 import org.scalatest.{FlatSpec, Matchers}
@@ -18,14 +18,14 @@ class OutputGenerationTest extends FlatSpec with Matchers {
   val passing = "rml-testcases"
   val temp = "temp_ignored_testcases/blanknodes"
   "Output from the generator" should "match the output from ouput.ttl" in {
-    OutputTestHelper.test(passing, checkGeneratedOutput)
+    ExpectedOutputTestHelper.test(passing, checkGeneratedOutput)
     //checkGeneratedOutput(OutputTestHelper.getFile("example2-object").toString)
   }
 
   it should "throw TermTypeException if the termType of the subject is a Literal" in {
     
     assertThrows[TermTypeException] {
-      OutputTestHelper.test(failing, checkForTermTypeException)
+      ExpectedOutputTestHelper.test(failing, checkForTermTypeException)
       throw new TermTypeException("")
     }
   }
@@ -56,7 +56,7 @@ class OutputGenerationTest extends FlatSpec with Matchers {
     * @param testFolderPath
     */
   def checkGeneratedOutput(testFolderPath: String): Unit = {
-    var expectedOutputs: Set[String] = OutputTestHelper.processFilesInTestFolder(testFolderPath).toSet.flatten
+    var expectedOutputs: Set[String] = ExpectedOutputTestHelper.processFilesInTestFolder(testFolderPath).toSet.flatten
     var generatedOutputs: List[String] = TripleGeneratorTestHelper.processFilesInTestFolder(testFolderPath).flatten
 
     /**

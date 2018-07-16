@@ -11,13 +11,10 @@ import scala.io.Source
   * A test helper object to get strings from the expected output turtle file.
   *
   */
-object OutputTestHelper extends FileProcessingHelper[Set[String]] {
+object ExpectedOutputTestHelper extends FileProcessingHelper[Set[String]] {
   val filters = Array(new CommentFilter)
 
-  override def getHelperSpecificFiles(path: String): Array[File] = {
-      candidateFiles.map( f => Paths.get(path, f).toFile).toArray
 
-  }
 
   /**
     * Read the given file and return a set of strings (output turtle triples are assumed to be distinct from each other)
