@@ -3,7 +3,7 @@ package io.rml.framework
 import java.util.concurrent.Executors
 
 import io.rml.framework.flink.source.StreamUtil
-import io.rml.framework.helper.{Logger, TestSink}
+import io.rml.framework.helper.{Logger, Sanitizer, TestSink}
 import org.apache.flink.api.common.io.OutputFormat
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.configuration.Configuration
@@ -27,10 +27,13 @@ class StreamTest extends FunSuite with Matchers {
 
     // execute
     Main.createStreamFromFormattedMapping(formattedMapping).addSink(TestSink())//TODO write to collection for assertions
+    var messages = List("{\n  \"students\": [{\n    \"ID\": 10,\n    \"FirstName\":\"Venus\",\n    \"LastName\":\"Williams\"\n  },\n    {\n      \"ID\": 20,\n      \"FirstName\":\"Minerva\",\n      \"LastName\":\"Tenebare\"\n    }\n  ]\n}")
+    messages = Sanitizer.sanitize(messages)
+    messages = List(messages.head.replaceAll("\n","") + "\n\r")
+    println(messages)
 
     val server = new Runnable{
       override def run(): Unit = {
-        val messages = List("{\"id\":2018}\n\r")
         TestUtil.createTCPServer(9999,messages.iterator)
       }
     }

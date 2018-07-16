@@ -7,7 +7,7 @@
 @prefix rmls: <http://semweb.mmlab.be/ns/rmls#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @base <http://example.com/base> .
-
+@prefix foaf: <http://foaf.org/foffie/> .
  <#TripleMap>
 
     a rr:TriplesMap;
@@ -18,22 +18,16 @@
             rmls:port "9999" ;
             rmls:type "PULL"
         ];
+        rml:iterator "$.students[*]" ;
         rml:referenceFormulation ql:JSONPath;
     ];
+  rr:subjectMap [
+    rr:template "http://example.com/Student/{ID}/{FirstName}";
+    rr:class foaf:Person, ex:Student
+  ];
 
-    rr:subjectMap [
-        rml:reference "$.id";
-        rr:termType rr:IRI;
-        rr:class ex:Concept
-    ];
+  rr:predicateObjectMap [
+    rr:predicate foaf:name;
+    rr:objectMap [ rml:reference "FirstName" ]
+  ].
 
-    rr:predicateObjectMap [
-            rr:predicateMap [
-                rr:constant ex:title;
-                rr:termType rr:IRI
-            ];
-            rr:objectMap [
-                rml:reference "$.id";
-                rr:termType rr:Literal
-            ]
-        ].
