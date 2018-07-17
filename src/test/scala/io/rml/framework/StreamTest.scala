@@ -1,17 +1,13 @@
 package io.rml.framework
 
+import java.io.File
 import java.util.concurrent.Executors
 
-import io.rml.framework.flink.source.StreamUtil
-import io.rml.framework.helper.{Logger, Sanitizer, TestSink}
-import org.apache.flink.api.common.io.OutputFormat
+import io.rml.framework.helper.fileprocessing.DataSourceTestHelper
+import io.rml.framework.helper.{Logger, TestSink}
 import org.apache.flink.api.scala.ExecutionEnvironment
-import org.apache.flink.configuration.Configuration
-import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.scalatest.{FunSuite, Matchers}
-
-import scala.collection.mutable.ArrayBuffer
 
 class StreamTest extends FunSuite with Matchers {
 
@@ -26,15 +22,20 @@ class StreamTest extends FunSuite with Matchers {
     val formattedMapping = TestUtil.readMapping("stream/stream-1.rml.ttl")
 
     // execute
-    Main.createStreamFromFormattedMapping(formattedMapping).addSink(TestSink())//TODO write to collection for assertions
-    var messages = List("{\n  \"students\": [{\n    \"ID\": 10,\n    \"FirstName\":\"Venus\",\n    \"LastName\":\"Williams\"\n  },\n    {\n      \"ID\": 20,\n      \"FirstName\":\"Minerva\",\n      \"LastName\":\"Tenebare\"\n    }\n  ]\n}")
-    messages = Sanitizer.sanitize(messages)
-    messages = List(messages.head.replaceAll("\n","") + "\n\r")
+    val dataStream = Main.createStreamFromFormattedMapping(formattedMapping).addSink(TestSink())
+    //TODO write to collection for assertions
+    //    var messages = List("{\n  \"students\": [{\n    \"ID\": 10,\n    \"FirstName\":\"Venus\",\n    \"LastName\":\"Williams\"\n  },\n    {\n      \"ID\": 20,\n      \"FirstName\":\"Minerva\",\n      \"LastName\":\"Tenebare\"\n    }\n  ]\n}")
+    //    messages = Sanitizer.sanitize(messages)
+    //    messages = List(messages.head.replaceAll("\n","") + "\n\r")
+    val messages = DataSourceTestHelper.processFile(new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/example-data.json"))
+
     println(messages)
 
-    val server = new Runnable{
+    val server = new Runnable {
       override def run(): Unit = {
-        TestUtil.createTCPServer(9999,messages.iterator)
+
+        val messages = List("{ \"student\": { \"ID\": 10, \"FirstName\": \"Venus\", \"LastName\": \"Williams\" }}\n\r{ \"student\": { \"ID\": 20, \"FirstName\": \"Minerva\", \"LastName\": \"Tenebare\" }}\n\r")
+        TestUtil.createTCPServer(9999, messages.iterator)
       }
     }
 
@@ -45,10 +46,14 @@ class StreamTest extends FunSuite with Matchers {
     pool.submit(server)
     Thread.sleep(2000)
     pool.submit(job)
-    Thread.sleep(5000)
+    Thread.sleep(2000)
 
-    for (el <- TestSink.triples) {
-      Logger.logInfo(el)
+    TestSink.triples.synchronized {
+      val iter = TestSink.triples.iterator()
+
+      while (iter.hasNext) {
+        Logger.logInfo(iter.next())
+      }
     }
 
   }

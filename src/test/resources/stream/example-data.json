@@ -1,13 +1,18 @@
 {
-  "students": [{
-    "ID": 10,
-    "FirstName":"Venus",
-    "LastName":"Williams"
-  },
+  "student":
     {
-      "ID": 20,
-      "FirstName":"Minerva",
-      "LastName":"Tenebare"
+      "ID": 10,
+      "FirstName": "Venus",
+      "LastName": "Williams"
     }
-  ]
+
+}
+================================
+
+{
+  "student": {
+    "ID": 20,
+    "FirstName": "Minerva",
+    "LastName": "Tenebare"
+  }
 }
