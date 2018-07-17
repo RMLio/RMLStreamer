@@ -16,16 +16,19 @@ object JSONStream {
 
   def apply(source: StreamDataSource, iterator: String)(implicit env: StreamExecutionEnvironment): Stream = {
     source match {
-      case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream)
+      case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, iterator)
       case fileStream: FileStream => fromFileStream(fileStream.path, iterator)
       case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream)
     }
   }
 
-  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream)(implicit env: StreamExecutionEnvironment): JSONStream = {
+  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream, iterator:String)(implicit env: StreamExecutionEnvironment): JSONStream = {
     val stream: DataStream[Item] = StreamUtil.createTcpSocketSource(tCPSocketStream)
       .flatMap(item => {
-        JSONItem.fromStringOptionable(item)
+        JSONItem.fromStringOptionableList(item, iterator)
+      })
+      .flatMap(item => {
+        item
       })
       .map(item => {
         item.asInstanceOf[Item]

@@ -33,8 +33,6 @@ class StreamTest extends FunSuite with Matchers {
 
     val server = new Runnable {
       override def run(): Unit = {
-
-        val messages = List("{ \"student\": { \"ID\": 10, \"FirstName\": \"Venus\", \"LastName\": \"Williams\" }}\n\r{ \"student\": { \"ID\": 20, \"FirstName\": \"Minerva\", \"LastName\": \"Tenebare\" }}\n\r")
         TestUtil.createTCPServer(9999, messages.iterator)
       }
     }
@@ -46,7 +44,7 @@ class StreamTest extends FunSuite with Matchers {
     pool.submit(server)
     Thread.sleep(2000)
     pool.submit(job)
-    Thread.sleep(2000)
+    Thread.sleep(5000)
 
     TestSink.triples.synchronized {
       val iter = TestSink.triples.iterator()

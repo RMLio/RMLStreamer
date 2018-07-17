@@ -27,6 +27,7 @@ object XMLStream {
   def fromTCPSocketStream(tCPSocketStream: TCPSocketStream)(implicit env: StreamExecutionEnvironment): XMLStream = {
     val stream: DataStream[Item] = StreamUtil.createTcpSocketSource(tCPSocketStream)
       .flatMap(item => {
+
         XMLItem.fromStringOptionable(item)
       }).map((item) => item.asInstanceOf[Item])
     XMLStream(stream)

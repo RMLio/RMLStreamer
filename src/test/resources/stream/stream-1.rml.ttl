@@ -18,16 +18,16 @@
             rmls:port "9999" ;
             rmls:type "PULL"
         ];
-        rml:iterator "$" ;
+        rml:iterator "$.students[*]" ;
         rml:referenceFormulation ql:JSONPath;
     ];
   rr:subjectMap [
-    rr:template "http://example.com/Student/{$.student.ID}/{$.student.FirstName}";
+    rr:template "http://example.com/Student/{ID}/{FirstName}";
     rr:class foaf:Person, ex:Student
   ];
 
   rr:predicateObjectMap [
     rr:predicate foaf:name;
-    rr:objectMap [ rml:reference "$.student.FirstName" ]
+    rr:objectMap [ rml:reference "FirstName" ]
   ].
 

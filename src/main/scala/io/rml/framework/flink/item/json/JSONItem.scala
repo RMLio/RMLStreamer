@@ -23,8 +23,11 @@
 package io.rml.framework.flink.item.json
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.jayway.jsonpath.JsonPath
 import io.rml.framework.flink.item.Item
+import org.jsfr.json.provider.JacksonProvider
+import org.jsfr.json.{JacksonParser, JsonSurfer}
 import org.slf4j.LoggerFactory
 
 import scala.util.control.NonFatal
@@ -42,7 +45,8 @@ class JSONItem(map: java.util.Map[String, Object]) extends Item {
       else if (_object.isInstanceOf[java.lang.Integer]) Some(_object.asInstanceOf[Integer].toString)
       else if (_object.isInstanceOf[java.lang.Long]) Some(_object.asInstanceOf[Long].toString)
       else {
-        println(_object); None
+        println(_object);
+        None
       }
 
     } catch {
@@ -55,18 +59,26 @@ class JSONItem(map: java.util.Map[String, Object]) extends Item {
 
 object JSONItem {
 
+  private val surfer = new JsonSurfer(JacksonParser.INSTANCE, JacksonProvider.INSTANCE)
+
   def fromString(json: String): JSONItem = {
     val mapper = new ObjectMapper()
     val node = mapper.readTree(json)
     null //new JSONItem(node)
   }
 
-  def fromStringOptionable(json: String): Option[JSONItem] = {
+  def fromStringOptionableList(json: String, iterator: String): Option[Array[JSONItem]] = {
     try {
+      println(json)
+      val collection =  surfer.collectAll(json,iterator)
+      val listOfJson =  collection.toArray()
       val mapper = new ObjectMapper()
-      val node = mapper.readTree(json)
-      val map = mapper.convertValue(node, classOf[java.util.Map[String, Object]])
-      Some(new JSONItem(map))
+
+      val result = listOfJson
+        .map(node => mapper.convertValue(node, classOf[java.util.Map[String, Object]]))
+        .map(map => new JSONItem(map))
+
+      Some(result)
     } catch {
       case NonFatal(e) => e.printStackTrace(); None
     }
