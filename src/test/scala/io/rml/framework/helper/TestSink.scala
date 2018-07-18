@@ -1,6 +1,5 @@
 package io.rml.framework.helper
 
-import java.util
 
 import org.apache.flink.streaming.api.functions.sink.{RichSinkFunction, SinkFunction}
 
@@ -9,7 +8,7 @@ import org.apache.flink.streaming.api.functions.sink.{RichSinkFunction, SinkFunc
   * list of string. The list will be synchronized across the threads.
   */
 object TestSink {
-  val triples: util.List[String] = new util.ArrayList[String]()
+  var triples: List[String] = List[String]()
 
   def apply(): TestSink = new TestSink()
 }
@@ -19,7 +18,9 @@ class TestSink extends RichSinkFunction[String] {
 
     synchronized {
       for (el <- value.split('\n'))
-        TestSink.triples.add(el)
+        TestSink.triples.synchronized {
+          TestSink.triples ::= el
+        }
     }
   }
 

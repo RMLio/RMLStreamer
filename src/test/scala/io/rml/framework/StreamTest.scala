@@ -45,11 +45,7 @@ class StreamTest extends FunSuite with Matchers {
     pool.submit(job)
     Thread.sleep(30000)
     TestSink.triples.synchronized {
-      val iter = TestSink.triples.iterator()
-
-      while (iter.hasNext) {
-        Logger.logInfo(iter.next())
-      }
+      TestSink.triples.foreach( _ => Logger.logInfo(_))
     }
 
   }

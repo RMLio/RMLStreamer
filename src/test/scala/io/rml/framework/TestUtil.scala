@@ -4,20 +4,20 @@ import java.io.File
 import java.net.InetSocketAddress
 
 import io.netty.bootstrap.ServerBootstrap
-import io.netty.buffer.ByteBuf
 import io.netty.channel._
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
-import io.netty.handler.codec.serialization.ObjectEncoder
 import io.netty.util.CharsetUtil
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model.FormattedRMLMapping
-import io.rml.framework.helper.Logger
+
+import scala.concurrent.{Future, Promise}
 
 object TestUtil {
-  var biggerContext: ChannelHandlerContext = _
-  def getContext : ChannelHandlerContext = biggerContext
+  var promiseChContext: Promise[ChannelHandlerContext] = Promise[ChannelHandlerContext]()
+  def getChCtxFuture: Future[ChannelHandlerContext] = promiseChContext.future
+
   def readMapping(path: String): FormattedRMLMapping = {
     val classLoader = getClass.getClassLoader
     val file_1 = new File(path)
@@ -51,7 +51,6 @@ object TestUtil {
 
 
       val channelFuture = serverBootstrap.bind.sync
-
       channelFuture.channel().closeFuture().sync()
     } catch {
       case e: Exception =>
@@ -61,8 +60,7 @@ object TestUtil {
 
   class TCPServerHandler(messages: Iterator[String]) extends ChannelInboundHandlerAdapter {
 
-    private var bigContext:ChannelHandlerContext =  _
-    import io.netty.buffer.{ByteBuf, Unpooled}
+    import io.netty.buffer.ByteBuf
 
     @throws[Exception]
     override def channelRead(ctx: ChannelHandlerContext, msge: Any): Unit = {
@@ -80,7 +78,11 @@ object TestUtil {
     }
 
     override def channelActive(ctx: ChannelHandlerContext): Unit = {
-      bigContext = ctx
+      if (promiseChContext.isCompleted) {
+        promiseChContext = Promise[ChannelHandlerContext] ()
+      }
+      promiseChContext success ctx
+
       messages.foreach(msg => {
         val byteBufMsg = ctx.alloc.buffer(msg.length)
         byteBufMsg.writeBytes(msg.getBytes)
