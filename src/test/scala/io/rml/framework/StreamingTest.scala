@@ -4,7 +4,7 @@ import java.io.File
 import java.util.concurrent.Executors
 
 import io.rml.framework.helper.fileprocessing.{DataSourceTestHelper, MappingTestHelper}
-import io.rml.framework.helper.{Logger, TestSink}
+import io.rml.framework.helper.{Logger, StreamTestHelper, TestSink}
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.configuration.{ConfigConstants, Configuration, TaskManagerOptions}
 import org.apache.flink.runtime.messages.JobManagerMessages.CancelJob
@@ -30,7 +30,8 @@ class StreamingTest extends AsyncFlatSpec {
     val folder = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0007a-JSON")
     val folder2 = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0007c-JSON")
     prepareGenerationFuture(folder.toString)
-    startCluster
+
+    StreamTestHelper.getClusterFuture
     Logger.logInfo("cluster started")
 
 
