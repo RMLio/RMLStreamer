@@ -14,13 +14,11 @@ import org.apache.flink.runtime.minicluster.{FlinkMiniCluster, LocalFlinkMiniClu
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 
 import scala.concurrent.duration.FiniteDuration
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 object StreamTestHelper {
 
-  implicit val env = ExecutionEnvironment.getExecutionEnvironment
-  implicit var senv = StreamExecutionEnvironment.createLocalEnvironment()
-  implicit val executor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
+  implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
   /**
     * Create a data stream from mapping file in de specified test case folder.
@@ -32,10 +30,8 @@ object StreamTestHelper {
     * @param testCaseFolder folder containing rml mapping file
     * @return flink DataStream[String]
     */
-  def createDataStream(testCaseFolder: File): DataStream[String] = {
+  def createDataStream(testCaseFolder: File)( implicit senv: StreamExecutionEnvironment, env: ExecutionEnvironment) : DataStream[String] = {
 
-    // Refreshes stream execution environment for each data stream
-    senv = StreamExecutionEnvironment.createLocalEnvironment()
     // read the mapping
     val formattedMapping = MappingTestHelper.processFilesInTestFolder(testCaseFolder.getAbsolutePath)
     val stream = Main.createStreamFromFormattedMapping(formattedMapping.head)
@@ -134,7 +130,7 @@ object StreamTestHelper {
     */
 
   def getClusterFuture: Future[LocalFlinkMiniCluster] = {
-
+    Logger.logInfo("Starting up cluster....")
     val configuration = new Configuration
     configuration.setLong(TaskManagerOptions.MANAGED_MEMORY_SIZE, -1L)
     configuration.setInteger(ConfigConstants.LOCAL_NUMBER_TASK_MANAGER, 2)
@@ -144,7 +140,7 @@ object StreamTestHelper {
     val cluster = new LocalFlinkMiniCluster(configuration, true)
 
     cluster.start()
-    // sleep or wait for all job finishes
+    Logger.logInfo("Cluster started")
     Future.successful(cluster)
   }
 
