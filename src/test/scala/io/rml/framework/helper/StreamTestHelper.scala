@@ -108,10 +108,9 @@ object StreamTestHelper {
     * @param port default value is 9999
     * @return
     */
-  def getTCPFuture(port: Int = 9999): Future[Unit] = {
+  def getTCPFuture(port: Int = 9999): Future[Unit] = Future{
     Logger.logInfo(s"Begin TCP server on port: $port")
     TestUtil.createTCPServer(port)
-    Future.successful()
   }
 
 
