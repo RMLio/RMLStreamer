@@ -69,7 +69,6 @@ object JSONItem {
 
   def fromStringOptionableList(json: String, iterator: String): Option[Array[JSONItem]] = {
     try {
-      println(json)
       val collection =  surfer.collectAll(json,iterator)
       val listOfJson =  collection.toArray()
       val mapper = new ObjectMapper()

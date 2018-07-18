@@ -19,8 +19,8 @@ class StreamingTest extends AsyncFlatSpec {
 
 
   "TCPsource -pull " should "map the incoming statements correctly with a valid mapping file" in {
-    val generationFuture = prepareGenerationFuture("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0001b-XML")
-    Await.result(generationFuture, 5 seconds)
+    val generationFuture = prepareGenerationFuture("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0007c-JSON")
+    Await.result(generationFuture, Duration.Inf)
 
     succeed
   }
@@ -39,6 +39,7 @@ class StreamingTest extends AsyncFlatSpec {
     // read data source file
     val dataSource = DataSourceTestHelper.processFilesInTestFolder(testCaseFolderPath).flatten
 
+    Logger.logInfo(dataSource.toString())
     // execute
     Main.createStreamFromFormattedMapping(formattedMapping.head).addSink(TestSink()) //TODO write to collection for assertions
 

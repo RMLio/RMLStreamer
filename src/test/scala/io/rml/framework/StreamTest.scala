@@ -28,8 +28,7 @@ class StreamTest extends FunSuite with Matchers {
     //    messages = Sanitizer.sanitize(messages)
     //    messages = List(messages.head.replaceAll("\n","") + "\n\r")
     val messages = DataSourceTestHelper.processFile(new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/example-data.json"))
-
-    println(messages)
+    Logger.logInfo(messages.toString())
 
     val server = new Runnable {
       override def run(): Unit = {
@@ -44,8 +43,7 @@ class StreamTest extends FunSuite with Matchers {
     pool.submit(server)
     Thread.sleep(2000)
     pool.submit(job)
-    Thread.sleep(5000)
-
+    Thread.sleep(30000)
     TestSink.triples.synchronized {
       val iter = TestSink.triples.iterator()
 

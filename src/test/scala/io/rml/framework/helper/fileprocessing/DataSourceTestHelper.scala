@@ -10,7 +10,7 @@ object DataSourceTestHelper extends FileProcessingHelper[List[String]] {
 
   override def processFile(file: File): List[String] = {
 
-    var result = ""
+    var result = List[String]()
     var entry = ""
 
     for (line <- Source.fromFile(file).getLines()) {
@@ -19,7 +19,7 @@ object DataSourceTestHelper extends FileProcessingHelper[List[String]] {
       if (trimmed.length > 0) {
         if (trimmed.charAt(0) == '=') {
           // more than one data source entry detected in the file
-          result += entry + "\n\r"
+          result ::= entry + "\n"
           entry = ""
         } else {
           entry += line.replaceAll(" +"," ")
@@ -28,9 +28,9 @@ object DataSourceTestHelper extends FileProcessingHelper[List[String]] {
     }
 
     //append last entry in data source to the result list
-    result += entry + "\n\r"
+    result ::= entry + "\n\r"
 
-    List(result)
+    result
 
 
   }
