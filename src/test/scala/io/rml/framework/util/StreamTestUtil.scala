@@ -4,8 +4,8 @@ import java.io.File
 import java.util.concurrent.Executors
 
 import io.netty.channel.ChannelHandlerContext
-import io.rml.framework.util.fileprocessing.MappingTestUtil
 import io.rml.framework.Main
+import io.rml.framework.util.fileprocessing.MappingTestUtil
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.configuration.{ConfigConstants, Configuration, TaskManagerOptions}
@@ -30,7 +30,7 @@ object StreamTestUtil {
     * @param testCaseFolder folder containing rml mapping file
     * @return flink DataStream[String]
     */
-  def createDataStream(testCaseFolder: File)( implicit senv: StreamExecutionEnvironment, env: ExecutionEnvironment) : DataStream[String] = {
+  def createDataStream(testCaseFolder: File)(implicit senv: StreamExecutionEnvironment, env: ExecutionEnvironment): DataStream[String] = {
 
     // read the mapping
     val formattedMapping = MappingTestUtil.processFilesInTestFolder(testCaseFolder.getAbsolutePath)
@@ -65,22 +65,23 @@ object StreamTestUtil {
     * Write out the given messages to a channel handled by the given netty ChannelHandlerContext
     *
     * The given channel context is wrapped in a handler since it has to be first set-up by the netty
-    *  TCP server
+    * TCP server
+    *
     * @param messages
     * @param ctxChlHandler future wrapped handler.
     */
 
   def writeDataToTCP(messages: Iterator[String], ctxChlHandler: Future[ChannelHandlerContext]): Unit = {
-      ctxChlHandler map {ctx =>
-        Logger.logInfo(ctx.channel().toString)
+    ctxChlHandler map { ctx =>
+      Logger.logInfo(ctx.channel().toString)
 
-        for(el <- messages) {
-          Logger.logInfo(el)
-          val byteBuff = ctx.alloc.buffer(el.length)
-          byteBuff.writeBytes(el.getBytes())
-          ctx.channel.writeAndFlush(byteBuff)
-        }
+      for (el <- messages) {
+        Logger.logInfo(el)
+        val byteBuff = ctx.alloc.buffer(el.length)
+        byteBuff.writeBytes(el.getBytes())
+        ctx.channel.writeAndFlush(byteBuff)
       }
+    }
   }
 
   /**
@@ -92,17 +93,21 @@ object StreamTestUtil {
     * @tparam T result type of the data stream
     * @return JobID of the submitted job which can be used later on to cancel/stop
     */
-  def submitJobToCluster[T](cluster: FlinkMiniCluster, dataStream: DataStream[T], name: String): JobID = {
+  def submitJobToCluster[T](cluster: LocalFlinkMiniCluster, dataStream: DataStream[T], name: String): Future[JobID] =
 
+    Future {
+      while(cluster.currentlyRunningJobs.size > 1 ){
+        val x = 1
+      }
+      val graph = dataStream.executionEnvironment.getStreamGraph
+      graph.setJobName(name)
+      val jobGraph = graph.getJobGraph
+      cluster.submitJobDetached(jobGraph)
+      Logger.logInfo(cluster.currentlyRunningJobs.toString())
 
-    val graph = dataStream.executionEnvironment.getStreamGraph
-    graph.setJobName(name)
-    val jobGraph = graph.getJobGraph
-    cluster.submitJobDetached(jobGraph)
+      jobGraph.getJobID
+    }
 
-
-    jobGraph.getJobID
-  }
 
 
   /**
@@ -111,7 +116,7 @@ object StreamTestUtil {
     * @param port default value is 9999
     * @return
     */
-  def getTCPFuture(port: Int = 9999): Future[Unit] = Future{
+  def getTCPFuture(port: Int = 9999): Future[Unit] = Future {
     Logger.logInfo(s"Begin TCP server on port: $port")
     TCPUtil.createTCPServer(port)
   }

@@ -3,7 +3,7 @@ package io.rml.framework
 import java.io.File
 import java.util.concurrent.Executors
 
-import io.rml.framework.util._
+import io.rml.framework.util.{Logger, _}
 import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil}
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
@@ -30,24 +30,24 @@ class StreamingTest extends AsyncFlatSpec {
 
   "TCPsource -pull " should "map the incoming statements correctly with a valid mapping file" in {
 
-    val folder = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0002c-JSON")
+    val folder = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0012a-JSON")
     val folder2 = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0007c-JSON")
 
     //folderLists = List(folder).toArray
     StreamTestUtil.getTCPFuture()
 
     //TODO: use this when actor models are implemented
-     var folderLists = ExpectedOutputTestUtil.getTestCaseFolders("stream").map( _.toFile).sorted
-        val fSerialized = {
-          var fAccum = Future{()}
-          for (folder <- folderLists){
-            Logger.logInfo(folder.toString)
-            fAccum  =  fAccum flatMap { _ => executeTestCase(folder)}
-          }
-          fAccum
-        }
+//     var folderLists = ExpectedOutputTestUtil.getTestCaseFolders("stream").map( _.toFile).sorted
+//        val fSerialized = {
+//          var fAccum = Future{()}
+//          for (folder <- folderLists){
+//            Logger.logInfo(folder.toString)
+//            fAccum  =  fAccum flatMap { _ => executeTestCase(folder)}
+//          }
+//          fAccum
+//        }
 
-    Await.result(fSerialized, Duration.Inf)
+    Await.result(executeTestCase(folder), Duration.Inf)
 
     succeed
   }
@@ -59,9 +59,10 @@ class StreamingTest extends AsyncFlatSpec {
       cluster.synchronized {
         Logger.logInfo(folder.toString)
         val dataStream = StreamTestUtil.createDataStream(folder)
-        val jobID = StreamTestUtil.submitJobToCluster(cluster, dataStream, folder.getName)
+        val eventualJobID = StreamTestUtil.submitJobToCluster(cluster, dataStream, folder.getName)
+        Await.result(eventualJobID, Duration.Inf)
+        val jobID = eventualJobID.value.get.get
         Logger.logInfo(s"Cluster job $jobID started")
-        
 
         /**
           * Send the input data as a stream of strings to port 9999

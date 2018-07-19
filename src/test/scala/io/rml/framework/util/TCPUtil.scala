@@ -11,7 +11,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.util.CharsetUtil
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model.FormattedRMLMapping
-import io.rml.framework.util.fileprocessing.DataSourceTestUtil
 
 import scala.concurrent.{Future, Promise}
 
@@ -24,6 +23,9 @@ object TCPUtil {
     promiseChContext.future
   }
 
+  val promiseCh: Promise[Channel] = Promise[Channel]()
+
+  def getChannel = promiseCh.future
 
   def readMapping(path: String): FormattedRMLMapping = {
     val classLoader = getClass.getClassLoader
@@ -58,7 +60,7 @@ object TCPUtil {
 
 
       val channelFuture = serverBootstrap.bind.sync
-
+      promiseCh success channelFuture.channel()
       channelFuture.channel().closeFuture().sync()
     } catch {
       case e: Exception =>
