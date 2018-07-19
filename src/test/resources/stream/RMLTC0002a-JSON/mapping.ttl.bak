@@ -9,7 +9,7 @@
 <TriplesMap1> a rr:TriplesMap;
     
   rml:logicalSource [ 
-    rml:source "rml-testcases/RMLTC0002a-JSON/student.json";
+    rml:source [            rdf:type rmls:TCPSocketStream ;            rmls:hostName "localhost" ;            rmls:port "9999" ;            rmls:type "PULL"        ];
     rml:referenceFormulation ql:JSONPath;
     rml:iterator "$.students[*]"
   ];

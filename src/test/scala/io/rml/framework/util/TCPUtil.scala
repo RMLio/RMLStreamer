@@ -1,4 +1,4 @@
-package io.rml.framework
+package io.rml.framework.util
 
 import java.io.File
 import java.net.InetSocketAddress
@@ -11,12 +11,19 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.util.CharsetUtil
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model.FormattedRMLMapping
+import io.rml.framework.util.fileprocessing.DataSourceTestUtil
 
 import scala.concurrent.{Future, Promise}
 
-object TestUtil {
+object TCPUtil {
+
+  val lock: AnyRef with Specializable = AnyRef
   var promiseChContext: Promise[ChannelHandlerContext] = Promise[ChannelHandlerContext]()
-  def getChCtxFuture: Future[ChannelHandlerContext] = promiseChContext.future
+
+  def getChCtxFuture: Future[ChannelHandlerContext] = lock.synchronized {
+    promiseChContext.future
+  }
+
 
   def readMapping(path: String): FormattedRMLMapping = {
     val classLoader = getClass.getClassLoader
@@ -51,6 +58,7 @@ object TestUtil {
 
 
       val channelFuture = serverBootstrap.bind.sync
+
       channelFuture.channel().closeFuture().sync()
     } catch {
       case e: Exception =>
@@ -78,16 +86,20 @@ object TestUtil {
     }
 
     override def channelActive(ctx: ChannelHandlerContext): Unit = {
-      if (promiseChContext.isCompleted) {
-        promiseChContext = Promise[ChannelHandlerContext] ()
-      }
-      promiseChContext success ctx
+      lock.synchronized {
 
-      messages.foreach(msg => {
-        val byteBufMsg = ctx.alloc.buffer(msg.length)
-        byteBufMsg.writeBytes(msg.getBytes)
-        ctx.channel.writeAndFlush(byteBufMsg)
-      })
+
+        if (promiseChContext.isCompleted) {
+          promiseChContext = Promise[ChannelHandlerContext]()
+        }
+        promiseChContext success ctx
+
+        messages.foreach(msg => {
+          val byteBufMsg = ctx.alloc.buffer(msg.length)
+          byteBufMsg.writeBytes(msg.getBytes)
+          ctx.channel.writeAndFlush(byteBufMsg)
+        })
+      }
     }
 
     @throws[Exception]

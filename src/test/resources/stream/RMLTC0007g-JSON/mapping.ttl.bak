@@ -15,12 +15,16 @@
   ];
 
   rr:subjectMap [ 
-    rr:template "http://example.com/Student/{ID}/{FirstName}"
+    rr:template "http://example.com/Student/{ID}/{FirstName}";
+    rr:graph rr:defaultGraph
   ];
 
   rr:predicateObjectMap [ 
-    rr:predicate rdf:type;
-    rr:object foaf:Person; 
+    rr:predicate foaf:name;
+    rr:objectMap [
+      rml:reference "FirstName"
+    ]
   ].
+
 
 

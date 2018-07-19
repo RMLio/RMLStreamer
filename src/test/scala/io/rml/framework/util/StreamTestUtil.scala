@@ -1,11 +1,11 @@
-package io.rml.framework.helper
+package io.rml.framework.util
 
 import java.io.File
 import java.util.concurrent.Executors
 
 import io.netty.channel.ChannelHandlerContext
-import io.rml.framework.helper.fileprocessing.MappingTestHelper
-import io.rml.framework.{Main, TestUtil}
+import io.rml.framework.util.fileprocessing.MappingTestUtil
+import io.rml.framework.Main
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.configuration.{ConfigConstants, Configuration, TaskManagerOptions}
@@ -16,7 +16,7 @@ import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironm
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
-object StreamTestHelper {
+object StreamTestUtil {
 
   implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
@@ -33,7 +33,7 @@ object StreamTestHelper {
   def createDataStream(testCaseFolder: File)( implicit senv: StreamExecutionEnvironment, env: ExecutionEnvironment) : DataStream[String] = {
 
     // read the mapping
-    val formattedMapping = MappingTestHelper.processFilesInTestFolder(testCaseFolder.getAbsolutePath)
+    val formattedMapping = MappingTestUtil.processFilesInTestFolder(testCaseFolder.getAbsolutePath)
     val stream = Main.createStreamFromFormattedMapping(formattedMapping.head)
 
 
@@ -52,12 +52,12 @@ object StreamTestHelper {
     * @param duration
     */
 
-  def cancelJob(jobID: JobID, cluster: FlinkMiniCluster, duration: FiniteDuration = FiniteDuration(1, "seconds")): Future[Unit] = {
+  def cancelJob(jobID: JobID, cluster: FlinkMiniCluster, duration: FiniteDuration = FiniteDuration(4, "seconds")): Future[AnyRef] = {
     val actorGateFuture = cluster.getLeaderGatewayFuture
-    actorGateFuture map { gateway =>
-      gateway.ask(new CancelJob(jobID), duration)
-
-    }
+    for {
+      gateway <- actorGateFuture
+      result <- gateway.ask(new CancelJob(jobID), duration)
+    } yield result
 
   }
 
@@ -72,8 +72,10 @@ object StreamTestHelper {
 
   def writeDataToTCP(messages: Iterator[String], ctxChlHandler: Future[ChannelHandlerContext]): Unit = {
       ctxChlHandler map {ctx =>
+        Logger.logInfo(ctx.channel().toString)
 
         for(el <- messages) {
+          Logger.logInfo(el)
           val byteBuff = ctx.alloc.buffer(el.length)
           byteBuff.writeBytes(el.getBytes())
           ctx.channel.writeAndFlush(byteBuff)
@@ -98,6 +100,7 @@ object StreamTestHelper {
     val jobGraph = graph.getJobGraph
     cluster.submitJobDetached(jobGraph)
 
+
     jobGraph.getJobID
   }
 
@@ -110,7 +113,7 @@ object StreamTestHelper {
     */
   def getTCPFuture(port: Int = 9999): Future[Unit] = Future{
     Logger.logInfo(s"Begin TCP server on port: $port")
-    TestUtil.createTCPServer(port)
+    TCPUtil.createTCPServer(port)
   }
 
 
@@ -142,5 +145,6 @@ object StreamTestHelper {
     Logger.logInfo("Cluster started")
     Future.successful(cluster)
   }
+
 
 }

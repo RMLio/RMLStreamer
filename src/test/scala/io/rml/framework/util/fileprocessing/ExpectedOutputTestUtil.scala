@@ -1,9 +1,9 @@
-package io.rml.framework.helper.fileprocessing
+package io.rml.framework.util.fileprocessing
 
 import java.io.File
 import java.nio.file.Paths
 
-import io.rml.framework.helper.CommentFilter
+import io.rml.framework.util.CommentFilter
 
 import scala.io.Source
 
@@ -11,7 +11,7 @@ import scala.io.Source
   * A test helper object to get strings from the expected output turtle file.
   *
   */
-object ExpectedOutputTestHelper extends FileProcessingHelper[Set[String]] {
+object ExpectedOutputTestUtil extends FileProcessingUtil[Set[String]] {
   val filters = Array(new CommentFilter)
 
 

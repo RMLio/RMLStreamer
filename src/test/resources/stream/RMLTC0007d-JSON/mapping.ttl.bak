@@ -21,6 +21,17 @@
   rr:predicateObjectMap [ 
     rr:predicate rdf:type;
     rr:object foaf:Person; 
+  ];
+
+  rr:predicateObjectMap [ 
+    rr:predicate rdf:type;
+    rr:object ex:Student; 
+  ];
+
+  rr:predicateObjectMap [ 
+    rr:predicate foaf:name;
+    rr:objectMap [ rml:reference "FirstName" ]
   ].
+
 
 

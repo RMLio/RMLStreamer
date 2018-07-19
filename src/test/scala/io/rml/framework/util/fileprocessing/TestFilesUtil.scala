@@ -1,4 +1,4 @@
-package io.rml.framework.helper.fileprocessing
+package io.rml.framework.util.fileprocessing
 
 import java.io.File
 import java.nio.file.Path
@@ -6,7 +6,7 @@ import java.nio.file.Path
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.RDFGraph
 import io.rml.framework.core.model.rdf.jena.JenaGraph
-import io.rml.framework.helper.Logger
+import io.rml.framework.util.Logger
 import org.apache.jena.rdf.model.ModelFactory
 
 import scala.util.Sorting
@@ -20,7 +20,7 @@ import scala.util.Sorting
   * @tparam R type of result from  processing a file
   */
 
-trait TestFilesHelper[R] {
+trait TestFilesUtil[R] {
 
   def getHelperSpecificFiles(testCaseFolder: String): Array[File]
 

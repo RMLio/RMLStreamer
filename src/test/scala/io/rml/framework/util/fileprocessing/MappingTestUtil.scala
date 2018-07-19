@@ -1,4 +1,4 @@
-package io.rml.framework.helper.fileprocessing
+package io.rml.framework.util.fileprocessing
 
 import java.io.File
 import java.nio.file.Paths
@@ -10,7 +10,7 @@ import io.rml.framework.core.model.FormattedRMLMapping
   * Test helper to read the mapping file and generate a FormattedRMLMapping
   */
 
-object MappingTestHelper extends FileProcessingHelper[FormattedRMLMapping] {
+object MappingTestUtil extends FileProcessingUtil[FormattedRMLMapping] {
 
 
   override def processFile(file: File): FormattedRMLMapping = {

@@ -1,10 +1,10 @@
-package io.rml.framework.helper.fileprocessing
+package io.rml.framework.util.fileprocessing
 
 import java.io.File
 
 import scala.io.Source
 
-object DataSourceTestHelper extends FileProcessingHelper[List[String]] {
+object DataSourceTestUtil extends FileProcessingUtil[List[String]] {
   override def candidateFiles: List[String] = List[String]("datasource.xml", "datasource.json")
 
 

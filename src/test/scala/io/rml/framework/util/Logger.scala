@@ -1,4 +1,4 @@
-package io.rml.framework.helper
+package io.rml.framework.util
 
 
 object Logger extends ColorString {

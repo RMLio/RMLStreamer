@@ -4,7 +4,7 @@ import java.io.File
 
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model.FormattedRMLMapping
-import io.rml.framework.helper.Logger
+import io.rml.framework.util.Logger
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 

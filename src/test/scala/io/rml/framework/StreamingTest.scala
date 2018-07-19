@@ -3,63 +3,95 @@ package io.rml.framework
 import java.io.File
 import java.util.concurrent.Executors
 
-import io.rml.framework.helper.{Logger, Sanitizer, StreamTestHelper, TestSink}
-import io.rml.framework.helper.fileprocessing.{DataSourceTestHelper, ExpectedOutputTestHelper}
+import io.rml.framework.util._
+import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil}
+import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
-import org.apache.flink.runtime.minicluster.LocalFlinkMiniCluster
+import org.apache.flink.runtime.minicluster.{FlinkMiniCluster, LocalFlinkMiniCluster}
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.scalatest.AsyncFlatSpec
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
 
+/**
+  * PLEASE REIMPLEMENT THIS USING ACTOR MODELS
+  *
+  * RIGHT NOW  YOU HAVE TO EXECUTE THIS MANUALLY BY PROVIDING A SINGLE TEST CASE FOLDER EVERYTIME
+  */
+
+
 class StreamingTest extends AsyncFlatSpec {
   implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
   implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
   implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
-  val cluster: Future[LocalFlinkMiniCluster] = StreamTestHelper.getClusterFuture
+  val cluster: Future[LocalFlinkMiniCluster] = StreamTestUtil.getClusterFuture
+
 
   "TCPsource -pull " should "map the incoming statements correctly with a valid mapping file" in {
 
-    val folder = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0007a-JSON")
+    val folder = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0002c-JSON")
     val folder2 = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0007c-JSON")
 
-    val folderLists = List(folder, folder2)
-    StreamTestHelper.getTCPFuture()
+    //folderLists = List(folder).toArray
+    StreamTestUtil.getTCPFuture()
 
-    cluster map { cluster =>
-      println("Cluster future started")
-      val dataStream = StreamTestHelper.createDataStream(folder)
-      val previous = StreamTestHelper.submitJobToCluster(cluster, dataStream, folder.getName)
-      val expectedOutputs: Set[String] = ExpectedOutputTestHelper.processFilesInTestFolder(folder.toString).toSet.flatten
+    //TODO: use this when actor models are implemented
+     var folderLists = ExpectedOutputTestUtil.getTestCaseFolders("stream").map( _.toFile).sorted
+        val fSerialized = {
+          var fAccum = Future{()}
+          for (folder <- folderLists){
+            Logger.logInfo(folder.toString)
+            fAccum  =  fAccum flatMap { _ => executeTestCase(folder)}
+          }
+          fAccum
+        }
 
-      /**
-        * Send the input data as a stream of strings to port 9999
-        */
-      val chlHandler = TestUtil.getChCtxFuture
-      val inputData = DataSourceTestHelper.processFilesInTestFolder(folder.toString).flatten
-      StreamTestHelper.writeDataToTCP(inputData.iterator, chlHandler)
-
-
-      compareResults(Sanitizer.sanitize(expectedOutputs))
-    }
-    println("Cluster future started")
-
-    Thread.sleep(Long.MaxValue)
-
-    Await.result(Future(), Duration.Inf)
+    Await.result(fSerialized, Duration.Inf)
 
     succeed
   }
 
-  def compareResults(expectedOutputs: Set[String]) : Unit = {
-    /**
-    * Don't think there is an alternative way to react to end of processing the data stream
-    * except waiting....
-    */
 
-    Thread.sleep(5000)
-    val generatedOutputs = Sanitizer.sanitize(TestSink.getTriples.filter( !_.isEmpty))
+
+  def executeTestCase(folder: File): Future[Unit] = {
+    cluster flatMap { cluster =>
+      cluster.synchronized {
+        Logger.logInfo(folder.toString)
+        val dataStream = StreamTestUtil.createDataStream(folder)
+        val jobID = StreamTestUtil.submitJobToCluster(cluster, dataStream, folder.getName)
+        Logger.logInfo(s"Cluster job $jobID started")
+        
+
+        /**
+          * Send the input data as a stream of strings to port 9999
+          */
+        val chlHandler = TCPUtil.getChCtxFuture
+        val inputData = DataSourceTestUtil.processFilesInTestFolder(folder.toString).flatten
+        StreamTestUtil.writeDataToTCP(inputData.iterator, chlHandler)
+
+
+        compareResults(folder)
+        Await.result(resetTestStates(jobID, cluster),Duration.Inf)
+        Future.successful(s"Cluster job $jobID done")
+      }
+    }
+  }
+
+  def resetTestStates(jobID: JobID, cluster: FlinkMiniCluster): Future[AnyRef] = {
+    // Clear the collected results in the sink
+    TestSink.empty()
+    // Cancel the job
+    StreamTestUtil.cancelJob(jobID, cluster)
+  }
+
+  def compareResults(folder: File): Unit = {
+
+    Thread.sleep(6000)
+
+    var expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
+    expectedOutputs = Sanitizer.sanitize(expectedOutputs)
+    val generatedOutputs = Sanitizer.sanitize(TestSink.getTriples.filter(!_.isEmpty))
 
 
     Logger.logInfo("Generated output: \n " + generatedOutputs.mkString("\n"))
@@ -76,7 +108,8 @@ class StreamingTest extends AsyncFlatSpec {
 
       val errorMsgMismatch = Array("Generated output does not match expected output",
         "Expected: \n" + expectedOutputs.mkString("\n"),
-        "Generated: \n" + generatedOutputs.mkString("\n")).mkString("\n")
+        "Generated: \n" + generatedOutputs.mkString("\n"),
+        s"Test case: ${folder.getName}").mkString("\n")
 
 
       assert(expectedOutputs.contains(generatedTriple), errorMsgMismatch)

@@ -1,4 +1,4 @@
-package io.rml.framework.helper
+package io.rml.framework.util
 
 
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
@@ -9,18 +9,20 @@ import org.apache.flink.streaming.api.functions.sink.SinkFunction
   */
 object TestSink {
 
+  private val lock = AnyRef
+
   private var triples: List[String] = List[String]()
 
 
   def apply(): TestSink = new TestSink()
 
 
-  def getTriples: List[String] = triples.synchronized {
+  def getTriples: List[String] = lock.synchronized {
     triples
   }
 
 
-  def empty(): Unit = triples.synchronized {
+  def empty(): Unit = lock.synchronized {
     triples = List()
   }
 
@@ -32,8 +34,9 @@ class TestSink extends SinkFunction[String] {
 
     synchronized {
       for (el <- value.split('\n')) {
-        TestSink.triples.synchronized {
-          TestSink.triples ::= el
+        TestSink.lock.synchronized {
+          // List in scala is linked list so prepending is faster
+          TestSink.triples = el :: TestSink.triples
         }
       }
     }

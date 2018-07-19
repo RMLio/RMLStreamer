@@ -1,4 +1,4 @@
-package io.rml.framework.helper
+package io.rml.framework.util
 
 class CommentFilter extends Filter[String] {
   val filterChars = Set('#')

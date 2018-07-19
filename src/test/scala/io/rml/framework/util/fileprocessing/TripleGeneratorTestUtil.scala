@@ -1,11 +1,11 @@
-package io.rml.framework.helper.fileprocessing
+package io.rml.framework.util.fileprocessing
 
 import java.io.File
 
 import io.rml.framework.Main
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model.FormattedRMLMapping
-import io.rml.framework.helper.Logger
+import io.rml.framework.util.Logger
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 
@@ -14,13 +14,13 @@ import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
   * containing triple maps.
   *
   */
-object TripleGeneratorTestHelper extends TestFilesHelper[List[String]] {
+object TripleGeneratorTestUtil extends TestFilesUtil[List[String]] {
   implicit val env = ExecutionEnvironment.getExecutionEnvironment
   implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
 
   override def getHelperSpecificFiles(testCaseFolder: String): Array[File] = {
-    MappingTestHelper.getHelperSpecificFiles(testCaseFolder)
+    MappingTestUtil.getHelperSpecificFiles(testCaseFolder)
   }
 
 

@@ -3,8 +3,8 @@ package io.rml.framework
 import java.io.File
 
 import io.rml.TestTags.MappingReadSeqTest
-import io.rml.framework.helper.Logger
-import io.rml.framework.helper.fileprocessing.MappingTestHelper
+import io.rml.framework.util.Logger
+import io.rml.framework.util.fileprocessing.MappingTestUtil
 import io.rml.framework.shared.RMLException
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -19,7 +19,7 @@ class ReadMappingTest extends FlatSpec with Matchers{
     val mappingFiles = getMappingFilesInFolder("rml-testcases")
     mappingFiles.foreach(file => {
       Logger.logInfo(" Reading mapping file: \n" + file)
-      MappingTestHelper.processFile(file)
+      MappingTestUtil.processFile(file)
     })
 
   }
@@ -35,7 +35,7 @@ class ReadMappingTest extends FlatSpec with Matchers{
       for (file <- mappingFiles) {
         Logger.logInfo(" Reading failed mapping file: \n" + file)
         val catcher =  Exception.catching(classOf[RMLException], classOf[Throwable])
-        val tryProcessFile = catcher.either(MappingTestHelper.processFile(file))
+        val tryProcessFile = catcher.either(MappingTestUtil.processFile(file))
 
         
         if(tryProcessFile.isLeft){
@@ -74,7 +74,7 @@ class ReadMappingTest extends FlatSpec with Matchers{
   it should "log exceptions thrown if it doesn't propagate the exceptions" taggedAs MappingReadSeqTest in {
 
     for (file <- preFailedTestCases ){
-      MappingTestHelper.processFile(file)
+      MappingTestUtil.processFile(file)
       Logger.logInfo("File being manually tested: " + file)
       Logger.lineBreak()
     }
@@ -93,8 +93,8 @@ class ReadMappingTest extends FlatSpec with Matchers{
     */
   def getMappingFilesInFolder(parentFolder: String): Array[File] = {
     var files = Array[File]()
-    for (path <- MappingTestHelper.getTestCaseFolders(parentFolder)) {
-      val foundFiles = MappingTestHelper.getHelperSpecificFiles(path.toString)
+    for (path <- MappingTestUtil.getTestCaseFolders(parentFolder)) {
+      val foundFiles = MappingTestUtil.getHelperSpecificFiles(path.toString)
 
       files = files ++ foundFiles.filter(_.exists())
     }

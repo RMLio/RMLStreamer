@@ -1,9 +1,9 @@
-package io.rml.framework.helper.fileprocessing
+package io.rml.framework.util.fileprocessing
 
 import java.io.File
 import java.nio.file.Paths
 
-trait FileProcessingHelper[A] extends TestFilesHelper[A] {
+trait FileProcessingUtil[A] extends TestFilesUtil[A] {
   def candidateFiles: List[String]
 
   override def getHelperSpecificFiles(testCaseFolder: String): Array[File] = {
