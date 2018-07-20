@@ -1,14 +1,20 @@
 package io.rml.framework.flink.item.xml
 
+import java.io.{ByteArrayInputStream, InputStreamReader}
 import javax.xml.namespace.NamespaceContext
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.xpath.{XPathConstants, XPathFactory}
 
+import com.ximpleware.extended.{AutoPilotHuge, VTDGenHuge, XMLBuffer}
+import io.netty.util.CharsetUtil
 import io.rml.framework.flink.item.Item
+import io.rml.framework.flink.source.XMLIterator
+import io.rml.framework.flink.util.XMLNamespace
 import org.apache.commons.io.IOUtils
 import org.w3c.dom.{Document, NodeList}
 
 import scala.util.control.NonFatal
+import scala.xml.{PrettyPrinter, XML}
 
 class XMLItem(xml: Document, namespaces: Map[String, String]) extends Item {
 
@@ -26,6 +32,7 @@ class XMLItem(xml: Document, namespaces: Map[String, String]) extends Item {
   private val content = toString()
 
   override def refer(reference: String): Option[String] = {
+
     val xpath = "/" + xml.getFirstChild.getNodeName + "/" + reference
     // the node name is added as a little hack such that the node itself does not need to be in the reference (e.g. "/note/@day" vs "@day")
     val nodes =
@@ -62,18 +69,55 @@ class XMLItem(xml: Document, namespaces: Map[String, String]) extends Item {
 object XMLItem {
 
 
+  def getNSpacesFromString(xml: String): Map[String, String] = {
+    val inputStream = new ByteArrayInputStream(xml.getBytes(CharsetUtil.UTF_8))
+    val reader = new InputStreamReader(inputStream)
+    try {
+      val namespace = XMLNamespace.fromStreamReader(reader)
+      namespace.map(tuple => tuple._1 -> tuple._2).toMap
+    } finally {
+      if (reader != null) reader.close()
+    }
+  }
+
+  // Since this is being used in other working parts of the code, it won't be refactored for now 20/7/18
   def fromString(xml: String, namespaces: Map[String, String] = Map()): XMLItem = {
     val documentBuilderFactory = DocumentBuilderFactory.newInstance()
     documentBuilderFactory.setNamespaceAware(true)
     val documentBuilder = documentBuilderFactory.newDocumentBuilder()
 
     val document: Document = documentBuilder.parse(IOUtils.toInputStream(xml))
+
     new XMLItem(document, namespaces)
+
   }
 
-  def fromStringOptionable(xml: String): Option[XMLItem] = {
+  def fromStringOptionable(orgXml: String, xpath: String): Option[Array[Item]] = {
     try {
-      Some(fromString(xml))
+
+
+      val namespaces = getNSpacesFromString(orgXml)
+      val xml = orgXml
+      val vg = new VTDGenHuge
+
+      val bytes = xml.getBytes()
+      val xmlBuffer = new XMLBuffer(bytes)
+      // parse the xml string as bytes using VTD5
+
+      vg.setDoc(xmlBuffer)
+      vg.parse(true)
+      val vn = vg.getNav
+      val ap = new AutoPilotHuge(vn)
+      namespaces.foreach(tuple => {
+        ap.declareXPathNameSpace(tuple._1, tuple._2)
+      })
+      // set the xpath expression
+      ap.selectXPath(xpath)
+
+
+
+      val result = XMLIterator(ap,vn,namespaces).flatten.toArray
+      Some(result)
     } catch {
       case NonFatal(e) => None
     }

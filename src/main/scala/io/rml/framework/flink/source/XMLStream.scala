@@ -18,18 +18,17 @@ object XMLStream {
 
   def apply(source: StreamDataSource, iterator: String)(implicit env: StreamExecutionEnvironment): Stream = {
     source match {
-      case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream)
+      case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, iterator)
       case fileStream: FileStream => fromFileStream(fileStream.path, iterator)
       case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream)
     }
   }
 
-  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream)(implicit env: StreamExecutionEnvironment): XMLStream = {
+  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream,iterator:String)(implicit env: StreamExecutionEnvironment): XMLStream = {
     val stream: DataStream[Item] = StreamUtil.createTcpSocketSource(tCPSocketStream)
       .flatMap(item => {
-
-        XMLItem.fromStringOptionable(item)
-      }).map((item) => item.asInstanceOf[Item])
+        XMLItem.fromStringOptionable(item, iterator)
+      }).flatMap( a => a )
     XMLStream(stream)
   }
 

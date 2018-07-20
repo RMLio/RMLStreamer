@@ -9,23 +9,27 @@ object XMLNamespace {
 
     val in = new FileInputStream(file)
     val reader = new InputStreamReader(in)
-    var bracketCounter = 0
-
-    var buffer = ""
     try {
-      var c = 0
-      while ( {
-        c != -1 && bracketCounter != 2
-      }) {
-        val char = reader.read().asInstanceOf[Char]
-        buffer += char
-        if (char == '>') bracketCounter += 1
-      }
-
+       fromStreamReader(reader)
     } finally {
       if (in != null) in.close()
       if (reader != null) reader.close()
     }
+  }
+
+  def fromStreamReader(reader: InputStreamReader): List[(String, String)] = {
+    var bracketCounter = 0
+
+    var buffer = ""
+    var c = 0
+    while ( {
+      c != -1 && bracketCounter != 2
+    }) {
+      val char = reader.read().asInstanceOf[Char]
+      buffer += char
+      if (char == '>') bracketCounter += 1
+    }
+
 
     val namespaceRegex = "xmlns:(.*)=\"([^\"]*\")".r
     val namespaceKeyRegex = "xmlns:(.*)=".r
@@ -42,5 +46,4 @@ object XMLNamespace {
 
     namespaceMap
   }
-
 }

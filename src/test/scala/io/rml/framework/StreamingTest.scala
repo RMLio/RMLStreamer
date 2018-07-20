@@ -30,8 +30,7 @@ class StreamingTest extends AsyncFlatSpec {
 
   "TCPsource -pull " should "map the incoming statements correctly with a valid mapping file" in {
 
-    val folder = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0012a-JSON")
-    val folder2 = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC0007c-JSON")
+    val folder = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/xml/RMLTC0012a-XML")
 
     //folderLists = List(folder).toArray
     StreamTestUtil.getTCPFuture()
