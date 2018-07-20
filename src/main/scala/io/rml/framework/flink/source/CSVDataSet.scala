@@ -2,8 +2,8 @@ package io.rml.framework.flink.source
 
 import java.nio.file.Paths
 
-import io.rml.framework.flink.item.csv.CSVHeader
-import io.rml.framework.flink.item.{Item, RowItem}
+import io.rml.framework.flink.item.Item
+import io.rml.framework.flink.item.csv.{CSVHeader, CSVItem, CSVRowItem}
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala.DataSet
 import org.apache.flink.table.api.scala.BatchTableEnvironment
@@ -15,7 +15,7 @@ case class CSVDataSet(dataset: DataSet[Item], headers: Map[String, Int]) extends
 
 object CSVDataSet {
 
-  def apply(name: String, path: String, delimiter: String)(implicit tEnv: BatchTableEnvironment): CSVDataSet = {
+  def apply(name: String, path: String, delimiter: String = CSVItem.delimiter, quoteCharacter: Char = CSVItem.quoteCharacter)(implicit tEnv: BatchTableEnvironment): CSVDataSet = {
 
     println("Creating CSVDataset from " + path)
 
@@ -23,16 +23,19 @@ object CSVDataSet {
     val header: Option[Array[String]] = CSVHeader(Paths.get(path), delimiter.charAt(0))
 
     // create table source, tables are use for dynamically assigning headers
-    val airplaneSource = CsvTableSource.builder()
+    val sourceBuilder = CsvTableSource.builder()
       .path(path.replaceFirst("file://", ""))
       .ignoreFirstLine() // skip the header
       .fieldDelimiter(delimiter)
+      .quoteCharacter(quoteCharacter)
+      .ignoreParseErrors()
+
 
     // assign headers dynamically
-    val builder = header.get.foldLeft(airplaneSource)((a, b) => a.field(b, Types.STRING)).build()
+    val csvTableSource = header.get.foldLeft(sourceBuilder)((a, b) => a.field(b, Types.STRING)).build()
 
     // register the table to the table environment
-    tEnv.registerTableSource(name, builder)
+    tEnv.registerTableSource(name, csvTableSource)
 
     // create the table
     val table: Table = tEnv
@@ -45,7 +48,7 @@ object CSVDataSet {
     // convert to a Flink dataset for further processing
     implicit val typeInfo = TypeInformation.of(classOf[Row])
     implicit val rowItemTypeInfo = TypeInformation.of(classOf[Item])
-    val dataSet: DataSet[Item] = tEnv.toDataSet(table)(typeInfo).map(row => RowItem(row, headersMap)
+    val dataSet: DataSet[Item] = tEnv.toDataSet(table)(typeInfo).map(row => CSVRowItem(row, headersMap)
       .asInstanceOf[Item]) // needed since types of datasets can't be subclasses due to Flink implementation
 
     // create the CSV DataSet

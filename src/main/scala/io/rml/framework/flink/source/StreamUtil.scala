@@ -10,6 +10,7 @@ object StreamUtil {
 
   def createTcpSocketSource(tCPSocketStream: TCPSocketStream)(implicit env: StreamExecutionEnvironment): DataStream[String] = {
     tCPSocketStream._type match {
+        //TODO: choose delimiter when mapper is gonna process csv data
       case TCPSocketStream.TYPE.PULL => env.socketTextStream(tCPSocketStream.hostName, tCPSocketStream.port)
       case TCPSocketStream.TYPE.PUSH => env.addSource(new TcpReceiverSource(tCPSocketStream.port)).setParallelism(1) // to avoid library to setup multiple instances
     }

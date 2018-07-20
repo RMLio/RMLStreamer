@@ -1,8 +1,8 @@
-package io.rml.framework.flink.item
+package io.rml.framework.flink.item.csv
 
 import org.apache.flink.types.Row
 
-class RowItem(row: Row, headers: Map[String, Int]) extends Item {
+class CSVRowItem(row: Row, headers: Map[String, Int]) extends CSVItem {
 
   override def refer(reference: String) = {
     val index = headers.get(reference)
@@ -16,6 +16,6 @@ class RowItem(row: Row, headers: Map[String, Int]) extends Item {
 
 }
 
-object RowItem {
-  def apply(row: Row, headers: Map[String, Int]): RowItem = new RowItem(row, headers)
+object CSVRowItem {
+  def apply(row: Row, headers: Map[String, Int]): CSVRowItem = new CSVRowItem(row, headers)
 }
