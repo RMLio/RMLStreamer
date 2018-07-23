@@ -11,12 +11,12 @@
   a rr:TriplesMap;
 
   rml:logicalSource [ 
-    rml:source "temp_ignored_testcases/sourceFmt_specialchar_fail/RMLTC0010a-JSON/country info.json";
+    rml:source "rml-testcases/RMLTC0010b-JSON/country info.json";
     rml:referenceFormulation ql:JSONPath;
     rml:iterator "$.countries[*]"
   ];
 
-  rr:subjectMap [ rr:template "http://example.com/{Country Code}" ];
+  rr:subjectMap [ rr:template "http://example.com/{Country Code}/{Name}" ];
 	
   rr:predicateObjectMap [ 
     rr:predicate ex:name ;

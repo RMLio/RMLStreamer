@@ -23,7 +23,6 @@
 package io.rml.framework.flink.item.json
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ObjectNode
 import com.jayway.jsonpath.JsonPath
 import io.rml.framework.flink.item.Item
 import org.jsfr.json.provider.JacksonProvider
@@ -38,7 +37,10 @@ class JSONItem(map: java.util.Map[String, Object]) extends Item {
 
   override def refer(reference: String): Option[String] = {
     try {
-      val checkedReference = if (reference.contains('$')) reference else "$." + reference
+
+      val sanitizedReference: String = if (reference.contains(' ')) s"['$reference']" else reference
+      val checkedReference = if (sanitizedReference.contains('$')) sanitizedReference else "$." + sanitizedReference
+
       // Some(next.toString.replaceAll("\"", "")) still necessary?
       val _object: Object = JsonPath.read(map, checkedReference)
       if (_object.isInstanceOf[String]) Some(_object.asInstanceOf[String])
@@ -51,6 +53,7 @@ class JSONItem(map: java.util.Map[String, Object]) extends Item {
 
     } catch {
       case NonFatal(e) => {
+        println(e)
         None
       }
     }
@@ -69,8 +72,8 @@ object JSONItem {
 
   def fromStringOptionableList(json: String, iterator: String): Option[Array[JSONItem]] = {
     try {
-      val collection =  surfer.collectAll(json,iterator)
-      val listOfJson =  collection.toArray()
+      val collection = surfer.collectAll(json, iterator)
+      val listOfJson = collection.toArray()
       val mapper = new ObjectMapper()
 
       val result = listOfJson

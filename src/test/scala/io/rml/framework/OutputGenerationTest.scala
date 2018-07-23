@@ -18,7 +18,7 @@ class OutputGenerationTest extends FlatSpec with Matchers {
   val passing = "rml-testcases"
   val temp = "temp_ignored_testcases/sourceFmt_specialchar_fail"
   "Output from the generator" should "match the output from ouput.ttl" in {
-    ExpectedOutputTestUtil.test(passing, checkGeneratedOutput)
+    ExpectedOutputTestUtil.test(temp, checkGeneratedOutput)
     //checkGeneratedOutput(OutputTestHelper.getFile("example2-object").toString)
   }
 
