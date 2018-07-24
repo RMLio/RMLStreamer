@@ -8,7 +8,7 @@ import io.rml.framework.flink.sink.FlinkRDFTriple
 
 case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
 
-  override def assemble(termMap: TermMap): (Item) => Option[Entity] = {
+  override def assemble(termMap: TermMap): (Item) => Option[Iterable[Entity]] = {
     require(termMap.isInstanceOf[FunctionMap], "Wrong TermMap instance.")
 
     val functionMap = termMap.asInstanceOf[FunctionMap]
@@ -29,6 +29,9 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
 
       require(RMLEnvironment.hasTransformationRegistered(name), "Transformation " + name + " is not registered.")
       RMLEnvironment.getTransformation(name).get.execute(Parameters(parameters))
+
+      //TODO: PLACEHOLDER REMOVE THIS WHEN FUNCTION MAP IS IMPLEMENTED !!!!!
+      None  // <---- REMOVE THIS!!!!!!!!!!!!
     }
   }
 

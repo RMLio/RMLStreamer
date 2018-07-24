@@ -31,7 +31,7 @@ class XMLItem(xml: Document, namespaces: Map[String, String]) extends Item {
   })
   private val content = toString()
 
-  override def refer(reference: String): Option[String] = {
+  override def refer(reference: String): Option[List[String]] = {
 
     val xpath = "/" + xml.getFirstChild.getNodeName + "/" + reference
     // the node name is added as a little hack such that the node itself does not need to be in the reference (e.g. "/note/@day" vs "@day")
@@ -46,7 +46,7 @@ class XMLItem(xml: Document, namespaces: Map[String, String]) extends Item {
     if (nodes.getLength > 0) {
       val text = nodes.item(0).getTextContent.trim
       if (text == null) None
-      Some(text)
+      Some(List(text))
     } else None
   }
 

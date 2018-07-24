@@ -27,8 +27,8 @@ import io.rml.framework.flink.item.Item
 
 class PredicateGeneratorAssembler extends TermMapGeneratorAssembler {
 
-  override def assemble(termMap: TermMap): (Item) => Option[Uri] = {
-    super.assemble(termMap).asInstanceOf[(Item) => Option[Uri]]
+  override def assemble(termMap: TermMap): (Item) => Option[Iterable[Uri]] = {
+    super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[Uri]]]
   }
 
 }

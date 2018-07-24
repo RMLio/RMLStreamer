@@ -22,6 +22,8 @@
 
 package io.rml.framework.flink.item.json
 
+import java.lang
+
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jayway.jsonpath.JsonPath
 import io.rml.framework.flink.item.Item
@@ -35,7 +37,7 @@ class JSONItem(map: java.util.Map[String, Object]) extends Item {
 
   val LOG = LoggerFactory.getLogger(JSONItem.getClass)
 
-  override def refer(reference: String): Option[String] = {
+  override def refer(reference: String): Option[List[String]] = {
     try {
 
       val sanitizedReference: String = if (reference.contains(' ')) s"['$reference']" else reference
@@ -43,12 +45,15 @@ class JSONItem(map: java.util.Map[String, Object]) extends Item {
 
       // Some(next.toString.replaceAll("\"", "")) still necessary?
       val _object: Object = JsonPath.read(map, checkedReference)
-      if (_object.isInstanceOf[String]) Some(_object.asInstanceOf[String])
-      else if (_object.isInstanceOf[java.lang.Integer]) Some(_object.asInstanceOf[Integer].toString)
-      else if (_object.isInstanceOf[java.lang.Long]) Some(_object.asInstanceOf[Long].toString)
-      else {
-        println(_object);
-        None
+
+      _object match {
+        case str: String => Some(List(str))
+        case integer: Integer => Some(List(integer.toString))
+        case lang: lang.Long => Some(List(lang.toString))
+        case arr : Array[AnyRef] =>  Some(arr.map(el => el.toString).toList)
+        case _ =>
+          println(_object);
+          None
       }
 
     } catch {

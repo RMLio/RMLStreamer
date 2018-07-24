@@ -73,9 +73,9 @@ class ParentStatement(subjectGenerator: Item => Option[TermNode],
   }
 }
 
-class StdStatement(subjectGenerator: Item => Option[TermNode],
-                   predicateGenerator: Item => Option[Uri],
-                   objectGenerator: Item => Option[Entity]) extends Statement[Item] with Serializable {
+class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
+                   predicateGenerator: Item => Option[Iterable[Uri]],
+                   objectGenerator: Item => Option[Iterable[Entity]]) extends Statement[Item] with Serializable {
 
   /**
     * Tries to refer a triple from the given item.
@@ -92,6 +92,12 @@ class StdStatement(subjectGenerator: Item => Option[TermNode],
       triple <- {
         println("TRIPLE PROV")
         println(item)
+        val spoGenerator = for {
+          subj <-  subject
+          pred <- predicate
+          obj <- _object
+        }yield (subj, pred, obj) 
+
         Statement.generateTriple(subject, predicate, _object)
       } // generate the triple
     } yield triple // this can be Some[RDFTriple] or None
@@ -102,13 +108,13 @@ class StdStatement(subjectGenerator: Item => Option[TermNode],
 
 object Statement {
 
-  def createStandardStatement(subject: Item => Option[TermNode],
-                              predicate: Item => Option[Uri],
-                              `object`: Item => Option[Entity])
+  def createStandardStatement(subject: Item => Option[Iterable[TermNode]],
+                              predicate: Item => Option[Iterable[Uri]],
+                              `object`: Item => Option[Iterable[Entity]])
 
-  : Statement[Item] = new StdStatement(subject: Item => Option[TermNode],
-    predicate: Item => Option[Uri],
-    `object`: Item => Option[Entity])
+  : Statement[Item] = new StdStatement(subject: Item => Option[Iterable[TermNode]],
+    predicate: Item => Option[Iterable[Uri]],
+    `object`: Item => Option[Iterable[Entity]])
 
   def createChildStatement(subject: Item => Option[TermNode],
                            predicate: Item => Option[Uri],

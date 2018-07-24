@@ -30,7 +30,7 @@ class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGe
                                         functionMapGeneratorAssembler: FunctionMapGeneratorAssembler) {
 
   def assemble(predicateObjectMap: PredicateObjectMap)
-  : List[(Item => Option[Uri], Item => Option[Entity])] = {
+  : List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])] = {
     predicateObjectMap.predicateMaps.flatMap(predicateMap => {
       predicateObjectMap.objectMaps.map(objectMap => {
         (predicateGeneratorAssembler.assemble(predicateMap),

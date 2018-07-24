@@ -31,66 +31,82 @@ import io.rml.framework.flink.item.Item
   */
 object TermMapGenerators {
 
-  def constantUriGenerator(constant: Entity): Item => Option[Uri] = {
+  def constantUriGenerator(constant: Entity): Item => Option[Iterable[Uri]] = {
     // return a function that just returns the constant
     (item: Item) => {
-      Some(Uri(constant.toString))
+      Some(List(Uri(constant.toString)))
     }
   }
 
-  def constantLiteralGenerator(constant: Entity, datatype: Option[Uri] = None, language: Option[Literal]): Item => Option[Literal] = {
+  def constantLiteralGenerator(constant: Entity, datatype: Option[Uri] = None, language: Option[Literal]): Item => Option[Iterable[Literal]]  = {
     // return a function that just returns the constant
     (item: Item) => {
-      Some(Literal(constant.toString, datatype, language))
+      Some(List(Literal(constant.toString, datatype, language)))
     }
 
   }
 
-  def templateUriGenerator(termMap: TermMap): Item => Option[Uri] = {
+  def templateUriGenerator(termMap: TermMap): Item => Option[Iterable[Uri]] = {
     // return a function that processes the template
     (item: Item) => {
+
       for {
-        value <- Engine.processTemplate(termMap.template.get, item, encode = true)
-        uri <- Some(Uri(value))
+        iter <- Engine.processTemplate(termMap.template.get, item, encode = true)
+      } yield for {
+        value <- iter
+        uri = Uri(value)
       } yield uri
     }
   }
 
-  def templateLiteralGenerator(termMap: TermMap): Item => Option[Literal] = {
+  def templateLiteralGenerator(termMap: TermMap): Item => Option[Iterable[Literal]] = {
     // return a function that processes the template
     (item: Item) => {
       for {
-        value <- Engine.processTemplate(termMap.template.get, item)
-        uri <- Some(Literal(value, termMap.datatype, termMap.language))
-      } yield uri
+        iter <- Engine.processTemplate(termMap.template.get, item)
+      } yield for {
+        value <- iter
+        lit = Literal(value, termMap.datatype, termMap.language)
+
+      } yield lit
     }
   }
 
-  def templateBlankNodeGenerator(termMap: TermMap): Item => Option[Blank] = {
+  def templateBlankNodeGenerator(termMap: TermMap): Item => Option[Iterable[Blank]] = {
     (item: Item) => {
+
       for {
-        value <- Engine.processTemplate(termMap.template.get, item, encode = true)
-        blank <- Some(Blank(value))
+        iter <- Engine.processTemplate(termMap.template.get, item, encode = true)
+      } yield for {
+        value <- iter
+        blank = Blank(value)
       } yield blank
     }
   }
 
-  def referenceLiteralGenerator(termMap: TermMap): Item => Option[Literal] = {
+  def referenceLiteralGenerator(termMap: TermMap): Item => Option[Iterable[Literal]] = {
     // return a function that processes a reference
     (item: Item) => {
       for {
-        value <- Engine.processReference(termMap.reference.get, item)
-        uri <- Some(Literal(value, termMap.datatype, termMap.language))
-      } yield uri
+        iter <- Engine.processReference(termMap.reference.get, item)
+
+      } yield for {
+        value <- iter
+        lit = Literal(value, termMap.datatype, termMap.language)
+
+      } yield lit
     }
   }
 
-  def referenceUriGenerator(termMap: TermMap): Item => Option[Uri] = {
+  def referenceUriGenerator(termMap: TermMap): Item => Option[Iterable[Uri]] = {
     // return a function that processes a reference
     (item: Item) => {
       for {
-        value <- Engine.processReference(termMap.reference.get, item, encode = true)
-        uri <- Some(Uri(value))
+        iter <- Engine.processReference(termMap.reference.get, item, encode = true)
+
+      } yield for {
+        value <- iter
+        uri = Uri(value)
       } yield uri
     }
   }

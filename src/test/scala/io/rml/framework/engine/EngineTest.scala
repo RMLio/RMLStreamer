@@ -29,7 +29,7 @@ import org.scalatest.{FunSuite, Matchers}
 class EngineTest extends FunSuite with Matchers {
 
   private val mockItem : Item =  new Item {
-    override def refer(reference: String): Option[String] = {
+    override def refer(reference: String): Option[List[String]] = {
       if(reference.equals("reference")) Some("value")
       else None
     }

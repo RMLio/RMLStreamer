@@ -32,6 +32,7 @@ class JSONInputFormat(path: String, jsonPath: String) extends GenericInputFormat
     val asInstanceOf = _object.asInstanceOf[ObjectNode]
     val mapper = new ObjectMapper()
     val map = mapper.convertValue(asInstanceOf, classOf[java.util.Map[String, Object]])
+
     new JSONItem(map)
   }
 }

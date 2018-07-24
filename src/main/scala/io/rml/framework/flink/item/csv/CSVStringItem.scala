@@ -39,10 +39,9 @@ class CSVStringItem(record: CSVRecord) extends CSVItem with Logging {
     * @param reference
     * @return
     */
-  override def refer(reference: String): Option[String] = {
+  override def refer(reference: String): Option[List[String]] = {
     try {
-
-      Some(record.get(reference))
+      Some(List(record.get(reference)))
     } catch {
       case ex: IllegalArgumentException => {
         if (isWarnEnabled) logWarning(ex.getMessage)
