@@ -30,7 +30,7 @@ class EngineTest extends FunSuite with Matchers {
 
   private val mockItem : Item =  new Item {
     override def refer(reference: String): Option[List[String]] = {
-      if(reference.equals("reference")) Some("value")
+      if(reference.equals("reference")) Some(List("value"))
       else None
     }
   }
@@ -54,7 +54,7 @@ class EngineTest extends FunSuite with Matchers {
     // Test execution
     // ============================================================================================
 
-    val result: Option[String] = Engine.processTemplate(literal, mockItem)
+    val result: Option[Iterable[String]] = Engine.processTemplate(literal, mockItem)
 
     // ============================================================================================
     // Test verification

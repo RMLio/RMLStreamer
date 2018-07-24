@@ -328,10 +328,10 @@ object Main {
         val joined: JoinDataSet[Item, Item] =
           childDataset.join(parentDataset)
             .where(item => {
-              item.refer(tm.joinCondition.get.child.toString).get
+              item.refer(tm.joinCondition.get.child.toString).get.head
             }) // empty fields are already filtered
             .equalTo(item => {
-            item.refer(tm.joinCondition.get.parent.toString).get
+            item.refer(tm.joinCondition.get.parent.toString).get.head
           }) // empty fields are already filtered
 
         joined.name("Join child and parent.")
