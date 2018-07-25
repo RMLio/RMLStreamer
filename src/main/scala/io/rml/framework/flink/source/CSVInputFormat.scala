@@ -4,7 +4,7 @@ import java.io.File
 import java.nio.charset.Charset
 
 import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.item.csv.{CSVRowItem, CSVRecordItem}
+import io.rml.framework.flink.item.csv.CSVRecordItem
 import org.apache.commons.csv.{CSVFormat, CSVParser, CSVRecord}
 import org.apache.flink.api.common.io.{GenericInputFormat, NonParallelInput}
 import org.apache.flink.core.io.GenericInputSplit

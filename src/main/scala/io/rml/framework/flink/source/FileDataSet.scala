@@ -15,6 +15,11 @@ abstract class FileDataSet extends Source {
   def dataset: DataSet[Item]
 }
 
+case class XMLDataSet(dataset: DataSet[Item]) extends FileDataSet
+
+case class JSONDataSet(dataset: DataSet[Item]) extends FileDataSet
+case class CSVDataSet(dataset: DataSet[Item]) extends FileDataSet
+
 /**
   * Object for creating Flink Datasets from a LogicalSource
   */
@@ -31,7 +36,7 @@ object FileDataSet {
 
   def createCSVDataSet(path: String)(implicit env: ExecutionEnvironment): CSVDataSet = {
     val dataset = env.createInput(new CSVInputFormat(path))
-    CSVDataSet(dataset, Map.empty[String,Int])
+    CSVDataSet(dataset)
   }
 
   /**
