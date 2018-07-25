@@ -5,7 +5,7 @@ import java.util.Properties
 
 import io.rml.framework.core.model.{KafkaStream, StreamDataSource}
 import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.item.csv.{CSVHeader, CSVRowItem, CSVRecordItem}
+import io.rml.framework.flink.item.csv.{CSVHeader, CSVRecordItem}
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
@@ -79,7 +79,7 @@ object CSVStream {
     // convert to a Flink datastream for further processing
     implicit val typeInfo = TypeInformation.of(classOf[Row])
     implicit val rowItemTypeInfo = TypeInformation.of(classOf[Item])
-    val dataSet: DataStream[Item] = tEnv.toAppendStream(table)(typeInfo).map(row => CSVRowItem(row, headersMap)
+    val dataSet: DataStream[Item] = tEnv.toAppendStream(table)(typeInfo).map(row => row
       .asInstanceOf[Item]) // needed since types of datastreams can't be subclasses due to Flink implementation
 
     // create the CSV Stream
