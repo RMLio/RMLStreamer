@@ -30,9 +30,8 @@ object FileDataSet {
   }
 
   def createCSVDataSet(path: String)(implicit env: ExecutionEnvironment): CSVDataSet = {
-    implicit val tEnv = TableEnvironment.getTableEnvironment(env)
-    val csvDataSet: CSVDataSet = CSVDataSet("", path)
-    csvDataSet
+    val dataset = env.createInput(new CSVInputFormat(path))
+    CSVDataSet(dataset, Map.empty[String,Int])
   }
 
   /**

@@ -5,7 +5,7 @@ import java.util.Properties
 
 import io.rml.framework.core.model.{KafkaStream, StreamDataSource}
 import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.item.csv.{CSVHeader, CSVRowItem, CSVStringItem}
+import io.rml.framework.flink.item.csv.{CSVHeader, CSVRowItem, CSVRecordItem}
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
@@ -28,7 +28,7 @@ object CSVStream {
   def fromTCPSocketStream(hostName: String, port: Int, headers: Array[String])(implicit env: StreamExecutionEnvironment): CSVStream = {
     val delimiter = ','
     val stream = env.socketTextStream(hostName, port)
-      .flatMap(item => CSVStringItem(item, delimiter, headers))
+      .flatMap(item => CSVRecordItem(item, delimiter, headers))
       .map(item => item.asInstanceOf[Item])
     CSVStream(stream, headers)
   }
@@ -42,7 +42,7 @@ object CSVStream {
     properties.setProperty("zookeepers.connect", zookeepersCommaSeparated)
     properties.setProperty("group.id", kafkaStream.groupId)
     val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer08[String](kafkaStream.topic, new SimpleStringSchema(), properties))
-      .map(item => CSVStringItem(item, delimiter, headers).asInstanceOf[Item])
+      .map(item => CSVRecordItem(item, delimiter, headers).asInstanceOf[Item])
     CSVStream(stream, headers)
   }
 

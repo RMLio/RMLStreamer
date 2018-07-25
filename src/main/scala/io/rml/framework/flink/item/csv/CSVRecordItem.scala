@@ -32,7 +32,7 @@ import org.apache.commons.io.IOUtils
   *
   * @param record
   */
-class CSVStringItem(record: CSVRecord) extends CSVItem with Logging {
+class CSVRecordItem(record: CSVRecord) extends CSVItem {
 
   /**
     *
@@ -44,7 +44,7 @@ class CSVStringItem(record: CSVRecord) extends CSVItem with Logging {
       Some(List(record.get(reference)))
     } catch {
       case ex: IllegalArgumentException => {
-        if (isWarnEnabled) logWarning(ex.getMessage)
+        println(ex)
         None
       }
     }
@@ -53,10 +53,10 @@ class CSVStringItem(record: CSVRecord) extends CSVItem with Logging {
 }
 
 
-object CSVStringItem {
+object CSVRecordItem {
 
 
-  def apply(record: CSVRecord): CSVStringItem = new CSVStringItem(record)
+  def apply(record: CSVRecord): CSVRecordItem = new CSVRecordItem(record)
 
   /**
     *
@@ -64,7 +64,7 @@ object CSVStringItem {
     * @param headers
     * @return
     */
-  def apply(csvLine: String, delimiter: Char, headers: Array[String]): Option[CSVStringItem] = {
+  def apply(csvLine: String, delimiter: Char, headers: Array[String]): Option[CSVRecordItem] = {
     try {
       val in = IOUtils.toInputStream(csvLine, "UTF-8")
       val reader = new InputStreamReader(in, "UTF-8")
@@ -74,7 +74,7 @@ object CSVStringItem {
         .withTrim()
         .parse(reader)
         .getRecords.get(0)
-      Some(CSVStringItem(record))
+      Some(CSVRecordItem(record))
     } catch {
       case e: IOException => None
       case e: IndexOutOfBoundsException => None
