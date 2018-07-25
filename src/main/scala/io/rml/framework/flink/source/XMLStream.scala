@@ -18,7 +18,7 @@ object XMLStream {
 
   def apply(source: StreamDataSource, iter: Option[String])(implicit env: StreamExecutionEnvironment): Stream = {
 
-    val iterator =  iter.getOrElse("/")
+    val iterator =  iter.getOrElse("/*")
 
     source match {
       case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, iterator)
