@@ -18,7 +18,6 @@
             rmls:port "9999" ;
             rmls:type "PULL"
         ];
-        rml:iterator "$.students[*]" ;
         rml:referenceFormulation ql:JSONPath;
     ];
   rr:subjectMap [

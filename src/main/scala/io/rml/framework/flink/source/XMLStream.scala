@@ -16,7 +16,9 @@ case class XMLStream(stream: DataStream[Item]) extends Stream
 
 object XMLStream {
 
-  def apply(source: StreamDataSource, iterator: String)(implicit env: StreamExecutionEnvironment): Stream = {
+  def apply(source: StreamDataSource, iter: Option[String])(implicit env: StreamExecutionEnvironment): Stream = {
+
+    val iterator =  iter.getOrElse("/")
     source match {
       case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, iterator)
       case fileStream: FileStream => fromFileStream(fileStream.path, iterator)

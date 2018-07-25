@@ -19,7 +19,7 @@ class StreamTest extends FunSuite with Matchers {
     val pool = Executors.newCachedThreadPool()
 
     // read the mapping
-    val formattedMapping = TCPUtil.readMapping("stream/stream-1.rml.ttl")
+    val formattedMapping = TCPUtil.readMapping("stream/mapping.ttl")
 
     // execute
     val dataStream = Main.createStreamFromFormattedMapping(formattedMapping).addSink(TestSink())
@@ -27,7 +27,7 @@ class StreamTest extends FunSuite with Matchers {
     //    var messages = List("{\n  \"students\": [{\n    \"ID\": 10,\n    \"FirstName\":\"Venus\",\n    \"LastName\":\"Williams\"\n  },\n    {\n      \"ID\": 20,\n      \"FirstName\":\"Minerva\",\n      \"LastName\":\"Tenebare\"\n    }\n  ]\n}")
     //    messages = Sanitizer.sanitize(messages)
     //    messages = List(messages.head.replaceAll("\n","") + "\n\r")
-    val messages = DataSourceTestUtil.processFile(new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/example-data.json"))
+    val messages = DataSourceTestUtil.processFile(new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/datasource.json"))
     Logger.logInfo(messages.toString())
 
     val server = new Runnable {
