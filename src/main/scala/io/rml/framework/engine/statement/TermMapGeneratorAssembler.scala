@@ -37,7 +37,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  def assemble(termMap: TermMap): (Item) => Option[Entity] = {
+  def assemble(termMap: TermMap): (Item) => Option[Iterable[Entity]] = {
     if (termMap.hasConstant) {
       constantGenerator(termMap)
     } else if (termMap.hasTemplate) {
@@ -52,9 +52,9 @@ abstract class TermMapGeneratorAssembler extends Logging {
     }
   }
 
-  private def blankNodeGenerator(): Item => Option[TermNode] = {
+  private def blankNodeGenerator(): Item => Option[Iterable[Entity]] = {
     (item: Item) => {
-      Some(Blank())
+      Some(List(Blank()))
     }
   }
 
@@ -63,7 +63,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  private def constantGenerator(termMap: TermMap): Item => Option[Entity] = {
+  private def constantGenerator(termMap: TermMap): Item => Option[Iterable[Entity]] = {
     termMap.termType.get.toString match {
       case RMLVoc.Class.IRI => TermMapGenerators.constantUriGenerator(termMap.constant.get)
       case RMLVoc.Class.LITERAL => TermMapGenerators.constantLiteralGenerator(termMap.constant.get, termMap.datatype, termMap.language)
@@ -75,7 +75,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  private def templateGenerator(termMap: TermMap): Item => Option[Entity] = {
+  private def templateGenerator(termMap: TermMap): Item => Option[Iterable[Entity]] = {
     termMap.termType.get.toString match {
       case RMLVoc.Class.IRI => TermMapGenerators.templateUriGenerator(termMap)
       case RMLVoc.Class.LITERAL => TermMapGenerators.templateLiteralGenerator(termMap)
@@ -88,7 +88,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  private def referenceGenerator(termMap: TermMap): Item => Option[Entity] = {
+  private def referenceGenerator(termMap: TermMap): Item =>Option[Iterable[Entity]] = {
     termMap.termType.get.toString match {
       case RMLVoc.Class.IRI => TermMapGenerators.referenceUriGenerator(termMap)
       case RMLVoc.Class.LITERAL => TermMapGenerators.referenceLiteralGenerator(termMap)

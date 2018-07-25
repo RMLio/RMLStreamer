@@ -22,33 +22,38 @@
 
 package io.rml.framework.flink.item.json
 
+import java.{lang, util}
+
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.jayway.jsonpath.JsonPath
+import com.jayway.jsonpath.{Configuration, JsonPath}
 import io.rml.framework.flink.item.Item
+import net.minidev.json.JSONObject
 import org.jsfr.json.provider.JacksonProvider
 import org.jsfr.json.{JacksonParser, JsonSurfer}
 import org.slf4j.LoggerFactory
 
+import scala.collection.JavaConversions._
 import scala.util.control.NonFatal
 
 class JSONItem(map: java.util.Map[String, Object]) extends Item {
 
   val LOG = LoggerFactory.getLogger(JSONItem.getClass)
 
-  override def refer(reference: String): Option[String] = {
+
+  override def refer(reference: String): Option[List[String]] = {
     try {
 
       val sanitizedReference: String = if (reference.contains(' ')) s"['$reference']" else reference
       val checkedReference = if (sanitizedReference.contains('$')) sanitizedReference else "$." + sanitizedReference
-
       // Some(next.toString.replaceAll("\"", "")) still necessary?
-      val _object: Object = JsonPath.read(map, checkedReference)
-      if (_object.isInstanceOf[String]) Some(_object.asInstanceOf[String])
-      else if (_object.isInstanceOf[java.lang.Integer]) Some(_object.asInstanceOf[Integer].toString)
-      else if (_object.isInstanceOf[java.lang.Long]) Some(_object.asInstanceOf[Long].toString)
-      else {
-        println(_object);
-        None
+      val _object : Object = JsonPath.read(map, checkedReference)
+
+      _object match{
+        case arr: java.util.List[Object] => Some(arr.toList.map(_.toString))
+        case jsonObj: util.HashMap[Object, Object] =>
+          println(jsonObj)
+          None
+        case e => Some(List(e.toString))
       }
 
     } catch {

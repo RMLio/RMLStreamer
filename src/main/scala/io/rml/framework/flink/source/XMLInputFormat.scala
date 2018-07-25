@@ -50,5 +50,5 @@ class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Ite
 }
 
 class EmptyItem extends Item {
-  override def refer(reference: String): Option[String] = None
+  override def refer(reference: String): Option[List[String]] = None
 }

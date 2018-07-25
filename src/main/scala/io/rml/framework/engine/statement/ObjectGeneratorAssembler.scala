@@ -27,7 +27,7 @@ import io.rml.framework.flink.item.Item
 
 class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
 
-  def assemble(objectMap: ObjectMap): (Item) => Option[Entity] = {
+  def assemble(objectMap: ObjectMap): (Item) => Option[Iterable[Entity]] = {
 
     // check if it has a parent triple map
     if (objectMap.parentTriplesMap.isDefined) {

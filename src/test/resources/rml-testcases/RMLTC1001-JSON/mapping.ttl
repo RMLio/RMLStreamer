@@ -10,13 +10,13 @@
   a rr:TriplesMap;
 
   rml:logicalSource [ 
-    rml:source "temp_ignored_testcases/arrayReference/RMLTC1001-XML/student.json";
-    rml:referenceFormulation ql:XPath;
-    rml:iterator "/students/student"
+    rml:source "rml-testcases/RMLTC1001-JSON/student.json";
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$.students[*]"
   ];
 
   rr:subjectMap [ 
-    rr:template "http://example.com/Student/{ID}"]
+    rr:template "http://example.com/Student/{ID}"
   ];
 
   rr:predicateObjectMap [ 

@@ -49,7 +49,7 @@ class StatementEngine[T](val statements: List[Statement[T]]) extends Engine[T] {
     * @return
     */
   override def process(item: T): List[FlinkRDFTriple] = {
-    statements.flatMap(statement => statement.process(item)) // flat map to filter out None
+    statements.flatMap(statement => statement.process(item)).flatten // flat map to filter out None
   }
 
 }

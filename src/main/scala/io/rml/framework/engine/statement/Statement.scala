@@ -34,48 +34,57 @@ import io.rml.framework.flink.sink.{FlinkRDFBlank, FlinkRDFLiteral, FlinkRDFReso
   */
 
 trait Statement[T] {
-  def process(item: T): Option[FlinkRDFTriple]
+  def process(item: T): Option[Iterable[FlinkRDFTriple]]
 }
 
-class ChildStatement(subjectGenerator: Item => Option[TermNode],
-                     predicateGenerator: Item => Option[Uri],
-                     objectGenerator: Item => Option[Entity]) extends Statement[JoinedItem] with Serializable {
+class ChildStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
+                     predicateGenerator: Item => Option[Iterable[Uri]],
+                     objectGenerator: Item => Option[Iterable[Entity]]) extends Statement[JoinedItem] with Serializable {
 
-  def process(item: JoinedItem): Option[FlinkRDFTriple] = {
-    for {
+  def process(item: JoinedItem): Option[Iterable[FlinkRDFTriple]] = {
+    val result = for {
       subject <- subjectGenerator(item.child) // try to generate the subject
       predicate <- predicateGenerator(item.child) // try to generate the  predicate
       _object <- objectGenerator(item.parent) // try to generate the object
+    } yield for{
+      (sub, pred, obj) <- Statement.tripleCombination(subject, predicate, _object)
       triple <- {
         println("TRIPLE PROV")
         println(item)
-        Statement.generateTriple(subject, predicate, _object)
+        Statement.generateTriple(sub, pred, obj)
       } // generate the triple
-    } yield triple // this can be Some[RDFTriple] or None
+    }yield triple // this can be Some[RDFTriple] or None
+
+    if (result.isEmpty) None else result
+
   }
 }
 
-class ParentStatement(subjectGenerator: Item => Option[TermNode],
-                      predicateGenerator: Item => Option[Uri],
-                      objectGenerator: Item => Option[Entity]) extends Statement[JoinedItem] with Serializable {
+class ParentStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
+                      predicateGenerator: Item => Option[Iterable[Uri]],
+                      objectGenerator: Item => Option[Iterable[Entity]]) extends Statement[JoinedItem] with Serializable {
 
-  def process(item: JoinedItem): Option[FlinkRDFTriple] = {
-    for {
+  def process(item: JoinedItem): Option[Iterable[FlinkRDFTriple]] = {
+    val result = for {
       subject <- subjectGenerator(item.parent) // try to generate the subject
       predicate <- predicateGenerator(item.parent) // try to generate the  predicate
       _object <- objectGenerator(item.parent) // try to generate the object
+    } yield for{
+      (sub, pred, obj) <- Statement.tripleCombination(subject, predicate, _object)
       triple <- {
         println("TRIPLE PROV")
         println(item)
-        Statement.generateTriple(subject, predicate, _object)
+        Statement.generateTriple(sub, pred, obj)
       } // generate the triple
-    } yield triple // this can be Some[RDFTriple] or None
+    }yield triple // this can be Some[RDFTriple] or None
+
+    if (result.isEmpty) None else result
   }
 }
 
-class StdStatement(subjectGenerator: Item => Option[TermNode],
-                   predicateGenerator: Item => Option[Uri],
-                   objectGenerator: Item => Option[Entity]) extends Statement[Item] with Serializable {
+class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
+                   predicateGenerator: Item => Option[Iterable[Uri]],
+                   objectGenerator: Item => Option[Iterable[Entity]]) extends Statement[Item] with Serializable {
 
   /**
     * Tries to refer a triple from the given item.
@@ -83,43 +92,53 @@ class StdStatement(subjectGenerator: Item => Option[TermNode],
     * @param item
     * @return
     */
-  def process(item: Item): Option[FlinkRDFTriple] = {
+  def process(item: Item): Option[Iterable[FlinkRDFTriple]] = {
+    val result =
+      for {
+        subject <- subjectGenerator(item) // try to generate the subject
+        predicate <- predicateGenerator(item) // try to generate the  predicate
+        _object <- objectGenerator(item) // try to generate the object
+      } yield for{
+        (sub, pred, obj) <- Statement.tripleCombination(subject, predicate, _object)
+        triple <- {
+          println("TRIPLE PROV")
+          println(item)
+          Statement.generateTriple(sub, pred, obj)
+        } // generate the triple
+      }yield triple // this can be Some[RDFTriple] or None
 
-    for {
-      subject <- subjectGenerator(item) // try to generate the subject
-      predicate <- predicateGenerator(item) // try to generate the  predicate
-      _object <- objectGenerator(item) // try to generate the object
-      triple <- {
-        println("TRIPLE PROV")
-        println(item)
-        Statement.generateTriple(subject, predicate, _object)
-      } // generate the triple
-    } yield triple // this can be Some[RDFTriple] or None
-
+    if (result.isEmpty) None else result
   }
 
 }
 
 object Statement {
 
-  def createStandardStatement(subject: Item => Option[TermNode],
-                              predicate: Item => Option[Uri],
-                              `object`: Item => Option[Entity])
+  def createStandardStatement(subject: Item => Option[Iterable[TermNode]],
+                              predicate: Item => Option[Iterable[Uri]],
+                              `object`: Item => Option[Iterable[Entity]])
 
-  : Statement[Item] = new StdStatement(subject: Item => Option[TermNode],
-    predicate: Item => Option[Uri],
-    `object`: Item => Option[Entity])
+  : Statement[Item] = new StdStatement(subject: Item => Option[Iterable[TermNode]],
+    predicate: Item => Option[Iterable[Uri]],
+    `object`: Item => Option[Iterable[Entity]])
 
-  def createChildStatement(subject: Item => Option[TermNode],
-                           predicate: Item => Option[Uri],
-                           `object`: Item => Option[Entity])
+  def createChildStatement(subject: Item => Option[Iterable[TermNode]],
+                           predicate: Item => Option[Iterable[Uri]],
+                           `object`: Item => Option[Iterable[Entity]])
   : Statement[JoinedItem] = new ChildStatement(subject, predicate, `object`)
 
-  def createParentStatement(subject: Item => Option[TermNode],
-                            predicate: Item => Option[Uri],
-                            `object`: Item => Option[Entity])
+  def createParentStatement(subject: Item => Option[Iterable[TermNode]],
+                            predicate: Item => Option[Iterable[Uri]],
+                            `object`: Item => Option[Iterable[Entity]])
   : Statement[JoinedItem] = new ParentStatement(subject, predicate, `object`)
 
+  def tripleCombination(subjectIter: Iterable[TermNode], predicateIter: Iterable[Uri], objIter: Iterable[Entity]): Iterable[(TermNode, Uri, Entity)] = {
+    for {
+      subj <- subjectIter
+      pred <- predicateIter
+      obj <- objIter
+    } yield (subj, pred, obj)
+  }
 
   def generateTriple(subject: TermNode, predicate: Uri, _object: Entity): Option[FlinkRDFTriple] = {
 
@@ -131,7 +150,7 @@ object Statement {
     val objectNode = _object match {
       case literal: Literal => FlinkRDFLiteral(literal)
       case resource: Uri => FlinkRDFResource(resource)
-      case blank : Blank => FlinkRDFBlank(blank)
+      case blank: Blank => FlinkRDFBlank(blank)
     }
     println(Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode)).get.toString)
     Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode))

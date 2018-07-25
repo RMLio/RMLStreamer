@@ -18,7 +18,7 @@ class OutputGenerationTest extends FlatSpec with Matchers {
   val passing = "rml-testcases"
   val temp = "temp_ignored_testcases/arrayReference"
   "Output from the generator" should "match the output from ouput.ttl" in {
-    ExpectedOutputTestUtil.test(temp, checkGeneratedOutput)
+    ExpectedOutputTestUtil.test(passing, checkGeneratedOutput)
     //checkGeneratedOutput(OutputTestHelper.getFile("example2-object").toString)
   }
 
@@ -76,14 +76,13 @@ class OutputGenerationTest extends FlatSpec with Matchers {
       */
 
     Logger.logInfo("Generated size: " + generatedOutputs.size)
-
+    val errorMsgMismatch = Array("Generated output does not match expected output",
+      "Expected: \n" + expectedOutputs.mkString("\n"),
+      "Generated: \n" + generatedOutputs.mkString("\n")).mkString("\n")
+    if(generatedOutputs.isEmpty){
+      assert(expectedOutputs.isEmpty, errorMsgMismatch)
+    }
     for (generatedTriple <- generatedOutputs) {
-
-      val errorMsgMismatch = Array("Generated output does not match expected output",
-        "Expected: \n" + expectedOutputs.mkString("\n"),
-        "Generated: \n" + generatedOutputs.mkString("\n")).mkString("\n")
-
-
       assert(expectedOutputs.contains(generatedTriple), errorMsgMismatch)
     }
   }

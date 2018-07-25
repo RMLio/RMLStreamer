@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2017 Ghent University - imec
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, free of charge, to any person obtai ning a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,6 +27,8 @@ import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.sink.FlinkRDFTriple
 
+import scala.collection.mutable
+
 /**
   * Created by wmaroy on 22.08.17.
   */
@@ -46,16 +48,53 @@ object Engine extends Logging {
     * @param item
     * @return
     */
-  def processTemplate(template: Literal, item: Item, encode: Boolean = false): Option[String] = {
+  def processTemplate(template: Literal, item: Item, encode: Boolean = false): Option[Iterable[String]] = {
     val regex = "(\\{[^\\{\\}]*\\})".r
     val replaced = template.value.replaceAll("\\$", "#")
-    val result = regex.replaceAllIn(replaced, m => {
-      val reference = removeBrackets(m.toString()).replaceAll("#", "\\$")
-      val referred = if (encode) item.refer(reference).flatMap(referred => Some(Uri.encode(referred))) else item.refer(reference) // if encode, this means this is an Uri
-      if (referred.isDefined) referred.get
-      else m.toString()
-    })
-    if (regex.findFirstIn(result).isEmpty) Some(result) else None
+    val result: mutable.Queue[String] = mutable.Queue.empty[String]
+    val matches = regex.findAllMatchIn(replaced)
+
+
+    // Matches is ie List("{foo}", "{bar}")
+    for (m <- matches) {
+      val sanitizedRef = removeBrackets(m.toString()).replaceAll("#", "\\$")
+      val optReferred = if (encode) item.refer(sanitizedRef).map(lString => lString.map(el => Uri.encode(el))) else item.refer(sanitizedRef)
+      //This is to get the value of Some(refList) (Not a for-loop over list!!!)
+      optReferred.foreach(refList => {
+
+        // Using fifo queue to create a list of template string with the combination of referenced resources
+          if(result.isEmpty){
+            //Used string template since we still have to escape the curly brackets
+            result ++=  refList.map( referred =>  replaced.replaceAll(s"\\{$sanitizedRef\\}",referred))
+          }else{
+
+            // Previously edited templates need to be reused for combination with new referenced resources
+            var count = 0
+            val maxLen = result.length
+            while (count !=  maxLen) {
+              val candid =  result.dequeue()
+              result  ++=  refList.map(referred =>  candid.replaceAll(s"\\{$sanitizedRef\\}",  referred))
+
+              count += 1
+            }
+
+
+          }
+
+      })
+    }
+
+    if(result.isEmpty) None else Some(result)
+
+    //    val result = regex.replaceAllIn(replaced, m => {
+    //      val reference = removeBrackets(m.toString()).replaceAll("#", "\\$")
+    //
+    //      val referred = if (encode)
+    //      val referred = if (encode) item.refer(reference).flatMap(referred => Some(Uri.encode(referred))) else item.refer(reference) // if encode, this means this is an Uri
+    //      if (referred.isDefined) referred.get
+    //      else m.toString()
+    //    })
+    //    if (regex.findFirstIn(result).isEmpty) Some(result) else None
   }
 
   /**
@@ -65,8 +104,8 @@ object Engine extends Logging {
     * @param item
     * @return
     */
-  def processReference(reference: Literal, item: Item, encode: Boolean = false): Option[String] = {
-    if (encode) item.refer(reference.toString).flatMap(referred => Some(Uri.encode(referred))) else item.refer(reference.toString)
+  def processReference(reference: Literal, item: Item, encode: Boolean = false): Option[List[String]] = {
+    if (encode) item.refer(reference.toString).map(list => list map Uri.encode)  else item.refer(reference.toString)
   }
 
   /**

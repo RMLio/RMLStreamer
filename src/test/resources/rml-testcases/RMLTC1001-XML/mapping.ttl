@@ -10,9 +10,9 @@
   a rr:TriplesMap;
 
   rml:logicalSource [ 
-    rml:source "temp_ignored_testcases/arrayReference/RMLTC1001-JSON/student.json";
-    rml:referenceFormulation ql:JSONPath;
-    rml:iterator "$.students[*]"
+    rml:source "rml-testcases/RMLTC1001-XML/student.xml";
+    rml:referenceFormulation ql:XPath;
+    rml:iterator "/students/student"
   ];
 
   rr:subjectMap [ 

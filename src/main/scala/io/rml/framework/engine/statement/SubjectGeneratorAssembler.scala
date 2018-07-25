@@ -29,7 +29,7 @@ import io.rml.framework.shared.TermTypeException
 
 
 class SubjectGeneratorAssembler extends TermMapGeneratorAssembler {
-  override def assemble(termMap: TermMap): (Item) => Option[TermNode] = {
+  override def assemble(termMap: TermMap): (Item) => Option[Iterable[TermNode]] = {
 
     /**
       * Tried implementing literal check in subject map extractor but it was assumed
@@ -42,7 +42,7 @@ class SubjectGeneratorAssembler extends TermMapGeneratorAssembler {
       case _ =>
 
     }
-    super.assemble(termMap).asInstanceOf[(Item) => Option[TermNode]]
+    super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[TermNode]]]
 
   }
 
