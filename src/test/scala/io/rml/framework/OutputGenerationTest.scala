@@ -76,14 +76,13 @@ class OutputGenerationTest extends FlatSpec with Matchers {
       */
 
     Logger.logInfo("Generated size: " + generatedOutputs.size)
-
+    val errorMsgMismatch = Array("Generated output does not match expected output",
+      "Expected: \n" + expectedOutputs.mkString("\n"),
+      "Generated: \n" + generatedOutputs.mkString("\n")).mkString("\n")
+    if(generatedOutputs.isEmpty){
+      assert(expectedOutputs.isEmpty, errorMsgMismatch)
+    }
     for (generatedTriple <- generatedOutputs) {
-
-      val errorMsgMismatch = Array("Generated output does not match expected output",
-        "Expected: \n" + expectedOutputs.mkString("\n"),
-        "Generated: \n" + generatedOutputs.mkString("\n")).mkString("\n")
-
-
       assert(expectedOutputs.contains(generatedTriple), errorMsgMismatch)
     }
   }

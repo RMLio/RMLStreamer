@@ -44,9 +44,12 @@ class XMLItem(xml: Document, namespaces: Map[String, String]) extends Item {
       }
 
     if (nodes.getLength > 0) {
-      val text = nodes.item(0).getTextContent.trim
-      if (text == null) None
-      Some(List(text))
+      var results: List[String] =  List.empty
+      for(i <- 0 until nodes.getLength){
+        results =  nodes.item(i).getTextContent.trim :: results
+      }
+      if (results.isEmpty) None
+      Some(results)
     } else None
   }
 
