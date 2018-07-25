@@ -80,6 +80,7 @@ object StreamTestUtil {
         val byteBuff = ctx.alloc.buffer(el.length)
         byteBuff.writeBytes(el.getBytes())
         ctx.channel.writeAndFlush(byteBuff)
+        Thread.sleep(2000)
       }
     }
   }
