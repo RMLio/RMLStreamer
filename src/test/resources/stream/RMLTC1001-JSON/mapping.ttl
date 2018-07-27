@@ -4,24 +4,31 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
-@prefix activity: <http://example.com/activity/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rmls: <http://semweb.mmlab.be/ns/rmls#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @base <http://example.com/base/> .
 
 <TriplesMap1>
   a rr:TriplesMap;
 
   rml:logicalSource [ 
-    rml:source [            rdf:type rmls:TCPSocketStream ;            rmls:hostName "localhost" ;            rmls:port "9999" ;            rmls:type "PULL"        ];
+      rml:source [
+                rdf:type rmls:TCPSocketStream ;
+                rmls:hostName "localhost" ;
+                rmls:port "9999" ;
+                rmls:type "PULL"
+            ];
     rml:referenceFormulation ql:JSONPath;
-        rml:iterator "$.countries[*]"
-
+    rml:iterator "$.students[*]"
   ];
 
-  rr:subjectMap [ rr:template "http://example.com/{Country Code}" ];
-	
+  rr:subjectMap [ 
+    rr:template "http://example.com/Student/{ID}"
+  ];
+
   rr:predicateObjectMap [ 
-    rr:predicate ex:name ;
-    rr:objectMap [ rml:reference "Name" ]
+    rr:predicate ex:Sport ;
+    rr:objectMap [ rml:reference "Sport" ]
   ] .
+
+

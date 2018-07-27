@@ -14,6 +14,7 @@
   rml:logicalSource [
     rml:source [            rdf:type rmls:TCPSocketStream ;            rmls:hostName "localhost" ;            rmls:port "9999" ;            rmls:type "PULL"        ];
     rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$.persons[*]"
   ];
 	
   rr:subjectMap [ rr:template "{fname}{lname}{amount}"; rr:termType rr:BlankNode; ];
