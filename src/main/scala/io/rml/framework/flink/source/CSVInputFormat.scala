@@ -4,7 +4,7 @@ import java.io.File
 import java.nio.charset.Charset
 
 import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.item.csv.CSVRecordItem
+import io.rml.framework.flink.item.csv.CSVItem
 import org.apache.commons.csv.{CSVFormat, CSVParser, CSVRecord}
 import org.apache.flink.api.common.io.{GenericInputFormat, NonParallelInput}
 import org.apache.flink.core.io.GenericInputSplit
@@ -31,7 +31,7 @@ class CSVInputFormat(filePath: String, delimiter: Char = ',', quoteChar: Char = 
 
   override def nextRecord(reuse: Item): Item = {
     val record = csvIterator.next()
-    if(record != null) CSVRecordItem(record) else new EmptyItem
+    if(record != null) CSVItem(record) else new EmptyItem
 
   }
 }

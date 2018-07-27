@@ -86,6 +86,8 @@ class OutputGenerationTest extends FlatSpec with Matchers {
     if(generatedOutputs.isEmpty){
       assert(expectedOutputs.isEmpty, errorMsgMismatch)
     }
+
+     assert(expectedOutputs.size <= generatedOutputs.length, errorMsgMismatch)
     for (generatedTriple <- generatedOutputs) {
       assert(expectedOutputs.contains(generatedTriple), errorMsgMismatch)
     }

@@ -57,7 +57,7 @@ trait TestFilesUtil[R] {
     */
   def test(rootDir: String, checkFunc: String => Unit): Unit = {
     var checkedTestCases = Array("")
-    for (pathString <- getTestCaseFolders(rootDir).map(_.toString)) {
+    for (pathString <- getTestCaseFolders(rootDir).map(_.toString).sorted) {
 
       checkFunc(pathString)
       val testCase = new File(pathString).getName

@@ -22,7 +22,7 @@
 
 package io.rml.framework.engine
 
-import io.rml.framework.flink.item.csv.CSVRecordItem
+import io.rml.framework.flink.item.csv.CSVItem
 import org.scalatest.{FunSuite, Matchers}
 
 class CSVItemTest extends FunSuite with Matchers {
@@ -47,7 +47,7 @@ class CSVItemTest extends FunSuite with Matchers {
     // ============================================================================================
     // Test execution
     // ============================================================================================
-    val csvItem = CSVRecordItem(line, delimiter, headers)
+    val csvItem = CSVItem(line, delimiter, headers)
 
     // ============================================================================================
     // Test verification
