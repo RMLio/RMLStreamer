@@ -52,7 +52,7 @@ class CSVItemTest extends FunSuite with Matchers {
     // ============================================================================================
     // Test verification
     // ============================================================================================
-    csvItem.get.refer("City").get should be ("Oudenaarde")
+    csvItem.get.refer("City").get should be (List("Oudenaarde"))
 
   }
 

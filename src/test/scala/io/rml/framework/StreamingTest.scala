@@ -71,7 +71,7 @@ class StreamingTest extends AsyncFlatSpec {
         StreamTestUtil.writeDataToTCP(inputData.iterator, chlHandler)
 
 
-        compareResults(folder)
+        StreamingTest.compareResults(folder)
         Await.result(resetTestStates(jobID, cluster),Duration.Inf)
         Future.successful(s"Cluster job $jobID done")
       }
@@ -85,6 +85,9 @@ class StreamingTest extends AsyncFlatSpec {
     StreamTestUtil.cancelJob(jobID, cluster)
   }
 
+}
+
+object StreamingTest{
   def compareResults(folder: File): Unit = {
 
     Thread.sleep(6000)
@@ -104,12 +107,16 @@ class StreamingTest extends AsyncFlatSpec {
 
     Logger.logInfo("Generated size: " + generatedOutputs.size)
 
-    for (generatedTriple <- generatedOutputs) {
+    val errorMsgMismatch = Array("Generated output does not match expected output",
+      "Expected: \n" + expectedOutputs.mkString("\n"),
+      "Generated: \n" + generatedOutputs.mkString("\n"),
+      s"Test case: ${folder.getName}").mkString("\n")
 
-      val errorMsgMismatch = Array("Generated output does not match expected output",
-        "Expected: \n" + expectedOutputs.mkString("\n"),
-        "Generated: \n" + generatedOutputs.mkString("\n"),
-        s"Test case: ${folder.getName}").mkString("\n")
+    if(expectedOutputs.nonEmpty){
+      assert(expectedOutputs.size <= generatedOutputs.size,  errorMsgMismatch)
+    }
+
+    for (generatedTriple <- generatedOutputs) {
 
 
       assert(expectedOutputs.contains(generatedTriple), errorMsgMismatch)

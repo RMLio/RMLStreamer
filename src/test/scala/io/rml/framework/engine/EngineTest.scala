@@ -61,7 +61,7 @@ class EngineTest extends FunSuite with Matchers {
     // ============================================================================================
 
     result shouldNot be (None)
-    result.get should be ("https://example.io/value")
+    result.get should be (List("https://example.io/value"))
 
   }
 
@@ -91,7 +91,7 @@ class EngineTest extends FunSuite with Matchers {
     // ============================================================================================
 
     result shouldNot be (None)
-    result.get should be ("value")
+    result.get should be (List("value"))
 
   }
 

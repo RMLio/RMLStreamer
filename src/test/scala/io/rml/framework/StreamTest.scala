@@ -3,8 +3,8 @@ package io.rml.framework
 import java.io.File
 import java.util.concurrent.Executors
 
-import io.rml.framework.util.fileprocessing.DataSourceTestUtil
-import io.rml.framework.util.{Logger, TCPUtil, TestSink}
+import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil}
+import io.rml.framework.util.{Logger, Sanitizer, TCPUtil, TestSink}
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.scalatest.{FunSuite, Matchers}
@@ -12,7 +12,7 @@ import org.scalatest.{FunSuite, Matchers}
 class StreamTest extends FunSuite with Matchers {
 
   test("TCPSource - pull") {
-
+    pending
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
@@ -43,8 +43,10 @@ class StreamTest extends FunSuite with Matchers {
     pool.submit(server)
     Thread.sleep(2000)
     pool.submit(job)
-    Thread.sleep(30000)
-
+    Thread.sleep(5000)
+    StreamingTest.compareResults(new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/"))
+    TestSink.empty()
+    succeed
   }
 
 }
