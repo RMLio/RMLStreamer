@@ -155,3 +155,7 @@ An example of how to define the generation of an RDF stream from a stream in an 
         ] .
         
  ```
+ 
+##### UML Diagram (Simplified)
+ 
+ ![alt txt] (images/rml-stream-uml-simplified.png "Uml diagram")
