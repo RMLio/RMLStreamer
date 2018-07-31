@@ -4,7 +4,7 @@ import java.io.File
 import java.util.concurrent.Executors
 
 import io.rml.framework.util.{Logger, _}
-import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil}
+import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil, MappingTestUtil}
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.runtime.minicluster.{FlinkMiniCluster, LocalFlinkMiniCluster}
@@ -30,7 +30,7 @@ class StreamingTest extends AsyncFlatSpec {
 
   "TCPsource -pull " should "map the incoming statements correctly with a valid mapping file" in {
 
-    val folder = new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/RMLTC1001-JSON-STREAM")
+    val folder = MappingTestUtil.getFile("stream/RMLTC0012a-JSON-STREAM-SPLIT")
 
     //folderLists = List(folder).toArray
     StreamTestUtil.getTCPFuture()
