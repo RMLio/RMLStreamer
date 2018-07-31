@@ -159,3 +159,17 @@ An example of how to define the generation of an RDF stream from a stream in an 
 ##### UML Diagram (Simplified)
  
  ![alt txt] (images/rml-stream-uml-simplified.png "Uml diagram")
+
+
+##### Streaming Tests
+
+The test will only be run for one test case during mvn clean install. 
+To run the test for other cases the ref path of the target test case folder needs to be changed 
+every run.
+
+
+In StreamingTest.scala, the following line needs to be edited every run to test for all test cases.
+```scala
+    val folder = MappingTestUtil.getFile(...test case folder ref path)
+    
+``` 
