@@ -6,6 +6,7 @@ import java.util.concurrent.Executors
 import io.rml.framework.util.{Logger, _}
 import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil, MappingTestUtil}
 import org.apache.flink.api.common.JobID
+import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.runtime.minicluster.{FlinkMiniCluster, LocalFlinkMiniCluster}
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
@@ -21,36 +22,28 @@ import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Futu
   */
 
 
-class StreamingTest extends AsyncFlatSpec {
+class StreamingTest extends App {
   implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
   implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
   implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
   val cluster: Future[LocalFlinkMiniCluster] = StreamTestUtil.getClusterFuture
 
 
-  "TCPsource -pull " should "map the incoming statements correctly with a valid mapping file" in {
+  val EMPTY_VALUE = "__NO_VALUE_KEY"
 
-    val folder = MappingTestUtil.getFile("stream/RMLTC0012a-JSON-STREAM-SPLIT")
+  // get parameters
+  val parameters = ParameterTool.fromArgs(args)
+  val fileName = if (parameters.has("path")) parameters.get("path")
+  else "stream/RMLTC1001-JSON-STREAM"
 
-    //folderLists = List(folder).toArray
-    StreamTestUtil.getTCPFuture()
 
-    //TODO: use this when actor models are implemented
-//     var folderLists = ExpectedOutputTestUtil.getTestCaseFolders("stream").map( _.toFile).sorted
-//        val fSerialized = {
-//          var fAccum = Future{()}
-//          for (folder <- folderLists){
-//            Logger.logInfo(folder.toString)
-//            fAccum  =  fAccum flatMap { _ => executeTestCase(folder)}
-//          }
-//          fAccum
-//        }
+  val folder = MappingTestUtil.getFile(fileName)
 
-    Await.result(executeTestCase(folder), Duration.Inf)
+  StreamTestUtil.getTCPFuture()
 
-    succeed
-  }
 
+  Await.result(executeTestCase(folder), Duration.Inf)
+  sys.exit(1)
 
 
   def executeTestCase(folder: File): Future[Unit] = {
@@ -71,8 +64,8 @@ class StreamingTest extends AsyncFlatSpec {
         StreamTestUtil.writeDataToTCP(inputData.iterator, chlHandler)
 
 
-        StreamingTest.compareResults(folder)
-        Await.result(resetTestStates(jobID, cluster),Duration.Inf)
+        compareResults(folder)
+        Await.result(resetTestStates(jobID, cluster), Duration.Inf)
         Future.successful(s"Cluster job $jobID done")
       }
     }
@@ -85,9 +78,7 @@ class StreamingTest extends AsyncFlatSpec {
     StreamTestUtil.cancelJob(jobID, cluster)
   }
 
-}
 
-object StreamingTest{
   def compareResults(folder: File): Unit = {
 
     Thread.sleep(6000)
@@ -112,8 +103,8 @@ object StreamingTest{
       "Generated: \n" + generatedOutputs.mkString("\n"),
       s"Test case: ${folder.getName}").mkString("\n")
 
-    if(expectedOutputs.nonEmpty){
-      assert(expectedOutputs.size <= generatedOutputs.size,  errorMsgMismatch)
+    if (expectedOutputs.nonEmpty) {
+      assert(expectedOutputs.size <= generatedOutputs.size, errorMsgMismatch)
     }
 
     for (generatedTriple <- generatedOutputs) {
