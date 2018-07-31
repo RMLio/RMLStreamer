@@ -170,8 +170,14 @@ The following are the classes/terms currently used:
     * rmls:TCPSocketStream specifies that the logical source will be a tcp socket stream.
     * rmls:FileStream specifies that the logical source will be a file stream. 
     * rmls:KafkaStream specifies that the logical source will be a kafka stream.
+   
+ 
 * rmls:hostName specifies the desired host name of the server, from where data will be streamed from.
+
+
 * rmls:port specifies a port number for the stream mapper to connect to. 
+
+
 * rmls:type specifies how a streamer will act: 
     * "PULL": The stream mapper will act as a client. It will create a socket and connect to the
     specified port at the given host name. 
