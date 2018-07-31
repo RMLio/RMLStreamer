@@ -166,25 +166,27 @@ Namespace: <http://semweb.mmlab.be/ns/rmls#>
 
 The RML vocabulary have been extended with rmls to support streaming logical sources. 
 The following are the classes/terms currently used:
-* rmls:[stream type] 
-    * rmls:TCPSocketStream specifies that the logical source will be a tcp socket stream.
-    * rmls:FileStream specifies that the logical source will be a file stream. 
-    * rmls:KafkaStream specifies that the logical source will be a kafka stream.
+* **rmls:[stream type]** 
+    * **rmls:TCPSocketStream** specifies that the logical source will be a tcp socket stream.
+    * **rmls:FileStream** specifies that the logical source will be a file stream. 
+    * **rmls:KafkaStream** specifies that the logical source will be a kafka stream.
    
  
-* rmls:hostName specifies the desired host name of the server, from where data will be streamed from.
+* **rmls:hostName** specifies the desired host name of the server, from where data will be streamed from.
 
 
-* rmls:port specifies a port number for the stream mapper to connect to. 
+* **rmls:port** specifies a port number for the stream mapper to connect to. 
 
 
-* rmls:type specifies how a streamer will act: 
-    * "PULL": The stream mapper will act as a client. It will create a socket and connect to the
-    specified port at the given host name. 
-     rmls:port and rmls:hostName needs to be specified.  
-    * "PUSH": The stream mapper will act as a server. It will start listening at the given port.
-    If the given port is taken, the mapper will keep opening subsequent ports until a free port is found. 
-    Only rmls:port needs to be specified here.  
+* **rmls:type** specifies how a streamer will act: 
+    * **"PULL"**:  
+      The stream mapper will act as a client.  
+      It will create a socket and connect to the specified port at the given host name.  
+      **rmls:port** and **rmls:hostName** needs to be specified.  
+    * **"PUSH"**:  
+      The stream mapper will act as a server and will start listening at the given port.  
+      If the given port is taken, the mapper will keep opening subsequent ports until a free port is found.    
+      Only **rmls:port** needs to be specified here.  
     
 Example of a valid json logical source map using all possible terms: 
 
@@ -213,11 +215,16 @@ There are 4 types of test case folders:
 * temp_ignored_testcases 
 
 
-1) rml-original-testcases contains all the original test cases without edits in the sub files/folders.  
-2) rml-testcases contains all the test cases for which the current implementation should pass. 
-3) stream contains all streaming test cases which must be executed manually, one at a time, with StreamingTest.scala 
-4) negative_test_cases contains cases for which, the current implementation should throw exceptions/fail.  
-4) temp_ignored_testcases contains cases for which, the current implementation cannot pass due to missing features. 
+1. rml-original-testcases contains all the original test cases without edits in the sub files/folders.  
+
+2. rml-testcases contains all the test cases for which the current implementation should pass. 
+
+3. stream contains all streaming test cases which must be executed manually, one at a time, with StreamingTest.scala 
+
+4. negative_test_cases contains cases for which, the current implementation should throw exceptions/fail.  
+
+5. temp_ignored_testcases contains cases for which, the current implementation cannot pass due to missing features. 
+
 
 ##### Streaming Tests
 
