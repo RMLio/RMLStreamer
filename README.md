@@ -14,10 +14,18 @@ Location of the Flink installation directory must be configured in `configuratio
 
 ### Executing RML Mappings
 
+
 ```
 bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Socket Port Number> ]
 ```
+or 
+```
+bash run.sh 
+```
+Here the options for -p -o and -s will be read from the configuration.properties. 
 
+If you provide -p -o and -s, the cli args are of a higher priority than the options provided by 
+configuration.properties.  
 #### Examples
 
 ##### Processing a stream

@@ -6,6 +6,13 @@
 #
 #
 
+
+
+# Default options are as follows:
+# MAPPINGPATH = src/main/resources/json_stream_data_mapping.ttl
+# OUTPUTPATH =
+# SOCKET = 9000
+
 PROPERTY_FILE=configuration.properties
 
 function getProperty {
@@ -16,7 +23,14 @@ function getProperty {
 
 echo "# Reading property from $PROPERTY_FILE"
 FLINKDIR=$(getProperty "flinkdir")
+MAPPINGPATH=$(getProperty "mappingPath")
+OUTPUTPATH=$(getProperty  "outputPath")
+SOCKET=$(getProperty "socket")
 
+
+echo "mapping: $MAPPINGPATH"
+echo "output: $OUTPUTPATH"
+echo "socekt: $SOCKET"
 
 echo ""
 echo "// RML Run Script"
