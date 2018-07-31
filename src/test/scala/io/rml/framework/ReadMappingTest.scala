@@ -43,7 +43,7 @@ class ReadMappingTest extends FlatSpec with Matchers{
           Logger.logError("Exception Log: " +  tryProcessFile.left.get.getMessage)
           passedTestCases :+= file
         }else{
-          Logger.logError(s"File: $file has failed the test")
+          Logger.logInfo(s"File: $file has failed the test")
           failedTestCases :+= file
           preFailedTestCases :+= file
         }
