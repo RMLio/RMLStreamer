@@ -22,7 +22,14 @@ or
 ```
 bash run.sh 
 ```
-Here, the options for -p, -o and -s will be read from the configuration.properties file. 
+with configuration.properties file 
+```
+flinkdir=/home/sitt/devtools/flink-1.3.2/bin/flink
+outputPath=
+mappingPath=src/main/resources/json_stream_data_mapping.ttl
+socket=9000
+```
+Here, the options for -p and -s will be read from the configuration.properties file. 
 
 If you provide -p, -o and -s, the cli args take priority over the options provided by 
 configuration.properties file.  
