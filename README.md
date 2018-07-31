@@ -160,15 +160,67 @@ An example of how to define the generation of an RDF stream from a stream in an 
  
  ![alt txt] (images/rml-stream-uml-simplified.png "Uml diagram")
 
+#### RML Stream Vocabulary 
+
+Namespace: <http://semweb.mmlab.be/ns/rmls#> 
+
+The RML vocabulary have been extended with rmls to support streaming logical sources. 
+The following are the classes/terms currently used:
+* rmls:[stream type] 
+    * rmls:TCPSocketStream specifies that the logical source will be a tcp socket stream.
+    * rmls:FileStream specifies that the logical source will be a file stream. 
+    * rmls:KafkaStream specifies that the logical source will be a kafka stream.
+* rmls:hostName specifies the desired host name of the server, from where data will be streamed from.
+* rmls:port specifies a port number for the stream mapper to connect to. 
+* rmls:type specifies how a streamer will act: 
+    * "PULL": The stream mapper will act as a client. It will create a socket and connect to the
+    specified port at the given host name. 
+     rmls:port and rmls:hostName needs to be specified.  
+    * "PUSH": The stream mapper will act as a server. It will start listening at the given port.
+    If the given port is taken, the mapper will keep opening subsequent ports until a free port is found. 
+    Only rmls:port needs to be specified here.  
+    
+Example of a valid json logical source map using all possible terms: 
+
+```
+
+rml:logicalSource [
+        rml:source [
+            rdf:type rmls:TCPSocketStream ;
+            rmls:hostName "localhost";
+            rmls:type "PULL" ;
+            rmls:port "5005"
+        ];
+        rml:referenceFormulation ql:JSONPath;
+    ];
+```
+
+
+#### Test
+##### Folders
+
+There are 4 types of test case folders:
+* rml-original-testcases
+* rml-testcases
+* stream
+* negative_test_cases
+* temp_ignored_testcases 
+
+
+1) rml-original-testcases contains all the original test cases without edits in the sub files/folders.  
+2) rml-testcases contains all the test cases for which the current implementation should pass. 
+3) stream contains all streaming test cases which must be executed manually, one at a time, with StreamingTest.scala 
+4) negative_test_cases contains cases for which, the current implementation should throw exceptions/fail.  
+4) temp_ignored_testcases contains cases for which, the current implementation cannot pass due to missing features. 
 
 ##### Streaming Tests
 
 The test will only be run for one test case during mvn clean install. 
-To run the test for other cases the ref path of the target test case folder needs to be changed 
+To run the test for other cases, the ref path of the target test case folder needs to be changed 
 every run.
 
 
-In StreamingTest.scala, the following line needs to be edited every run to test for all test cases.
+In StreamingTest.scala, the following line needs to be edited manually, every run, to test for all test cases.
 ```scala
     val folder = MappingTestUtil.getFile(...test case folder ref path)
     
