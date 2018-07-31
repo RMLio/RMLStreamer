@@ -7,7 +7,6 @@ import io.rml.framework.flink.item.xml.XMLItem
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.hadoopcompatibility.scala.HadoopInputs
-import org.apache.flink.table.api.TableEnvironment
 import org.apache.hadoop.io.{LongWritable, Text}
 import org.apache.mahout.text.wikipedia.XmlInputFormat
 
@@ -35,7 +34,15 @@ object FileDataSet {
   }
 
   def createCSVDataSet(path: String)(implicit env: ExecutionEnvironment): CSVDataSet = {
-    val dataset = env.createInput(new CSVInputFormat(path))
+    val src = scala.io.Source.fromFile(path)
+    var header:Array[String] =  Array.empty
+    try{
+      header =  src.getLines().next().split(",")
+    }finally{
+      src.close()
+    }
+
+    val dataset = env.createInput(new CSVInputFormat(path,header))
     CSVDataSet(dataset)
   }
 

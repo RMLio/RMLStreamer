@@ -13,7 +13,7 @@
   a rr:TriplesMap;
 
   rml:logicalSource [ 
-    rml:source "rml-testcases/RMLTC0009b-XML/student.xml";
+    rml:source "temp_ignored_testcases/nq/RMLTC0009b-XML/student.xml";
     rml:referenceFormulation ql:XPath;
     rml:iterator "/students/student"
   ];
@@ -47,7 +47,7 @@
   a rr:TriplesMap;
 		
   rml:logicalSource [ 
-    rml:source "rml-testcases/RMLTC0009b-XML/sport.xml";
+    rml:source "temp_ignored_testcases/nq/RMLTC0009b-XML/sport.xml";
     rml:referenceFormulation ql:XPath;
     rml:iterator "/sports/sport"
   ];
