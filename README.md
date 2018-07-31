@@ -22,10 +22,10 @@ or
 ```
 bash run.sh 
 ```
-Here the options for -p -o and -s will be read from the configuration.properties. 
+Here, the options for -p, -o and -s will be read from the configuration.properties file. 
 
-If you provide -p -o and -s, the cli args are of a higher priority than the options provided by 
-configuration.properties.  
+If you provide -p, -o and -s, the cli args take priority over the options provided by 
+configuration.properties file.  
 #### Examples
 
 ##### Processing a stream
