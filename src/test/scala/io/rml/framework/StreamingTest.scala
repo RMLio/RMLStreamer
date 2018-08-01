@@ -22,28 +22,35 @@ import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Futu
   */
 
 
-class StreamingTest extends App {
+object StreamingTest {
   implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
   implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
   implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
   val cluster: Future[LocalFlinkMiniCluster] = StreamTestUtil.getClusterFuture
 
+  def main(args: Array[String]): Unit = {
 
-  val EMPTY_VALUE = "__NO_VALUE_KEY"
+    val EMPTY_VALUE = "__NO_VALUE_KEY"
 
-  // get parameters
-  val parameters = ParameterTool.fromArgs(args)
-  val fileName = if (parameters.has("path")) parameters.get("path")
-  else "stream/RMLTC1001-JSON-STREAM"
+    // get parameters
+    if(args.nonEmpty)
+      Logger.logInfo(s"Arguments: ${args.mkString(" ")}")
+
+    val parameters = ParameterTool.fromArgs(args)
+
+    val fileName = if (parameters.has("path")) parameters.get("path")
+    else "stream/RMLTC1001-XML-STREAM"
 
 
-  val folder = MappingTestUtil.getFile(fileName)
+    val folder = MappingTestUtil.getFile(fileName)
 
-  StreamTestUtil.getTCPFuture()
+    StreamTestUtil.getTCPFuture()
 
 
-  Await.result(executeTestCase(folder), Duration.Inf)
-  sys.exit(1)
+    Await.result(executeTestCase(folder), Duration.Inf)
+    sys.exit(1)
+
+  }
 
 
   def executeTestCase(folder: File): Future[Unit] = {
@@ -64,7 +71,7 @@ class StreamingTest extends App {
         StreamTestUtil.writeDataToTCP(inputData.iterator, chlHandler)
 
 
-        compareResults(folder)
+        StreamingTest.compareResults(folder)
         Await.result(resetTestStates(jobID, cluster), Duration.Inf)
         Future.successful(s"Cluster job $jobID done")
       }
@@ -78,7 +85,6 @@ class StreamingTest extends App {
     StreamTestUtil.cancelJob(jobID, cluster)
   }
 
-
   def compareResults(folder: File): Unit = {
 
     Thread.sleep(6000)
@@ -88,8 +94,8 @@ class StreamingTest extends App {
     val generatedOutputs = Sanitizer.sanitize(TestSink.getTriples.filter(!_.isEmpty))
 
 
-    Logger.logInfo("Generated output: \n " + generatedOutputs.mkString("\n"))
-    Logger.logInfo("Expected Output: \n " + expectedOutputs.mkString("\n"))
+    Logger.logInfo(List("Generated output: ", generatedOutputs.mkString("\n")).mkString("\n"))
+    Logger.logInfo(List("Expected Output: ", expectedOutputs.mkString("\n")).mkString("\n"))
 
 
     /**
@@ -99,18 +105,23 @@ class StreamingTest extends App {
     Logger.logInfo("Generated size: " + generatedOutputs.size)
 
     val errorMsgMismatch = Array("Generated output does not match expected output",
-      "Expected: \n" + expectedOutputs.mkString("\n"),
-      "Generated: \n" + generatedOutputs.mkString("\n"),
+      "Expected: ", expectedOutputs.mkString("\n"),
+      "Generated: ", generatedOutputs.mkString("\n"),
       s"Test case: ${folder.getName}").mkString("\n")
 
-    if (expectedOutputs.nonEmpty) {
-      assert(expectedOutputs.size <= generatedOutputs.size, errorMsgMismatch)
+
+    if (expectedOutputs.nonEmpty && expectedOutputs.size  > generatedOutputs.size  ) {
+      errorMsgMismatch.split("\n").foreach(Logger.logError)
+      return
     }
 
     for (generatedTriple <- generatedOutputs) {
-
-
-      assert(expectedOutputs.contains(generatedTriple), errorMsgMismatch)
+      if(!expectedOutputs.contains(generatedTriple)){
+        errorMsgMismatch.split("\n").foreach(Logger.logError)
+        return
+      }
     }
+
+    Logger.logSuccess(s"Testcase ${folder.getName} passed streaming test!")
   }
 }
