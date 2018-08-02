@@ -243,7 +243,7 @@ There are 4 types of test case folders:
 
 ##### Streaming Tests
 
-The streming tests will have to be executed using the script stream-test.sh 
+The streaming test cases will have to be checked using the script stream-test.sh 
 
 ```
     bash stream-test.sh [option]
@@ -251,3 +251,8 @@ The streming tests will have to be executed using the script stream-test.sh
     Options:  
         -c|--clean: recompiles all test classes using mvn test -DskipTests. 
 ```
+
+The script will run all the test cases under "stream" folder of test resources.
+
+Any failed test cases will be identified, in the console, at the end of the script with their 
+output. If any test case doesn't get evaluated by the script, running with --clean might solve it. 
