@@ -243,13 +243,11 @@ There are 4 types of test case folders:
 
 ##### Streaming Tests
 
-The test will only be run for one test case during mvn clean install. 
-To run the test for other cases, the ref path of the target test case folder needs to be changed 
-every run.
+The streming tests will have to be executed using the script stream-test.sh 
 
-
-In StreamingTest.scala, the following line needs to be edited manually, every run, to test for all test cases.
-```scala
-    val folder = MappingTestUtil.getFile(...test case folder ref path)
+```
+    bash stream-test.sh [option]
     
-``` 
+    Options:  
+        -c|--clean: recompiles all test classes using mvn test -DskipTests. 
+```
