@@ -39,7 +39,7 @@ object StreamingTest {
     val parameters = ParameterTool.fromArgs(args)
 
     val fileName = if (parameters.has("path")) parameters.get("path")
-    else "stream/csv/RMLTC0012a-CSV"
+    else "stream/RMLTC0012a-CSV-STREAM"
 
 
     val folder = MappingTestUtil.getFile(fileName)
