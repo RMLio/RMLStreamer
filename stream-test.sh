@@ -47,6 +47,7 @@ exec 4<"$temp_test_log"
 rm "$temp_test_log"
 
 find src/test/resources/stream -type d -name "RMLTC*" |
+    sort | 
     grep "stream/.*RMLTC.*" -o |
     sed 's/\(.*\)/--path \1/'| 
     tr "\n" "\0" |
