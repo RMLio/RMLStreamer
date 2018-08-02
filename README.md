@@ -232,9 +232,9 @@ There are 4 types of test case folders:
 
 1. rml-original-testcases contains all the original test cases without edits in the sub files/folders.  
 
-2. rml-testcases contains all the test cases for which the current implementation should pass. 
+2. rml-testcases contains all the test cases for which, the current implementation should pass. 
 
-3. stream contains all streaming test cases which must be executed manually, one at a time, with StreamingTest.scala 
+3. stream contains all streaming test cases which should be checked using the stream-test.sh in the root folder.
 
 4. negative_test_cases contains cases for which, the current implementation should throw exceptions/fail.  
 
