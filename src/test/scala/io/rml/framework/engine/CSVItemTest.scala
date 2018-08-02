@@ -47,7 +47,7 @@ class CSVItemTest extends FunSuite with Matchers {
     // ============================================================================================
     // Test execution
     // ============================================================================================
-    val csvItem = CSVItem(line, delimiter, headers)
+    val csvItem = CSVItem(line, delimiter, '"', headers)
 
     // ============================================================================================
     // Test verification

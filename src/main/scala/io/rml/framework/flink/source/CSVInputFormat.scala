@@ -11,25 +11,25 @@ import org.apache.flink.core.fs.Path
   * Extending GenericCsvInputFormat allows us to use CSV parser from apache commons instead of the broken parser from flink.
   *
   */
-class CSVInputFormat(filePath: String,header: Array[String] = Array.empty, delimiter: Char = ',', quoteChar: Char = '"') extends GenericCsvInputFormat[Item](new Path(filePath)) {
-  if(header.isEmpty){
-    throw new IllegalArgumentException("Header for the CSV Input needs to be provided! header.size: " + header.length)
+class CSVInputFormat(filePath: String,csvFormat: CSVFormat) extends GenericCsvInputFormat[Item](new Path(filePath)) {
+
+    if(csvFormat == null){
+      throw new IllegalArgumentException(s"CSVFormat provided to $this cannot be null")
+    }
+  {
+    val header: Array[String] = csvFormat.getHeader
+    if (header.isEmpty) {
+      throw new IllegalArgumentException("Header for the CSV Input needs to be provided! header.size: " + header.length)
+    }
+
+    setSkipFirstLineAsHeader(true)
   }
-
-  setSkipFirstLineAsHeader(true)
-
 
   override def readRecord(reuse: Item, bytes: Array[Byte], offset: Int, numBytes: Int): Item = {
 
-    val format = CSVFormat
-      .newFormat(delimiter)
-      .withQuote(quoteChar)
-      .withTrim()
-      .withHeader(header: _*)
-
     val line = bytes.slice(offset, numBytes + offset).map(_.toChar).mkString("")
 
-    val csvIter: java.util.Iterator[CSVRecord] = CSVParser.parse(line, format).iterator()
+    val csvIter: java.util.Iterator[CSVRecord] = CSVParser.parse(line, csvFormat).iterator()
 
     if (csvIter.hasNext) {
 

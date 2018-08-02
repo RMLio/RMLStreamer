@@ -33,21 +33,19 @@ import scala.io.Source
 
 object CSVHeader {
 
-  def apply(path: Path, delimiter: Char): Option[Array[String]] = {
+  def apply(path: Path, csvFormat: CSVFormat): Option[Array[String]] = {
     val src = Source.fromFile(path.toString)
     val line = src.getLines.take(1).next()
-    println(line)
+
     src.close
-    CSVHeader(line, delimiter)
+    CSVHeader(line, csvFormat)
   }
 
-  def apply(csvLine: String, delimiter: Char): Option[Array[String]] = {
+  def apply(csvLine: String, csvFormat: CSVFormat): Option[Array[String]] = {
     try {
       val in = IOUtils.toInputStream(csvLine, "UTF-8")
       val reader = new InputStreamReader(in, "UTF-8")
-      val parser = CSVFormat.newFormat(delimiter)
-        .withQuote('"')
-        .withTrim()
+      val parser = csvFormat
         .parse(reader)
 
       Some(parser.getRecords.get(0).iterator().asScala.toArray)

@@ -59,20 +59,20 @@ object CSVItem {
 
   def apply(record: CSVRecord): CSVItem = new CSVItem(record)
 
-  /**
-    *
-    * @param csvLine
-    * @param headers
-    * @return
-    */
-  def apply(csvLine: String, delimiter: Char, headers: Array[String]): Option[CSVItem] = {
+
+  //TODO remove this method and use the one with CSVFormat
+  def apply(csvLine: String, delimiter: Char, quoteCharacter: Char, headers: Array[String]): Option[CSVItem] = {
+    CSVItem(csvLine, CSVFormat.newFormat(delimiter)
+      .withQuote(quoteCharacter)
+      .withHeader(headers: _*) // convert to Java var args
+      .withTrim())
+  }
+
+  def apply(csvLine: String, cSVFormat: CSVFormat): Option[CSVItem] = {
     try {
       val in = IOUtils.toInputStream(csvLine, "UTF-8")
       val reader = new InputStreamReader(in, "UTF-8")
-      val record = CSVFormat.newFormat(delimiter)
-        .withQuote('"')
-        .withHeader(headers: _*) // convert to Java var args
-        .withTrim()
+      val record = cSVFormat
         .parse(reader)
         .getRecords.get(0)
       Some(CSVItem(record))
@@ -80,6 +80,7 @@ object CSVItem {
       case e: IOException => None
       case e: IndexOutOfBoundsException => None
     }
+
 
   }
 

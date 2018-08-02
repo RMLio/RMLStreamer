@@ -1,16 +1,21 @@
 package io.rml.framework.flink.source
 
+import java.nio.file.Paths
+
 import io.rml.framework.core.model.{LogicalSource, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
+import io.rml.framework.flink.item.csv.CSVHeader
 import io.rml.framework.flink.item.xml.XMLItem
+import io.rml.framework.flink.util.DefaultCSVConfig
+import org.apache.commons.csv.CSVFormat
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.hadoopcompatibility.scala.HadoopInputs
 import org.apache.hadoop.io.{LongWritable, Text}
 import org.apache.mahout.text.wikipedia.XmlInputFormat
 
-abstract class FileDataSet extends Source {
+sealed abstract class FileDataSet extends Source {
   def dataset: DataSet[Item]
 }
 
@@ -34,15 +39,12 @@ object FileDataSet {
   }
 
   def createCSVDataSet(path: String)(implicit env: ExecutionEnvironment): CSVDataSet = {
-    val src = scala.io.Source.fromFile(path)
-    var header:Array[String] =  Array.empty
-    try{
-      header =  src.getLines().next().split(",")
-    }finally{
-      src.close()
-    }
-
-    val dataset = env.createInput(new CSVInputFormat(path,header))
+    val config = DefaultCSVConfig()
+    val format =  CSVFormat.newFormat(config.delimiter)
+      .withQuote(config.quoteCharacter)
+      .withTrim()
+    val header = CSVHeader(Paths.get(path), format).getOrElse(Array.empty)
+    val dataset = env.createInput(new CSVInputFormat(path,format.withHeader(header:_*)))
     CSVDataSet(dataset)
   }
 
