@@ -75,13 +75,13 @@ object JSONItem {
     null //new JSONItem(node)
   }
 
-  def fromStringOptionableList(json: String, iterator: String): Option[Array[JSONItem]] = {
+  def fromStringOptionableList(json: String, iterator: String): Option[Array[Item]] = {
     try {
       val collection = surfer.collectAll(json, iterator)
       val listOfJson = collection.toArray()
       val mapper = new ObjectMapper()
 
-      val result = listOfJson
+      val result: Array[Item] = listOfJson
         .map(node => mapper.convertValue(node, classOf[java.util.Map[String, Object]]))
         .map(map => new JSONItem(map))
 

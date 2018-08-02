@@ -39,7 +39,7 @@ object StreamingTest {
     val parameters = ParameterTool.fromArgs(args)
 
     val fileName = if (parameters.has("path")) parameters.get("path")
-    else "stream/RMLTC1001-XML-STREAM"
+    else "stream/csv/RMLTC0012a-CSV"
 
 
     val folder = MappingTestUtil.getFile(fileName)
@@ -68,6 +68,7 @@ object StreamingTest {
           */
         val chlHandler = TCPUtil.getChCtxFuture
         val inputData = DataSourceTestUtil.processFilesInTestFolder(folder.toString).flatten
+
         StreamTestUtil.writeDataToTCP(inputData.iterator, chlHandler)
 
 

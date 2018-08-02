@@ -22,12 +22,12 @@
 
 package io.rml.framework.flink.item.csv
 
-import java.io.{IOException, InputStreamReader}
+import java.io.{IOException, StringReader}
 
-import io.rml.framework.core.internal.Logging
 import io.rml.framework.flink.item.Item
+import io.rml.framework.flink.source.EmptyItem
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
-import org.apache.commons.io.IOUtils
+import scala.collection.JavaConverters._
 
 /**
   *
@@ -61,24 +61,32 @@ object CSVItem {
 
 
   //TODO remove this method and use the one with CSVFormat
-  def apply(csvLine: String, delimiter: Char, quoteCharacter: Char, headers: Array[String]): Option[CSVItem] = {
+  def apply(csvLine: String, delimiter: Char, quoteCharacter: Char, headers: Array[String]): Item = {
     CSVItem(csvLine, CSVFormat.newFormat(delimiter)
       .withQuote(quoteCharacter)
       .withHeader(headers: _*) // convert to Java var args
       .withTrim())
   }
 
-  def apply(csvLine: String, cSVFormat: CSVFormat): Option[CSVItem] = {
+  def fromDataBatch(dataBatch: String, csvFormat: CSVFormat): Option[Array[Item]] = {
+    val format = csvFormat.withFirstRecordAsHeader()
+
+    val parser = format.parse(new StringReader(dataBatch))
+    val result:Array[Item] = parser.getRecords.asScala.toArray.map(new CSVItem(_))
+    if(result.isEmpty) None else Some(result)
+  }
+
+  def apply(csvLine: String, cSVFormat: CSVFormat): Item = {
     try {
-      val in = IOUtils.toInputStream(csvLine, "UTF-8")
-      val reader = new InputStreamReader(in, "UTF-8")
+      val reader = new StringReader(csvLine)
       val record = cSVFormat
         .parse(reader)
         .getRecords.get(0)
-      Some(CSVItem(record))
+
+      CSVItem(record)
     } catch {
-      case e: IOException => None
-      case e: IndexOutOfBoundsException => None
+      case e: IOException => new EmptyItem
+      case e: IndexOutOfBoundsException => new EmptyItem
     }
 
 

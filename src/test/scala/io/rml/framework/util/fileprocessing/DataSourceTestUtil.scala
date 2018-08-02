@@ -5,30 +5,38 @@ import java.io.File
 import scala.io.Source
 
 object DataSourceTestUtil extends FileProcessingUtil[List[String]] {
-  override def candidateFiles: List[String] = List[String]("datasource.xml", "datasource.json")
+  override def candidateFiles: List[String] = List[String]("datasource.xml", "datasource.json", "datasource.csv")
 
 
   override def processFile(file: File): List[String] = {
 
     var result = List[String]()
     var entry = ""
+    //TODO: REFACTOR THIS UGLY QUICKIE WICKIE CODE FIX FOR CSV DATA READING
+    val regex = candidateFiles(2).r
 
-    for (line <- Source.fromFile(file).getLines()) {
+    val csvMatches = regex.findAllMatchIn(file.getName)
+    val tail = if (csvMatches.hasNext) "\n\n" else "\n"
+
+    for (line <- Source.fromFile(file).getLines) {
 
       val trimmed = line.trim
       if (trimmed.length > 0) {
         if (trimmed.charAt(0) == '=') {
           // more than one data source entry detected in the file
-          result ::= entry + "\n"
+
+          result ::= entry + tail
           entry = ""
         } else {
-          entry += line.replaceAll(" +"," ")
+          var formattedLine = line.replaceAll(" +", " ")
+          formattedLine = if (csvMatches.hasNext) formattedLine + "\n" else formattedLine
+          entry += formattedLine
         }
       }
     }
 
     //append last entry in data source to the result list
-    result ::= entry + "\n\r"
+    result ::= entry + tail
 
     result
 

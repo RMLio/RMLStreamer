@@ -22,7 +22,7 @@
 
 package io.rml.framework.flink.item.csv
 
-import java.io.{IOException, InputStreamReader}
+import java.io.{IOException, InputStreamReader, Reader, StringReader}
 import java.nio.file.Path
 
 import org.apache.commons.csv.CSVFormat
@@ -38,16 +38,25 @@ object CSVHeader {
     val line = src.getLines.take(1).next()
 
     src.close
-    CSVHeader(line, csvFormat)
+    getCSVHeaders(line, csvFormat)
   }
 
-  def apply(csvLine: String, csvFormat: CSVFormat): Option[Array[String]] = {
+  def apply(csvData: String, csvFormat: CSVFormat, isBatch: Boolean = false): Option[Array[String]] = {
+    if (isBatch) {
+      val firstLine = csvData.split(csvFormat.getDelimiter)
+
+      if (firstLine.isEmpty) None else getCSVHeaders(firstLine(0), csvFormat)
+    } else {
+      getCSVHeaders(csvData, csvFormat)
+
+    }
+  }
+
+  private def getCSVHeaders(csvLine: String, csvFormat: CSVFormat): Option[Array[String]] = {
     try {
-      val in = IOUtils.toInputStream(csvLine, "UTF-8")
-      val reader = new InputStreamReader(in, "UTF-8")
+      val reader = new StringReader(csvLine)
       val parser = csvFormat
         .parse(reader)
-
       Some(parser.getRecords.get(0).iterator().asScala.toArray)
     } catch {
       case e: IOException => None

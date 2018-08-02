@@ -3,9 +3,10 @@ package io.rml.framework.flink.source
 import java.nio.file.Paths
 import java.util.Properties
 
-import io.rml.framework.core.model.{KafkaStream, StreamDataSource}
+import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.csv.{CSVHeader, CSVItem}
+import io.rml.framework.flink.util.{CustomCSVConfig, DefaultCSVConfig}
 import org.apache.commons.csv.CSVFormat
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
@@ -21,18 +22,34 @@ case class CSVStream(stream: DataStream[Item], headers: Array[String]) extends S
 
 object CSVStream {
 
-  def apply(source: StreamDataSource): Stream = {
-    // TODO
-    null
+  def apply(source: StreamDataSource)(implicit env: StreamExecutionEnvironment): Stream = {
+
+    source match {
+      case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream)
+      case fileStream: FileStream => fromFileStream(fileStream.path)
+      case _ => null
+    }
   }
 
-  def fromTCPSocketStream(hostName: String, port: Int, headers: Array[String])(implicit env: StreamExecutionEnvironment): CSVStream = {
-    val delimiter = ','
-    val quoteCharacter = '"'
-    val stream = env.socketTextStream(hostName, port)
-      .flatMap(item => CSVItem(item, delimiter, quoteCharacter, headers))
-      .map(item => item.asInstanceOf[Item])
-    CSVStream(stream, headers)
+  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream)(implicit env: StreamExecutionEnvironment): CSVStream = {
+    // var's set up
+    val hostName = tCPSocketStream.hostName
+    val port = tCPSocketStream.port
+    val defaultConfig = DefaultCSVConfig()
+    val csvConfig = CustomCSVConfig(defaultConfig.delimiter, defaultConfig.quoteCharacter, "\n\n")
+
+
+    // CSVFormat set up with delimiter and quote character
+    val format = CSVFormat.newFormat(csvConfig.delimiter)
+      .withQuote(csvConfig.quoteCharacter)
+      .withTrim()
+
+    val stream = StreamUtil.createTcpSocketSource(tCPSocketStream, csvConfig.recordDelimiter)
+      .flatMap(batchString => {
+        CSVItem.fromDataBatch(batchString, format)
+      })
+        .flatMap(item => item)
+    CSVStream(stream, Array.empty)
   }
 
   def fromKafkaStream(kafkaStream: KafkaStream, headers: Array[String])(implicit env: StreamExecutionEnvironment): CSVStream = {

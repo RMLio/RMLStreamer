@@ -31,9 +31,6 @@ object JSONStream {
       .flatMap(item => {
         item
       })
-      .map(item => {
-        item.asInstanceOf[Item]
-      })
     JSONStream(stream)
   }
 
