@@ -24,7 +24,7 @@ package io.rml.framework.engine.statement
 
 import io.rml.framework.core.model._
 import io.rml.framework.flink.item.{Item, JoinedItem}
-import io.rml.framework.flink.sink.{FlinkRDFBlank, FlinkRDFLiteral, FlinkRDFResource, FlinkRDFTriple}
+import io.rml.framework.flink.sink._
 
 /**
   * Represents a potential triple. A statement potentially generates a triple

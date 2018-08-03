@@ -30,7 +30,8 @@ import io.rml.framework.flink.item.{Item, JoinedItem}
   * Creates statements from triple maps.
   */
 class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectGeneratorAssembler(),
-                          predicateObjectAssembler: PredicateObjectGeneratorAssembler = PredicateObjectGeneratorAssembler()) {
+                          predicateObjectAssembler: PredicateObjectGeneratorAssembler = PredicateObjectGeneratorAssembler(),
+                          graphAssembler: GraphGeneratorAssembler = GraphGeneratorAssembler()) {
 
   /**
     * Creates statements from a triple map.
@@ -38,29 +39,33 @@ class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectG
     * @param tripleMap
     * @return
     */
-  def assembleStatements(tripleMap: TripleMap): List[((Item) => Option[Iterable[TermNode]], (Item) => Option[Iterable[Uri]], (Item) => Option[Iterable[Entity]])] = {
+  def assembleStatements(tripleMap: TripleMap): List[(Item => Option[Iterable[TermNode]], Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
+    val subjectGraphGenerator = graphAssembler.assemble(tripleMap.subjectMap.graphMap)
+
+
     // assemble subject
     val subjectGenerator = subjectAssembler.assemble(tripleMap.subjectMap)
     // check for class mappings (rr:class)
-    val classMappings = getClassMappingStatements(subjectGenerator, tripleMap.subjectMap.`class`)
+    val classMappings = getClassMappingStatements(subjectGenerator, tripleMap.subjectMap.`class`, subjectGraphGenerator)
     // assemble predicate and object
     val predicateObjects = tripleMap.predicateObjectMaps.flatMap(predicateObjectMap => {
       predicateObjectAssembler.assemble(predicateObjectMap)
     })
     // create the statements
     predicateObjects.map(predicateObject => {
-      (subjectGenerator, predicateObject._1, predicateObject._2)
+      (subjectGenerator, predicateObject._1, predicateObject._2, subjectGraphGenerator)
     }) ++ classMappings // add class mappings
 
   }
 
 
   private def getClassMappingStatements(subjectGenerator: (Item) => Option[Iterable[TermNode]],
-                                        classes: List[Uri]): Seq[((Item) => Option[Iterable[TermNode]], (Item) => Some[Iterable[Uri]], (Item) => Some[Iterable[Uri]])] = {
+                                        classes: List[Uri], graphGenerator: Item => Option[Iterable[Uri]]): Seq[(Item => Option[Iterable[TermNode]], Item => Some[List[Uri]], Item => Some[List[Uri]], Item => Option[Iterable[Uri]])] = {
+
     classes.map(_class => {
       val predicateGenerator = (item: Item) => Some(List(Uri(RDFVoc.Property.TYPE)))
       val objectGenerator = (item: Item) => Some(List(_class))
-      (subjectGenerator, predicateGenerator, objectGenerator)
+      (subjectGenerator, predicateGenerator, objectGenerator, graphGenerator)
     })
 
   }

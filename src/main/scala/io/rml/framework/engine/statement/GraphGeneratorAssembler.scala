@@ -1,11 +1,11 @@
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.model.{TermMap, Uri}
+import io.rml.framework.core.model.{GraphMap, TermMap, Uri}
 import io.rml.framework.flink.item.Item
 
 class GraphGeneratorAssembler extends TermMapGeneratorAssembler {
 
-  def assemble(graphMapOpt: Option[TermMap]): Item => Option[Iterable[Uri]] = {
+  def assemble(graphMapOpt: Option[GraphMap]): Item => Option[Iterable[Uri]] = {
     graphMapOpt match {
       case None => Item => None
       case Some(map) => assemble(map)
