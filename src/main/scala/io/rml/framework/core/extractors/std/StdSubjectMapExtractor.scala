@@ -22,7 +22,7 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.SubjectMapExtractor
+import io.rml.framework.core.extractors.{GraphMapExtractor, SubjectMapExtractor}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.model.{Literal, SubjectMap, Uri}
@@ -32,7 +32,7 @@ import io.rml.framework.shared.RMLException
 /**
   * Extractor for extracting Subject Maps from RDFResources.
   */
-class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
+class StdSubjectMapExtractor(graphMapExtractor: GraphMapExtractor) extends SubjectMapExtractor with Logging {
 
   /**
     * Extracts a SubjectMap from a resource.
@@ -78,15 +78,17 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
     val constant = extractConstant(resource)
     val template = extractTemplate(resource)
     val termType = extractTermType(resource)
+    val graphMap = graphMapExtractor.extract(resource)
 
     logDebug(resource.uri + ": Extracted from subject map" +
       ": reference -> " + reference +
       ", constant -> " + constant +
       ", template -> " + template +
       ", termType -> " + termType +
+      ", graphMap -> " + graphMap +
       ", class -> " + _class)
 
-    SubjectMap(resource.uri.toString, _class, constant, reference, template, termType)
+    SubjectMap(resource.uri.toString, _class, constant, reference, template, termType, graphMap)
   }
 
   override def extractTermType(resource: RDFResource): Option[Uri] = {

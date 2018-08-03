@@ -29,5 +29,6 @@ case class StdSubjectMap(identifier: String,
                          constant: Option[Entity],
                          reference: Option[Literal],
                          template: Option[Literal],
-                         termType: Option[Uri]) extends SubjectMap
+                         termType: Option[Uri],
+                         graphMap: Option[GraphMap]) extends SubjectMap
 

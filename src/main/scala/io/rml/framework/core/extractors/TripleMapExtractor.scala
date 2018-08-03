@@ -48,7 +48,7 @@ object TripleMapExtractor {
   def apply(logicalSourceExtractor: LogicalSourceExtractor = LogicalSourceExtractor(),
             subjectMapExtractor: SubjectMapExtractor = SubjectMapExtractor(),
             predicateObjectMapExtractor: PredicateObjectMapExtractor =
-            PredicateObjectMapExtractor(), graphMapExtractor: GraphMapExtractor = new StdGraphMapExtractor())
+            PredicateObjectMapExtractor(), graphMapExtractor: GraphMapExtractor = GraphMapExtractor())
 
   : TripleMapExtractor = {
 

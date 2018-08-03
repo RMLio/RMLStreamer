@@ -29,8 +29,8 @@ trait SubjectMapExtractor extends TermMapExtractor[SubjectMap]
 
 object SubjectMapExtractor {
 
-  def apply(): SubjectMapExtractor = {
-    lazy val extractor = new StdSubjectMapExtractor()
+  def apply(graphMapExtractor: GraphMapExtractor =  GraphMapExtractor()): SubjectMapExtractor = {
+    lazy val extractor = new StdSubjectMapExtractor(graphMapExtractor)
     extractor
   }
 
