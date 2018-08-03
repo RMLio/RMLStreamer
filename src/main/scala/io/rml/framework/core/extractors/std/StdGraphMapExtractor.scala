@@ -15,7 +15,6 @@ class StdGraphMapExtractor extends GraphMapExtractor {
     * @return
     *
     */
-  @throws(classOf[RMLException])
   override def extract(resource: RDFResource): Option[GraphMap] = {
     val mapProperties = resource.listProperties(RMLVoc.Property.GRAPHMAP)
     val shortcutProperties = resource.listProperties(RMLVoc.Property.GRAPH)
@@ -42,7 +41,6 @@ class StdGraphMapExtractor extends GraphMapExtractor {
     if (result.isDefined) result else Some(Uri(RMLVoc.Class.IRI))
   }
 
-  @throws(classOf[RMLException])
   def extractGraph(node: RDFNode): Option[GraphMap] = {
     val resource = getRDFResource(node)
     Some(GraphMap(resource.uri.toString, Some(Uri(resource.uri.toString)), None, None, extractTermType(resource)))
@@ -53,7 +51,6 @@ class StdGraphMapExtractor extends GraphMapExtractor {
     Some(extractGraphMapProperties(getRDFResource(node)))
   }
 
-  @throws(classOf[RMLException])
   def extractGraphMapProperties(resource: RDFResource): GraphMap = {
     val termType = extractTermType(resource)
     val template = extractTemplate(resource)
