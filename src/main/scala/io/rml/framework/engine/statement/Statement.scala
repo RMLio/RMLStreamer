@@ -46,14 +46,14 @@ class ChildStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
       subject <- subjectGenerator(item.child) // try to generate the subject
       predicate <- predicateGenerator(item.child) // try to generate the  predicate
       _object <- objectGenerator(item.parent) // try to generate the object
-    } yield for{
+    } yield for {
       (sub, pred, obj) <- Statement.tripleCombination(subject, predicate, _object)
       triple <- {
         println("TRIPLE PROV")
         println(item)
         Statement.generateTriple(sub, pred, obj)
       } // generate the triple
-    }yield triple // this can be Some[RDFTriple] or None
+    } yield triple // this can be Some[RDFTriple] or None
 
     if (result.isEmpty) None else result
 
@@ -69,14 +69,14 @@ class ParentStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
       subject <- subjectGenerator(item.parent) // try to generate the subject
       predicate <- predicateGenerator(item.parent) // try to generate the  predicate
       _object <- objectGenerator(item.parent) // try to generate the object
-    } yield for{
+    } yield for {
       (sub, pred, obj) <- Statement.tripleCombination(subject, predicate, _object)
       triple <- {
         println("TRIPLE PROV")
         println(item)
         Statement.generateTriple(sub, pred, obj)
       } // generate the triple
-    }yield triple // this can be Some[RDFTriple] or None
+    } yield triple // this can be Some[RDFTriple] or None
 
     if (result.isEmpty) None else result
   }
@@ -98,14 +98,14 @@ class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
         subject <- subjectGenerator(item) // try to generate the subject
         predicate <- predicateGenerator(item) // try to generate the  predicate
         _object <- objectGenerator(item) // try to generate the object
-      } yield for{
+      } yield for {
         (sub, pred, obj) <- Statement.tripleCombination(subject, predicate, _object)
         triple <- {
           println("TRIPLE PROV")
           println(item)
           Statement.generateTriple(sub, pred, obj)
         } // generate the triple
-      }yield triple // this can be Some[RDFTriple] or None
+      } yield triple // this can be Some[RDFTriple] or None
 
     if (result.isEmpty) None else result
   }
@@ -118,9 +118,7 @@ object Statement {
                               predicate: Item => Option[Iterable[Uri]],
                               `object`: Item => Option[Iterable[Entity]])
 
-  : Statement[Item] = new StdStatement(subject: Item => Option[Iterable[TermNode]],
-    predicate: Item => Option[Iterable[Uri]],
-    `object`: Item => Option[Iterable[Entity]])
+  : Statement[Item] = new StdStatement(subject, predicate, `object`)
 
   def createChildStatement(subject: Item => Option[Iterable[TermNode]],
                            predicate: Item => Option[Iterable[Uri]],

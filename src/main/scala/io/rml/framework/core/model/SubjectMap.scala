@@ -39,6 +39,7 @@ trait SubjectMap extends TermMap {
     */
   def `class`: List[Uri]
 
+  def graphMap: Option[GraphMap]
 }
 
 object SubjectMap {
