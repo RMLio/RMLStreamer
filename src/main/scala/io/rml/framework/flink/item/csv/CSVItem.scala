@@ -69,9 +69,10 @@ object CSVItem {
   }
 
   def fromDataBatch(dataBatch: String, csvFormat: CSVFormat): Option[Array[Item]] = {
-    val format = csvFormat.withFirstRecordAsHeader()
 
-    val parser = format.parse(new StringReader(dataBatch))
+    //jdata batch string must not contain any leading whitespaces
+    val sanitizedData = dataBatch.replaceAll("^\\s+", "")
+    val parser = csvFormat.parse(new StringReader(sanitizedData))
     val result:Array[Item] = parser.getRecords.asScala.toArray.map(new CSVItem(_))
     if(result.isEmpty) None else Some(result)
   }

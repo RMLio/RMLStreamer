@@ -33,8 +33,6 @@ object CSVStream {
 
   def fromTCPSocketStream(tCPSocketStream: TCPSocketStream)(implicit env: StreamExecutionEnvironment): CSVStream = {
     // var's set up
-    val hostName = tCPSocketStream.hostName
-    val port = tCPSocketStream.port
     val defaultConfig = DefaultCSVConfig()
     val csvConfig = CustomCSVConfig(defaultConfig.delimiter, defaultConfig.quoteCharacter, "\n\n")
 
@@ -43,6 +41,7 @@ object CSVStream {
     val format = CSVFormat.newFormat(csvConfig.delimiter)
       .withQuote(csvConfig.quoteCharacter)
       .withTrim()
+      .withFirstRecordAsHeader()
 
     val stream = StreamUtil.createTcpSocketSource(tCPSocketStream, csvConfig.recordDelimiter)
       .flatMap(batchString => {
