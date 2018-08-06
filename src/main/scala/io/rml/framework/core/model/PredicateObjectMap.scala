@@ -44,10 +44,11 @@ trait PredicateObjectMap extends Node {
 
   def predicateMaps: List[PredicateMap]
 
+  def graphMap: Option[GraphMap]
 }
 
 object PredicateObjectMap {
-  def apply(identifier: String, objectMaps: List[ObjectMap], functionMaps: List[FunctionMap], predicateMaps: List[PredicateMap]): PredicateObjectMap = {
-    StdPredicateObjectMap(identifier, objectMaps, functionMaps, predicateMaps)
+  def apply(identifier: String, objectMaps: List[ObjectMap], functionMaps: List[FunctionMap], predicateMaps: List[PredicateMap], graphMap: Option[GraphMap]): PredicateObjectMap = {
+    StdPredicateObjectMap(identifier, objectMaps, functionMaps, predicateMaps, graphMap)
   }
 }

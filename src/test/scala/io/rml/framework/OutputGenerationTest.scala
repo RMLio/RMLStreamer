@@ -22,7 +22,7 @@ class OutputGenerationTest extends FlatSpec with Matchers {
   val temp = "temp_ignored_testcases/nq"
   "Output from the generator" should "match the output from ouput.ttl" in {
 
-    ExpectedOutputTestUtil.test(temp, checkGeneratedOutput)
+    ExpectedOutputTestUtil.test(passing, checkGeneratedOutput)
     //checkGeneratedOutput(OutputTestHelper.getFile("example2-object").toString)
   }
 

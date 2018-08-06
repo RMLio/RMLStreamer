@@ -74,6 +74,8 @@ class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectG
 
 object StatementsAssembler {
 
+  //TODO: Refactor these three methods to use pattern matching/polymorphism  (StatementType Enum might be useful)
+
   def assembleStatements(tripleMap: TripleMap): List[Statement[Item]] = {
     val quads = new StatementsAssembler()
       .assembleStatements(tripleMap)

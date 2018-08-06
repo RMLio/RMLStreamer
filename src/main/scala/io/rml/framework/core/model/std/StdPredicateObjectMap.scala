@@ -27,6 +27,7 @@ import io.rml.framework.core.model._
 case class StdPredicateObjectMap(identifier: String,
                                  objectMaps: List[ObjectMap],
                                  functionMaps: List[FunctionMap],
-                                 predicateMaps: List[PredicateMap])
+                                 predicateMaps: List[PredicateMap],
+                                 graphMap: Option[GraphMap])
 
   extends PredicateObjectMap

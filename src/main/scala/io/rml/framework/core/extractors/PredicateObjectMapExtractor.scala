@@ -30,8 +30,9 @@ trait PredicateObjectMapExtractor extends ResourceExtractor[List[PredicateObject
 object PredicateObjectMapExtractor {
   def apply(objectMapExtractor: ObjectMapExtractor = ObjectMapExtractor(),
             predicateMapExtractor: PredicateMapExtractor = PredicateMapExtractor(),
-            functionMapExtractor: FunctionMapExtractor = FunctionMapExtractor())
+            functionMapExtractor: FunctionMapExtractor = FunctionMapExtractor(),
+            graphMapExtractor: GraphMapExtractor = GraphMapExtractor())
 
   : PredicateObjectMapExtractor =
-    new StdPredicateObjectMapExtractor(predicateMapExtractor, objectMapExtractor, functionMapExtractor)
+    new StdPredicateObjectMapExtractor(predicateMapExtractor, objectMapExtractor, functionMapExtractor, graphMapExtractor)
 }

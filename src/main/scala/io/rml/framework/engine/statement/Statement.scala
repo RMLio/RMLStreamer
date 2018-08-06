@@ -43,6 +43,24 @@ abstract class Statement[T] {
 
 
   def process(item: T): Option[Iterable[FlinkRDFQuad]]
+
+
+  def subProcess[S <: Item] (graphItem:S, subjItem:S, predItem: S, objectItem: S): Option[Iterable[FlinkRDFQuad]] = {
+    val graphOption = graphGenerator(graphItem)
+
+    val result = for {
+      subject <- subjectGenerator(subjItem) // try to generate the subject
+      predicate <- predicateGenerator(predItem) // try to generate the  predicate
+      _object <- objectGenerator(objectItem ) // try to generate the object
+    } yield for {
+      (subj, pred, obj, graph) <- Statement.quadCombination(subject, predicate, _object, graphOption)
+      triple <- Statement.generateQuad(subj, pred, obj, graph)
+
+    } yield triple
+
+
+    if (result.isEmpty) None else result
+  }
 }
 
 
@@ -52,21 +70,7 @@ case class ChildStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
                      graphGenerator: Item => Option[Iterable[Uri]]) extends Statement[JoinedItem] with Serializable {
 
   def process(item: JoinedItem): Option[Iterable[FlinkRDFQuad]] = {
-    val result = for {
-      subject <- subjectGenerator(item.child) // try to generate the subject
-      predicate <- predicateGenerator(item.child) // try to generate the  predicate
-      _object <- objectGenerator(item.parent) // try to generate the object
-    } yield for {
-      (sub, pred, obj, _) <- Statement.quadCombination(subject, predicate, _object)
-      triple <- {
-        println("TRIPLE PROV")
-        println(item)
-        Statement.generateQuad(sub, pred, obj)
-      } // generate the triple
-    } yield triple // this can be Some[RDFTriple] or None
-
-    if (result.isEmpty) None else result
-
+    subProcess(item.child, item.child, item.child, item.parent)
   }
 }
 
@@ -76,20 +80,7 @@ case class ParentStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
                       graphGenerator: Item => Option[Iterable[Uri]]) extends Statement[JoinedItem] with Serializable {
 
   def process(item: JoinedItem): Option[Iterable[FlinkRDFQuad]] = {
-    val result = for {
-      subject <- subjectGenerator(item.parent) // try to generate the subject
-      predicate <- predicateGenerator(item.parent) // try to generate the  predicate
-      _object <- objectGenerator(item.parent) // try to generate the object
-    } yield for {
-      (sub, pred, obj, _) <- Statement.quadCombination(subject, predicate, _object)
-      triple <- {
-        println("TRIPLE PROV")
-        println(item)
-        Statement.generateQuad(sub, pred, obj)
-      } // generate the triple
-    } yield triple // this can be Some[RDFTriple] or None
-
-    if (result.isEmpty) None else result
+    subProcess(item.parent, item.parent, item.parent, item.parent)
   }
 }
 
@@ -106,20 +97,7 @@ case class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
     */
   def process(item: Item): Option[Iterable[FlinkRDFQuad]] = {
 
-    val graphOption = graphGenerator(item)
-
-    val result = for {
-      subject <- subjectGenerator(item) // try to generate the subject
-      predicate <- predicateGenerator(item) // try to generate the  predicate
-      _object <- objectGenerator(item) // try to generate the object
-    } yield for {
-      (subj, pred, obj, graph) <- Statement.quadCombination(subject, predicate, _object, graphOption)
-      triple <- Statement.generateQuad(subj, pred, obj, graph)
-
-    } yield triple
-
-
-    if (result.isEmpty) None else result
+    subProcess(item,item,item,item)
   }
 
 }

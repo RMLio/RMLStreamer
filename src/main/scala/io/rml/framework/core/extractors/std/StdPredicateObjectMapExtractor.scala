@@ -34,7 +34,8 @@ import io.rml.framework.shared.RMLException
   */
 class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtractor,
                                      objectMapExtractor: ObjectMapExtractor,
-                                     functionMapExtractor: FunctionMapExtractor)
+                                     functionMapExtractor: FunctionMapExtractor,
+                                     graphMapExtractor: GraphMapExtractor)
 
   extends PredicateObjectMapExtractor with Logging {
 
@@ -72,7 +73,8 @@ class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtracto
     val objectMaps = objectMapExtractor.extract(resource)
     val functionMaps = functionMapExtractor.extract(resource)
     val predicateMaps = predicateMapExtractor.extract(resource)
-    PredicateObjectMap(resource.uri.toString, objectMaps, functionMaps, predicateMaps)
+    val graphMap = graphMapExtractor.extract(resource)
+    PredicateObjectMap(resource.uri.toString, objectMaps, functionMaps, predicateMaps, graphMap)
   }
 
 }

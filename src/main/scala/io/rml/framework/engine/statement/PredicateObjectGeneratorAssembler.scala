@@ -27,18 +27,23 @@ import io.rml.framework.flink.item.Item
 
 class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGeneratorAssembler,
                                         objectGeneratorAssembler: ObjectGeneratorAssembler,
-                                        functionMapGeneratorAssembler: FunctionMapGeneratorAssembler) {
+                                        functionMapGeneratorAssembler: FunctionMapGeneratorAssembler,
+                                        graphGeneratorAssembler: GraphGeneratorAssembler) {
 
   def assemble(predicateObjectMap: PredicateObjectMap)
-  : List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])] = {
+  : List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
+
+
     predicateObjectMap.predicateMaps.flatMap(predicateMap => {
       predicateObjectMap.objectMaps.map(objectMap => {
         (predicateGeneratorAssembler.assemble(predicateMap),
-          objectGeneratorAssembler.assemble(objectMap))
+          objectGeneratorAssembler.assemble(objectMap),
+        graphGeneratorAssembler.assemble(predicateObjectMap.graphMap))
       }) ++
         predicateObjectMap.functionMaps.map(fnMap => {
           (predicateGeneratorAssembler.assemble(predicateMap),
-            functionMapGeneratorAssembler.assemble(fnMap))
+            functionMapGeneratorAssembler.assemble(fnMap),
+          graphGeneratorAssembler.assemble(predicateObjectMap.graphMap))
         })
     })
   }
@@ -46,11 +51,13 @@ class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGe
 
 object PredicateObjectGeneratorAssembler {
 
-  def apply(predicateGeneratorAssembler: PredicateGeneratorAssembler = PredicateGeneratorAssembler(),
-            objectGeneratorAssembler: ObjectGeneratorAssembler = ObjectGeneratorAssembler(),
-            functionMapGeneratorAssembler: FunctionMapGeneratorAssembler = FunctionMapGeneratorAssembler())
+  def apply(
+             predicateGeneratorAssembler: PredicateGeneratorAssembler = PredicateGeneratorAssembler(),
+             objectGeneratorAssembler: ObjectGeneratorAssembler = ObjectGeneratorAssembler(),
+             functionMapGeneratorAssembler: FunctionMapGeneratorAssembler = FunctionMapGeneratorAssembler(),
+             graphGeneratorAssembler: GraphGeneratorAssembler = GraphGeneratorAssembler())
 
   : PredicateObjectGeneratorAssembler = new PredicateObjectGeneratorAssembler(predicateGeneratorAssembler,
     objectGeneratorAssembler,
-    functionMapGeneratorAssembler)
+    functionMapGeneratorAssembler, graphGeneratorAssembler)
 }
