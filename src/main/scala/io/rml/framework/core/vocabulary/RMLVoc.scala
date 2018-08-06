@@ -51,6 +51,7 @@ object RMLVoc {
     val GRAPHMAP = Namespaces("rr", "graphMap")
     val DATATYPE = Namespaces("rr", "datatype")
     val LANGUAGE = Namespaces("rr", "language")
+    val DEFAULTGRAPH = Namespaces("rr", "defaultGraph")
 
     ///////////////////////////////////////////////////////////////////////////
     // RML

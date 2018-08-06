@@ -20,43 +20,49 @@ class StdGraphMapExtractor extends GraphMapExtractor {
     val shortcutProperties = resource.listProperties(RMLVoc.Property.GRAPH)
     val amount = mapProperties.size + shortcutProperties.size
 
-
     amount match {
       case 0 => None
-      case 1 => if (mapProperties.nonEmpty) extractGraphMap(mapProperties.head) else extractGraph(shortcutProperties.head)
+      case 1 => if (mapProperties.nonEmpty) {
+        generalExtractGraph(mapProperties.head, extractGraphMap)
+      } else {
+        generalExtractGraph(shortcutProperties.head, extractGraph)
+      }
       case _ => throw new RMLException("Only one GraphMap allowed.")
     }
 
   }
 
-  private def getRDFResource(node: RDFNode): RDFResource = {
-    node match {
-      case literal: Literal => throw new RMLException("GraphMap must be a resrouce.")
-      case resource: RDFResource => resource
-    }
-  }
 
   override def extractTermType(resource: RDFResource): Option[Uri] = {
     val result = super.extractTermType(resource)
     if (result.isDefined) result else Some(Uri(RMLVoc.Class.IRI))
   }
 
-  def extractGraph(node: RDFNode): Option[GraphMap] = {
-    val resource = getRDFResource(node)
-    Some(GraphMap(resource.uri.toString, Some(Uri(resource.uri.toString)), None, None, extractTermType(resource)))
+  def generalExtractGraph(node: RDFNode, extractFunc: RDFResource => Option[GraphMap]): Option[GraphMap] = {
+    val resource = node match {
+      case literal: Literal => throw new RMLException("GraphMap must be a resource.")
+      case resource: RDFResource => resource
+    }
+
+    resource.uri match {
+      case Uri(RMLVoc.Property.DEFAULTGRAPH) => None
+      case _ => extractFunc(resource)
+    }
 
   }
 
-  def extractGraphMap(node: RDFNode): Option[GraphMap] = {
-    Some(extractGraphMapProperties(getRDFResource(node)))
+  def extractGraph(resource: RDFResource): Option[GraphMap] = {
+
+    Some(GraphMap(resource.uri.toString, Some(resource.uri), None, None, extractTermType(resource)))
+
   }
 
-  def extractGraphMapProperties(resource: RDFResource): GraphMap = {
+  def extractGraphMap(resource: RDFResource): Option[GraphMap] = {
     val termType = extractTermType(resource)
     val template = extractTemplate(resource)
     val constant = extractConstant(resource)
     val reference = extractReference(resource)
-    GraphMap(constant.getOrElse(resource.uri).toString, constant, reference, template, termType)
+    Some(GraphMap(constant.getOrElse(resource.uri).toString, constant, reference, template, termType))
   }
 
 }

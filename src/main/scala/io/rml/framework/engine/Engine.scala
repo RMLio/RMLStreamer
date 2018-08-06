@@ -25,7 +25,7 @@ package io.rml.framework.engine
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.sink.FlinkRDFTriple
+import io.rml.framework.flink.sink.FlinkRDFQuad
 
 import scala.collection.mutable
 
@@ -34,7 +34,7 @@ import scala.collection.mutable
   */
 trait Engine[T] extends Serializable {
 
-  def process(item: T): List[FlinkRDFTriple]
+  def process(item: T): List[FlinkRDFQuad]
 
 }
 

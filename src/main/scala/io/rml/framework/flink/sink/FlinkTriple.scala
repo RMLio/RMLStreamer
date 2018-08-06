@@ -38,29 +38,16 @@ case class FlinkRDFLiteral(literal: Literal) extends FlinkRDFNode(literal) {
   }
 }
 
-abstract class FlinkQuad(uad: FlinkRDFTermNode,
-                         predicateQuad: FlinkRDFResource,
-                         objectQuad: FlinkRDFNode,
-                         graphQuad: Option[FlinkRDFResource] = None) extends Serializable
 
-case class FlinkRDFTriple(subject: FlinkRDFTermNode,
-                          predicate: FlinkRDFResource,
-                          `object`: FlinkRDFNode) extends FlinkQuad(subject, predicate, `object`) with Serializable {
 
-  override def toString: String = {
-    subject + "  " + predicate + "  " + `object` + " ."
-  }
-
-}
-
-case class FlinkRDFQuad(subjectQuad: FlinkRDFTermNode,
-                        predicateQuad: FlinkRDFResource,
-                        objectQuad: FlinkRDFNode,
-                        graphQuad: Option[FlinkRDFResource] = None)
-  extends FlinkQuad(subjectQuad, predicateQuad, objectQuad, graphQuad) with Serializable {
+case class FlinkRDFQuad(subject: FlinkRDFTermNode,
+                        predicate: FlinkRDFResource,
+                        `object`: FlinkRDFNode,
+                        graph: Option[FlinkRDFResource] = None)
+  extends  Serializable {
 
   override def toString: String = {
-    s"$subjectQuad $predicateQuad $objectQuad  ${graphQuad getOrElse ""}."
+    s"$subject $predicate " + `object` + s" ${graph getOrElse ""}."
 
   }
 }

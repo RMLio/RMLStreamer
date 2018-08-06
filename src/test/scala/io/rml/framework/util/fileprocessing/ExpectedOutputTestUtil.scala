@@ -34,5 +34,5 @@ object ExpectedOutputTestUtil extends FileProcessingUtil[Set[String]] {
     result
   }
 
-  override def candidateFiles: List[String] = List("output.ttl")
+  override def candidateFiles: List[String] = List("output.ttl", "output.nq")
 }

@@ -75,21 +75,21 @@ class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectG
 object StatementsAssembler {
 
   def assembleStatements(tripleMap: TripleMap): List[Statement[Item]] = {
-    val triples = new StatementsAssembler()
+    val quads = new StatementsAssembler()
       .assembleStatements(tripleMap)
-    triples.map(triple => Statement.createStandardStatement(triple._1, triple._2, triple._3))
+    quads.map(quad => StdStatement(quad._1, quad._2, quad._3,quad._4))
   }
 
   def assembleChildStatements(joinedTripleMap: JoinedTripleMap): List[Statement[JoinedItem]] = {
     val triples = new StatementsAssembler()
       .assembleStatements(joinedTripleMap)
-    triples.map(triple => Statement.createChildStatement(triple._1, triple._2, triple._3))
+    triples.map(triple => ChildStatement(triple._1, triple._2, triple._3, triple._4))
   }
 
   def assembleParentStatements(joinedTripleMap: JoinedTripleMap): List[Statement[JoinedItem]] = {
     val triples = new StatementsAssembler()
       .assembleStatements(joinedTripleMap.parentTriplesMap)
-    triples.map(triple => Statement.createParentStatement(triple._1, triple._2, triple._3))
+    triples.map(triple => ParentStatement(triple._1, triple._2, triple._3, triple._4))
   }
 
 

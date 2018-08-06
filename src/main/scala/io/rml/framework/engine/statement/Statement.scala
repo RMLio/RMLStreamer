@@ -33,25 +33,35 @@ import io.rml.framework.flink.sink._
   * This class is used by the StatementEngine implementation.
   */
 
-trait Statement[T] {
-  def process(item: T): Option[Iterable[FlinkRDFTriple]]
+abstract class Statement[T] {
+
+  val subjectGenerator: Item => Option[Iterable[TermNode]]
+  val predicateGenerator: Item => Option[Iterable[Uri]]
+  val objectGenerator: Item => Option[Iterable[Entity]]
+  val graphGenerator:  Item => Option[Iterable[Uri]]
+
+
+
+  def process(item: T): Option[Iterable[FlinkRDFQuad]]
 }
 
-class ChildStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
-                     predicateGenerator: Item => Option[Iterable[Uri]],
-                     objectGenerator: Item => Option[Iterable[Entity]]) extends Statement[JoinedItem] with Serializable {
 
-  def process(item: JoinedItem): Option[Iterable[FlinkRDFTriple]] = {
+case class ChildStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
+                     predicateGenerator: Item => Option[Iterable[Uri]],
+                     objectGenerator: Item => Option[Iterable[Entity]],
+                     graphGenerator: Item => Option[Iterable[Uri]]) extends Statement[JoinedItem] with Serializable {
+
+  def process(item: JoinedItem): Option[Iterable[FlinkRDFQuad]] = {
     val result = for {
       subject <- subjectGenerator(item.child) // try to generate the subject
       predicate <- predicateGenerator(item.child) // try to generate the  predicate
       _object <- objectGenerator(item.parent) // try to generate the object
     } yield for {
-      (sub, pred, obj) <- Statement.tripleCombination(subject, predicate, _object)
+      (sub, pred, obj, _) <- Statement.quadCombination(subject, predicate, _object)
       triple <- {
         println("TRIPLE PROV")
         println(item)
-        Statement.generateTriple(sub, pred, obj)
+        Statement.generateQuad(sub, pred, obj)
       } // generate the triple
     } yield triple // this can be Some[RDFTriple] or None
 
@@ -60,21 +70,22 @@ class ChildStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
   }
 }
 
-class ParentStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
+case class ParentStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
                       predicateGenerator: Item => Option[Iterable[Uri]],
-                      objectGenerator: Item => Option[Iterable[Entity]]) extends Statement[JoinedItem] with Serializable {
+                      objectGenerator: Item => Option[Iterable[Entity]],
+                      graphGenerator: Item => Option[Iterable[Uri]]) extends Statement[JoinedItem] with Serializable {
 
-  def process(item: JoinedItem): Option[Iterable[FlinkRDFTriple]] = {
+  def process(item: JoinedItem): Option[Iterable[FlinkRDFQuad]] = {
     val result = for {
       subject <- subjectGenerator(item.parent) // try to generate the subject
       predicate <- predicateGenerator(item.parent) // try to generate the  predicate
       _object <- objectGenerator(item.parent) // try to generate the object
     } yield for {
-      (sub, pred, obj) <- Statement.tripleCombination(subject, predicate, _object)
+      (sub, pred, obj, _) <- Statement.quadCombination(subject, predicate, _object)
       triple <- {
         println("TRIPLE PROV")
         println(item)
-        Statement.generateTriple(sub, pred, obj)
+        Statement.generateQuad(sub, pred, obj)
       } // generate the triple
     } yield triple // this can be Some[RDFTriple] or None
 
@@ -82,9 +93,10 @@ class ParentStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
   }
 }
 
-class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
+case class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
                    predicateGenerator: Item => Option[Iterable[Uri]],
-                   objectGenerator: Item => Option[Iterable[Entity]]) extends Statement[Item] with Serializable {
+                   objectGenerator: Item => Option[Iterable[Entity]],
+                   graphGenerator: Item => Option[Iterable[Uri]]) extends Statement[Item] with Serializable {
 
   /**
     * Tries to refer a triple from the given item.
@@ -92,20 +104,20 @@ class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
     * @param item
     * @return
     */
-  def process(item: Item): Option[Iterable[FlinkRDFTriple]] = {
-    val result =
-      for {
-        subject <- subjectGenerator(item) // try to generate the subject
-        predicate <- predicateGenerator(item) // try to generate the  predicate
-        _object <- objectGenerator(item) // try to generate the object
-      } yield for {
-        (sub, pred, obj) <- Statement.tripleCombination(subject, predicate, _object)
-        triple <- {
-          println("TRIPLE PROV")
-          println(item)
-          Statement.generateTriple(sub, pred, obj)
-        } // generate the triple
-      } yield triple // this can be Some[RDFTriple] or None
+  def process(item: Item): Option[Iterable[FlinkRDFQuad]] = {
+
+    val graphOption = graphGenerator(item)
+
+    val result = for {
+      subject <- subjectGenerator(item) // try to generate the subject
+      predicate <- predicateGenerator(item) // try to generate the  predicate
+      _object <- objectGenerator(item) // try to generate the object
+    } yield for {
+      (subj, pred, obj, graph) <- Statement.quadCombination(subject, predicate, _object, graphOption)
+      triple <- Statement.generateQuad(subj, pred, obj, graph)
+
+    } yield triple
+
 
     if (result.isEmpty) None else result
   }
@@ -114,31 +126,30 @@ class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
 
 object Statement {
 
-  def createStandardStatement(subject: Item => Option[Iterable[TermNode]],
-                              predicate: Item => Option[Iterable[Uri]],
-                              `object`: Item => Option[Iterable[Entity]])
+  def quadCombination(subjectIter: Iterable[TermNode], predicateIter: Iterable[Uri], objIter: Iterable[Entity], graphIterOpt: Option[Iterable[Uri]] = None): Iterable[(TermNode, Uri, Entity, Option[Uri])] = {
 
-  : Statement[Item] = new StdStatement(subject, predicate, `object`)
+    val graphIter: Iterable[Uri] = graphIterOpt getOrElse List()
 
-  def createChildStatement(subject: Item => Option[Iterable[TermNode]],
-                           predicate: Item => Option[Iterable[Uri]],
-                           `object`: Item => Option[Iterable[Entity]])
-  : Statement[JoinedItem] = new ChildStatement(subject, predicate, `object`)
-
-  def createParentStatement(subject: Item => Option[Iterable[TermNode]],
-                            predicate: Item => Option[Iterable[Uri]],
-                            `object`: Item => Option[Iterable[Entity]])
-  : Statement[JoinedItem] = new ParentStatement(subject, predicate, `object`)
-
-  def tripleCombination(subjectIter: Iterable[TermNode], predicateIter: Iterable[Uri], objIter: Iterable[Entity]): Iterable[(TermNode, Uri, Entity)] = {
-    for {
+    //TODO: Smells bad, might have to refactor this
+    val triple = for {
       subj <- subjectIter
       pred <- predicateIter
       obj <- objIter
-    } yield (subj, pred, obj)
+    } yield (subj, pred, obj, None)
+
+    if (graphIter.nonEmpty) {
+      for {
+        graph <- graphIter
+        (subj, pred, obj, _) <- triple
+      } yield (subj, pred, obj, Some(graph))
+
+    } else {
+      triple
+    }
   }
 
-  def generateTriple(subject: TermNode, predicate: Uri, _object: Entity): Option[FlinkRDFTriple] = {
+
+  def generateQuad(subject: TermNode, predicate: Uri, _object: Entity, graphOpt: Option[Uri] = None): Option[FlinkRDFQuad] = {
 
     val subjectResource = subject match {
       case blank: Blank => FlinkRDFBlank(blank)
@@ -150,8 +161,10 @@ object Statement {
       case resource: Uri => FlinkRDFResource(resource)
       case blank: Blank => FlinkRDFBlank(blank)
     }
-    println(Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode)).get.toString)
-    Some(FlinkRDFTriple(subjectResource, predicateResource, objectNode))
+    val graphUri = graphOpt.map(FlinkRDFResource)
 
+    val result = Some(FlinkRDFQuad(subjectResource, predicateResource, objectNode, graphUri))
+    println(result)
+    result
   }
 }

@@ -404,7 +404,7 @@ object Main {
 
     override def map(in: T): List[String] = {
       engine.process(in)
-        .map(triple => triple.toString)
+        .map(quad => quad.toString)
     }
 
   }

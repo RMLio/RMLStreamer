@@ -26,7 +26,7 @@ import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{JoinedTripleMap, TripleMap}
 import io.rml.framework.engine.Engine
 import io.rml.framework.flink.item.{Item, JoinedItem}
-import io.rml.framework.flink.sink.FlinkRDFTriple
+import io.rml.framework.flink.sink.FlinkRDFQuad
 
 /**
   * A statement engine is an engine implementation that makes use of a transformed
@@ -48,7 +48,7 @@ class StatementEngine[T](val statements: List[Statement[T]]) extends Engine[T] {
     * @param item
     * @return
     */
-  override def process(item: T): List[FlinkRDFTriple] = {
+  override def process(item: T): List[FlinkRDFQuad] = {
     statements.flatMap(statement => statement.process(item)).flatten // flat map to filter out None
   }
 
@@ -62,7 +62,7 @@ object StatementEngine extends Logging {
   /**
     *
     * @param tripleMaps
-    * @returnSubj
+    * @return
     */
   def fromTripleMaps(tripleMaps: List[TripleMap]): StatementEngine[Item] = {
     // assemble the statements

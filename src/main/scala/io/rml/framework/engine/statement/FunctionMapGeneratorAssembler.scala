@@ -4,7 +4,7 @@ import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.sink.FlinkRDFTriple
+import io.rml.framework.flink.sink.FlinkRDFQuad
 
 case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
 
@@ -14,7 +14,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
     val functionMap = termMap.asInstanceOf[FunctionMap]
     val functionEngine = StatementEngine.fromTripleMaps(List(functionMap.functionValue))
     (item: Item) => {
-      val triples: List[FlinkRDFTriple] = functionEngine.process(item)
+      val triples: List[FlinkRDFQuad] = functionEngine.process(item)
       val parameters: Map[Uri, String] = triples.filter(triple => triple.predicate.uri != Uri(RMLVoc.Property.EXECUTES))
         .map(triple => {
           val parameterName = triple.predicate.uri
