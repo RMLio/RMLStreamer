@@ -119,13 +119,27 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
   override def extractTermType(resource: RDFResource): Option[Uri] = {
     val result = super.extractTermType(resource)
     if (result.isDefined) result else {
-      // if this is a reference-based term map or contains an referenceFormulation or has a datatype property the
-      // term type is a literal
-      val elements = resource.listProperties(RMLVoc.Property.REFERENCE) ++
-        resource.listProperties(RMLVoc.Property.REFERENCEFORMULATION) ++
-        resource.listProperties(RMLVoc.Property.DATATYPE)
-      if (elements.nonEmpty) Some(Uri(RMLVoc.Class.LITERAL))
-      else Some(Uri(RMLVoc.Class.IRI))
+
+      //if the resource has rr:constant, return the type of the node referred by rr:constant.
+      val constantValue = resource.listProperties(RMLVoc.Property.CONSTANT)
+
+      if (constantValue.nonEmpty) {
+
+        constantValue.head match {
+          case literal: Literal => Some(Uri(RMLVoc.Class.LITERAL))
+          case _ => Some(Uri(RMLVoc.Class.IRI))
+        }
+
+      } else {
+
+        // if this is a reference-based term map or contains an referenceFormulation or has a datatype property the
+        // term type is a literal
+        val elements = resource.listProperties(RMLVoc.Property.REFERENCE) ++
+          resource.listProperties(RMLVoc.Property.REFERENCEFORMULATION) ++
+          resource.listProperties(RMLVoc.Property.DATATYPE)
+        if (elements.nonEmpty) Some(Uri(RMLVoc.Class.LITERAL))
+        else Some(Uri(RMLVoc.Class.IRI))
+      }
     }
   }
 
