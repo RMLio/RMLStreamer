@@ -48,7 +48,7 @@ rm "$temp_test_log"
 
 find src/test/resources/stream -type d -name "RMLTC*" |
     sort | 
-    grep -v "stream/.*RMLTC.*STREAM$" |
+    grep "stream/.*RMLTC.*" -o |
     sed 's/\(.*\)/--path \1/'| 
     tr "\n" "\0" |
     xargs -0 -i -n1 mvn exec:java -Dexec.mainClass="io.rml.framework.StreamingTest" -Dexec.classpathScope="test" -Dexec.args={} |
