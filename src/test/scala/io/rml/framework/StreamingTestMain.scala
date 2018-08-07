@@ -39,7 +39,7 @@ object StreamingTestMain {
     val parameters = ParameterTool.fromArgs(args)
 
     val fileName = if (parameters.has("path")) parameters.get("path")
-    else "stream/RMLTC0000-CSV-STREAM"
+    else "stream/RMLTC0002b-CSV-STREAM"
 
 
     val folder = MappingTestUtil.getFile(fileName)
@@ -70,9 +70,10 @@ object StreamingTestMain {
         val inputData = DataSourceTestUtil.processFilesInTestFolder(folder.toString).flatten
 
         StreamTestUtil.writeDataToTCP(inputData.iterator, chlHandler)
+        Thread.sleep(6000)
 
 
-        StreamingTestMain.compareResults(folder)
+        StreamingTestMain.compareResults(folder,  TestSink.getTriples.filter(!_.isEmpty))
         Await.result(resetTestStates(jobID, cluster), Duration.Inf)
         Future.successful(s"Cluster job $jobID done")
       }
@@ -86,13 +87,12 @@ object StreamingTestMain {
     StreamTestUtil.cancelJob(jobID, cluster)
   }
 
-  def compareResults(folder: File): Unit = {
+  def compareResults(folder: File, unsanitizedOutput: List[String]): Unit = {
 
-    Thread.sleep(6000)
 
     var expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
     expectedOutputs = Sanitizer.sanitize(expectedOutputs)
-    val generatedOutputs = Sanitizer.sanitize(TestSink.getTriples.filter(!_.isEmpty))
+    val generatedOutputs = Sanitizer.sanitize(unsanitizedOutput)
 
 
     Logger.logInfo(List("Generated output: ", generatedOutputs.mkString("\n")).mkString("\n"))

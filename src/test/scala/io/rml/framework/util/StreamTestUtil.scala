@@ -76,7 +76,7 @@ object StreamTestUtil {
       Logger.logInfo(ctx.channel().toString)
 
       for (el <- messages) {
-        Logger.logInfo(el)
+        el.split("\n").foreach(Logger.logInfo)
         val byteBuff = ctx.alloc.buffer(el.length)
         byteBuff.writeBytes(el.getBytes())
         ctx.channel.writeAndFlush(byteBuff)
