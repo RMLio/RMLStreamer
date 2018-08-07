@@ -2,6 +2,8 @@
 
 # Fetch arguments
 POSITIONAL=()
+TESTCLASS="io.rml.framework.StreamingTestMain"
+
 while [[ $# -gt 0 ]] 
 do
     key="$1"
@@ -11,6 +13,12 @@ do
         shift
         shift
         ;;
+        -t|--test)
+            TESTCLASS="$2"
+        shift
+        shift
+        ;;
+
         *)
            POSITIONAL+=("$1")
         shift
@@ -46,12 +54,14 @@ exec 4<"$temp_test_log"
 
 rm "$temp_test_log"
 
+
+
 find src/test/resources/stream -type d -name "RMLTC*" |
     sort | 
     grep "stream/.*RMLTC.*" -o |
     sed 's/\(.*\)/--path \1/'| 
     tr "\n" "\0" |
-    xargs -0 -i -n1 mvn exec:java -Dexec.mainClass="io.rml.framework.StreamingTest" -Dexec.classpathScope="test" -Dexec.args={} |
+    xargs -0 -i -n1 mvn exec:java -Dexec.mainClass="$TESTCLASS"  -Dexec.classpathScope="test" -Dexec.args={} |
     xargs -I%  bash -c 'echo "%" | egrep "^\[.*\][^\[\]]*|^<.*>|^_:" ;  echo "%" >&3'
 
 
@@ -83,6 +93,5 @@ do
 done <&4 
 
 
-cat <&4 | grep --color=always "^\[ERROR\].*" 
 
 

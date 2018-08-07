@@ -44,7 +44,7 @@ class StreamTest extends FunSuite with Matchers {
     Thread.sleep(2000)
     pool.submit(job)
     Thread.sleep(5000)
-    StreamingTest.compareResults(new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/"))
+    StreamingTestMain.compareResults(new File("/home/sitt/Documents/idlab/rml-streamer/src/test/resources/stream/"))
     TestSink.empty()
     succeed
   }

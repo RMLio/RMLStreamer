@@ -22,7 +22,7 @@ import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Futu
   */
 
 
-object StreamingTest {
+object StreamingTestMain {
   implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
   implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
   implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
@@ -39,7 +39,7 @@ object StreamingTest {
     val parameters = ParameterTool.fromArgs(args)
 
     val fileName = if (parameters.has("path")) parameters.get("path")
-    else "stream/RMLTC0007b-XML"
+    else "stream/RMLTC0000-CSV-STREAM"
 
 
     val folder = MappingTestUtil.getFile(fileName)
@@ -72,7 +72,7 @@ object StreamingTest {
         StreamTestUtil.writeDataToTCP(inputData.iterator, chlHandler)
 
 
-        StreamingTest.compareResults(folder)
+        StreamingTestMain.compareResults(folder)
         Await.result(resetTestStates(jobID, cluster), Duration.Inf)
         Future.successful(s"Cluster job $jobID done")
       }
