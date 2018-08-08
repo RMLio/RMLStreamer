@@ -47,10 +47,10 @@ object StreamingTestMain {
     val parameters = ParameterTool.fromArgs(args)
 
     val fileName = if (parameters.has(PATH_PARAM)) parameters.get(PATH_PARAM)
-    else "stream/RMLTC0002b-CSV-STREAM"
+    else "stream"
 
     val testType = if (parameters.has(TYPE_PARAM)) parameters.get(TYPE_PARAM)
-    else "tcp"
+    else "kafka"
 
     val folder = MappingTestUtil.getFile(fileName)
     val server = serverFactoryMap(testType).createServer()
