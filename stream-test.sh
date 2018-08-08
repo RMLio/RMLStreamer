@@ -10,7 +10,6 @@ do
         -c|--clean)
             CLEAN=true
         shift
-        shift
         ;;
         -t|--type)
             STREAMTYPE="$2"
