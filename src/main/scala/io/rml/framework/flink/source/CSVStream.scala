@@ -60,6 +60,7 @@ object CSVStream {
     val zookeepersCommaSeparated = kafkaStream.zookeepers.reduce((a, b) => a + ", " + b)
     properties.setProperty("zookeeper.connect", zookeepersCommaSeparated)
     properties.setProperty("group.id", kafkaStream.groupId)
+    properties.setProperty("auto.offset.reset", "earliest")
     val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer08[String](kafkaStream.topic, new SimpleStringSchema(), properties))
       .map(item => CSVItem(item, delimiter, quoteCharacter, headers).asInstanceOf[Item])
     CSVStream(stream, headers)

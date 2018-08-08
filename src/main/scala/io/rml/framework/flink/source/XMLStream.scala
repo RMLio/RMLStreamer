@@ -23,7 +23,7 @@ object XMLStream {
     source match {
       case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, iterator)
       case fileStream: FileStream => fromFileStream(fileStream.path, iterator)
-      case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream)
+      case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, iterator)
     }
   }
 
@@ -40,17 +40,19 @@ object XMLStream {
     XMLStream(senv.addSource(source))
   }
 
-  def fromKafkaStream(kafkaStream: KafkaStream)(implicit env: StreamExecutionEnvironment): XMLStream = {
+  def fromKafkaStream(kafkaStream: KafkaStream,iterator:String)(implicit env: StreamExecutionEnvironment): XMLStream = {
     val properties = new Properties()
     val brokersCommaSeparated = kafkaStream.brokers.reduce((a, b) => a + ", " + b)
     properties.setProperty("bootstrap.servers", brokersCommaSeparated)
     val zookeepersCommaSeparated = kafkaStream.zookeepers.reduce((a, b) => a + ", " + b)
     properties.setProperty("zookeeper.connect", zookeepersCommaSeparated)
     properties.setProperty("group.id", kafkaStream.groupId)
+    properties.setProperty("auto.offset.reset", "earliest")
     val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer08[String](kafkaStream.topic, new SimpleStringSchema(), properties))
-      .map(item => {
-        XMLItem.fromString(item).asInstanceOf[Item]
-      })
+      .flatMap(item => {
+        println(item)
+        XMLItem.fromStringOptionable(item, iterator)
+      }).flatMap( a => a )
     XMLStream(stream)
   }
 

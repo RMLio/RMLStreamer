@@ -2,7 +2,6 @@
 
 # Fetch arguments
 POSITIONAL=()
-TESTCLASS="io.rml.framework.StreamingTestMain"
 
 while [[ $# -gt 0 ]] 
 do
@@ -13,8 +12,8 @@ do
         shift
         shift
         ;;
-        -t|--test)
-            TESTCLASS="$2"
+        -t|--type)
+            STREAMTYPE="$2"
         shift
         shift
         ;;
@@ -32,6 +31,16 @@ echo ""
 echo "// STREAM TEST SCRIPT"
 echo "-----------------------------------------"
 echo "" 
+
+if [ -z "$STREAMTYPE" ]; then
+    echo "" 
+    echo "You must give the input stream type of the test with -t|--type [kafka,tcp,file]"
+    echo "-------------------------------------------------------------------------------"
+    echo ""
+    exit 1
+fi
+
+
 
 if [ ! -z "$CLEAN" ]; then
     echo ""
@@ -56,13 +65,14 @@ rm "$temp_test_log"
 
 
 
-find src/test/resources/stream -type d -name "RMLTC*" |
+find src/test/resources/stream/$STREAMTYPE -type d -name "RMLTC*" |
     sort | 
     grep "stream/.*RMLTC.*" -o |
     sed 's/\(.*\)/--path \1/'| 
     tr "\n" "\0" |
-    xargs -0 -i -n1 mvn exec:java -Dexec.mainClass="$TESTCLASS"  -Dexec.classpathScope="test" -Dexec.args={} |
-    xargs -I%  bash -c 'echo "%" | egrep "^\[.*\][^\[\]]*|^<.*>|^_:" ;  echo "%" >&3'
+    xargs -0 -i -n1 mvn exec:java -Dexec.mainClass="io.rml.framework.StreamingTestMain"  -Dexec.classpathScope="test" -Dexec.args="{} --type $STREAMTYPE" |
+    tr "\n" "\0" |
+    xargs -0 -I% -n1 bash -c 'echo  "%" | egrep "^\[.*\][^\[\]]*|^<.*>|^_:" ;  echo "%" >&3'
 
 
 
