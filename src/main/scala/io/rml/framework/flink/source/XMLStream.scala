@@ -45,7 +45,7 @@ object XMLStream {
     val brokersCommaSeparated = kafkaStream.brokers.reduce((a, b) => a + ", " + b)
     properties.setProperty("bootstrap.servers", brokersCommaSeparated)
     val zookeepersCommaSeparated = kafkaStream.zookeepers.reduce((a, b) => a + ", " + b)
-    properties.setProperty("zookeepers.connect", zookeepersCommaSeparated)
+    properties.setProperty("zookeeper.connect", zookeepersCommaSeparated)
     properties.setProperty("group.id", kafkaStream.groupId)
     val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer08[String](kafkaStream.topic, new SimpleStringSchema(), properties))
       .map(item => {
