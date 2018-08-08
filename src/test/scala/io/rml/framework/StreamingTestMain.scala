@@ -5,6 +5,7 @@ import java.util.concurrent.Executors
 
 import io.rml.framework.util.{Logger, _}
 import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil, MappingTestUtil}
+import io.rml.framework.util.server.{TestServer, TCPTestServer}
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala.ExecutionEnvironment
@@ -27,6 +28,13 @@ object StreamingTestMain {
   implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
   implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
   val cluster: Future[LocalFlinkMiniCluster] = StreamTestUtil.getClusterFuture
+  var serverOpt:Option[TestServer] =  None
+
+  val serverFactoryMap: Map[String,StreamTestServerFactory] =  Map("tcp" -> TCPTestServerFactory, "kafka" -> KafkaTestServerFactory)
+
+  val PATH_PARAM = "path"
+  val TYPE_PARAM =  "type"
+
 
   def main(args: Array[String]): Unit = {
 
@@ -38,16 +46,21 @@ object StreamingTestMain {
 
     val parameters = ParameterTool.fromArgs(args)
 
-    val fileName = if (parameters.has("path")) parameters.get("path")
+    val fileName = if (parameters.has(PATH_PARAM)) parameters.get(PATH_PARAM)
     else "stream/RMLTC0002b-CSV-STREAM"
 
+    val testType = if (parameters.has(TYPE_PARAM)) parameters.get(TYPE_PARAM)
+    else "tcp"
 
     val folder = MappingTestUtil.getFile(fileName)
-
-    StreamTestUtil.getTCPFuture()
+    val server = serverFactoryMap(testType).createServer()
+    serverOpt =  Some(server)
+    server.setup()
 
 
     Await.result(executeTestCase(folder), Duration.Inf)
+
+    server.tearDown()
     sys.exit(1)
 
   }
@@ -56,6 +69,10 @@ object StreamingTestMain {
   def executeTestCase(folder: File): Future[Unit] = {
     cluster flatMap { cluster =>
       cluster.synchronized {
+
+        if(serverOpt.isEmpty){
+          throw new IllegalStateException("Set up the server first!!!")
+        }
         Logger.logInfo(folder.toString)
         val dataStream = StreamTestUtil.createDataStream(folder)
         val eventualJobID = StreamTestUtil.submitJobToCluster(cluster, dataStream, folder.getName)
@@ -66,10 +83,9 @@ object StreamingTestMain {
         /**
           * Send the input data as a stream of strings to port 9999
           */
-        val chlHandler = TCPUtil.getChCtxFuture
         val inputData = DataSourceTestUtil.processFilesInTestFolder(folder.toString).flatten
 
-        StreamTestUtil.writeDataToTCP(inputData.iterator, chlHandler)
+        serverOpt.get.writeData(inputData)
         Thread.sleep(6000)
 
 

@@ -1,9 +1,7 @@
 package io.rml.framework.util
 
 import java.io.File
-import java.util.concurrent.Executors
 
-import io.netty.channel.ChannelHandlerContext
 import io.rml.framework.Main
 import io.rml.framework.util.fileprocessing.MappingTestUtil
 import org.apache.flink.api.common.JobID
@@ -14,11 +12,9 @@ import org.apache.flink.runtime.minicluster.{FlinkMiniCluster, LocalFlinkMiniClu
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 
 import scala.concurrent.duration.FiniteDuration
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
-object StreamTestUtil {
-
-  implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
+object StreamTestUtil{
 
   /**
     * Create a data stream from mapping file in de specified test case folder.
@@ -52,7 +48,7 @@ object StreamTestUtil {
     * @param duration
     */
 
-  def cancelJob(jobID: JobID, cluster: FlinkMiniCluster, duration: FiniteDuration = FiniteDuration(4, "seconds")): Future[AnyRef] = {
+  def cancelJob(jobID: JobID, cluster: FlinkMiniCluster, duration: FiniteDuration = FiniteDuration(4, "seconds"))(implicit executur: ExecutionContextExecutor) : Future[AnyRef] = {
     val actorGateFuture = cluster.getLeaderGatewayFuture
     for {
       gateway <- actorGateFuture
@@ -61,29 +57,6 @@ object StreamTestUtil {
 
   }
 
-  /**
-    * Write out the given messages to a channel handled by the given netty ChannelHandlerContext
-    *
-    * The given channel context is wrapped in a handler since it has to be first set-up by the netty
-    * TCP server
-    *
-    * @param messages
-    * @param ctxChlHandler future wrapped handler.
-    */
-
-  def writeDataToTCP(messages: Iterator[String], ctxChlHandler: Future[ChannelHandlerContext]): Unit = {
-    ctxChlHandler map { ctx =>
-      Logger.logInfo(ctx.channel().toString)
-
-      for (el <- messages) {
-        el.split("\n").foreach(Logger.logInfo)
-        val byteBuff = ctx.alloc.buffer(el.length)
-        byteBuff.writeBytes(el.getBytes())
-        ctx.channel.writeAndFlush(byteBuff)
-        Thread.sleep(2000)
-      }
-    }
-  }
 
   /**
     * Submit a job specified in the data stream to the given mini flink cluster.
@@ -94,7 +67,7 @@ object StreamTestUtil {
     * @tparam T result type of the data stream
     * @return JobID of the submitted job which can be used later on to cancel/stop
     */
-  def submitJobToCluster[T](cluster: LocalFlinkMiniCluster, dataStream: DataStream[T], name: String): Future[JobID] =
+  def submitJobToCluster[T](cluster: LocalFlinkMiniCluster, dataStream: DataStream[T], name: String)(implicit executur: ExecutionContextExecutor) : Future[JobID] =
 
     Future {
       while(cluster.currentlyRunningJobs.size > 1 ){
@@ -112,18 +85,6 @@ object StreamTestUtil {
 
 
   /**
-    * Starts a tcp server on port 9999(default) on another thread.
-    *
-    * @param port default value is 9999
-    * @return
-    */
-  def getTCPFuture(port: Int = 9999): Future[Unit] = Future {
-    Logger.logInfo(s"Begin TCP server on port: $port")
-    TCPUtil.createTCPServer(port)
-  }
-
-
-  /**
     * Starts a local mini cluster to let scala tests have more control
     * over the flink jobs (cancelling, adding, multiple jobs, etc...)
     *
@@ -137,7 +98,7 @@ object StreamTestUtil {
     *         which can be used for stopping/cancelling and starting jobs
     */
 
-  def getClusterFuture: Future[LocalFlinkMiniCluster] = {
+  def getClusterFuture(implicit executur: ExecutionContextExecutor) : Future[LocalFlinkMiniCluster] = {
     Logger.logInfo("Starting up cluster....")
     val configuration = new Configuration
     configuration.setLong(TaskManagerOptions.MANAGED_MEMORY_SIZE, -1L)

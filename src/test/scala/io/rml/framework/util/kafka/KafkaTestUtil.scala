@@ -1,5 +1,6 @@
 package io.rml.framework.util.kafka
 
+import java.io.File
 import java.util.Properties
 
 import kafka.admin.AdminUtils
@@ -7,6 +8,7 @@ import kafka.consumer.ConsumerConnector
 import kafka.server.{KafkaConfig, KafkaServerStartable}
 import kafka.utils.ZKStringSerializer
 import org.I0Itec.zkclient.ZkClient
+import org.apache.commons.io.FileUtils
 import org.apache.curator.test.TestingServer
 import org.apache.kafka.clients.producer.KafkaProducer
 
@@ -48,13 +50,15 @@ object KafkaTestUtil {
     props.put("broker.id", "1")
     props.put("port", "9092")
     props.put("host.name", "localhost")
+    props.put("delete.topic.enable", "true")
     props
   }
 
   private object KafkaTestFixture {
     var zk: Option[TestingServer] = None
     var kafka: Option[KafkaServerStartable] = None
-
+    var zkClient: Option[ZkClient] = None
+    var props:Properties = _
     def start(properties: Properties): Unit = {
       zk = Some(new TestingServer(properties.getProperty("zookeeper.connect").split(":")(1).toInt))
       zk.get.start()
@@ -64,7 +68,7 @@ object KafkaTestUtil {
       properties.put("topic", "demo")
       kafka.get.startup()
       topicSetup(properties)
-
+      props = properties
 
     }
 
@@ -72,21 +76,34 @@ object KafkaTestUtil {
     def topicSetup(prop: Properties): Unit = {
       val sessionTimeoutMs = 10000
       val connectionTimeoutMs = 10000
-      val zkClient = new ZkClient(prop.getProperty("zookeeper.connect"), sessionTimeoutMs, connectionTimeoutMs,
-        ZKStringSerializer)
+      zkClient = Some(new ZkClient(prop.getProperty("zookeeper.connect"), sessionTimeoutMs, connectionTimeoutMs,
+        ZKStringSerializer))
 
 
       val topicName = prop.getProperty("topic")
       val numPartitions = 1
       val replicationFactor = 1
       val topicConfig = new Properties
-      AdminUtils.createTopic(zkClient, topicName, numPartitions, replicationFactor, topicConfig)
+      AdminUtils.createTopic(zkClient.get, topicName, numPartitions, replicationFactor, topicConfig)
     }
 
+    def cleanUpLogs(): Unit = {
+      val logDirs = new KafkaConfig(props).logDirs
+
+      logDirs.foreach(dir => FileUtils.deleteDirectory(new File(dir)))
+
+    }
 
     def stop(): Unit = {
       if (kafka.isDefined) kafka.get.shutdown()
+      kafka.get.awaitShutdown()
+      if (zkClient.isDefined) {
+        AdminUtils.deleteTopic(zkClient.get, "demo")
+      }
       if (zk.isDefined) zk.get.close()
+
+
+      cleanUpLogs()
     }
   }
 

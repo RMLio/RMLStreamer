@@ -1,6 +1,5 @@
-package io.rml.framework.util
+package io.rml.framework.util.server
 
-import java.io.File
 import java.net.InetSocketAddress
 
 import io.netty.bootstrap.ServerBootstrap
@@ -9,39 +8,21 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.util.CharsetUtil
-import io.rml.framework.core.extractors.MappingReader
-import io.rml.framework.core.model.FormattedRMLMapping
+import io.rml.framework.util.Logger
 
-import scala.concurrent.{Future, Promise}
+import scala.concurrent.{ExecutionContextExecutor, Future, Promise}
 
-object TCPUtil {
+case class TCPTestServer(port: Int = 9999) extends TestServer {
 
   val lock: AnyRef with Specializable = AnyRef
   var promiseChContext: Promise[ChannelHandlerContext] = Promise[ChannelHandlerContext]()
+  var serverChannel: Option[ChannelFuture] = None
 
-  def getChCtxFuture: Future[ChannelHandlerContext] = lock.synchronized {
-    promiseChContext.future
+  override def setup(): Unit = {
+    setup(port)
   }
 
-  val promiseCh: Promise[Channel] = Promise[Channel]()
-
-  def getChannel = promiseCh.future
-
-  def readMapping(path: String): FormattedRMLMapping = {
-    val classLoader = getClass.getClassLoader
-    val file_1 = new File(path)
-    val mapping = if (file_1.isAbsolute) {
-      val file = new File(path)
-      MappingReader().read(file)
-    } else {
-      val file = new File(classLoader.getResource(path).getFile)
-      MappingReader().read(file)
-    }
-
-    FormattedRMLMapping.fromRMLMapping(mapping)
-  }
-
-  def createTCPServer(port: Int, messages: Iterator[String] = Iterator.empty): Unit = {
+  def setup(port: Int, messages: Iterator[String] = Iterator.empty): Unit = {
     val group = new NioEventLoopGroup
 
     try {
@@ -59,13 +40,39 @@ object TCPUtil {
       })
 
 
-      val channelFuture = serverBootstrap.bind.sync
-      promiseCh success channelFuture.channel()
-      channelFuture.channel().closeFuture().sync()
+      serverChannel = Some(serverBootstrap.bind.sync)
     } catch {
       case e: Exception =>
-        e.printStackTrace(); null
+        e.printStackTrace()
     }
+  }
+
+  override def writeData(messages: Iterable[String])(implicit executur: ExecutionContextExecutor): Unit = {
+
+    getChCtxFuture map { ctx =>
+      Logger.logInfo(ctx.channel().toString)
+
+      for (el <- messages) {
+        el.split("\n").foreach(Logger.logInfo)
+        val byteBuff = ctx.alloc.buffer(el.length)
+        byteBuff.writeBytes(el.getBytes())
+        ctx.channel.writeAndFlush(byteBuff)
+        Thread.sleep(2000)
+      }
+    }
+  }
+
+  override def tearDown(): Unit = {
+    if (serverChannel.isDefined) {
+      val ch = serverChannel.get
+
+      ch.channel().close().sync()
+    }
+  }
+
+
+  def getChCtxFuture: Future[ChannelHandlerContext] = lock.synchronized {
+    promiseChContext.future
   }
 
   class TCPServerHandler(messages: Iterator[String]) extends ChannelInboundHandlerAdapter {
@@ -110,5 +117,6 @@ object TCPUtil {
       ctx.close
     }
   }
+
 
 }
