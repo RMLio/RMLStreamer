@@ -47,7 +47,7 @@ object StreamingTestMain {
     val parameters = ParameterTool.fromArgs(args)
 
     val fileName = if (parameters.has(PATH_PARAM)) parameters.get(PATH_PARAM)
-    else "stream/kafka/RMLTC0001b-XML-STREAM"
+    else "stream/csv/RMLTC0010b-CSV-STREAM-SPLIT"
 
     val testType = if (parameters.has(TYPE_PARAM)) parameters.get(TYPE_PARAM)
     else "kafka"

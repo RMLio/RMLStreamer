@@ -27,6 +27,7 @@ object CSVStream {
     source match {
       case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream)
       case fileStream: FileStream => fromFileStream(fileStream.path)
+      case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, Array.empty)
       case _ => null
     }
   }
@@ -47,13 +48,22 @@ object CSVStream {
       .flatMap(batchString => {
         CSVItem.fromDataBatch(batchString, format)
       })
-        .flatMap(item => item)
+      .flatMap(item => item)
     CSVStream(stream, Array.empty)
   }
 
   def fromKafkaStream(kafkaStream: KafkaStream, headers: Array[String])(implicit env: StreamExecutionEnvironment): CSVStream = {
-    val delimiter = ','
-    val quoteCharacter = '"'
+    // var's set up
+    val defaultConfig = DefaultCSVConfig()
+    val csvConfig = CustomCSVConfig(defaultConfig.delimiter, defaultConfig.quoteCharacter, "\n\n")
+
+
+    // CSVFormat set up with delimiter and quote character
+    val format = CSVFormat.newFormat(csvConfig.delimiter)
+      .withQuote(csvConfig.quoteCharacter)
+      .withTrim()
+      .withFirstRecordAsHeader()
+
     val properties = new Properties()
     val brokersCommaSeparated = kafkaStream.brokers.reduce((a, b) => a + ", " + b)
     properties.setProperty("bootstrap.servers", brokersCommaSeparated)
@@ -62,7 +72,10 @@ object CSVStream {
     properties.setProperty("group.id", kafkaStream.groupId)
     properties.setProperty("auto.offset.reset", "earliest")
     val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer08[String](kafkaStream.topic, new SimpleStringSchema(), properties))
-      .map(item => CSVItem(item, delimiter, quoteCharacter, headers).asInstanceOf[Item])
+      .flatMap(batchString => {
+        CSVItem.fromDataBatch(batchString, format)
+      })
+      .flatMap(item => item)
     CSVStream(stream, headers)
   }
 
