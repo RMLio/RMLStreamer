@@ -50,7 +50,6 @@ object XMLStream {
     properties.setProperty("auto.offset.reset", "earliest")
     val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer010[String](kafkaStream.topic, new SimpleStringSchema(), properties))
       .flatMap(item => {
-        println(item)
         XMLItem.fromStringOptionable(item, iterator)
       }).flatMap( a => a )
     XMLStream(stream)

@@ -50,8 +50,6 @@ object JSONStream {
 
     val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer010[String](kafkaStream.topic, new SimpleStringSchema(), properties))
       .flatMap(item => {
-
-        println(item)
         JSONItem.fromStringOptionableList(item, iterator)
       })
         .flatMap( item => item)

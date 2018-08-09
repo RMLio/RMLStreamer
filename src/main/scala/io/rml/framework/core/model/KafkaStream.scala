@@ -4,4 +4,5 @@ case class KafkaStream(uri: Uri,
                        zookeepers: List[String],
                        brokers: List[String],
                        groupId: String,
-                       topic: String) extends StreamDataSource
+                       topic: String,
+                       version: String = "") extends StreamDataSource
