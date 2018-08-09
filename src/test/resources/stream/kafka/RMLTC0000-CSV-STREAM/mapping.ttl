@@ -13,6 +13,7 @@
         
   rml:logicalSource [ 
         rml:source [
+
             rdf:type rmls:KafkaStream ;
             rmls:zookeeper "localhost:2181";
             rmls:broker "localhost:9092";
