@@ -14,11 +14,7 @@
 
   rml:logicalSource [ 
       rml:source [ rdf:type rmls:KafkaStream ;  rmls:zookeeper "localhost:2181"; rmls:broker "localhost:9092"; rmls:groupId "2";  rmls:topic "demo"         ];
-                rdf:type rmls:TCPSocketStream ;
-                rmls:hostName "localhost" ;
-                rmls:port "9999" ;
-                rmls:type "PULL"
-            ];
+
     rml:referenceFormulation ql:JSONPath;
   ];
 
