@@ -7,7 +7,7 @@ import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.json.JSONItem
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema
 
 case class JSONStream(stream: DataStream[Item]) extends Stream
@@ -48,7 +48,7 @@ object JSONStream {
     properties.setProperty("group.id", kafkaStream.groupId)
     properties.setProperty("auto.offset.reset", "earliest")
 
-    val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer08[String](kafkaStream.topic, new SimpleStringSchema(), properties))
+    val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer010[String](kafkaStream.topic, new SimpleStringSchema(), properties))
       .flatMap(item => {
 
         println(item)

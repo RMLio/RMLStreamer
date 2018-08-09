@@ -11,7 +11,7 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema
 import org.apache.flink.table.api.scala.StreamTableEnvironment
 import org.apache.flink.table.api.{Table, TableEnvironment, Types}
@@ -71,7 +71,7 @@ object CSVStream {
     properties.setProperty("zookeeper.connect", zookeepersCommaSeparated)
     properties.setProperty("group.id", kafkaStream.groupId)
     properties.setProperty("auto.offset.reset", "earliest")
-    val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer08[String](kafkaStream.topic, new SimpleStringSchema(), properties))
+    val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer010[String](kafkaStream.topic, new SimpleStringSchema(), properties))
       .flatMap(batchString => {
         CSVItem.fromDataBatch(batchString, format)
       })

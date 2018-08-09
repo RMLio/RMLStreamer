@@ -6,8 +6,9 @@ import java.util.Properties
 import io.rml.framework.util.Logger
 import kafka.admin.AdminUtils
 import kafka.server.{KafkaConfig, KafkaServerStartable}
-import kafka.utils.ZKStringSerializer
-import org.I0Itec.zkclient.ZkClient
+import kafka.utils.ZkUtils
+import org.I0Itec.zkclient.serialize.ZkSerializer
+import org.I0Itec.zkclient.{ZkClient, ZkConnection}
 import org.apache.commons.io.FileUtils
 import org.apache.curator.test.TestingServer
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
@@ -19,6 +20,7 @@ case class KafkaTestServer() extends TestServer {
   var zk: Option[TestingServer] = None
   var kafka: Option[KafkaServerStartable] = None
   var zkClient: Option[ZkClient] = None
+  var zkUtils: Option[ZkUtils] =  None
   val producer: KafkaProducer[String, String] = new KafkaProducer[String, String](producerProps())
   val defaultTopic = "demo"
   var logDirs:Seq[String] = List()
@@ -51,7 +53,7 @@ case class KafkaTestServer() extends TestServer {
 
     producer.close()
     if (zkClient.isDefined) {
-      AdminUtils.deleteTopic(zkClient.get, props.getProperty("topic"))
+      AdminUtils.deleteTopic(zkUtils.get, props.getProperty("topic"))
     }
     if (kafka.isDefined) kafka.get.shutdown()
     kafka.get.awaitShutdown()
@@ -63,15 +65,18 @@ case class KafkaTestServer() extends TestServer {
   def topicSetup(prop: Properties): Unit = {
     val sessionTimeoutMs = 10000
     val connectionTimeoutMs = 10000
-    zkClient = Some(new ZkClient(prop.getProperty("zookeeper.connect"), sessionTimeoutMs, connectionTimeoutMs,
-      ZKStringSerializer))
+    val clientConnectionTuple = ZkUtils.createZkClientAndConnection(prop.getProperty("zookeeper.connect"), sessionTimeoutMs, connectionTimeoutMs)
 
+
+    zkClient = Some(clientConnectionTuple._1)
+    zkUtils = Some(new ZkUtils(clientConnectionTuple._1, clientConnectionTuple._2, false ))
 
     val topicName = prop.getProperty("topic")
     val numPartitions = 1
     val replicationFactor = 1
     val topicConfig = new Properties
-    AdminUtils.createTopic(zkClient.get, topicName, numPartitions, replicationFactor, topicConfig)
+
+    AdminUtils.createTopic(zkUtils.get, topicName, numPartitions, replicationFactor, topicConfig)
   }
 
 
