@@ -80,6 +80,10 @@ object RMLVoc {
     val GROUPID = Namespaces("rmls", "groupId")
     val TOPIC = Namespaces("rmls", "topic")
     val KAFKAVERSION= Namespaces("rmls", "kafkaversion")
+    val KAFKA08 =  Namespaces("rmls", "kafka08")
+    val KAFKA09 =  Namespaces("rmls", "kafka09")
+    val KAFKA010 =  Namespaces("rmls", "kafka010")
+
     ///////////////////////////////////////////////////////////////////////////
     // FNML
     ///////////////////////////////////////////////////////////////////////////
