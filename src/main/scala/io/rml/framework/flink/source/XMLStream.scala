@@ -41,14 +41,9 @@ object XMLStream {
   }
 
   def fromKafkaStream(kafkaStream: KafkaStream,iterator:String)(implicit env: StreamExecutionEnvironment): XMLStream = {
-    val properties = new Properties()
-    val brokersCommaSeparated = kafkaStream.brokers.reduce((a, b) => a + ", " + b)
-    properties.setProperty("bootstrap.servers", brokersCommaSeparated)
-    val zookeepersCommaSeparated = kafkaStream.zookeepers.reduce((a, b) => a + ", " + b)
-    properties.setProperty("zookeeper.connect", zookeepersCommaSeparated)
-    properties.setProperty("group.id", kafkaStream.groupId)
-    properties.setProperty("auto.offset.reset", "earliest")
-    val stream: DataStream[Item] = env.addSource(new FlinkKafkaConsumer010[String](kafkaStream.topic, new SimpleStringSchema(), properties))
+    val properties = kafkaStream.getProperties
+    val consumer =  kafkaStream.getConnectorFactory.getConsumer(kafkaStream.topic, new SimpleStringSchema(), properties)
+    val stream: DataStream[Item] = env.addSource(consumer)
       .flatMap(item => {
         XMLItem.fromStringOptionable(item, iterator)
       }).flatMap( a => a )

@@ -31,7 +31,7 @@ abstract class KafkaConnectorFactory {
 
 object KafkaConnectorVersionFactory {
 
-  def apply[T](version: String, dataStream: DataStream[T]): KafkaConnectorFactory = {
+  def apply[T](version: String): KafkaConnectorFactory = {
     version match {
       case RMLVoc.Property.KAFKA08 => KafkaConnector08Factory()
       case RMLVoc.Property.KAFKA09 => KafkaConnector09Factory()
