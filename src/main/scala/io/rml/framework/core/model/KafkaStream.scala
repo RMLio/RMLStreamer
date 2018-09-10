@@ -4,6 +4,7 @@ import java.util.Properties
 
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.source.kafka.{KafkaConnectorFactory, KafkaConnectorVersionFactory}
+import io.rml.framework.shared.RMLException
 
 case class KafkaStream(uri: Uri,
                        zookeepers: List[String],
@@ -11,9 +12,8 @@ case class KafkaStream(uri: Uri,
                        groupId: String,
                        topic: String,
                        version: String = RMLVoc.Property.KAFKA08) extends StreamDataSource {
-
   def getConnectorFactory: KafkaConnectorFactory = {
-    KafkaConnectorVersionFactory(version)
+    KafkaConnectorVersionFactory(version).get
   }
 
   def getProperties: Properties = {
@@ -26,4 +26,11 @@ case class KafkaStream(uri: Uri,
     properties.setProperty("auto.offset.reset", "earliest")
     properties
   }
+}
+
+object KafkaStream{
+
+
+  val VERSIONS = Set(RMLVoc.Property.KAFKA08, RMLVoc.Property.KAFKA09, RMLVoc.Property.KAFKA010)
+
 }

@@ -25,7 +25,9 @@ import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model._
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.item.{Item, JoinedItem}
+import io.rml.framework.flink.source.kafka.KafkaConnectorVersionFactory
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
+import io.rml.framework.shared.RMLException
 import org.apache.flink.api.common.functions.RichMapFunction
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala._
@@ -57,6 +59,14 @@ object Main {
     else EMPTY_VALUE
     val outputSocket = if (parameters.has("socket")) parameters.get("socket")
     else EMPTY_VALUE
+
+    val kafkaBrokers = if (parameters.has("broker-list")) parameters.get("broker-list")
+    else EMPTY_VALUE
+    val kafkaVersion = if (parameters.has("kafka-version")) parameters.get("kafka-version")
+    else EMPTY_VALUE
+    val kafkaTopic = if (parameters.has("topic")) parameters.get("topic")
+    else EMPTY_VALUE
+
 
     // TODO: do logging correctly
     println("Mapping path: " + mappingPath)
@@ -98,6 +108,16 @@ object Main {
       // write to a socket if the parameter is given
       if (outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
 
+      else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE && kafkaVersion != EMPTY_VALUE){
+        val optConnectFact = KafkaConnectorVersionFactory(kafkaVersion)
+
+        if(optConnectFact.isEmpty) {
+          throw new RMLException(s"Current RML streamer doesn't support kafka version: $kafkaVersion \n" + s"Supported versions are ${KafkaStream.VERSIONS.reduceLeft((a, b) => s"$a, $b")}" )
+        }
+        val fact = optConnectFact.get
+        fact.applyProducer(kafkaBrokers,kafkaTopic, new SimpleStringSchema(), stream)
+
+      }
       // write to a file if the parameter is given
       else if (!outputPath.contains(EMPTY_VALUE)) stream.writeAsText(outputPath, WriteMode.OVERWRITE)
 

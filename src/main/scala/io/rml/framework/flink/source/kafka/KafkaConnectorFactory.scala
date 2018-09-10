@@ -31,11 +31,12 @@ abstract class KafkaConnectorFactory {
 
 object KafkaConnectorVersionFactory {
 
-  def apply[T](version: String): KafkaConnectorFactory = {
+  def apply[T](version: String): Option[KafkaConnectorFactory] = {
     version match {
-      case RMLVoc.Property.KAFKA08 => KafkaConnector08Factory()
-      case RMLVoc.Property.KAFKA09 => KafkaConnector09Factory()
-      case RMLVoc.Property.KAFKA010 => KafkaConnector010Factory()
+      case RMLVoc.Property.KAFKA08 => Some(KafkaConnector08Factory())
+      case RMLVoc.Property.KAFKA09 => Some(KafkaConnector09Factory())
+      case RMLVoc.Property.KAFKA010 => Some(KafkaConnector010Factory())
+      case _ => None
     }
   }
 }
