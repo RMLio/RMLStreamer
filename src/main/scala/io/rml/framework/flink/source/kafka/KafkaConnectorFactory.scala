@@ -122,24 +122,21 @@ case class KafkaConnector010Factory(version: String = RMLVoc.Property.KAFKA010) 
   }
 
   override def applyProducer[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], stream: DataStream[T]): Unit = {
-    //TODO: fix this
 
+    //TODO: fix this / update flink to latest version to use the stable api methods....
     /**
-      * Have to manually copy the following part from the library method since there seems to be problems with
-      * overloading methods. Compiler expects FlinkKafkaPartitioner to be provided even though calling;
+      * Trying to implement the same way as the code snippet from official website for flink 1.3 documentation
+      * doesn't work due to method overloading error...
       *
-      * FlinkKafkaProducer010.writeToKafkaWithTimestamps(dataStream, topic, serializationSchema,FlinkKafkaProducerBase.getPropertiesFromBrokerList(brokerList))
+      * Link: https://ci.apache.org/projects/flink/flink-docs-release-1.3/dev/connectors/kafka.html#kafka-producer
       *
-      * should work with parameters (stream:DataStream[T], topic:String, serialSchema:SerializationSchema[T], props: Properties)
-      *
-      * Apache flink's code snippet: https://ci.apache.org/projects/flink/flink-docs-release-1.3/dev/connectors/kafka.html#kafka-producer
+      * The current implementation would'nt make use of latest kafka feature of attaching timestamps to the records of
+      * triple.
       */
+    val producer = new FlinkKafkaProducer010(brokerList, topic, serializationSchema)
+    producer.setFlushOnCheckpoint(true)
+    producer.setLogFailuresOnly(false)
 
-    implicit val typeInfo: TypeInformation[Object] = TypeInformation.of(classOf[Object])
-    val kafkaProducer = new FlinkKafkaProducer010[T](topic, serializationSchema, FlinkKafkaProducerBase.getPropertiesFromBrokerList(brokerList), new FlinkFixedPartitioner[T].asInstanceOf[FlinkKafkaPartitioner[T]])
-    val transformation = stream.transform("FlinKafkaProducer 0.10.x", kafkaProducer)
-    val config = new FlinkKafkaProducer010.FlinkKafkaProducer010Configuration[_](transformation, kafkaProducer)
-    config.setFlushOnCheckpoint(true)
-    config.setLogFailuresOnly(false)
+    stream.addSink(producer)
   }
 }
