@@ -4,13 +4,13 @@ import java.util
 import java.util.Properties
 
 import io.rml.framework.core.vocabulary.RMLVoc
-import io.rml.framework.shared.RMLException
+import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.streaming.api.scala.DataStream
+import org.apache.flink.streaming.connectors.kafka._
 import org.apache.flink.streaming.connectors.kafka.partitioner.{FlinkFixedPartitioner, FlinkKafkaPartitioner}
-import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaProducer010, _}
-import org.apache.flink.streaming.util.serialization.{DeserializationSchema, KeyedDeserializationSchema, KeyedSerializationSchema, SerializationSchema}
+import org.apache.flink.streaming.util.serialization._
 
-trait KafkaConnectorFactory {
+abstract class KafkaConnectorFactory {
   def getConsumer[T](topic: String, valueDeserializer: DeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T]
 
   def getConsumer[T](topic: String, deserializer: KeyedDeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T]
@@ -20,9 +20,12 @@ trait KafkaConnectorFactory {
   def getConsumer[T](topics: util.List[String], deserializationSchema: KeyedDeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T]
 
 
-  def getOrApplyProducer[T](brokerList: String, topic: String, serializationSchema: SerializationSchema[T], dataStream: Option[DataStream[T]]): Either[FlinkKafkaProducerBase[T], Unit]
+  def applyProducer[T](brokerList: String, topic: String, serializationSchema: SerializationSchema[T], dataStream: DataStream[T]): Unit = {
+    applyProducer(brokerList, topic, new KeyedSerializationSchemaWrapper[T](serializationSchema), dataStream)
 
-  def getOrApplyProducer[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: Option[DataStream[T]]): Either[FlinkKafkaProducerBase[T], Unit]
+  }
+
+  def applyProducer[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: DataStream[T]): Unit
 
 }
 
@@ -62,12 +65,9 @@ case class KafkaConnector08Factory(version: String = RMLVoc.Property.KAFKA08) ex
     new FlinkKafkaConsumer08[T](topics, deserializationSchema, props)
   }
 
-  override def getOrApplyProducer[T](brokerList: String, topic: String, serializationSchema: SerializationSchema[T], dataStream: Option[DataStream[T]]): Either[FlinkKafkaProducerBase[T], Unit] = {
-    Left(new FlinkKafkaProducer08[T](brokerList,topic,serializationSchema))
-  }
-
-  override def getOrApplyProducer[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: Option[DataStream[T]]): Either[FlinkKafkaProducerBase[T], Unit] = {
-    Left(new FlinkKafkaProducer08[T](brokerList, topic, serializationSchema)) 
+  override def applyProducer[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: DataStream[T]): Unit = {
+    val producer = new FlinkKafkaProducer08[T](brokerList, topic, serializationSchema)
+    dataStream.addSink(producer)
   }
 }
 
@@ -92,12 +92,9 @@ case class KafkaConnector09Factory(version: String = RMLVoc.Property.KAFKA09) ex
     new FlinkKafkaConsumer09[T](topics, deserializationSchema, props)
   }
 
-  override def getOrApplyProducer[T](brokerList: String, topic: String, serializationSchema: SerializationSchema[T], dataStream: Option[DataStream[T]]): Either[FlinkKafkaProducerBase[T], Unit] = {
-    Left(new FlinkKafkaProducer09[T](brokerList, topic, serializationSchema))
-  }
-
-  override def getOrApplyProducer[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: Option[DataStream[T]]): Either[FlinkKafkaProducerBase[T], Unit] = {
-    Left(new FlinkKafkaProducer09[T](brokerList, topic, serializationSchema))
+  override def applyProducer[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: DataStream[T]): Unit = {
+    val producer = new FlinkKafkaProducer09[T](brokerList, topic, serializationSchema)
+    dataStream.addSink(producer)
   }
 }
 
@@ -124,23 +121,25 @@ case class KafkaConnector010Factory(version: String = RMLVoc.Property.KAFKA010) 
     new FlinkKafkaConsumer010[T](topics, deserializationSchema, props)
   }
 
-  override def getOrApplyProducer[T](brokerList: String, topic: String, serializationSchema: SerializationSchema[T], dataStream: Option[DataStream[T]]): Either[FlinkKafkaProducerBase[T], Unit] = {
-    if(dataStream.isEmpty){
-      throw new RMLException("Data stream must be provided to the method getOrApplyProducer for instantiating FlinkKafkaProducer010")
-    }
-    val stream = dataStream.get
+  override def applyProducer[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], stream: DataStream[T]): Unit = {
+    //TODO: fix this
 
-    FlinkKafkaProducer010.writeToKafkaWithTimestamps[T](stream,topic, serializationSchema, FlinkKafkaProducerBase.getPropertiesFromBrokerList(brokerList))
-    Right()
-  }
+    /**
+      * Have to manually copy the following part from the library method since there seems to be problems with
+      * overloading methods. Compiler expects FlinkKafkaPartitioner to be provided even though calling;
+      *
+      * FlinkKafkaProducer010.writeToKafkaWithTimestamps(dataStream, topic, serializationSchema,FlinkKafkaProducerBase.getPropertiesFromBrokerList(brokerList))
+      *
+      * should work with parameters (stream:DataStream[T], topic:String, serialSchema:SerializationSchema[T], props: Properties)
+      *
+      * Apache flink's code snippet: https://ci.apache.org/projects/flink/flink-docs-release-1.3/dev/connectors/kafka.html#kafka-producer
+      */
 
-  override def getOrApplyProducer[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: Option[DataStream[T]]): Either[FlinkKafkaProducerBase[T], Unit] = {
-    if(dataStream.isEmpty){
-      throw new RMLException("Data stream must be provided to the method getOrApplyProducer for instantiating FlinkKafkaProducer010")
-    }
-    val stream = dataStream.get
-
-    FlinkKafkaProducer010.writeToKafkaWithTimestamps[T](stream,topic, serializationSchema, FlinkKafkaProducerBase.getPropertiesFromBrokerList(brokerList))
-    Right()
+    implicit val typeInfo: TypeInformation[Object] = TypeInformation.of(classOf[Object])
+    val kafkaProducer = new FlinkKafkaProducer010[T](topic, serializationSchema, FlinkKafkaProducerBase.getPropertiesFromBrokerList(brokerList), new FlinkFixedPartitioner[T].asInstanceOf[FlinkKafkaPartitioner[T]])
+    val transformation = stream.transform("FlinKafkaProducer 0.10.x", kafkaProducer)
+    val config = new FlinkKafkaProducer010.FlinkKafkaProducer010Configuration[_](transformation, kafkaProducer)
+    config.setFlushOnCheckpoint(true)
+    config.setLogFailuresOnly(false)
   }
 }
