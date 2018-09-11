@@ -113,5 +113,5 @@ bash ${CONNECTOR} "${CONNECTOR_PROPERTIES}" "$CONNECTOR_SOURCE_PROPERTIES" "$CON
 CONNECTOR_PID=$!
 
 echo "zookeeper.pid=${ZOOKEEPER_PID}" > ${TMP_KAFKA_PID}
-echo "connector.pid=${CONNECTOR_PID}" > ${TMP_KAFKA_PID}
-echo "broker.pid=${BROKER_PID}" > ${TMP_KAFKA_PID}
+echo "connector.pid=${CONNECTOR_PID}" >> ${TMP_KAFKA_PID}
+echo "broker.pid=${BROKER_PID}" >> ${TMP_KAFKA_PID}
