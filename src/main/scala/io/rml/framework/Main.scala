@@ -25,7 +25,7 @@ import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model._
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.item.{Item, JoinedItem}
-import io.rml.framework.flink.source.kafka.KafkaConnectorVersionFactory
+import io.rml.framework.flink.connector.kafka.KafkaConnectorVersionFactory
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
 import io.rml.framework.shared.RMLException
 import org.apache.flink.api.common.functions.RichMapFunction
@@ -109,13 +109,15 @@ object Main {
       if (outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
 
       else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE && kafkaVersion != EMPTY_VALUE){
-        val optConnectFact = KafkaConnectorVersionFactory(kafkaVersion)
+        val optConnectFact = KafkaConnectorVersionFactory(KafkaVersion(kafkaVersion))
 
         if(optConnectFact.isEmpty) {
-          throw new RMLException(s"Current RML streamer doesn't support kafka version: $kafkaVersion \n" + s"Supported versions are ${KafkaStream.VERSIONS.reduceLeft((a, b) => s"$a, $b")}" )
+          throw new RMLException(s"Current RML streamer doesn't support kafka version: $kafkaVersion \n" +
+            s"Supported versions are ${KafkaVersion.SUPPORTED_VERSIONS.map(_.version).reduceLeft((a,b)=> s"$a, $b")}" )
         }
+
         val fact = optConnectFact.get
-        fact.applyProducer(kafkaBrokers,kafkaTopic, new SimpleStringSchema(), stream)
+        fact.applySink(kafkaBrokers,kafkaTopic, new SimpleStringSchema(), stream)
 
       }
       // write to a file if the parameter is given

@@ -79,10 +79,8 @@ object RMLVoc {
     val BROKER = Namespaces("rmls", "broker")
     val GROUPID = Namespaces("rmls", "groupId")
     val TOPIC = Namespaces("rmls", "topic")
-    val KAFKAVERSION= Namespaces("rmls", "kafkaversion")
-    val KAFKA08 =  Namespaces("rmls", "kafka-0.8")
-    val KAFKA09 =  Namespaces("rmls", "kafka-0.9")
-    val KAFKA010 =  Namespaces("rmls", "kafka-0.10")
+    val KAFKAVERSION= Namespaces("rmls", "kafkaVersion")
+
 
     ///////////////////////////////////////////////////////////////////////////
     // FNML
