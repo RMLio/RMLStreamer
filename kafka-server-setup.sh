@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 SLEEP_TIME=15
-SCRIPT_USAGE_ERR_MSG="USAGE ./kafka-server-setup.sh -zp [zookeeper.properties] -bp [broker.properties] -cp [connector_standalone.properties] [connector_source.properties] [connector_sink.properties]"
+TMP_KAFKA_PID="/tmp/kafka-test-pids"
+SCRIPT_USAGE_ERR_MSG="USAGE ./kafka-server-setup.sh [-d kafka directory] -zp [zookeeper.properties] -bp [broker.properties] -cp [connector_standalone.properties] [connector_source.properties] [connector_sink.properties]"
 
 function getProperty {
    PROP_KEY=$2
@@ -111,11 +112,6 @@ echo "-----------------------------------------------"
 bash ${CONNECTOR} "${CONNECTOR_PROPERTIES}" "$CONNECTOR_SOURCE_PROPERTIES" "$CONNECTOR_SINK_PROPERTIES" &
 CONNECTOR_PID=$!
 
-sleep $SLEEP_TIME
-kill -9 $CONNECTOR_PID
-
-sleep $SLEEP_TIME
-kill -9 $BROKER_PID
-
-sleep $SLEEP_TIME
-kill -9 $ZOOKEEPER_PID
+echo "zookeeper.pid=${ZOOKEEPER_PID}" > ${TMP_KAFKA_PID}
+echo "connector.pid=${CONNECTOR_PID}" > ${TMP_KAFKA_PID}
+echo "broker.pid=${BROKER_PID}" > ${TMP_KAFKA_PID}
