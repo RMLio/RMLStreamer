@@ -2,7 +2,7 @@
 
 SLEEP_TIME=15
 TMP_KAFKA_PID="/tmp/kafka-test-pids"
-SCRIPT_USAGE_ERR_MSG="USAGE ./kafka-server-setup.sh [-d kafka directory] -zp [zookeeper.properties] -bp [broker.properties] -cp [connector_standalone.properties] [connector_source.properties] [connector_sink.properties]"
+SCRIPT_USAGE_ERR_MSG="USAGE ./kafka-test-server-setup.sh [-d kafka directory] -zp [zookeeper.properties] -bp [broker.properties] -cp [connector_standalone.properties] [connector_source.properties] [connector_sink.properties]"
 
 function getProperty {
    PROP_KEY=$2
