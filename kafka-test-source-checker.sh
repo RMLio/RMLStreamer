@@ -10,23 +10,34 @@ function findKafkaDir {
     find . -type d -name "$NAME" -print
 }
 
+
+PROPERTY_FILE="kafka_test.properties"
+
+function getProperty {
+   PROP_KEY=$1
+   PROP_VALUE=`cat $PROPERTY_FILE | grep "$PROP_KEY" | cut -d'=' -f2`
+   echo $PROP_VALUE
+}
+
 KAFKA08="$(findKafkaDir "kafka*0.8*" )"
 KAFKA09="$(findKafkaDir "kafka*0.9*" )"
 KAFKA010="$(findKafkaDir "kafka*0.10*" )"
 
-KAFKA08SOURCE="https://archive.apache.org/dist/kafka/0.8.2.2/kafka_2.10-0.8.2.2.tgz"
-KAFKA09SOURCE="https://archive.apache.org/dist/kafka/0.9.0.1/kafka_2.10-0.9.0.1.tgz"
-KAFKA010SOURCE="http://apache.cu.be/kafka/0.10.2.2/kafka_2.10-0.10.2.2.tgz"
+KAFKA08SOURCE=$(getProperty "kafka08.download.link")
+KAFKA09SOURCE=$(getProperty "kafka09.download.link")
+KAFKA010SOURCE=$(getProperty "kafka010.download.link")
 
 
 kafkaFiles=("$KAFKA08" "$KAFKA09" "$KAFKA010")
-kafkaLinks=("$KAFKA08SOURCE" "$KAFKA09SOURCE" "$KAFKA010SOURCE")
+kafkaLinks=($KAFKA08SOURCE $KAFKA09SOURCE $KAFKA010SOURCE)
 
 for i in "${!kafkaFiles[@]}"; do
     if [ ! -d "${kafkaFiles[$i]}" ]; then
         echo "Downloading required files from ${kafkaLinks[$i]}...."
         echo "-----"
-        wget -qO- "${kafkaLinks[$i]}" | tar -xz -C ./
+        sanitizedLink="${kafkaLinks[$i]%\"}"
+        sanitizedLink="${sanitizedLink#\"}"
+        wget -O- $sanitizedLink | tar -xz -C ./
     fi
 done
 
