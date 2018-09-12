@@ -16,12 +16,6 @@ import org.scalatest.AsyncFlatSpec
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
 
-/**
-  * PLEASE REIMPLEMENT THIS USING ACTOR MODELS
-  *
-  * RIGHT NOW  YOU HAVE TO EXECUTE THIS MANUALLY BY PROVIDING A SINGLE TEST CASE FOLDER EVERYTIME
-  */
-
 
 object StreamingTestMain {
   implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
