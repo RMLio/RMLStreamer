@@ -38,3 +38,9 @@ if [ -f "$file" ]; then
    echo "Killed"
 fi
 
+echo "[WARNING]: The script will now attempt to clear the /tmp dir of kafka/zookeeper logs" 
+read -p "Press enter to confirm deletion of log files for kafka in /tmp"
+
+
+rm -rf /tmp/kafka-logs* /tmp/zookeeper*
+
