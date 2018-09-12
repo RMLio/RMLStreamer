@@ -26,11 +26,6 @@ if [ -f "$file" ]; then
         eval ${nKey}=${value}
    done < "$file"
 
-   echo "Killing connector processes... (pid: ${connector_pid})"
-   spin $SLEEP_MS
-   kill -9 ${connector_pid}
-   echo "Killed"
-
 
    echo "Killing broker processes... (pid: ${broker_pid})"
    spin $SLEEP_MS
