@@ -22,7 +22,7 @@ function getProperty {
 }
 
 echo "# Reading property from $PROPERTY_FILE"
-FLINKDIR=$(getProperty "flinkdir")
+FLINKBIN=$(getProperty "flinkBin")
 MAPPINGPATH=$(getProperty "mappingPath")
 OUTPUTPATH=$(getProperty  "outputPath")
 SOCKET=$(getProperty "socket")
@@ -73,7 +73,7 @@ set -- "${POSITIONAL[@]}"
 # Check if $MAPPINGPATH is set
 if [ ! -z "$MAPPINGPATH"  ]; then
 	# Execute
-	bash $FLINKDIR run  -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET
+	bash $FLINKBIN run  -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET
 else
 	echo "Execution aborted: -p|--path must be given."
 	echo ""
