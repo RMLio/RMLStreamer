@@ -12,6 +12,10 @@ do
         shift
         ;;
 
+        -v|--verbose)
+            VERBOSE=true
+        shift
+        ;;
         *)
            POSITIONAL+=("$1")
         shift
@@ -41,20 +45,77 @@ if [ ! -z "$CLEAN" ]; then
     sleep 5
 fi
 
+PROPERTY_FILE="kafka_test.properties"
+
+function getProperty {
+   PROP_KEY=$1
+   PROP_VALUE=`cat $PROPERTY_FILE | grep "$PROP_KEY" | cut -d'=' -f2`
+   echo $PROP_VALUE
+}
+
+
 function findKafkaDir {
     NAME="$1"
     find . -type d -name "$NAME" -print
+}
+
+
+function runCommand {
+    echo "$2"
+    if [ ! -z "$VERBOSE" ]; then
+       echo "VERBOSE!"
+       $1
+    else
+        echo "NOT VERBOSE!"
+       $1  &>/dev/null
+    fi
 }
 
 function testServerVersion {
     VERSIONPATTERN="$1"
 
     KAFKADIR="$(findKafkaDir ${VERSIONPATTERN})"
-    echo "$KAFKADIR"
     ZOOKEEPER_PROPERTY="${KAFKADIR}/config/zookeeper.properties"
     BROKER_PROPERTY="${KAFKADIR}/config/server.properties"
 
-    ./kafka-test-server-setup.sh -d "${KAFKADIR}/" -zp "${ZOOKEEPER_PROPERTY}" -bp "${BROKER_PROPERTY}"
+    PRODUCER="${KAFKADIR}/bin/kafka-console-producer.sh"
+    CONSUMER="${KAFKADIR}/bin/kafka-console-consumer.sh"
+    TOPIC="${KAFKADIR}/bin/kafka-topics.sh"
+
+
+    zookeeper_connection="$(getProperty "zookeeper.connection")"
+    broker_list="$(getProperty "broker-list")"
+    topic="$(getProperty "topic")"
+
+    runCommand "./kafka-test-server-setup.sh -d "${KAFKADIR}/" -zp "${ZOOKEEPER_PROPERTY}" -bp "${BROKER_PROPERTY}"" "Starting server from ${KAFKADIR}"
+    if [ $? -eq 0 ]; then
+        if [ ! -f "test.txt" ]; then
+            echo "Test data source file for kafka producer doesn't exists: test.txt"
+            
+        else
+
+            sleep 5
+            bash ${TOPIC} --create --zookeeper ${zookeeper_connection} --replication-factor 1 --partitions 1 --topic ${topic}
+            echo "---------------------------"
+            echo "Topic created!!"
+            echo "---------------------------"
+
+            bash ${PRODUCER} --broker-list localhost:9092 --topic ${topic} < "test.txt"
+            echo "--------------------------------------"
+            echo "Producer has written to a kafka broker"
+            echo "--------------------------------------"
+
+            bash ${CONSUMER} --zookeeper localhost:2181 --topic ${topic} --from-beginning > "test.sink.txt"  &
+            consumer_pid=$!
+            echo "------------------------------------------------"
+            echo "Consumer has written rml output to test.sink.txt"
+            echo "------------------------------------------------"
+            sleep 5
+            kill -9 ${consumer_pid}
+        fi
+    fi
+    read -p "Press enter to continue the test for the next supported kafka version"
+
 }
 
 
