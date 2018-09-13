@@ -86,11 +86,17 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     require(groupIdProperties.length == 1, "exactly 1 groupID needed")
     val topicProperties = resource.listProperties(RMLVoc.Property.TOPIC)
     require(topicProperties.length == 1, "exactly 1 topic needed")
+    val versionProperties = resource.listProperties(RMLVoc.Property.KAFKAVERSION)
+    require(versionProperties.length == 1, "exactly 1 kafka version needed")
+
     val zookeeper = ExtractorUtil.matchLiteral(zookeeperProperties.head)
     val broker = ExtractorUtil.matchLiteral(brokerProperties.head)
     val groupId = ExtractorUtil.matchLiteral(groupIdProperties.head)
     val topic = ExtractorUtil.matchLiteral(topicProperties.head)
-    KafkaStream(resource.uri, List(zookeeper.value), List(broker.value), groupId.value, topic.value)
+    val kafkaVersion = ExtractorUtil.matchLiteral(versionProperties.head)
+
+
+    KafkaStream(resource.uri, List(zookeeper.value), List(broker.value), groupId.value, topic.value, KafkaVersion(kafkaVersion.value))
   }
 
   private def extractTCPSocketStream(resource: RDFResource): StreamDataSource = {

@@ -68,6 +68,9 @@ case object KafkaConnector08Factory extends KafkaConnectorFactory {
 
   override def applySink[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: DataStream[T]): Unit = {
     val producer = new FlinkKafkaProducer08[T](brokerList, topic, serializationSchema)
+    producer.setFlushOnCheckpoint(true)
+    producer.setLogFailuresOnly(false)
+
     dataStream.addSink(producer)
   }
 }
@@ -95,6 +98,9 @@ case object KafkaConnector09Factory extends KafkaConnectorFactory {
 
   override def applySink[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: DataStream[T]): Unit = {
     val producer = new FlinkKafkaProducer09[T](brokerList, topic, serializationSchema)
+    producer.setFlushOnCheckpoint(true)
+    producer.setLogFailuresOnly(false)
+
     dataStream.addSink(producer)
   }
 }
