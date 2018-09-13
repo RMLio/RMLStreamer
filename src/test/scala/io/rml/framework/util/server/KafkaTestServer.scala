@@ -24,7 +24,6 @@ case class KafkaTestServer() extends TestServer {
   var zk: Option[TestingServer] = None
   var kafka: Option[KafkaServerStartable] = None
   var zkClient: Option[ZkClient] = None
-  var zkUtils: Option[ZkUtils] = None
   val producer: KafkaProducer[String, String] = new KafkaProducer[String, String](producerProps())
   val defaultTopic = "demo"
   var logDirs: Seq[String] = List()
@@ -69,7 +68,7 @@ case class KafkaTestServer() extends TestServer {
 
     producer.close()
     if (zkClient.isDefined) {
-      AdminUtils.deleteTopic(zkUtils.get, props.getProperty("topic"))
+      AdminUtils.deleteTopic(zkClient.get, props.getProperty("topic"))
     }
 
     if(consumerConnector.isDefined) {
@@ -85,18 +84,18 @@ case class KafkaTestServer() extends TestServer {
   def topicSetup(prop: Properties): Unit = {
     val sessionTimeoutMs = 10000
     val connectionTimeoutMs = 10000
-    val clientConnectionTuple = ZkUtils.createZkClientAndConnection(prop.getProperty("zookeeper.connect"), sessionTimeoutMs, connectionTimeoutMs)
+
+    val client = new ZkClient(prop.getProperty("zookeeper.connect"),sessionTimeoutMs, connectionTimeoutMs)
 
 
-    zkClient = Some(clientConnectionTuple._1)
-    zkUtils = Some(new ZkUtils(clientConnectionTuple._1, clientConnectionTuple._2, false))
+    zkClient = Some(client)
 
     val topicName = prop.getProperty("topic")
     val numPartitions = 1
     val replicationFactor = 1
     val topicConfig = new Properties
 
-    AdminUtils.createTopic(zkUtils.get, topicName, numPartitions, replicationFactor, topicConfig)
+    AdminUtils.createTopic(zkClient.get, topicName, numPartitions, replicationFactor, topicConfig)
   }
 
 
