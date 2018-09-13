@@ -2,6 +2,7 @@
 .idea/
 framework.iml
 target/
+kafka_2*/
 *.txt
 *.swp
 *.properties
