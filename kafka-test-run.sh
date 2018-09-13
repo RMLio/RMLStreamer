@@ -36,7 +36,7 @@ if [ ! -z "$CLEAN" ]; then
     echo "Recompiling test classes......"
     echo "-------------------------------------"
     echo ""
-    mvn test -DskipTests
+    mvn clean install -DskipTests
     echo ""
     echo "------------------------------"
     echo "Waiting 5 seconds..."
@@ -74,6 +74,9 @@ function runCommand {
 function testServerVersion {
     VERSIONPATTERN="$1"
     rm "test.sink.txt" > /dev/null
+    
+    FLINKBIN="$(getProperty "flinkBin")"
+    
     KAFKADIR="$(findKafkaDir ${VERSIONPATTERN})"
     ZOOKEEPER_PROPERTY="${KAFKADIR}/config/zookeeper.properties"
     BROKER_PROPERTY="${KAFKADIR}/config/server.properties"
@@ -82,10 +85,11 @@ function testServerVersion {
     CONSUMER="${KAFKADIR}/bin/kafka-console-consumer.sh"
     TOPIC="${KAFKADIR}/bin/kafka-topics.sh"
 
-
+    
     zookeeper_connection="$(getProperty "zookeeper.connection")"
     broker_list="$(getProperty "broker-list")"
-    topic="$(getProperty "topic")"
+    topic="$(getProperty "rdf-source-topic")"
+    rdf_test_topic="$(getProperty "rdf-test-topic")"
 
     runCommand "./kafka-test-server-setup.sh -d "${KAFKADIR}/" -zp "${ZOOKEEPER_PROPERTY}" -bp "${BROKER_PROPERTY}"" "Starting server from ${KAFKADIR}"
     if [ $? -eq 0 ]; then
@@ -93,25 +97,36 @@ function testServerVersion {
             echo "Test data source file for kafka producer doesn't exists: test.txt"
             
         else
-
+            echo "[INFO] Running rml streamer with options --broker-list ${broker_list} --topic $rdf_test_topic" 
             sleep 5
             bash ${TOPIC} --create --zookeeper ${zookeeper_connection} --replication-factor 1 --partitions 1 --topic ${topic}
+            bash ${TOPIC} --create --zookeeper ${zookeeper_connection} --replication-factor 1 --partitions 1 --topic ${rdf_test_topic}            
             echo "---------------------------"
             echo "Topic created!!"
             echo "---------------------------"
 
+            
+           bash $FLINKBIN  run -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar -path src/test/resources/stream/mapping.ttl --broker-list "${broker_list}" --topic "$rdf_test_topic" &            
+          
+           FLINK_PID=$!            
+
+            read -p "[INFO] Press enter to produce input for flink with kafka producer" 
             bash ${PRODUCER} --broker-list ${broker_list} --topic ${topic} < "test.txt"
             echo "--------------------------------------"
             echo "Producer has written to a kafka broker"
             echo "--------------------------------------"
-
-            bash ${CONSUMER} --zookeeper ${zookeeper_connection} --topic ${topic} --from-beginning > "test.sink.txt"  &
+ 
+            sleep 5 
+            read -p "[INFO] Press enter to collect generated rdf triple in test.sink.txt" 
+            bash ${CONSUMER} --zookeeper ${zookeeper_connection} --topic ${rdf_test_topic} --from-beginning > "test.sink.txt"  &
             consumer_pid=$!
             echo "------------------------------------------------"
             echo "Consumer has written rml output to test.sink.txt"
             echo "------------------------------------------------"
             sleep 5
             kill -9 ${consumer_pid}
+
+            kill -SIGINT ${FLINK_PID}
         fi
     fi
     read -p "Press enter to continue the test for the next supported kafka version"
@@ -121,11 +136,44 @@ function testServerVersion {
 
 ./kafka-test-source-checker.sh
 
-testServerVersion "kafka*0.8*"
+echo "" 
+echo "---------------------------------------------"
+PS3="Choose the kafka version server for testing..."
+options=("Kafka08" "Kafka09" "Kafka010")
+
+select opt in "${options[@]}"
+do
+
+    case $opt in 
+        "Kafka08")
+            testServerVersion "kafka*0.8*" "0.8.x"
+
+            break
+            ;;
+
+
+        "Kafka09")
+            testServerVersion "kafka*0.9*" "0.9.x"
+
+            break
+            ;;
+
+        "Kafka010")
+            testServerVersion "kafka*0.10*" "0.10.x"
+            break
+            ;;
+
+
+        *)
+            echo "invalid option" ;;
+
+
+
+    esac
+
+
+done
+
+
 ./kafka-test-stop-all.sh
 
-testServerVersion "kafka*0.9*"
-./kafka-test-stop-all.sh
-
-testServerVersion "kafka*0.10*"
-./kafka-test-stop-all.sh

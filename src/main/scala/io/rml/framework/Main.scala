@@ -63,8 +63,7 @@ object Main {
 
     val kafkaBrokers = if (parameters.has("broker-list")) parameters.get("broker-list")
     else EMPTY_VALUE
-    val kafkaVersion = if (parameters.has("kafka-version")) parameters.get("kafka-version")
-    else EMPTY_VALUE
+
     val kafkaTopic = if (parameters.has("topic")) parameters.get("topic")
     else EMPTY_VALUE
 
@@ -73,7 +72,9 @@ object Main {
     println("Mapping path: " + mappingPath)
     println("Output path: " + outputPath)
     println("Output socket: " + outputSocket)
-    println("Kafka-version: " +  kafkaVersion)
+    println("Kafka brokers: " +  kafkaBrokers)
+    println("Kafka Topic: " +  kafkaTopic)
+
 
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.
     // Triple maps are also organized in categories (does it contain streams, does it contain joins, ... )
@@ -110,13 +111,8 @@ object Main {
       // write to a socket if the parameter is given
       if (outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
 
-      else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE && kafkaVersion != EMPTY_VALUE){
-        val optConnectFact = KafkaConnectorVersionFactory(KafkaVersion(kafkaVersion))
-
-        if(optConnectFact.isEmpty) {
-          throw new RMLException(s"Current RML streamer doesn't support kafka version: $kafkaVersion \n" +
-            s"Supported versions are ${KafkaVersion.SUPPORTED_VERSIONS.map(_.version).reduceLeft((a,b)=> s"$a, $b")}" )
-        }
+      else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE){
+        val optConnectFact = KafkaConnectorVersionFactory(Kafka010)
 
         val fact = optConnectFact.get
         fact.applySink[String](kafkaBrokers,kafkaTopic, new SimpleStringSchema(), stream)

@@ -42,6 +42,8 @@ object JSONStream {
   def fromKafkaStream(kafkaStream: KafkaStream, iterator:String)(implicit env: StreamExecutionEnvironment): JSONStream = {
     val properties = kafkaStream.getProperties
     val consumer =  kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
+
+    println(consumer)
     val stream: DataStream[Item] = env.addSource(consumer)
       .flatMap(item => {
         JSONItem.fromStringOptionableList(item, iterator)
