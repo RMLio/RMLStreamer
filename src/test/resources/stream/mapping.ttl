@@ -18,7 +18,6 @@
             rmls:broker "localhost:9092";
             rmls:groupId "1";
             rmls:topic "demo";
-            rmls:kafkaVersion "0.10.x";
         ];
         rml:referenceFormulation ql:JSONPath;
         rml:iterator "$.students[*]"
