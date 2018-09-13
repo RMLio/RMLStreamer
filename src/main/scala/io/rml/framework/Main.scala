@@ -33,6 +33,7 @@ import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala._
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
+import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaProducer08, FlinkKafkaProducer09}
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema
 
 import scala.collection.immutable
@@ -72,6 +73,7 @@ object Main {
     println("Mapping path: " + mappingPath)
     println("Output path: " + outputPath)
     println("Output socket: " + outputSocket)
+    println("Kafka-version: " +  kafkaVersion)
 
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.
     // Triple maps are also organized in categories (does it contain streams, does it contain joins, ... )
@@ -117,8 +119,7 @@ object Main {
         }
 
         val fact = optConnectFact.get
-        fact.applySink(kafkaBrokers,kafkaTopic, new SimpleStringSchema(), stream)
-
+        fact.applySink[String](kafkaBrokers,kafkaTopic, new SimpleStringSchema(), stream)
       }
       // write to a file if the parameter is given
       else if (!outputPath.contains(EMPTY_VALUE)) stream.writeAsText(outputPath, WriteMode.OVERWRITE)
