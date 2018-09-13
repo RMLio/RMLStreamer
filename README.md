@@ -226,6 +226,8 @@ There are 4 types of test case folders:
 * rml-original-testcases
 * rml-testcases
 * stream
+    * kafka
+    * tcp
 * negative_test_cases
 * temp_ignored_testcases 
 
@@ -235,10 +237,42 @@ There are 4 types of test case folders:
 2. rml-testcases contains all the test cases for which, the current implementation should pass. 
 
 3. stream contains all streaming test cases which should be checked using the stream-test.sh in the root folder.
+    * kafka contains all the test cases with kafka cluster as logical source.
+    * tcp contains all the test cases with tcp socket as a logical source. 
 
 4. negative_test_cases contains cases for which, the current implementation should throw exceptions/fail.  
 
 5. temp_ignored_testcases contains cases for which, the current implementation cannot pass due to missing features. 
+
+##### Kafka Test
+
+The following kafka test scripts are used in the main script called kafka-test-run.sh:
+* kafka-test-server-setup.sh
+* kafka-test-source-checker.sh
+* kafka-test-stop-all.sh
+
+with configuration file kafka_test.properties:
+
+```
+    kafka08.download.link="https://archive.apache.org/dist/kafka/0.8.2.2/kafka_2.10-0.8.2.2.tgz"
+    kafka09.download.link="https://archive.apache.org/dist/kafka/0.9.0.1/kafka_2.10-0.9.0.1.tgz"
+    kafka010.download.link="http://apache.cu.be/kafka/0.10.2.2/kafka_2.10-0.10.2.2.tgz"
+    
+    
+    flinkBin=/home/sitt/devtools/flink-1.3.2/bin/flink
+    rdf-test-topic=connect-test  #topic used by flink kafka producer to write output
+    rdf-source-topic=demo   #topic used by kafka cluster for streamer input data
+    zookeeper.connection=127.0.0.1:2181
+    broker-list=127.0.0.1:9092
+```
+
+The main script will execute an integration test on the streamer for the chosen 
+kafka version. 
+
+```
+    TODO
+
+```
 
 
 ##### Streaming Tests
