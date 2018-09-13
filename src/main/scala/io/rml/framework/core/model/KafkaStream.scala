@@ -11,7 +11,7 @@ case class KafkaStream(uri: Uri,
                        brokers: List[String],
                        groupId: String,
                        topic: String,
-                       version: KafkaVersion = Kafka010) extends StreamDataSource {
+                       version: KafkaVersion) extends StreamDataSource {
   def getConnectorFactory: KafkaConnectorFactory = {
     KafkaConnectorVersionFactory(version).get
   }

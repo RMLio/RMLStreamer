@@ -1,14 +1,10 @@
 package io.rml.framework.util.server
 
 import java.io.File
-import java.util
 import java.util.Properties
 
 import io.rml.framework.util.Logger
 import kafka.admin.AdminUtils
-import kafka.consumer.{Consumer, ConsumerConfig, ConsumerIterator, KafkaStream}
-import kafka.javaapi.consumer.ConsumerConnector
-import kafka.serializer.StringDecoder
 import kafka.server.{KafkaConfig, KafkaServerStartable}
 import kafka.utils.ZkUtils
 import org.I0Itec.zkclient.serialize.ZkSerializer
@@ -24,11 +20,10 @@ case class KafkaTestServer() extends TestServer {
   var zk: Option[TestingServer] = None
   var kafka: Option[KafkaServerStartable] = None
   var zkClient: Option[ZkClient] = None
+  var zkUtils: Option[ZkUtils] =  None
   val producer: KafkaProducer[String, String] = new KafkaProducer[String, String](producerProps())
   val defaultTopic = "demo"
-  var logDirs: Seq[String] = List()
-
-  var consumerConnector: Option[ConsumerConnector] = None
+  var logDirs:Seq[String] = List()
 
   override def setup(): Unit = {
     val properties = serverProperties()
@@ -36,8 +31,9 @@ case class KafkaTestServer() extends TestServer {
     zk.get.start()
     val config = new KafkaConfig(properties)
 
-    logDirs = config.logDirs
+    logDirs =  config.logDirs
     kafka = Some(new KafkaServerStartable(config))
+
 
     kafka.get.startup()
     topicSetup(topicProps())
@@ -45,22 +41,11 @@ case class KafkaTestServer() extends TestServer {
   }
 
   override def writeData(input: Iterable[String])(implicit executur: ExecutionContextExecutor): Unit = {
-    for (in <- input) {
+    for(in <- input){
       in.split("\n").foreach(Logger.logInfo)
-      producer.send(new ProducerRecord[String, String](defaultTopic, in))
+
+      producer.send(new ProducerRecord[String,String](defaultTopic, in))
     }
-  }
-
-  def buildConsumer(topic: String): ConsumerIterator[String, String] = {
-    val props = consumerProperties()
-
-    var topicCountMap: java.util.Map[String, Integer] = new util.HashMap()
-    topicCountMap.put(topic, 1)
-    val consumerConfig = new ConsumerConfig(props)
-    consumerConnector = Some(Consumer.createJavaConsumerConnector(consumerConfig))
-    var consumers = consumerConnector.get.createMessageStreams(topicCountMap, new StringDecoder(null), new StringDecoder(null))
-    val stream = consumers.get(topic).get(0)
-    stream.iterator()
   }
 
   override def tearDown(): Unit = {
@@ -68,11 +53,7 @@ case class KafkaTestServer() extends TestServer {
 
     producer.close()
     if (zkClient.isDefined) {
-      AdminUtils.deleteTopic(zkClient.get, props.getProperty("topic"))
-    }
-
-    if(consumerConnector.isDefined) {
-      consumerConnector.get.shutdown()
+      AdminUtils.deleteTopic(zkUtils.get, props.getProperty("topic"))
     }
     if (kafka.isDefined) kafka.get.shutdown()
     kafka.get.awaitShutdown()
@@ -84,18 +65,18 @@ case class KafkaTestServer() extends TestServer {
   def topicSetup(prop: Properties): Unit = {
     val sessionTimeoutMs = 10000
     val connectionTimeoutMs = 10000
+    val clientConnectionTuple = ZkUtils.createZkClientAndConnection(prop.getProperty("zookeeper.connect"), sessionTimeoutMs, connectionTimeoutMs)
 
-    val client = new ZkClient(prop.getProperty("zookeeper.connect"),sessionTimeoutMs, connectionTimeoutMs)
 
-
-    zkClient = Some(client)
+    zkClient = Some(clientConnectionTuple._1)
+    zkUtils = Some(new ZkUtils(clientConnectionTuple._1, clientConnectionTuple._2, false ))
 
     val topicName = prop.getProperty("topic")
     val numPartitions = 1
     val replicationFactor = 1
     val topicConfig = new Properties
 
-    AdminUtils.createTopic(zkClient.get, topicName, numPartitions, replicationFactor, topicConfig)
+    AdminUtils.createTopic(zkUtils.get, topicName, numPartitions, replicationFactor, topicConfig)
   }
 
 
@@ -130,15 +111,7 @@ case class KafkaTestServer() extends TestServer {
     props
   }
 
-  def consumerProperties(): Properties = {
-    val props = new Properties()
-    props.put("zookeeper.connect", serverProperties().get("zookeeper.connect"))
-    props.put("group.id", "group1")
-    props.put("auto.offset.reset", "smallest")
-    props
-  }
-
-  private def getZkPort(inetAddress: String) = {
+  private def getZkPort(inetAddress: String): Int = {
     if (inetAddress == null || inetAddress.isEmpty || !inetAddress.contains(":")) {
       throw new IllegalArgumentException("The given connection address in string is invalid.")
     }

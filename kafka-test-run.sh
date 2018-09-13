@@ -73,7 +73,7 @@ function runCommand {
 
 function testServerVersion {
     VERSIONPATTERN="$1"
-
+    rm "test.sink.txt" > /dev/null
     KAFKADIR="$(findKafkaDir ${VERSIONPATTERN})"
     ZOOKEEPER_PROPERTY="${KAFKADIR}/config/zookeeper.properties"
     BROKER_PROPERTY="${KAFKADIR}/config/server.properties"
@@ -100,12 +100,12 @@ function testServerVersion {
             echo "Topic created!!"
             echo "---------------------------"
 
-            bash ${PRODUCER} --broker-list localhost:9092 --topic ${topic} < "test.txt"
+            bash ${PRODUCER} --broker-list ${broker_list} --topic ${topic} < "test.txt"
             echo "--------------------------------------"
             echo "Producer has written to a kafka broker"
             echo "--------------------------------------"
 
-            bash ${CONSUMER} --zookeeper localhost:2181 --topic ${topic} --from-beginning > "test.sink.txt"  &
+            bash ${CONSUMER} --zookeeper ${zookeeper_connection} --topic ${topic} --from-beginning > "test.sink.txt"  &
             consumer_pid=$!
             echo "------------------------------------------------"
             echo "Consumer has written rml output to test.sink.txt"

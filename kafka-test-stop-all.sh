@@ -36,7 +36,11 @@ if [ -f "$file" ]; then
    spin $SLEEP_MS
    kill -9 ${zookeeper_pid}
    echo "Killed"
+
+   rm "${file}"
 fi
+
+
 
 echo "[WARNING]: The script will now attempt to clear the /tmp dir of kafka/zookeeper logs" 
 read -p "Press enter to confirm deletion of log files for kafka in /tmp"
