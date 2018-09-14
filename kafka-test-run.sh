@@ -128,7 +128,7 @@ function testServerVersion {
            FLINK_PID=$!            
 
             read -p "[INFO] Press enter to produce input for flink with kafka producer" 
-            bash ${PRODUCER} --broker-list ${broker_list} --topic ${topic} < "test.txt"
+            bash ${PRODUCER} --broker-list ${broker_list} --topic ${topic} < "${INPUT}"
             echo "--------------------------------------"
             echo "Producer has written to a kafka broker"
             echo "--------------------------------------"
