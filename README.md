@@ -278,9 +278,11 @@ The test scripts will use the configuration file kafka_test.properties:
     kafka09.download.link="https://archive.apache.org/dist/kafka/0.9.0.1/kafka_2.10-0.9.0.1.tgz"
     kafka010.download.link="http://apache.cu.be/kafka/0.10.2.2/kafka_2.10-0.10.2.2.tgz"
     
-    
+    data-input=src/test/resources/stream/datasource.json
+    mapping=src/test/resources/stream/mapping.ttl
     flinkBin=/home/sitt/devtools/flink-1.3.2/bin/flink
     rdf-test-topic=connect-test  #topic used by flink kafka producer to write output
+    
     #the following 3 configs should be the same as the one written in the mapping file. 
     rdf-source-topic=demo   #topic used by kafka cluster for streamer input data
     zookeeper.connection=127.0.0.1:2181
