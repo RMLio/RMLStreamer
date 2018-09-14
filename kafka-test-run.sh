@@ -59,6 +59,17 @@ function findKafkaDir {
     find . -type d -name "$NAME" -print
 }
 
+function checkFile {
+    FILE="$1"
+    MSG="$2"
+
+    if [ -z "$FILE" ]; then
+
+        echo "$2"
+        exit 1
+    fi
+
+}
 
 function runCommand {
     echo "$2"
@@ -77,6 +88,12 @@ function testServerVersion {
     
     FLINKBIN="$(getProperty "flinkBin")"
     
+    MAPPING="$(getProperty "mapping")"
+    INPUT="$(getProperty "data-input")"
+    
+    checkFile "$MAPPING" "[ERROR] RML mapping file doesn't exists: ${MAPPING}" 
+    checkFile "$INPUT" "[ERROR] Input data file doesn't exists: ${INPUT}"
+
     KAFKADIR="$(findKafkaDir ${VERSIONPATTERN})"
     ZOOKEEPER_PROPERTY="${KAFKADIR}/config/zookeeper.properties"
     BROKER_PROPERTY="${KAFKADIR}/config/server.properties"
@@ -106,7 +123,7 @@ function testServerVersion {
             echo "---------------------------"
 
             
-           bash $FLINKBIN  run -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar -path src/test/resources/stream/mapping.ttl --broker-list "${broker_list}" --topic "$rdf_test_topic" &            
+           bash $FLINKBIN  run -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar -path "$MAPPING" --broker-list "${broker_list}" --topic "$rdf_test_topic" &            
           
            FLINK_PID=$!            
 
