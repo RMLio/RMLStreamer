@@ -261,17 +261,38 @@ with configuration file kafka_test.properties:
     
     flinkBin=/home/sitt/devtools/flink-1.3.2/bin/flink
     rdf-test-topic=connect-test  #topic used by flink kafka producer to write output
+    #the following 3 configs should be the same as the one written in the mapping file. 
     rdf-source-topic=demo   #topic used by kafka cluster for streamer input data
     zookeeper.connection=127.0.0.1:2181
     broker-list=127.0.0.1:9092
 ```
+##### Versioning problem
+Flink supports kafka connectors but only for their respective versions.
+
+Ex. FlinkConsumer08/-Producer08 will use kafka clients module from version 0.8 
+
+This prevents us from implementing a dynamic kafka version support since same modules used by a library with different versions
+get overwritten by maven depending on it's distance in the dependency tree. 
+
+A posssible [solution](http://jesseyates.com/2015/08/17/using-maven-shade-to-run-multiple-versions-in-a-jvm.html) to the problem will be making an empty module using the aforementioned connectors libraries. 
+
+We could then change the naming of the conflicting dependencies using maven-shade-plugin, and then compiling this wrapper 
+module as a library to be used in the streamer. 
+
+It should work but it's not really a solution but a workaound instead.....
+
+
+###### Executing
 
 The main script will execute an integration test on the streamer for the chosen 
-kafka version. 
+kafka version.
 
 ```
-    TODO
-
+    ./kafka-test-run.sh  [option]
+    
+    Options:
+        -c|--clean: recompiles all the classes using "mvn clean install -DskipTests".
+        -v|--verbose: logs all the output of subscripts executed by this main script.
 ```
 
 
