@@ -5,12 +5,14 @@ The RML Framework runs it's jobs on Flink clusters. More information on how to i
  At least a local cluster must be running in order to start executing RML Mappings with the RML Framework. At the moment of writing this readme it is not necessary to install Hadoop. Please not that the current repository works with Flink 1.3.2, which can be downloaded [here](http://www.apache.org/dyn/closer.lua/flink/flink-1.3.2/flink-1.3.2-bin-scala_2.11.tgz).
 
 ## Installing RML Framework
+
+Location of the Flink installation directory must be configured in `configuration.properties` (see the example file `configuration_example.properties`).
+
 ```
 git clone ssh://git@git.datasciencelab.ugent.be:4444/rml/rml-streamer.git 
 cd rml-streamer
 mvn clean install
 ```
-Location of the Flink installation directory must be configured in `configuration.properties` (see the example file `configuration_example.properties`).
 
 ### Executing RML Mappings
 
@@ -246,26 +248,8 @@ There are 4 types of test case folders:
 
 ##### Kafka Test
 
-The following kafka test scripts are used in the main script called kafka-test-run.sh:
-* kafka-test-server-setup.sh
-* kafka-test-source-checker.sh
-* kafka-test-stop-all.sh
+You will need to first have the flink server up and running just as you would before running the RML streamer from CLI.
 
-with configuration file kafka_test.properties:
-
-```
-    kafka08.download.link="https://archive.apache.org/dist/kafka/0.8.2.2/kafka_2.10-0.8.2.2.tgz"
-    kafka09.download.link="https://archive.apache.org/dist/kafka/0.9.0.1/kafka_2.10-0.9.0.1.tgz"
-    kafka010.download.link="http://apache.cu.be/kafka/0.10.2.2/kafka_2.10-0.10.2.2.tgz"
-    
-    
-    flinkBin=/home/sitt/devtools/flink-1.3.2/bin/flink
-    rdf-test-topic=connect-test  #topic used by flink kafka producer to write output
-    #the following 3 configs should be the same as the one written in the mapping file. 
-    rdf-source-topic=demo   #topic used by kafka cluster for streamer input data
-    zookeeper.connection=127.0.0.1:2181
-    broker-list=127.0.0.1:9092
-```
 ##### Versioning problem
 Flink supports kafka connectors but only for their respective versions.
 
@@ -285,14 +269,141 @@ It should work but it's not really a solution but a workaound instead.....
 ###### Executing
 
 The main script will execute an integration test on the streamer for the chosen 
-kafka version.
+kafka version. 
 
+The test scripts will use the configuration file kafka_test.properties:
+
+```
+    kafka08.download.link="https://archive.apache.org/dist/kafka/0.8.2.2/kafka_2.10-0.8.2.2.tgz"
+    kafka09.download.link="https://archive.apache.org/dist/kafka/0.9.0.1/kafka_2.10-0.9.0.1.tgz"
+    kafka010.download.link="http://apache.cu.be/kafka/0.10.2.2/kafka_2.10-0.10.2.2.tgz"
+    
+    
+    flinkBin=/home/sitt/devtools/flink-1.3.2/bin/flink
+    rdf-test-topic=connect-test  #topic used by flink kafka producer to write output
+    #the following 3 configs should be the same as the one written in the mapping file. 
+    rdf-source-topic=demo   #topic used by kafka cluster for streamer input data
+    zookeeper.connection=127.0.0.1:2181
+    broker-list=127.0.0.1:9092
+```
+
+
+At this moment you will need to create a test.txt file containing the input data in the 
+working directory.
+
+This file will be used by the kafka producer for stream emission. 
+ 
+Executing the main script: 
 ```
     ./kafka-test-run.sh  [option]
     
     Options:
         -c|--clean: recompiles all the classes using "mvn clean install -DskipTests".
         -v|--verbose: logs all the output of subscripts executed by this main script.
+```
+
+The main script is composed of the following child scripts:
+1. kafka-test-source-checker.sh 
+2. kafka-test-server-setup.sh
+3. kafka-test-stop-all.sh
+
+The main script will wait for user input for collecting generated triples and running kafka producer to 
+write data from test.txt to the topic specified in the kafka_test.properties 
+
+###### Main Script.
+
+While executing the test script, you will have too keep in mind the connector being used in the implementation.
+
+For more info, check out the official [documentation](https://ci.apache.org/projects/flink/flink-docs-release-1.3/dev/connectors/kafka.html)
+
+Here are steps the script will take:
+
+1. The script will first execute kafka-test-source-checker.sh.
+
+
+2. Choose the desired version then press enter:
+```
+    1) Kafka08
+    2) Kafka09
+    3) Kafka010
+    Choose the kafka version server for testing...
+
+```
+
+2. kafka-test-server-setup.sh will be executed with default config files provided in the respective kafka bin directory.
+
+
+3. 2 topics will be created "demo" and "connect-test"
+
+
+4. RML streamer will be started using the compiled jar in target/ folder just like in the run.sh script. 
+
+
+5. You will have to wait for the rml streamer to be setup properly and finish setting up connection with the kafka cluster. Wait until rml streamer stops logging to the terminal. 
+
+    In verbose mode you will have to pay attention to the following log in the terminal, to know that the flink job is up and running.
+
+```
+    09/14/2018 13:30:34	Source: Custom Source -> Flat Map -> Flat Map -> Map -> Execute statements on items. -> Reduce to strings. -> Sink: Unnamed(1/1) switched to RUNNING 
+```
+
+6. You can now press enter to make kafka producer write the data from test.txt to the specified topic in the kafka cluster.
+
+7. From here onwards you will see prompts for user input, just follow them.
+
+The script will at the end executes kafka-test-stop-all.sh to terminate any running kafka server. 
+
+***NOTE***
+If you have terminated the script while it is still running, please be sure to kill the server and free up the ports used by them. You can try 
+using the scripts provided in the bin/ directory of the specified kafka version. 
+
+If it still doesn't work find the pid of the server processes and terminate it.
+
+
+command to find pids of zookeeper and broker:
+```
+    ps -ax | grep -i zookeeper 
+    ps -ax | grep -i kafka
+```
+
+###### What does the scripts do?
+
+
+```
+    ./kafka-test-source-checker.sh
+    
+    Checks in the current directory for folder containing bins for setting up kafka server. 
+    The script will automatically download if it doesn't detect any separate kafka folder containing version 0.8, 0.9 or 0.10. 
+    
+    If you already have the kafka folders, move them to working directory and name them accordingly. 
+    The matches for folder are done using following regexes with grep: 
+
+    kafka*0.8*
+    kafka*0.9*
+    kafka*0.10*
+
+```
+
+```
+    ./kafka-test-server-setup.sh [-d|-zp|-bp] [ARGS]
+
+    It will setup a kafka cluster using the configurations from the property files given.
+
+    Options:
+        -d|--kafka-dir: root directory of kafka bin for starting up servers
+        -zp|--zookeeper-property: property file containing configurations for the zookeeper 
+                                  for reference, see config/zookeeper.properties in kafka dir 
+        -bp|--broker-property: property file containing configurations fro the broker 
+                               for reference, see config/server.properties in kafka dir 
+
+```
+
+```
+    ./kafka-test-stop-all.sh
+
+    Finds the kafka zookeeper/broker process ids written out in /tmp/kafka-test-pids 
+    and kill them.
+
 ```
 
 
