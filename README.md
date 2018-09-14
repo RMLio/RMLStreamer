@@ -248,17 +248,17 @@ There are 4 types of test case folders:
 
 ##### Kafka Test
 
-You will need to first have the flink server up and running just as you would before running the RML streamer from CLI.
+You will need to first have the flink server up and running, just as you would before running the RML streamer from CLI.
 
 ##### Versioning problem
-Flink supports kafka connectors but only for their respective versions.
+Flink supports kafka connectors, but only for their respective versions.
 
 Ex. FlinkConsumer08/-Producer08 will use kafka clients module from version 0.8 
 
-This prevents us from implementing a dynamic kafka version support since same modules used by a library with different versions
+This prevents us from implementing a dynamic kafka version support since same modules, used by a library with different versions,
 get overwritten by maven depending on it's distance in the dependency tree. 
 
-A posssible [solution](http://jesseyates.com/2015/08/17/using-maven-shade-to-run-multiple-versions-in-a-jvm.html) to the problem will be making an empty module using the aforementioned connectors libraries. 
+A posssible [solution](http://jesseyates.com/2015/08/17/using-maven-shade-to-run-multiple-versions-in-a-jvm.html) to the problem, will be making an empty module using the aforementioned connectors libraries. 
 
 We could then change the naming of the conflicting dependencies using maven-shade-plugin, and then compiling this wrapper 
 module as a library to be used in the streamer. 
