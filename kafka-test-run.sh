@@ -110,10 +110,6 @@ function testServerVersion {
 
     runCommand "./kafka-test-server-setup.sh -d "${KAFKADIR}/" -zp "${ZOOKEEPER_PROPERTY}" -bp "${BROKER_PROPERTY}"" "Starting server from ${KAFKADIR}"
     if [ $? -eq 0 ]; then
-        if [ ! -f "test.txt" ]; then
-            echo "Test data source file for kafka producer doesn't exists: test.txt"
-            
-        else
             echo "[INFO] Running rml streamer with options --broker-list ${broker_list} --topic $rdf_test_topic" 
             sleep 5
             bash ${TOPIC} --create --zookeeper ${zookeeper_connection} --replication-factor 1 --partitions 1 --topic ${topic}
@@ -144,7 +140,6 @@ function testServerVersion {
             kill -9 ${consumer_pid}
 
             kill -SIGINT ${FLINK_PID}
-        fi
     fi
     read -p "Press enter to continue the test for the next supported kafka version"
 
