@@ -39,6 +39,16 @@ function setProperties {
             shift # past argument
             shift # past value
             ;;
+        -b|--kafkaBrokerList)
+            KAFKA_BROKERLIST="$2"
+            shift # past argument
+            shift # past value
+            ;;
+        -t|--kafkaTopic)
+            KAFKA_TOPIC="$2"
+            shift # past argument
+            shift # past value
+            ;;
         -c|--config)
             CONFIG="$2"
             shift # past argument
@@ -76,6 +86,14 @@ function setProperties {
         if [ -z "$FLINKBIN"  ]; then
           FLINKBIN=$(getPropertyFromConfig "flinkBin")
         fi
+
+        if [ -z "$KAFKA_BROKERLIST"  ]; then
+          KAFKA_BROKERLIST=$(getPropertyFromConfig "kafkaBrokerList")
+        fi
+
+        if [ -z "$KAFKA_TOPIC"  ]; then
+          KAFKA_TOPIC=$(getPropertyFromConfig "kafkaTopic")
+        fi
     fi
 }
 
@@ -85,6 +103,8 @@ setProperties $@
 echo "mapping: $MAPPINGPATH"
 echo "output: $OUTPUTPATH"
 echo "socket: $SOCKET"
+echo "kafkaBrokerList: $KAFKA_BROKERLIST"
+echo "kafkaTopic: $KAFKA_TOPIC"
 
 echo ""
 echo "// RML Run Script"
@@ -94,7 +114,7 @@ echo ""
 # Check if $MAPPINGPATH is set
 if [ ! -z "$MAPPINGPATH"  ]; then
 	# Execute
-	bash $FLINKBIN run  -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET
+	bash $FLINKBIN run  -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
 else
 	echo "Execution aborted: -p|--path must be given."
 	echo ""
