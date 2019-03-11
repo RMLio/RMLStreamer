@@ -12,8 +12,8 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.hadoopcompatibility.scala.HadoopInputs
-import org.apache.hadoop.io.{LongWritable, Text}
-import org.apache.mahout.text.wikipedia.XmlInputFormat
+//import org.apache.hadoop.io.{LongWritable, Text}
+//import org.apache.mahout.text.wikipedia.XmlInputFormat
 
 sealed abstract class FileDataSet extends Source {
   def dataset: DataSet[Item]
@@ -56,8 +56,8 @@ object FileDataSet {
     * @param env
     * @return
     */
-  @Deprecated
-  def createXMLDataSet(path: String, tag: String)(implicit env: ExecutionEnvironment): XMLDataSet = {
+  //@Deprecated
+  /*def createXMLDataSet(path: String, tag: String)(implicit env: ExecutionEnvironment): XMLDataSet = {
     println("Creating XMLDataSet from " + path + ", with tag " + tag)
     implicit val longWritableTypeInfo: TypeInformation[LongWritable] = TypeInformation.of(classOf[LongWritable])
     implicit val textTypeInfo: TypeInformation[Text] = TypeInformation.of(classOf[Text])
@@ -69,7 +69,7 @@ object FileDataSet {
       XMLItem.fromString(item._2.toString).asInstanceOf[Item]
     }) // needed since types of datasets can't be subclasses due to Flink implementation
     XMLDataSet(dataset)
-  }
+  }*/
 
   def createXMLWithXPathDataSet(path: String, xpath: String)(implicit env: ExecutionEnvironment): XMLDataSet = {
     println("Creating XMLDataSet with XPath from " + path + ", with xpath " + xpath)
