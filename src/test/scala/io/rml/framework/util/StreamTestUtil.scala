@@ -6,7 +6,8 @@ import io.rml.framework.Main
 import io.rml.framework.util.fileprocessing.MappingTestUtil
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
-import org.apache.flink.configuration.{ConfigConstants, Configuration, TaskManagerOptions}
+import org.apache.flink.configuration.{ConfigConstants, Configuration}
+import org.apache.flink.runtime.jobgraph.JobGraph
 import org.apache.flink.runtime.messages.JobManagerMessages.CancelJob
 import org.apache.flink.runtime.minicluster.{FlinkMiniCluster, LocalFlinkMiniCluster}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
@@ -75,7 +76,7 @@ object StreamTestUtil{
       }
       val graph = dataStream.executionEnvironment.getStreamGraph
       graph.setJobName(name)
-      val jobGraph = graph.getJobGraph
+      val jobGraph: JobGraph = graph.getJobGraph
       cluster.submitJobDetached(jobGraph)
       Logger.logInfo(cluster.currentlyRunningJobs.toString())
 
@@ -101,7 +102,7 @@ object StreamTestUtil{
   def getClusterFuture(implicit executur: ExecutionContextExecutor) : Future[LocalFlinkMiniCluster] = {
     Logger.logInfo("Starting up cluster....")
     val configuration = new Configuration
-    configuration.setLong(TaskManagerOptions.MANAGED_MEMORY_SIZE, -1L)
+    //configuration.setString(TaskManagerOptions.MANAGED_MEMORY_SIZE, "-1L")
     configuration.setInteger(ConfigConstants.LOCAL_NUMBER_TASK_MANAGER, 2)
     configuration.setInteger(ConfigConstants.TASK_MANAGER_NUM_TASK_SLOTS, 100)
 
