@@ -1,24 +1,24 @@
 package io.rml.framework.flink.item.xml
 
 import java.io.{ByteArrayInputStream, InputStreamReader}
-import javax.xml.namespace.NamespaceContext
-import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.xpath.{XPathConstants, XPathFactory}
 
 import com.ximpleware.extended.{AutoPilotHuge, VTDGenHuge, XMLBuffer}
 import io.netty.util.CharsetUtil
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.source.XMLIterator
 import io.rml.framework.flink.util.XMLNamespace
+import javax.xml.namespace.NamespaceContext
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.xpath.{XPathConstants, XPathFactory}
 import org.apache.commons.io.IOUtils
 import org.w3c.dom.{Document, NodeList}
 
 import scala.util.control.NonFatal
-import scala.xml.{PrettyPrinter, XML}
+//import scala.xml.{PrettyPrinter, XML}
 
 class XMLItem(xml: Document, namespaces: Map[String, String]) extends Item {
 
-  private val xPath = XPathFactory.newInstance().newXPath()
+  @transient private lazy val xPath = XPathFactory.newInstance().newXPath()
 
   xPath.setNamespaceContext(new NamespaceContext() {
     def getNamespaceURI(prefix: String): String = {
@@ -55,6 +55,7 @@ class XMLItem(xml: Document, namespaces: Map[String, String]) extends Item {
 
   override def toString: String = {
     import java.io.StringWriter
+
     import javax.xml.transform.dom.DOMSource
     import javax.xml.transform.stream.StreamResult
     import javax.xml.transform.{OutputKeys, TransformerFactory}
