@@ -291,7 +291,7 @@ The test scripts will use the configuration file kafka_test.properties:
 
 
 At this moment you will need to create a test.txt file containing the input data in the 
-working directory.
+working directory, for instance `src/test/resources/stream/datasource.json`.
 
 This file will be used by the kafka producer for stream emission. 
  

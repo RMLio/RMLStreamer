@@ -153,13 +153,13 @@ under the License.
 			<version>0.13.2-SNAPSHOT</version>
 		</dependency-->
 
-		<dependency>
+		<!--dependency>
 			<groupId>sample</groupId>
 			<artifactId>com.sample</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/json-mapreduce-1.0.jar</systemPath>
-		</dependency>
+		</dependency-->
 
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
@@ -410,9 +410,9 @@ on a cluster. Change the value of Program-Class if your program entry point chan
 									<exclude>org.apache.sling:org.apache.sling.commons.json</exclude>
 									<exclude>commons-logging:commons-logging</exclude>
 									<exclude>commons-codec:commons-codec</exclude>
-									<exclude>com.fasterxml.jackson.core:jackson-core</exclude>
+									<!--exclude>com.fasterxml.jackson.core:jackson-core</exclude>
 									<exclude>com.fasterxml.jackson.core:jackson-databind</exclude>
-									<exclude>com.fasterxml.jackson.core:jackson-annotations</exclude>
+									<exclude>com.fasterxml.jackson.core:jackson-annotations</exclude-->
 									<exclude>stax:stax-api</exclude>
 									<exclude>com.typesafe:config</exclude>
 									<exclude>org.uncommons.maths:uncommons-maths</exclude>
