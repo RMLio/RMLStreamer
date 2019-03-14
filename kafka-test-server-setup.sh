@@ -42,7 +42,7 @@ do
         shift
         ;;
 
-        -bp|--broker-proerpty)
+        -bp|--broker-property)
             BROKER_PROPERTY="$2"
         shift
         shift
