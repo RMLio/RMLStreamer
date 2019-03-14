@@ -50,9 +50,6 @@ under the License.
 		<log4j.version>1.2.17</log4j.version>
 		<scala.binary.version>2.11</scala.binary.version>
         <java.version>1.8</java.version>
-        <!--maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>10</maven.compiler.target>
-        <maven.compiler.release>10</maven.compiler.release-->
 	</properties>
 
 	<!--
@@ -147,20 +144,6 @@ under the License.
 			<version>1.3.6</version>
 		</dependency>
 
-		<!--dependency>
-			<groupId>org.apache.mahout</groupId>
-			<artifactId>mahout-integration</artifactId>
-			<version>0.13.2-SNAPSHOT</version>
-		</dependency-->
-
-		<!--dependency>
-			<groupId>sample</groupId>
-			<artifactId>com.sample</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/json-mapreduce-1.0.jar</systemPath>
-		</dependency-->
-
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -175,21 +158,12 @@ under the License.
 			<version>3.0.6</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.scalacheck/scalacheck -->
-
 
 		<dependency>
 			<groupId>org.apache.directory.studio</groupId>
 			<artifactId>org.apache.commons.io</artifactId>
 			<version>2.4</version>
 		</dependency>
-
-		<!--dependency>
-			<groupId>org.scalacheck</groupId>
-			<artifactId>scalacheck_2.10</artifactId>
-			<version>1.13.5</version>
-			<scope>test</scope>
-		</dependency-->
 
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
 		<dependency>
@@ -410,9 +384,6 @@ on a cluster. Change the value of Program-Class if your program entry point chan
 									<exclude>org.apache.sling:org.apache.sling.commons.json</exclude>
 									<exclude>commons-logging:commons-logging</exclude>
 									<exclude>commons-codec:commons-codec</exclude>
-									<!--exclude>com.fasterxml.jackson.core:jackson-core</exclude>
-									<exclude>com.fasterxml.jackson.core:jackson-databind</exclude>
-									<exclude>com.fasterxml.jackson.core:jackson-annotations</exclude-->
 									<exclude>stax:stax-api</exclude>
 									<exclude>com.typesafe:config</exclude>
 									<exclude>org.uncommons.maths:uncommons-maths</exclude>
