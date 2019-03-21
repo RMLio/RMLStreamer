@@ -11,6 +11,10 @@ function getPropertyFromConfig {
 }
 
 function setProperties {
+
+    # Some default properties
+    PARALLELISM=1
+
     echo $@
     # Fetch arguments
     POSITIONAL=()
@@ -54,6 +58,11 @@ function setProperties {
             shift # past argument
             shift # past value
             ;;
+        -a|--parallelism)
+            PARALLELISM="$2"
+            shift # past argument
+            shift # past value
+            ;;
         *)
             POSITIONAL+=("$1")
             shift
@@ -61,11 +70,6 @@ function setProperties {
     esac
     done
     set -- "${POSITIONAL[@]}"
-
-    #echo "mapping: $MAPPINGPATH"
-    #echo "output: $OUTPUTPATH"
-    #echo "socket: $SOCKET"
-    #echo "config: $CONFIG"
 
     if [ ! -z "$CONFIG" ]; then
         PROPERTY_FILE=$CONFIG;
@@ -94,6 +98,10 @@ function setProperties {
         if [ -z "$KAFKA_TOPIC"  ]; then
           KAFKA_TOPIC=$(getPropertyFromConfig "kafkaTopic")
         fi
+
+        if [ -z "$PARALLELISM"  ]; then
+          PARALLELISM=$(getPropertyFromConfig "parallelism")
+        fi
     fi
 }
 
@@ -105,6 +113,7 @@ echo "output: $OUTPUTPATH"
 echo "socket: $SOCKET"
 echo "kafkaBrokerList: $KAFKA_BROKERLIST"
 echo "kafkaTopic: $KAFKA_TOPIC"
+echo "parallelism: $PARALLELISM"
 
 echo ""
 echo "// RML Run Script"
@@ -114,7 +123,7 @@ echo ""
 # Check if $MAPPINGPATH is set
 if [ ! -z "$MAPPINGPATH"  ]; then
 	# Execute
-	bash $FLINKBIN run  -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
+	bash $FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
 else
 	echo "Execution aborted: -p|--path must be given."
 	echo ""
