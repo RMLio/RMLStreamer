@@ -1,18 +1,16 @@
 package io.rml.framework.flink.source
 
-import java.util.Properties
-
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.json.JSONItem
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema
 
 case class JSONStream(stream: DataStream[Item]) extends Stream
 
-object JSONStream {
+object JSONStream extends Logging {
 
   def apply(source: StreamDataSource, iter: Option[String])(implicit env: StreamExecutionEnvironment): Stream = {
     val iterator =  iter.getOrElse("$")
@@ -43,7 +41,7 @@ object JSONStream {
     val properties = kafkaStream.getProperties
     val consumer =  kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
 
-    println(consumer)
+    logDebug(consumer.getProducedType.toString)
     val stream: DataStream[Item] = env.addSource(consumer)
       .flatMap(item => {
         JSONItem.fromStringOptionableList(item, iterator)

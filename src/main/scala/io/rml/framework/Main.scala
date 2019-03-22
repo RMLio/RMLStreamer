@@ -22,6 +22,7 @@ package io.rml.framework
 import java.io.File
 
 import io.rml.framework.core.extractors.MappingReader
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.KafkaConnectorVersionFactory
@@ -40,7 +41,7 @@ import scala.collection.immutable
 /**
   *
   */
-object Main {
+object Main extends Logging {
 
   /**
     * Main method that will be executed as a Flink Job by the Flink Framework.
@@ -48,6 +49,7 @@ object Main {
     * @param args
     */
   def main(args: Array[String]): Unit = {
+
 
     val EMPTY_VALUE = "__NO_VALUE_KEY"
 
@@ -68,11 +70,11 @@ object Main {
 
 
     // TODO: do logging correctly
-    println("Mapping path: " + mappingPath)
-    println("Output path: " + outputPath)
-    println("Output socket: " + outputSocket)
-    println("Kafka brokers: " +  kafkaBrokers)
-    println("Kafka Topic: " +  kafkaTopic)
+    logInfo("Mapping path: " + mappingPath)
+    logInfo("Output path: " + outputPath)
+    logInfo("Output socket: " + outputSocket)
+    logInfo("Kafka brokers: " +  kafkaBrokers)
+    logInfo("Kafka Topic: " +  kafkaTopic)
 
 
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.
@@ -87,7 +89,7 @@ object Main {
     // check if the mapping contains standard dataset mappings
     if (formattedMapping.standardTripleMaps.nonEmpty) {
 
-      println("Dataset Job Found.")
+      logInfo("Dataset Job Found.")
 
       // create a flink dataset from the formatted mapping
       val dataset: DataSet[String] = createDataSetFromFormattedMapping(formattedMapping)
@@ -102,7 +104,7 @@ object Main {
       // check if the mapping contains streamed mappings
     } else if (formattedMapping.streamTripleMaps.nonEmpty) {
 
-      println("Datastream Job found.")
+      logInfo("Datastream Job found.")
 
       // create a flink stream from the formatted mapping
       val stream = createStreamFromFormattedMapping(formattedMapping)
@@ -173,7 +175,7 @@ object Main {
       val tripleMaps = entry._2
       // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
       Source(logicalSource) -> {
-        println(entry._2.size + " Triple Maps are found.")
+        logInfo(entry._2.size + " Triple Maps are found.")
         StatementEngine.fromTripleMaps(tripleMaps)
       }
     })
@@ -265,7 +267,7 @@ object Main {
       val tripleMaps = entry._2
       // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
       Source(logicalSource) -> {
-        println(entry._2.size + " Triple Maps are found.")
+        logInfo(entry._2.size + " Triple Maps are found.")
         StatementEngine.fromTripleMaps(tripleMaps)
       }
     })

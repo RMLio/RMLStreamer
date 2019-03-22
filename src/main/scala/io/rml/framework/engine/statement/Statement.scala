@@ -22,6 +22,7 @@
 
 package io.rml.framework.engine.statement
 
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.sink._
@@ -102,7 +103,7 @@ case class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
 
 }
 
-object Statement {
+object Statement extends Logging {
 
   def quadCombination(subjectIter: Iterable[TermNode], predicateIter: Iterable[Uri], objIter: Iterable[Entity], graphIterOpt: Option[Iterable[Uri]] = None): Iterable[(TermNode, Uri, Entity, Option[Uri])] = {
 
@@ -142,7 +143,7 @@ object Statement {
     val graphUri = graphOpt.map(FlinkRDFResource)
 
     val result = Some(FlinkRDFQuad(subjectResource, predicateResource, objectNode, graphUri))
-    println(result)
+    logDebug(result.get.toString)
     result
   }
 }

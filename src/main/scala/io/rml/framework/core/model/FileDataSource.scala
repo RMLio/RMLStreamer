@@ -24,6 +24,7 @@ package io.rml.framework.core.model
 
 import java.io.File
 
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.std.StdFileDataSource
 
 /**
@@ -34,7 +35,7 @@ trait FileDataSource extends DataSource
 /**
   * FileDataSource companion object.
   */
-object FileDataSource {
+object FileDataSource extends Logging {
 
   /**
     * Factory method for creating a file data source.
@@ -45,7 +46,7 @@ object FileDataSource {
   def apply(uri: ExplicitNode): DataSource = {
     val file = new File(uri.toString)
     if (file.isAbsolute) {
-      println(Uri(file.getAbsolutePath))
+      logDebug(Uri(file.getAbsolutePath).uri)
       StdFileDataSource(Uri(file.getAbsolutePath))
     } else {
       val url = ClassLoader.getSystemResource(uri.toString)

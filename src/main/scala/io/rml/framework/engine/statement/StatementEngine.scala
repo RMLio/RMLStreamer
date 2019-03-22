@@ -70,7 +70,7 @@ object StatementEngine extends Logging {
 
     // do some logging
     if (isDebugEnabled) logDebug(statements.size + " statements were generated.")
-    println(statements.size + " statements were generated.")
+    logDebug(statements.size + " statements were generated.")
     // create the engine instance
     new StatementEngine(statements)
   }

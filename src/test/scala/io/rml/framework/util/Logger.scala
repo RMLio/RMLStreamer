@@ -1,24 +1,23 @@
 package io.rml.framework.util
 
+import io.rml.framework.core.internal.Logging
 
-object Logger extends ColorString {
+object Logger extends ColorString with Logging {
 
-  
-
-  def logInfo(msg : String): Unit = {
-    println( "[INFO]".yellow +  msg.yellow)
+  override def logInfo(msg : String): Unit = {
+    super.logInfo( "[INFO]".yellow +  msg.yellow)
   }
 
-  def logError(msg: String): Unit = {
-    println("[ERROR]".red + msg.red )
+  override def logError(msg: String): Unit = {
+    super.logError("[ERROR]".red + msg.red )
   }
 
   def logSuccess(msg: String): Unit = {
-    println("[SUCCESS]".green + msg.green)
+    logInfo("[SUCCESS]".green + msg.green)
   }
 
   def lineBreak(count:Int = 100) : Unit = {
-    println(("="*count).blue)
+    logInfo(("="*count).blue)
   }
 
 

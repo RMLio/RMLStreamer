@@ -27,6 +27,7 @@ import java.io.{IOException, StringReader}
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.source.EmptyItem
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
+
 import scala.collection.JavaConverters._
 
 /**
@@ -45,7 +46,7 @@ class CSVItem(record: CSVRecord) extends Item {
       Some(List(record.get(reference)))
     } catch {
       case ex: IllegalArgumentException => {
-        println(ex)
+        logError("Could not find reference. ", ex)
         None
       }
     }

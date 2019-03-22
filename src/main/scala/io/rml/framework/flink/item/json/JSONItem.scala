@@ -22,12 +22,11 @@
 
 package io.rml.framework.flink.item.json
 
-import java.{lang, util}
+import java.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.jayway.jsonpath.{Configuration, JsonPath}
+import com.jayway.jsonpath.JsonPath
 import io.rml.framework.flink.item.Item
-import net.minidev.json.JSONObject
 import org.jsfr.json.provider.JacksonProvider
 import org.jsfr.json.{JacksonParser, JsonSurfer}
 import org.slf4j.LoggerFactory
@@ -51,14 +50,14 @@ class JSONItem(map: java.util.Map[String, Object]) extends Item {
       _object match{
         case arr: java.util.List[Object] => Some(arr.toList.map(_.toString))
         case jsonObj: util.HashMap[Object, Object] =>
-          println(jsonObj)
+          logDebug(jsonObj.toString)
           None
         case e => Some(List(e.toString))
       }
 
     } catch {
       case NonFatal(e) => {
-        println(e)
+        logError("Could not refer JSON Item", e)
         None
       }
     }

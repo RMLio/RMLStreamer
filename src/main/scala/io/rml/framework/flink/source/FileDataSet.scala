@@ -2,6 +2,7 @@ package io.rml.framework.flink.source
 
 import java.nio.file.Paths
 
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{LogicalSource, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
@@ -22,7 +23,7 @@ case class CSVDataSet(dataset: DataSet[Item]) extends FileDataSet
 /**
   * Object for creating Flink Datasets from a LogicalSource
   */
-object FileDataSet {
+object FileDataSet extends Logging {
 
   def apply(logicalSource: LogicalSource)(implicit env: ExecutionEnvironment): FileDataSet = {
     logicalSource.referenceFormulation match {
@@ -67,13 +68,13 @@ object FileDataSet {
   }*/
 
   def createXMLWithXPathDataSet(path: String, xpath: String)(implicit env: ExecutionEnvironment): XMLDataSet = {
-    println("Creating XMLDataSet with XPath from " + path + ", with xpath " + xpath)
+    logDebug("Creating XMLDataSet with XPath from " + path + ", with xpath " + xpath)
     val dataset = env.createInput(new XMLInputFormat(path, xpath))
     XMLDataSet(dataset)
   }
 
   def createJSONWithJSONPathDataSet(path: String, jsonPath: String)(implicit env: ExecutionEnvironment): JSONDataSet = {
-    println("Creating JSONDataSet from " + path + ", with JsonPath " + jsonPath)
+    logDebug("Creating JSONDataSet from " + path + ", with JsonPath " + jsonPath)
     val dataset = env.createInput(new JSONInputFormat(path, jsonPath))
     JSONDataSet(dataset)
   }

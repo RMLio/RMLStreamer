@@ -22,12 +22,13 @@
 
 package io.rml.framework.flink.item
 
+import io.rml.framework.core.internal.Logging
 import org.apache.jena.graph.BlankNodeId
 
 /**
   * Represents a data item.
   */
-trait Item extends Serializable {
+trait Item extends Serializable with Logging {
 
   def refer(reference: String): Option[List[String]]
 

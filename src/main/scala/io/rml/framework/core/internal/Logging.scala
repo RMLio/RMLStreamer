@@ -22,20 +22,22 @@
 
 package io.rml.framework.core.internal
 
-import org.apache.logging.log4j.LogManager
+import org.slf4j.LoggerFactory
 
 /**
   *
   */
 trait Logging {
 
-  private val logger = LogManager.getLogger(this.getClass.getName)
+  private val logger = LoggerFactory.getLogger(this.getClass);
 
   def logDebug(log: String): Unit = logger.debug(log)
 
   def logInfo(log: String): Unit = logger.info(log)
 
   def logError(log: String): Unit = logger.error(log)
+
+  def logError(log: String, errorObj: Any*): Unit = logger.error(log, errorObj);
 
   def logWarning(log: String): Unit = logger.warn(log)
 
