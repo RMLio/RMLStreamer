@@ -1,40 +1,54 @@
 ## RML Framework
 
 ### Installing Flink
-The RML Framework runs it's jobs on Flink clusters. More information on how to install Flink and getting clusters up and running can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.3/quickstart/setup_quickstart.html).
- At least a local cluster must be running in order to start executing RML Mappings with the RML Framework. At the moment of writing this readme it is not necessary to install Hadoop. Please not that the current repository works with Flink 1.3.2, which can be downloaded [here](http://www.apache.org/dyn/closer.lua/flink/flink-1.3.2/flink-1.3.2-bin-scala_2.11.tgz).
+The RML Streamer runs its jobs on Flink clusters.
+More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.7/tutorials/local_setup.html).
+At least a local cluster must be running in order to start executing RML Mappings with the RML Streamer.
+It is not necessary to install Hadoop. Please note that the current repository works with Flink 1.7.2 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.7.2/flink-1.7.2-bin-scala_2.11.tgz).
 
 ## Installing RML Framework
 
-Location of the Flink installation directory must be configured in `configuration.properties` (see the example file `configuration_example.properties`).
+Clone or download and then build the code in this repository:
 
 ```
-git clone ssh://git@git.datasciencelab.ugent.be:4444/rml/rml-streamer.git 
-cd rml-streamer
-mvn clean install
+git clone https://github.com/RMLio/RMLStreamer.git 
+cd RMLStreamer
+mvn clean package
 ```
+
+The resulting `RMLStreamer-<version>.jar` can be deployed on a Flink cluster.
 
 ### Executing RML Mappings
 
+The script `run.sh` helps running the RML Streamer on a given Flink cluster.
 
 ```
-bash run.sh [ -p <RML Mapping Location> -o <File Output Location> -s <Output Socket Port Number> ]
-```
-or 
-```
-bash run.sh 
-```
-with configuration.properties file 
-```
-flinkdir=/home/sitt/devtools/flink-1.3.2/bin/flink
-outputPath=
-mappingPath=src/main/resources/json_stream_data_mapping.ttl
-socket=9000
-```
-Here, the options for -p and -s will be read from the configuration.properties file. 
+Usage:
+run.sh -p RML MAPPING PATH -f FLINK PATH -o FILE OUTPUT PATH [-a PARALLELISM]
+run.sh -p RML MAPPING PATH -f FLINK PATH -s SOCKET [-a PARALLELISM] 
+run.sh -p RML MAPPING PATH -f FLINK PATH -b KAFKA BROKERS -t KAFKA TOPIC
+run.sh -c CONFIG FILE
 
-If you provide -p, -o and -s, the cli args take priority over the options provided by 
-configuration.properties file.  
+Every option can be defined in its long form in the CONFIG FILE.
+E.g. flinkBin=/opt/flink-1.7.2/flink
+
+Options:
+-p --path RML MAPPING PATH         The path to an RML mapping file.
+-o --outputPath FILE OUTPUT PATH   The path to an output file.
+-f --flinkBin FLINK PATH           The path to the Flink binary.
+-s --socket                        The port number of the socket.
+-b --kafkaBrokerList KAFKA BROKERS The (list of) hosts where Kafka runs on
+-c --config CONFIG FILE	           The path to a configuration file. Every parameter can be put in its long form in the 
+                                   configuration file. e.g:
+                                    flinkBin=/opt/flink-1.7.2/bin/flink
+                                    path=/home/rml/mapping.rml.ttl
+                                   Commandline parameters override properties.
+```
+
+---
+
+*TODO: documentation below needs updates.* 
+
 #### Examples
 
 ##### Processing a stream
