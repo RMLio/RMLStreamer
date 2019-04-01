@@ -29,14 +29,14 @@ import com.jayway.jsonpath.JsonPath
 import io.rml.framework.flink.item.Item
 import org.jsfr.json.provider.JacksonProvider
 import org.jsfr.json.{JacksonParser, JsonSurfer}
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConversions._
 import scala.util.control.NonFatal
 
 class JSONItem(map: java.util.Map[String, Object]) extends Item {
 
-  val LOG = LoggerFactory.getLogger(JSONItem.getClass)
+  val LOG: Logger = LoggerFactory.getLogger(JSONItem.getClass)
 
 
   override def refer(reference: String): Option[List[String]] = {
@@ -48,18 +48,17 @@ class JSONItem(map: java.util.Map[String, Object]) extends Item {
       val _object : Object = JsonPath.read(map, checkedReference)
 
       _object match{
-        case arr: java.util.List[Object] => Some(arr.toList.map(_.toString))
-        case jsonObj: util.HashMap[Object, Object] =>
+        case arr: java.util.List[_] => Some(arr.toList.map(_.toString))
+        case jsonObj: util.HashMap[_,_]  =>
           logDebug(jsonObj.toString)
           None
         case e => Some(List(e.toString))
       }
 
     } catch {
-      case NonFatal(e) => {
+      case NonFatal(e) =>
         logError("Could not refer JSON Item", e)
         None
-      }
     }
   }
 }

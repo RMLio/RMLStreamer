@@ -1,6 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
-framework.iml
+*.iml
 target/
 kafka_2*/
 *.txt
