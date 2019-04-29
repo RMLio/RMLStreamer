@@ -4,6 +4,7 @@ import java.util
 import java.util.Properties
 
 import io.rml.framework.core.model.{Kafka010, Kafka09, KafkaVersion}
+import org.apache.flink.streaming.connectors.kafka.internals.KeyedSerializationSchemaWrapper
 import org.apache.kafka.clients.producer.ProducerConfig
 //import io.rml.framework.core.vocabulary.RMLVoc
 import org.apache.flink.streaming.api.scala.DataStream

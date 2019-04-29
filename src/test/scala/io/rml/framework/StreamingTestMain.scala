@@ -1,15 +1,16 @@
 package io.rml.framework
 
 import java.io.File
-import java.util.concurrent.Executors
+import java.util.concurrent.{CompletableFuture, Executors}
 
 import io.rml.framework.util.{Logger, _}
 import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil, MappingTestUtil}
-import io.rml.framework.util.server.{TestServer, TCPTestServer}
+import io.rml.framework.util.server.{TCPTestServer, TestServer}
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala.ExecutionEnvironment
-import org.apache.flink.runtime.minicluster.{FlinkMiniCluster, LocalFlinkMiniCluster}
+import org.apache.flink.runtime.messages.Acknowledge
+import org.apache.flink.runtime.minicluster.MiniCluster
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.scalatest.AsyncFlatSpec
 
@@ -21,7 +22,7 @@ object StreamingTestMain {
   implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
   implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
   implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
-  val cluster: Future[LocalFlinkMiniCluster] = StreamTestUtil.getClusterFuture
+  val cluster: Future[MiniCluster] = StreamTestUtil.getClusterFuture
   var serverOpt:Option[TestServer] =  None
 
   val serverFactoryMap: Map[String,StreamTestServerFactory] =  Map("tcp" -> TCPTestServerFactory, "kafka" -> KafkaTestServerFactory)
@@ -84,13 +85,15 @@ object StreamingTestMain {
 
 
         StreamingTestMain.compareResults(folder,  TestSink.getTriples.filter(!_.isEmpty))
-        Await.result(resetTestStates(jobID, cluster), Duration.Inf)
+        val waitfor = resetTestStates(jobID, cluster)
+        waitfor.get
+        //Await.result(resetTestStates(jobID, cluster), Duration.Inf)
         Future.successful(s"Cluster job $jobID done")
       }
     }
   }
 
-  def resetTestStates(jobID: JobID, cluster: FlinkMiniCluster): Future[AnyRef] = {
+  def resetTestStates(jobID: JobID, cluster: MiniCluster): CompletableFuture[Acknowledge] = {
     // Clear the collected results in the sink
     TestSink.empty()
     // Cancel the job

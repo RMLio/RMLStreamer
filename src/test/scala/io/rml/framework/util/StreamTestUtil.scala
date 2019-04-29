@@ -1,6 +1,7 @@
 package io.rml.framework.util
 
 import java.io.File
+import java.util.concurrent.CompletableFuture
 
 import io.rml.framework.Main
 import io.rml.framework.util.fileprocessing.MappingTestUtil
@@ -8,8 +9,9 @@ import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.configuration.{ConfigConstants, Configuration}
 import org.apache.flink.runtime.jobgraph.JobGraph
+import org.apache.flink.runtime.messages.Acknowledge
 import org.apache.flink.runtime.messages.JobManagerMessages.CancelJob
-import org.apache.flink.runtime.minicluster.{FlinkMiniCluster, LocalFlinkMiniCluster}
+import org.apache.flink.runtime.minicluster.{MiniCluster, MiniClusterConfiguration}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 
 import scala.concurrent.duration.FiniteDuration
@@ -49,12 +51,13 @@ object StreamTestUtil{
     * @param duration
     */
 
-  def cancelJob(jobID: JobID, cluster: FlinkMiniCluster, duration: FiniteDuration = FiniteDuration(4, "seconds"))(implicit executur: ExecutionContextExecutor) : Future[AnyRef] = {
-    val actorGateFuture = cluster.getLeaderGatewayFuture
+  def cancelJob(jobID: JobID, cluster: MiniCluster, duration: FiniteDuration = FiniteDuration(4, "seconds"))(implicit executur: ExecutionContextExecutor) : CompletableFuture[Acknowledge] = {
+    cluster.cancelJob(jobID)
+    /*val actorGateFuture = cluster
     for {
       gateway <- actorGateFuture
       result <- gateway.ask(new CancelJob(jobID), duration)
-    } yield result
+    } yield result*/
 
   }
 
@@ -68,17 +71,18 @@ object StreamTestUtil{
     * @tparam T result type of the data stream
     * @return JobID of the submitted job which can be used later on to cancel/stop
     */
-  def submitJobToCluster[T](cluster: LocalFlinkMiniCluster, dataStream: DataStream[T], name: String)(implicit executur: ExecutionContextExecutor) : Future[JobID] =
+  def submitJobToCluster[T](cluster: MiniCluster, dataStream: DataStream[T], name: String)(implicit executur: ExecutionContextExecutor) : Future[JobID] =
 
     Future {
-      while(cluster.currentlyRunningJobs.size > 1 ){
-        val x = 1
+      while(cluster.requestClusterOverview().get().getNumJobsRunningOrPending > 1 ){
+        Thread.sleep(100)
+        //val x = 1 // TODO this seems weird
       }
       val graph = dataStream.executionEnvironment.getStreamGraph
       graph.setJobName(name)
       val jobGraph: JobGraph = graph.getJobGraph
-      cluster.submitJobDetached(jobGraph)
-      Logger.logInfo(cluster.currentlyRunningJobs.toString())
+      cluster.runDetached(jobGraph)
+      Logger.logInfo(cluster.requestClusterOverview().get().getNumJobsRunningOrPending().toString)
 
       jobGraph.getJobID
     }
@@ -99,15 +103,14 @@ object StreamTestUtil{
     *         which can be used for stopping/cancelling and starting jobs
     */
 
-  def getClusterFuture(implicit executur: ExecutionContextExecutor) : Future[LocalFlinkMiniCluster] = {
+  def getClusterFuture(implicit executur: ExecutionContextExecutor) : Future[MiniCluster] = {
     Logger.logInfo("Starting up cluster....")
-    val configuration = new Configuration
-    //configuration.setString(TaskManagerOptions.MANAGED_MEMORY_SIZE, "-1L")
-    configuration.setInteger(ConfigConstants.LOCAL_NUMBER_TASK_MANAGER, 2)
-    configuration.setInteger(ConfigConstants.TASK_MANAGER_NUM_TASK_SLOTS, 100)
-
+    val configuration = new MiniClusterConfiguration.Builder()
+      .setNumTaskManagers(2)
+      .setNumSlotsPerTaskManager(100)
+        .build()
     // start cluster
-    val cluster = new LocalFlinkMiniCluster(configuration, true)
+    val cluster = new MiniCluster(configuration)
 
     cluster.start()
     Logger.logInfo("Cluster started")

@@ -45,7 +45,7 @@ under the License.
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <flink.version>1.7.2</flink.version>
+        <flink.version>1.8.0</flink.version>
         <slf4j.version>1.7.7</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
         <scala.binary.version>2.11</scala.binary.version>
@@ -115,7 +115,7 @@ under the License.
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-hadoop-compatibility_2.11</artifactId>
-            <version>1.7.2</version>
+            <version>${flink.version}</version>
         </dependency>
 
         <dependency>
@@ -245,7 +245,7 @@ under the License.
 	<!-- Otherwise they are missing in IntelliJ, because the dependency is 'provided' -->
     <profiles>
         <profile>
-            <id>>add-dependencies-for-IDEA</id>
+            <id>add-dependencies-for-IDEA</id>
             <activation>
                 <property>
                     <name>idea.version</name>
