@@ -123,7 +123,7 @@ echo ""
 # Check if $MAPPINGPATH is set
 if [ ! -z "$MAPPINGPATH"  ]; then
 	# Execute
-	bash $FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
+	bash $FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main target/RMLStreamer-1.0.1-SNAPSHOT.jar --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
 else
 	echo "Execution aborted: -p|--path must be given."
 	echo ""
