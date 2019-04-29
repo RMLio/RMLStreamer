@@ -4,6 +4,7 @@ import java.util
 import java.util.Properties
 
 import io.rml.framework.core.model.{Kafka010, Kafka09, KafkaVersion}
+import org.apache.kafka.clients.producer.ProducerConfig
 //import io.rml.framework.core.vocabulary.RMLVoc
 import org.apache.flink.streaming.api.scala.DataStream
 import org.apache.flink.streaming.connectors.kafka._
@@ -25,6 +26,14 @@ abstract class KafkaConnectorFactory {
   }
 
   def applySink[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: DataStream[T]): Unit
+
+  def getProducerConfig(brokerList: String): Properties = {
+    // set at-least-once delivery strategy. See https://ci.apache.org/projects/flink/flink-docs-stable/dev/connectors/kafka.html#kafka-09-and-010
+    val producerConfig = FlinkKafkaProducerBase.getPropertiesFromBrokerList(brokerList);
+    producerConfig.setProperty(ProducerConfig.RETRIES_CONFIG, "5");
+    producerConfig.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "1");
+    producerConfig
+  }
 
 }
 
@@ -97,10 +106,9 @@ case object KafkaConnector09Factory extends KafkaConnectorFactory {
   }
 
   override def applySink[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: DataStream[T]): Unit = {
-    val producer = new FlinkKafkaProducer09[T](brokerList, topic, serializationSchema)
+    val producer = new FlinkKafkaProducer09[T](topic, serializationSchema, getProducerConfig(brokerList));
     producer.setFlushOnCheckpoint(true)
     producer.setLogFailuresOnly(false)
-
     dataStream.addSink(producer)
   }
 }
@@ -128,7 +136,7 @@ case object KafkaConnector010Factory extends KafkaConnectorFactory {
     new FlinkKafkaConsumer010[T](topics, deserializationSchema, props)
   }
 
-  override def applySink[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], stream: DataStream[T]): Unit = {
+  override def applySink[T](brokerList: String, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: DataStream[T]): Unit = {
 
     //TODO: fix this / update flink to latest version to use the stable api methods....
     /**
@@ -140,10 +148,10 @@ case object KafkaConnector010Factory extends KafkaConnectorFactory {
       * The current implementation wouldn't make use of latest kafka feature of attaching timestamps to the records of
       * triple.
       */
-    val producer = new FlinkKafkaProducer010(brokerList, topic, serializationSchema)
+    val producer = new FlinkKafkaProducer010[T](topic, serializationSchema, getProducerConfig(brokerList));
     producer.setFlushOnCheckpoint(true)
     producer.setLogFailuresOnly(false)
-
-    stream.addSink(producer)
+    dataStream.addSink(producer)
   }
+
 }
