@@ -4,7 +4,7 @@
 The RML Streamer runs its jobs on Flink clusters.
 More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.7/tutorials/local_setup.html).
 At least a local cluster must be running in order to start executing RML Mappings with the RML Streamer.
-It is not necessary to install Hadoop. Please note that the current repository works with Flink 1.7.2 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.7.2/flink-1.7.2-bin-scala_2.11.tgz).
+It is not necessary to install Hadoop. Please note that the current repository works with Flink 1.8.0 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.8.0/flink-1.8.0-bin-scala_2.11.tgz).
 
 ## Installing RML Framework
 
@@ -30,7 +30,7 @@ run.sh -p RML MAPPING PATH -f FLINK PATH -b KAFKA BROKERS -t KAFKA TOPIC
 run.sh -c CONFIG FILE
 
 Every option can be defined in its long form in the CONFIG FILE.
-E.g. flinkBin=/opt/flink-1.7.2/flink
+E.g. flinkBin=/opt/flink-1.8.0/flink
 
 Options:
 -p --path RML MAPPING PATH         The path to an RML mapping file.
@@ -38,9 +38,10 @@ Options:
 -f --flinkBin FLINK PATH           The path to the Flink binary.
 -s --socket                        The port number of the socket.
 -b --kafkaBrokerList KAFKA BROKERS The (list of) hosts where Kafka runs on
+-a --parallelism                   The parallelism to assign to the job. The default is 1.
 -c --config CONFIG FILE	           The path to a configuration file. Every parameter can be put in its long form in the 
                                    configuration file. e.g:
-                                    flinkBin=/opt/flink-1.7.2/bin/flink
+                                    flinkBin=/opt/flink-1.8.0/bin/flink
                                     path=/home/rml/mapping.rml.ttl
                                    Commandline parameters override properties.
 ```
@@ -267,7 +268,7 @@ You will need to first have the flink server up and running, just as you would b
 ##### Versioning problem
 Flink supports kafka connectors, but only for their respective versions.
 
-Ex. FlinkConsumer08/-Producer08 will use kafka clients module from version 0.8 
+Ex. FlinkConsumer010/-Producer010 will use kafka clients module from version 0.10 
 
 This prevents us from implementing a dynamic kafka version support since same modules, used by a library with different versions,
 get overwritten by maven depending on it's distance in the dependency tree. 
@@ -294,7 +295,7 @@ The test scripts will use the configuration file kafka_test.properties:
     
     data-input=src/test/resources/stream/datasource.json
     mapping=src/test/resources/stream/mapping.ttl
-    flinkBin=/home/sitt/devtools/flink-1.3.2/bin/flink
+    flinkBin=/opt/flink-1.8.0/bin/flink
     rdf-test-topic=connect-test  #topic used by flink kafka producer to write output
     
     #the following 3 configs should be the same as the one written in the mapping file. 
@@ -330,7 +331,7 @@ write data from test.txt to the topic specified in the kafka_test.properties
 
 While executing the test script, you will have too keep in mind the connector being used in the implementation.
 
-For more info, check out the official [documentation](https://ci.apache.org/projects/flink/flink-docs-release-1.3/dev/connectors/kafka.html)
+For more info, check out the official [documentation](https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/kafka.html)
 
 Here are steps the script will take:
 
