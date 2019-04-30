@@ -48,13 +48,5 @@ trait Logging {
 }
 
 object Logging {
-
   private[this] var _level: LogLevel = Debug
-
-  @deprecated
-  def setLogLevel(level: LogLevel): Unit = _level = level
-
-  @deprecated
-  def logLevel: LogLevel = _level
-
 }

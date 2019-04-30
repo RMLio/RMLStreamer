@@ -22,17 +22,9 @@
 
 package io.rml.framework.std
 
-import java.io.File
-
-import io.rml.framework.core.extractors.{MappingExtractor, MappingReader}
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.rdf.RDFGraph
-import io.rml.framework.core.model.{RMLMapping, Uri}
-import org.apache.commons.io.IOUtils
-import org.mockito.Matchers._
-import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfter, FunSuite, Matchers}
+import org.scalatestplus.mockito.MockitoSugar
 
 class StdMappingReaderTest extends FunSuite with Matchers
                                             with MockitoSugar

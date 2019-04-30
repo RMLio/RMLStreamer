@@ -7,10 +7,8 @@ import io.rml.framework.Main
 import io.rml.framework.util.fileprocessing.MappingTestUtil
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
-import org.apache.flink.configuration.{ConfigConstants, Configuration}
 import org.apache.flink.runtime.jobgraph.JobGraph
 import org.apache.flink.runtime.messages.Acknowledge
-import org.apache.flink.runtime.messages.JobManagerMessages.CancelJob
 import org.apache.flink.runtime.minicluster.{MiniCluster, MiniClusterConfiguration}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 
@@ -76,7 +74,6 @@ object StreamTestUtil{
     Future {
       while(cluster.requestClusterOverview().get().getNumJobsRunningOrPending > 1 ){
         Thread.sleep(100)
-        //val x = 1 // TODO this seems weird
       }
       val graph = dataStream.executionEnvironment.getStreamGraph
       graph.setJobName(name)

@@ -25,13 +25,13 @@ package io.rml.framework.core.model.rdf.jena
 import java.io.{ByteArrayInputStream, File}
 import java.nio.charset.StandardCharsets
 
-import io.rml.framework.core.internal.{Debug, Logging}
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFLiteral, RDFResource, RDFTriple}
 import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.util.{Format, JenaUtil, Turtle}
 import io.rml.framework.core.vocabulary.RDFVoc
 import io.rml.framework.shared.{RMLException, ReadException}
-import org.apache.jena.rdf.model.{Model, Statement, Literal => JLiteral}
+import org.apache.jena.rdf.model.{Model, Statement}
 import org.apache.jena.shared.JenaException
 
 import scala.collection.JavaConverters._
@@ -158,7 +158,7 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   }
 
   private def logModelWhenDebugEnabled(): Unit = {
-    if (Logging.logLevel == Debug) {
+    if (isDebugEnabled) {
       logDebug("Loading triples into model:")
       val statements = model.listStatements().asScala.toSet
       statements.foreach(statement => logDebug(statement.toString))

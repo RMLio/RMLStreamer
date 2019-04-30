@@ -1,18 +1,16 @@
 package io.rml.framework.flink.source
 
 import java.nio.file.Paths
-import java.util.Properties
 
 import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.csv.{CSVHeader, CSVItem}
 import io.rml.framework.flink.util.{CustomCSVConfig, DefaultCSVConfig}
 import org.apache.commons.csv.CSVFormat
+import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010
-import org.apache.flink.streaming.util.serialization.SimpleStringSchema
 import org.apache.flink.table.api.scala.StreamTableEnvironment
 import org.apache.flink.table.api.{Table, TableEnvironment, Types}
 import org.apache.flink.table.sources.CsvTableSource

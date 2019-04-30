@@ -4,12 +4,13 @@ import java.util
 import java.util.Properties
 
 import io.rml.framework.core.model.{Kafka010, Kafka09, KafkaVersion}
+import org.apache.flink.api.common.serialization.{DeserializationSchema, SerializationSchema}
 import org.apache.flink.streaming.connectors.kafka.internals.KeyedSerializationSchemaWrapper
+import org.apache.flink.streaming.util.serialization.{KeyedDeserializationSchema, KeyedSerializationSchema}
 import org.apache.kafka.clients.producer.ProducerConfig
 //import io.rml.framework.core.vocabulary.RMLVoc
 import org.apache.flink.streaming.api.scala.DataStream
 import org.apache.flink.streaming.connectors.kafka._
-import org.apache.flink.streaming.util.serialization._
 
 abstract class KafkaConnectorFactory {
   def getSource[T](topic: String, valueDeserializer: DeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T]

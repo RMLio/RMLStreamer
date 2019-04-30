@@ -29,13 +29,13 @@ import io.rml.framework.flink.connector.kafka.KafkaConnectorVersionFactory
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
 import org.apache.flink.api.common.functions.RichMapFunction
+import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala._
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 //import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaProducer09}
-import org.apache.flink.streaming.util.serialization.SimpleStringSchema
 
 import scala.collection.immutable
 

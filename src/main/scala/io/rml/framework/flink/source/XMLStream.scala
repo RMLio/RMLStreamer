@@ -1,15 +1,12 @@
 package io.rml.framework.flink.source
 
-import java.util.Properties
-
 import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.xml.XMLItem
+import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010
-import org.apache.flink.streaming.util.serialization.SimpleStringSchema
 import org.slf4j.LoggerFactory
 
 case class XMLStream(stream: DataStream[Item]) extends Stream
