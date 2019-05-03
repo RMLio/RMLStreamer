@@ -1,9 +1,9 @@
 package io.rml.framework.flink.item.xml
 
 import java.io.{ByteArrayInputStream, InputStreamReader}
+import java.nio.charset.StandardCharsets
 
 import com.ximpleware.extended.{AutoPilotHuge, VTDGenHuge, XMLBuffer}
-import io.netty.util.CharsetUtil
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.source.XMLIterator
 import io.rml.framework.flink.util.XMLNamespace
@@ -74,7 +74,7 @@ object XMLItem {
 
 
   def getNSpacesFromString(xml: String): Map[String, String] = {
-    val inputStream = new ByteArrayInputStream(xml.getBytes(CharsetUtil.UTF_8))
+    val inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))
     val reader = new InputStreamReader(inputStream)
     try {
       val namespace = XMLNamespace.fromStreamReader(reader)

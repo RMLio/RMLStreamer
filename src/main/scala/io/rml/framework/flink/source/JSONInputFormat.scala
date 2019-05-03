@@ -1,6 +1,6 @@
 package io.rml.framework.flink.source
 
-import java.io.{BufferedReader, FileReader}
+import java.io.{FileInputStream, InputStream}
 import java.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -16,12 +16,13 @@ import org.jsfr.json.{JacksonParser, JsonSurfer}
 class JSONInputFormat(path: String, jsonPath: String) extends GenericInputFormat[Item] with NonParallelInput {
 
   private var iterator: util.Iterator[Object] = _
+  private var inputStream: InputStream = _
 
   override def open(inputSplit: GenericInputSplit): Unit = {
     super.open(inputSplit)
     val surfer = new JsonSurfer(JacksonParser.INSTANCE, JacksonProvider.INSTANCE)
-    iterator = surfer.iterator(new BufferedReader(new FileReader(path)),
-      JsonPathCompiler.compile(jsonPath))
+    inputStream = new FileInputStream(path)
+    iterator = surfer.iterator(inputStream, JsonPathCompiler.compile(jsonPath))
 
   }
 
@@ -34,5 +35,10 @@ class JSONInputFormat(path: String, jsonPath: String) extends GenericInputFormat
     val map = mapper.convertValue(asInstanceOf, classOf[java.util.Map[String, Object]])
 
     new JSONItem(map)
+  }
+
+  override def close(): Unit = {
+    inputStream.close();
+    super.close()
   }
 }
