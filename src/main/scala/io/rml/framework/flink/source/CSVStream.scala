@@ -12,7 +12,7 @@ import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.table.api.scala.StreamTableEnvironment
-import org.apache.flink.table.api.{Table, TableEnvironment, Types}
+import org.apache.flink.table.api.{Table, Types}
 import org.apache.flink.table.sources.CsvTableSource
 import org.apache.flink.types.Row
 
@@ -74,7 +74,7 @@ object CSVStream {
 
   def fromFileStream(path: String)(implicit senv: StreamExecutionEnvironment): CSVStream = {
 
-    implicit val tEnv: StreamTableEnvironment = TableEnvironment.getTableEnvironment(senv)
+    implicit val tEnv: StreamTableEnvironment = StreamTableEnvironment.create(senv);
 
     // standard delimiter //TODO: from RML mapping
     val delimiter = ','
