@@ -36,7 +36,7 @@ if [ ! -z "$CLEAN" ]; then
     echo "Recompiling test classes......"
     echo "-------------------------------------"
     echo ""
-    mvn clean install -DskipTests
+    mvn clean package -DskipTests
     echo ""
     echo "------------------------------"
     echo "Waiting 5 seconds..."
@@ -83,6 +83,9 @@ function runCommand {
 }
 
 function testServerVersion {
+    STREAMER_JAR=$(ls target/RMLStreamer*)
+    echo "Streamer jar: $STREAMER_JAR"
+
     VERSIONPATTERN="$1"
     rm "test.sink.txt" > /dev/null
     
@@ -119,7 +122,7 @@ function testServerVersion {
             echo "---------------------------"
 
             
-           bash $FLINKBIN  run -c io.rml.framework.Main target/framework-1.0-SNAPSHOT.jar -path "$MAPPING" --broker-list "${broker_list}" --topic "$rdf_test_topic" &            
+           bash $FLINKBIN  run -c io.rml.framework.Main $STREAMER_JAR -path "$MAPPING" --broker-list "${broker_list}" --topic "$rdf_test_topic" &            
           
            FLINK_PID=$!            
 

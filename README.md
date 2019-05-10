@@ -329,7 +329,7 @@ write data from test.txt to the topic specified in the kafka_test.properties
 
 ###### Main Script.
 
-While executing the test script, you will have too keep in mind the connector being used in the implementation.
+While executing the test script, you will have to keep in mind the connector being used in the implementation.
 
 For more info, check out the official [documentation](https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/kafka.html)
 
