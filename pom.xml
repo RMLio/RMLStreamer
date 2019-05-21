@@ -103,6 +103,10 @@ under the License.
                     <groupId>org.apache.flink</groupId>
                     <artifactId>flink-streaming-scala_2.11</artifactId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>flink-streaming-java_2.11</artifactId>
+                    <groupId>org.apache.flink</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -128,12 +132,32 @@ under the License.
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-table-planner_2.11</artifactId>
             <version>${flink.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.flink</groupId>
+                    <artifactId>flink-streaming-scala_2.11</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>flink-streaming-java_2.11</artifactId>
+                    <groupId>org.apache.flink</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-table-api-scala-bridge_2.11</artifactId>
             <version>${flink.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.flink</groupId>
+                    <artifactId>flink-streaming-scala_2.11</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>flink-streaming-java_2.11</artifactId>
+                    <groupId>org.apache.flink</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -284,6 +308,33 @@ under the License.
     on a cluster. Change the value of Program-Class if your program entry point changes. -->
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-banned-dependencies</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedDependencies>
+                                    <excludes>
+                                        <exclude>org.apache.flink:flink-streaming-scala_2.11:*:*:compile</exclude>
+                                        <exclude>org.apache.flink:flink-streaming-java_2.11:*:*:compile</exclude>
+                                        <exclude>org.apache.flink:flink-clients_2.11:*:*:compile</exclude>
+                                    </excludes>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- We use the maven-shade plugin to create a fat jar that contains all dependencies
             except flink and it's transitive dependencies. The resulting fat-jar can be executed
             on a cluster. Change the value of Program-Class if your program entry point changes. -->
