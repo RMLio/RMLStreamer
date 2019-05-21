@@ -102,7 +102,7 @@ object TermMapGenerators {
     // return a function that processes a reference
     (item: Item) => {
       for {
-        iter <- Engine.processReference(termMap.reference.get, item, encode = true)
+        iter <- Engine.processReference(termMap.reference.get, item, encode = !termMap.isInstanceOf[SubjectMap])
 
       } yield for {
         value <- iter
