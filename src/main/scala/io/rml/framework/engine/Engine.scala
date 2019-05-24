@@ -104,8 +104,8 @@ object Engine extends Logging {
     * @param item
     * @return
     */
-  def processReference(reference: Literal, item: Item, encode: Boolean = false): Option[List[String]] = {
-    if (encode) item.refer(reference.toString).map(list => list map Uri.encode)  else item.refer(reference.toString)
+  def processReference(reference: Literal, item: Item): Option[List[String]] = {
+    item.refer(reference.toString)
   }
 
   /**
