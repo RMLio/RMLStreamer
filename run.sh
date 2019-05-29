@@ -108,6 +108,10 @@ function setProperties {
 # we pass the script arguments to the function via $@
 setProperties $@
 
+# find a jar...
+STREAMER_JAR=$(ls target/RMLStreamer*)
+
+echo "streamer jar: $STREAMER_JAR"
 echo "mapping: $MAPPINGPATH"
 echo "output: $OUTPUTPATH"
 echo "socket: $SOCKET"
@@ -123,7 +127,7 @@ echo ""
 # Check if $MAPPINGPATH is set
 if [ ! -z "$MAPPINGPATH"  ]; then
 	# Execute
-	bash $FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main target/RMLStreamer-1.0.1-SNAPSHOT.jar --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
+	bash $FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main $STREAMER_JAR --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
 else
 	echo "Execution aborted: -p|--path must be given."
 	echo ""
