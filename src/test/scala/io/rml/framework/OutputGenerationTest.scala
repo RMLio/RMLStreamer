@@ -1,28 +1,21 @@
 package io.rml.framework
 
-import java.io.{File, InputStreamReader}
-import java.nio.file.Path
-
+import io.rml.framework.shared.TermTypeException
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
 import io.rml.framework.util.{Logger, Sanitizer}
-import io.rml.framework.shared.{RMLException, TermTypeException}
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.io.IOUtils
 import org.scalatest.{FlatSpec, Matchers}
-import scala.collection.JavaConverters._
 
-import scala.util.Sorting
 import scala.util.control.Exception
 
 
 class OutputGenerationTest extends FlatSpec with Matchers {
 
   val failing = "negative_test_cases/liter_typecast_fail"
-  val passing = "rml-testcases"
+  val passing = Array("bugs", "rml-testcases")
   val temp = "temp_ignored_testcases/nq"
   "Output from the generator" should "match the output from ouput.ttl" in {
 
-    ExpectedOutputTestUtil.test(passing, checkGeneratedOutput)
+    passing.foreach(test => ExpectedOutputTestUtil.test(test, checkGeneratedOutput))
     //checkGeneratedOutput(OutputTestHelper.getFile("example2-object").toString)
   }
 

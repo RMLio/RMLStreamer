@@ -1,0 +1,8 @@
+{
+  "people": [
+     {"id": "0",
+       "test": [{"name":"john"}, {"name":"joe"} ],
+       "test2": {"n": "doe"}
+     }
+   ]
+}
