@@ -22,6 +22,8 @@
 
 package io.rml.framework.engine
 
+import java.util.regex.Pattern
+
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.flink.item.Item
@@ -59,13 +61,14 @@ object Engine extends Logging {
     for (m <- matches) {
       val sanitizedRef = removeBrackets(m.toString()).replaceAll("#", "\\$")
       val optReferred = if (encode) item.refer(sanitizedRef).map(lString => lString.map(el => Uri.encode(el))) else item.refer(sanitizedRef)
+      val quotedSanitizedRef = Pattern.quote(sanitizedRef)
       //This is to get the value of Some(refList) (Not a for-loop over list!!!)
       optReferred.foreach(refList => {
 
         // Using fifo queue to create a list of template string with the combination of referenced resources
           if(result.isEmpty){
             //Used string template since we still have to escape the curly brackets
-            result ++=  refList.map( referred =>  replaced.replaceAll(s"\\{$sanitizedRef\\}",referred))
+            result ++=  refList.map( referred =>  replaced.replaceAll(s"\\{$quotedSanitizedRef\\}",referred))
           }else{
 
             // Previously edited templates need to be reused for combination with new referenced resources
@@ -73,7 +76,7 @@ object Engine extends Logging {
             val maxLen = result.length
             while (count !=  maxLen) {
               val candid =  result.dequeue()
-              result  ++=  refList.map(referred =>  candid.replaceAll(s"\\{$sanitizedRef\\}",  referred))
+              result  ++=  refList.map(referred =>  candid.replaceAll(s"\\{$quotedSanitizedRef\\}",  referred))
 
               count += 1
             }
