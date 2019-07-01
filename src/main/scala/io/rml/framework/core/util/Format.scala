@@ -26,4 +26,6 @@ sealed trait Format
 
 case object Turtle extends Format
 
+case object JSON_LD extends Format
+
 case object NTriples extends Format

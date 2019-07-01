@@ -28,6 +28,7 @@ object JenaUtil {
     format match {
       case Turtle => "TURTLE"
       case NTriples => "NTRIPLES"
+      case JSON_LD => "JSON-LD"
     }
   }
 
