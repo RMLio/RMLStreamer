@@ -53,7 +53,7 @@ object StreamingTestMain {
     implicit val postProcessor:PostProcessor =
       parameters.get(POST_PROCESS_PARAM) match {
         case "bulk" => new BulkPostProcessor
-        case "JSON-LD" => new JsonLDProcessor("")
+        case "json-ld" => new JsonLDProcessor
         case _ => new NopPostProcessor
       }
 

@@ -130,6 +130,13 @@ trait RDFGraph extends RDFNode {
     */
   def createLiteral(literal: Literal): RDFLiteral
 
+
+  /**
+    *
+    * Clears the stored statements in the model
+    */
+  def clear():Unit
+
 }
 
 object RDFGraph {

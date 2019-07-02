@@ -31,7 +31,7 @@ import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.util.{Format, JenaUtil, Turtle}
 import io.rml.framework.core.vocabulary.RDFVoc
 import io.rml.framework.shared.{RMLException, ReadException}
-import org.apache.jena.rdf.model.{Model, Statement}
+import org.apache.jena.rdf.model.{Model, ModelFactory, Statement}
 import org.apache.jena.shared.JenaException
 
 import scala.collection.JavaConverters._
@@ -147,6 +147,13 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
     resources.map(resource => JenaResource(resource)).toList
   }
 
+  /**
+    * Clears all the statements stored in the model
+    */
+  override def clear(): Unit = {
+      model.removeAll()
+  }
+
   ////////////////////////////////////////////////
   // Private
   ////////////////////////////////////////////////
@@ -175,5 +182,5 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
 object JenaGraph {
 
   def apply(model: Model): JenaGraph = new JenaGraph(model)
-
+  def apply():JenaGraph = JenaGraph(ModelFactory.createDefaultModel())
 }

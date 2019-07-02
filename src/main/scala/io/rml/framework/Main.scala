@@ -73,7 +73,7 @@ object Main extends Logging {
     implicit val postProcessor:PostProcessor =
       parameters.get("post-process") match {
         case "bulk" => new BulkPostProcessor
-        case "JSON-LD" => new JsonLDProcessor("")
+        case "json-ld" => new JsonLDProcessor
         case _ => new NopPostProcessor
       }
 
