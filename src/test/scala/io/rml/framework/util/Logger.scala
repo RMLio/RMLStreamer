@@ -5,7 +5,7 @@ import io.rml.framework.core.internal.Logging
 object Logger extends ColorString with Logging {
 
   override def logInfo(msg : String): Unit = {
-    super.logError( "[INFO]  ".yellow +  msg.yellow)
+    super.logInfo( "[INFO]  ".yellow +  msg.yellow)
   }
 
   override def logError(msg: String): Unit = {
@@ -13,11 +13,11 @@ object Logger extends ColorString with Logging {
   }
 
   def logSuccess(msg: String): Unit = {
-    super.logError("[SUCCESS]  ".green + msg.green)
+    super.logInfo("[SUCCESS]  ".green + msg.green)
   }
 
   def lineBreak(count:Int = 100) : Unit = {
-    super.logError(("="*count).blue)
+    super.logInfo(("="*count).blue)
   }
 
 
