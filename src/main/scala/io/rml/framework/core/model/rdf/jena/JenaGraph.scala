@@ -22,7 +22,7 @@
 
 package io.rml.framework.core.model.rdf.jena
 
-import java.io.{ByteArrayInputStream, File}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, OutputStream}
 import java.nio.charset.StandardCharsets
 
 import io.rml.framework.core.internal.Logging
@@ -69,7 +69,11 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
     model.listStatements().asScala.map(JenaTriple(_)).toList
   }
 
-  override def write(format: Format): String = ??? //TODO
+  override def write(format: Format): String = {
+    val stream = new ByteArrayOutputStream()
+    model.write(stream, JenaUtil.format(format))
+    stream.toString("UTF-8")
+  }
 
   @throws(classOf[ReadException])
   override def read(dump: String, format: String = "TURTLE"): Unit = {
