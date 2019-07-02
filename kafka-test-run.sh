@@ -16,6 +16,12 @@ do
             VERBOSE=true
         shift
         ;;
+
+        -pp|--postprocess)
+            POSTPROCESS="$2"
+        shift
+        shift
+        ;;
         *)
            POSITIONAL+=("$1")
         shift
@@ -122,7 +128,7 @@ function testServerVersion {
             echo "---------------------------"
 
             
-           bash $FLINKBIN  run -c io.rml.framework.Main $STREAMER_JAR -path "$MAPPING" --broker-list "${broker_list}" --topic "$rdf_test_topic" &            
+           bash $FLINKBIN  run -c io.rml.framework.Main $STREAMER_JAR --post-process "$POSTPROCESS" --path "$MAPPING" --broker-list "${broker_list}" --topic "$rdf_test_topic" &            
           
            FLINK_PID=$!            
 

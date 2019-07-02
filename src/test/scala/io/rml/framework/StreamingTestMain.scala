@@ -3,6 +3,7 @@ package io.rml.framework
 import java.io.File
 import java.util.concurrent.{CompletableFuture, Executors}
 
+import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
 import io.rml.framework.util.{Logger, _}
 import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil, MappingTestUtil}
 import io.rml.framework.util.server.{TCPTestServer, TestServer}
@@ -19,6 +20,7 @@ import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Futu
 
 
 object StreamingTestMain {
+  Logger.lineBreak(50)
   implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
   implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
   implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
@@ -29,6 +31,7 @@ object StreamingTestMain {
 
   val PATH_PARAM = "path"
   val TYPE_PARAM =  "type"
+  val POST_PROCESS_PARAM = "post-process"
 
 
   def main(args: Array[String]): Unit = {
@@ -47,6 +50,13 @@ object StreamingTestMain {
     val testType = if (parameters.has(TYPE_PARAM)) parameters.get(TYPE_PARAM)
     else "kafka"
 
+    implicit val postProcessor:PostProcessor =
+      parameters.get(POST_PROCESS_PARAM) match {
+        case "bulk" => new BulkPostProcessor
+        case "JSON-LD" => new JsonLDProcessor
+        case _ => new NopPostProcessor
+      }
+
     val folder = MappingTestUtil.getFile(fileName)
     val server = serverFactoryMap(testType).createServer()
     serverOpt =  Some(server)
@@ -56,12 +66,13 @@ object StreamingTestMain {
     Await.result(executeTestCase(folder), Duration.Inf)
 
     server.tearDown()
+    Logger.lineBreak(50)
     sys.exit(1)
 
   }
 
 
-  def executeTestCase(folder: File): Future[Unit] = {
+  def executeTestCase(folder: File)(implicit postProcessor: PostProcessor): Future[Unit] = {
     cluster flatMap { cluster =>
       cluster.synchronized {
 

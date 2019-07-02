@@ -49,10 +49,10 @@ if [ ! -z "$CLEAN" ]; then
     mvn test -DskipTests
     echo ""
     echo "------------------------------"
-    echo "Waiting 5 seconds..." 
+    echo "Waiting 2 seconds..." 
     echo "------------------------------"
     echo ""
-    sleep 5
+    sleep 2
 fi
 
 #Create temp file for logging output and grepping failed test cases
@@ -63,17 +63,16 @@ exec 4<"$temp_test_log"
 rm "$temp_test_log"
 
 
+echo "jqskdlfmqsdfjk"
 
 find src/test/resources/stream/$STREAMTYPE -type d -name "RMLTC*" |
     sort | 
     grep "stream/.*RMLTC.*" -o |
     sed 's/\(.*\)/--path \1/'| 
-    tr "\n" "\0" |
+    tr "\n" "\0"  | 
     xargs -0 -i -n1 mvn exec:java -Dexec.mainClass="io.rml.framework.StreamingTestMain"  -Dexec.classpathScope="test" -Dexec.args="{} --type $STREAMTYPE" |
     tr "\n" "\0" |
-    xargs -0 -I% -n1 bash -c 'echo  "%" | egrep "^\[.*\][^\[\]]*|^<.*>|^_:" ;  echo "%" >&3'
-
-
+    xargs -0 -I% -n1 bash -c 'echo  "%" | egrep "\[SUCCESS\].*|\[ERROR\].*|\[INFO\].*|^<.*>|^_:|===*" ;  echo "%" >&3'
 
 echo "" 
 echo "" 
@@ -86,7 +85,7 @@ echo ""
 while read error_line 
 do
   
-   candid=$(echo "$error_line"| grep --color=always "^\[ERROR\].*")
+   candid=$(echo "$error_line"| grep --color=always "\[ERROR\].*")
    
    if [ ! -z "$candid" ]; then 
        echo $candid 

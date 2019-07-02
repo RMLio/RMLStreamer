@@ -1,6 +1,6 @@
 package io.rml.framework.engine
 
-trait PostProcessor extends Serializable {
+trait PostProcessor extends Serializable{
 
   def process(quadStrings: List[String]): List[String]
 }
@@ -15,6 +15,7 @@ class NopPostProcessor extends PostProcessor {
 class BulkPostProcessor extends PostProcessor {
   override def process(quadStrings: List[String]): List[String] = {
     List(quadStrings.mkString("\n"))
+
   }
 }
 

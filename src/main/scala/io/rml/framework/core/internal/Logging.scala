@@ -29,7 +29,8 @@ import org.slf4j.LoggerFactory
   */
 trait Logging {
 
-  private val logger = LoggerFactory.getLogger(this.getClass);
+  private val logger = LoggerFactory.getLogger(this.getClass)
+
 
   def logDebug(log: String): Unit = logger.debug(log)
 
@@ -37,7 +38,7 @@ trait Logging {
 
   def logError(log: String): Unit = logger.error(log)
 
-  def logError(log: String, errorObj: Any*): Unit = logger.error(log, errorObj);
+  def logError(log: String, errorObj: Any*): Unit = logger.error(log, errorObj)
 
   def logWarning(log: String): Unit = logger.warn(log)
 
@@ -48,5 +49,5 @@ trait Logging {
 }
 
 object Logging {
-  private[this] var _level: LogLevel = Debug
+  private[this] var _level: LogLevel = Info
 }
