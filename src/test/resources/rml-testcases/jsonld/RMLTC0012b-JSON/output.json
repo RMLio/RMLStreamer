@@ -1,5 +1,6 @@
-_:BobSmith <http://example.com/city> "London" .
-_:BobSmith <http://xmlns.com/foaf/0.1/name> "Bob Smith" .
-_:SueJones <http://example.com/city> "Madrid" .
-_:SueJones <http://xmlns.com/foaf/0.1/name> "Sue Jones" .
-
+{ "@id" : "_:b0", "city" : "London", "@context" : { "city" : { "@id" : "http://example.com/city" } } }
+{ "@id" : "_:b0", "name" : "Bob Smith", "@context" : { "name" : { "@id" : "http://xmlns.com/foaf/0.1/name" } } }
+{ "@id" : "_:b0", "city" : "London", "@context" : { "city" : { "@id" : "http://example.com/city" } } }
+{ "@id" : "_:b0", "name" : "Bob Smith", "@context" : { "name" : { "@id" : "http://xmlns.com/foaf/0.1/name" } } }
+{ "@id" : "_:b0", "city" : "Madrid", "@context" : { "city" : { "@id" : "http://example.com/city" } } }
+{ "@id" : "_:b0", "name" : "Sue Jones", "@context" : { "name" : { "@id" : "http://xmlns.com/foaf/0.1/name" } } }

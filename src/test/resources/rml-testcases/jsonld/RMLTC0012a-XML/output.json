@@ -1,5 +1,3 @@
-_:BobSmith30 <http://example.com/amount> "30" .
-_:BobSmith30 <http://xmlns.com/foaf/0.1/name> "Bob Smith" .
-_:SueJones20 <http://example.com/amount> "20" .
-_:SueJones20 <http://xmlns.com/foaf/0.1/name> "Sue Jones" .
-
+{ "@id" : "_:b0", "amount" : "30", "name" : "Bob Smith", "@context" : { "name" : { "@id" : "http://xmlns.com/foaf/0.1/name" }, "amount" : { "@id" : "http://example.com/amount" } } }
+{ "@id" : "_:b0", "amount" : "20", "name" : "Sue Jones", "@context" : { "name" : { "@id" : "http://xmlns.com/foaf/0.1/name" }, "amount" : { "@id" : "http://example.com/amount" } } }
+{ "@id" : "_:b0", "amount" : "30", "name" : "Bob Smith", "@context" : { "name" : { "@id" : "http://xmlns.com/foaf/0.1/name" }, "amount" : { "@id" : "http://example.com/amount" } } }
