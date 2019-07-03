@@ -84,9 +84,11 @@ trait RDFGraph extends RDFNode {
   def filterProperties(propertyUri: Uri): List[RDFResource]
 
   /**
+    * Outputs a string containing the statements in the
+    * model in the given format.
     *
     * @param format Output format
-    * @return
+    * @return a formatted string containing the statements of the model
     */
   def write(format: Format): String
 
@@ -127,6 +129,12 @@ trait RDFGraph extends RDFNode {
     * @return RDFLiteral instance.
     */
   def createLiteral(literal: Literal): RDFLiteral
+
+
+  /**
+    * Reset the model to it's initial/blank state.
+    */
+  def clear():Unit
 
 }
 

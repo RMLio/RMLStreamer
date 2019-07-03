@@ -22,7 +22,7 @@
 
 package io.rml.framework.core.model.rdf.jena
 
-import java.io.{ByteArrayInputStream, File}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, OutputStream}
 import java.nio.charset.StandardCharsets
 
 import io.rml.framework.core.internal.Logging
@@ -31,7 +31,7 @@ import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.util.{Format, JenaUtil, Turtle}
 import io.rml.framework.core.vocabulary.RDFVoc
 import io.rml.framework.shared.{RMLException, ReadException}
-import org.apache.jena.rdf.model.{Model, Statement}
+import org.apache.jena.rdf.model.{Model, ModelFactory, Statement}
 import org.apache.jena.shared.JenaException
 
 import scala.collection.JavaConverters._
@@ -69,7 +69,11 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
     model.listStatements().asScala.map(JenaTriple(_)).toList
   }
 
-  override def write(format: Format): String = ??? //TODO
+  override def write(format: Format): String = {
+    val stream = new ByteArrayOutputStream()
+    model.write(stream, JenaUtil.format(format))
+    stream.toString("UTF-8")
+  }
 
   @throws(classOf[ReadException])
   override def read(dump: String, format: String = "TURTLE"): Unit = {
@@ -143,6 +147,13 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
     resources.map(resource => JenaResource(resource)).toList
   }
 
+  /**
+    * Clears all the statements stored in the model
+    */
+  override def clear(): Unit = {
+      model.removeAll()
+  }
+
   ////////////////////////////////////////////////
   // Private
   ////////////////////////////////////////////////
@@ -171,5 +182,5 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
 object JenaGraph {
 
   def apply(model: Model): JenaGraph = new JenaGraph(model)
-
+  def apply():JenaGraph = JenaGraph(ModelFactory.createDefaultModel())
 }

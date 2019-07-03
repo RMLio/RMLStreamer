@@ -1,8 +1,9 @@
 package io.rml.framework
 
+import io.rml.framework.engine.PostProcessor
 import io.rml.framework.shared.TermTypeException
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
-import io.rml.framework.util.{Logger, Sanitizer}
+import io.rml.framework.util.{Logger, Sanitizer, TestUtil}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.control.Exception
@@ -11,11 +12,14 @@ import scala.util.control.Exception
 class OutputGenerationTest extends FlatSpec with Matchers {
 
   val failing = "negative_test_cases/liter_typecast_fail"
-  val passing = Array("bugs", "rml-testcases")
+  val passing = Array(("bugs","noopt"), ("rml-testcases","noopt"), ("rml-testcases/jsonld","json-ld"))
   val temp = "temp_ignored_testcases/nq"
-  "Output from the generator" should "match the output from ouput.ttl" in {
+  "Output from the generator" should "match the output from output.ttl" in {
 
-    passing.foreach(test => ExpectedOutputTestUtil.test(test, checkGeneratedOutput))
+    passing.foreach(test =>  {
+      implicit val postProcessor: PostProcessor= TestUtil.pickPostProcessor(test._2)
+      ExpectedOutputTestUtil.test(test._1, checkGeneratedOutput)
+    })
     //checkGeneratedOutput(OutputTestHelper.getFile("example2-object").toString)
   }
 
@@ -52,9 +56,10 @@ class OutputGenerationTest extends FlatSpec with Matchers {
     *
     * @param testFolderPath
     */
-  def checkGeneratedOutput(testFolderPath: String): Unit = {
+  def checkGeneratedOutput(testFolderPath: String)(implicit postProcessor: PostProcessor): Unit = {
     var expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(testFolderPath).toSet.flatten
-    var generatedOutputs: List[String] = TripleGeneratorTestUtil.processFilesInTestFolder(testFolderPath).flatten
+    val tester = TripleGeneratorTestUtil(postProcessor)
+    var generatedOutputs: List[String] = tester.processFilesInTestFolder(testFolderPath).flatten
 
     /**
       * The amount of spaces added in the generated triples might be different from the expected triple.

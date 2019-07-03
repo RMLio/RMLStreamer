@@ -27,7 +27,7 @@ object JenaUtil {
   def format(format: Format): String = {
     format match {
       case Turtle => "TURTLE"
-      case NTriples => "NTRIPLES"
+      case NTriples => "N-TRIPLES"
       case JSON_LD => "JSON-LD"
     }
   }

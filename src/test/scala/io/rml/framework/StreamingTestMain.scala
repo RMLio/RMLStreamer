@@ -45,17 +45,12 @@ object StreamingTestMain {
     val parameters = ParameterTool.fromArgs(args)
 
     val fileName = if (parameters.has(PATH_PARAM)) parameters.get(PATH_PARAM)
-    else "stream/kafka/RMLTC0012a-XML-STREAM"
+    else "/home/sitt/Documents/rml-streamer/src/test/resources/json-ld/stream/tcp/RMLTC0012a-XML-STREAM-SPLIT"
 
     val testType = if (parameters.has(TYPE_PARAM)) parameters.get(TYPE_PARAM)
-    else "kafka"
+    else "tcp"
 
-    implicit val postProcessor:PostProcessor =
-      parameters.get(POST_PROCESS_PARAM) match {
-        case "bulk" => new BulkPostProcessor
-        case "JSON-LD" => new JsonLDProcessor
-        case _ => new NopPostProcessor
-      }
+    implicit val postProcessor:PostProcessor = TestUtil.pickPostProcessor(parameters.get(POST_PROCESS_PARAM))
 
     val folder = MappingTestUtil.getFile(fileName)
     val server = serverFactoryMap(testType).createServer()
