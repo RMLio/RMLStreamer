@@ -24,6 +24,7 @@ import java.io.File
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
+import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.KafkaConnectorVersionFactory
 import io.rml.framework.flink.item.{Item, JoinedItem}
@@ -68,6 +69,13 @@ object Main extends Logging {
 
     val kafkaTopic = if (parameters.has("topic")) parameters.get("topic")
     else EMPTY_VALUE
+
+    implicit val postProcessor:PostProcessor =
+      parameters.get("post-process") match {
+        case "bulk" => new BulkPostProcessor
+        case "JSON-LD" => new JsonLDProcessor
+        case _ => new NopPostProcessor
+      }
 
 
     // TODO: do logging correctly
@@ -161,7 +169,8 @@ object Main extends Logging {
     */
   def createStreamFromFormattedMapping(formattedMapping: FormattedRMLMapping)
                                       (implicit env: ExecutionEnvironment,
-                                       senv: StreamExecutionEnvironment): DataStream[String] = {
+                                       senv: StreamExecutionEnvironment,
+                                       postProcessor: PostProcessor): DataStream[String] = {
 
     // to create a Flink Data Stream there must be triple maps that contain streamed logical sources
     require(formattedMapping.streamTripleMaps.nonEmpty)
@@ -214,7 +223,8 @@ object Main extends Logging {
     */
   def createDataSetFromFormattedMapping(formattedMapping: FormattedRMLMapping)
                                        (implicit env: ExecutionEnvironment,
-                                        senv: StreamExecutionEnvironment): DataSet[String] = {
+                                        senv: StreamExecutionEnvironment,
+                                        postProcessor: PostProcessor): DataSet[String] = {
 
     /**
       * check if the mapping has standard triple maps and triple maps with joined triple maps
@@ -257,7 +267,8 @@ object Main extends Logging {
     */
   private def createStandardTripleMapPipeline(triplesMaps: List[TripleMap])
                                              (implicit env: ExecutionEnvironment,
-                                              senv: StreamExecutionEnvironment): DataSet[String] = {
+                                              senv: StreamExecutionEnvironment,
+                                              postProcessor: PostProcessor): DataSet[String] = {
 
     // group triple maps by logical sources
     val grouped = triplesMaps.groupBy(tripleMap => tripleMap.logicalSource)
@@ -302,7 +313,7 @@ object Main extends Logging {
     * @param senv        The execution environment needs to be given implicitly
     * @return
     */
-  private def createTMWithPTMPipeline(triplesMaps: List[JoinedTripleMap])(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment): DataSet[String] = {
+  private def createTMWithPTMPipeline(triplesMaps: List[JoinedTripleMap])(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataSet[String] = {
     // TODO: Check if CoGroup is more efficient than Filter + Join
 
     val datasets = triplesMaps.map(tm => {
@@ -422,19 +433,24 @@ object Main extends Logging {
 
   // Abstract class for creating a custom processing mapping step in a pipeline.
   // extend a RichFunction to have access to the RuntimeContext
-  abstract class Processor[T](engine: StatementEngine[T]) extends RichMapFunction[T, List[String]] {
+  abstract class Processor[T](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends RichMapFunction[T, List[String]] {
 
     override def map(in: T): List[String] = {
-      engine.process(in)
+      val quadStrings = engine.process(in)
         .map(quad => quad.toString)
-    }
 
+      postProcessor.process(quadStrings)
+    }
   }
 
+
+
   // Custom processing class with normal items
-  class StdProcessor(engine: StatementEngine[Item]) extends Processor[Item](engine)
+  class StdProcessor(engine: StatementEngine[Item])(implicit postProcessor: PostProcessor) extends Processor[Item](engine)
+
 
   // Custom processing class with joined items
-  class JoinedProcessor(engine: StatementEngine[JoinedItem]) extends Processor[JoinedItem](engine)
+  class JoinedProcessor(engine: StatementEngine[JoinedItem])(implicit postProcessor: PostProcessor) extends Processor[JoinedItem](engine)
+
 
 }

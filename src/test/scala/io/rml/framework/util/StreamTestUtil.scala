@@ -4,6 +4,7 @@ import java.io.File
 import java.util.concurrent.CompletableFuture
 
 import io.rml.framework.Main
+import io.rml.framework.engine.{NopPostProcessor, PostProcessor}
 import io.rml.framework.util.fileprocessing.MappingTestUtil
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
@@ -27,7 +28,9 @@ object StreamTestUtil{
     * @param testCaseFolder folder containing rml mapping file
     * @return flink DataStream[String]
     */
-  def createDataStream(testCaseFolder: File)(implicit senv: StreamExecutionEnvironment, env: ExecutionEnvironment): DataStream[String] = {
+  def createDataStream(testCaseFolder: File)(implicit senv: StreamExecutionEnvironment,
+                                             env: ExecutionEnvironment,
+                                             postProcessor: PostProcessor): DataStream[String] = {
 
     // read the mapping
     val formattedMapping = MappingTestUtil.processFilesInTestFolder(testCaseFolder.getAbsolutePath)

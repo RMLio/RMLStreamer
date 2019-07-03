@@ -6,7 +6,8 @@ kafka_2*/
 *.txt
 *.swp
 *.properties
-!kafka_test.properties
+!src/test/resources/log4j.properties
+!kafka_test_example.properties
 !*_example.properties
 !docker/configuration.properties
 scripts/node_modules

@@ -20,6 +20,7 @@ class StatementEngineTest extends FunSuite with Matchers {
 
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     val formattedMapping = readMapping("example10/mapping.rml.ttl")
@@ -39,6 +40,7 @@ class StatementEngineTest extends FunSuite with Matchers {
 
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     //val formattedMapping = readMapping("example1/example.rml.ttl")
@@ -58,6 +60,7 @@ class StatementEngineTest extends FunSuite with Matchers {
 
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     val formattedMapping = readMapping("example2/example.rml.ttl")
@@ -76,6 +79,7 @@ class StatementEngineTest extends FunSuite with Matchers {
 
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     val formattedMapping = readMapping("example2-bn/example.rml.ttl")
@@ -92,6 +96,7 @@ class StatementEngineTest extends FunSuite with Matchers {
   test("example2-lang") {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     val formattedMapping = readMapping("example2-lang/example.rml.ttl")
@@ -108,6 +113,7 @@ class StatementEngineTest extends FunSuite with Matchers {
   test("example2-object") {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     val formattedMapping = readMapping("example2-object/example.rml.ttl")
@@ -124,6 +130,7 @@ class StatementEngineTest extends FunSuite with Matchers {
   test("example2-pm") {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     val formattedMapping = readMapping("example2pm/example.rml.ttl")
@@ -157,6 +164,7 @@ class StatementEngineTest extends FunSuite with Matchers {
   test("example4") {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     val formattedMapping = readMapping("example4/example4_Venue.rml.ttl")
@@ -173,6 +181,7 @@ class StatementEngineTest extends FunSuite with Matchers {
   test("example4b") {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     val formattedMapping = readMapping("example4b/example4_Venue.rml.ttl")
@@ -189,6 +198,7 @@ class StatementEngineTest extends FunSuite with Matchers {
   test("example6") {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     val formattedMapping = readMapping("example6/example.rml.ttl")
@@ -205,6 +215,7 @@ class StatementEngineTest extends FunSuite with Matchers {
   test("example8") {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     val formattedMapping = readMapping("example8/simergy.rml.ttl")
@@ -222,6 +233,7 @@ class StatementEngineTest extends FunSuite with Matchers {
 
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
     val formattedMapping = readMapping("csv-extensive-1/complete.rml.ttl")
