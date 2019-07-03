@@ -39,6 +39,8 @@ Options:
 -s --socket                        The port number of the socket.
 -b --kafkaBrokerList KAFKA BROKERS The (list of) hosts where Kafka runs on
 -a --parallelism                   The parallelism to assign to the job. The default is 1.
+-pp --post-process                 The name of the post processing that will be done on generated triples 
+                                   Currently suppots:  bulk, json-ld
 -c --config CONFIG FILE	           The path to a configuration file. Every parameter can be put in its long form in the 
                                    configuration file. e.g:
                                     flinkBin=/opt/flink-1.8.0/bin/flink
