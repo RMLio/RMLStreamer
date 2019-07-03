@@ -221,12 +221,7 @@ under the License.
             <artifactId>flink-connector-kafka-0.10_2.11</artifactId>
             <version>${flink.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.rdf4j/rdf4j-rio-api -->
-        <dependency>
-            <groupId>org.eclipse.rdf4j</groupId>
-            <artifactId>rdf4j-rio-api</artifactId>
-            <version>3.0.0-M1</version>
-        </dependency>
+
 
         <!--dependency>
             <groupId>org.apache.flink</groupId>
