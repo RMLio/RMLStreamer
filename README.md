@@ -40,7 +40,8 @@ Options:
 -b --kafkaBrokerList KAFKA BROKERS The (list of) hosts where Kafka runs on
 -a --parallelism                   The parallelism to assign to the job. The default is 1.
 -pp --post-process                 The name of the post processing that will be done on generated triples 
-                                   Currently suppots:  bulk, json-ld
+                                   Default is: None
+                                   Currently supports:  bulk, json-ld
 -c --config CONFIG FILE	           The path to a configuration file. Every parameter can be put in its long form in the 
                                    configuration file. e.g:
                                     flinkBin=/opt/flink-1.8.0/bin/flink
@@ -244,7 +245,11 @@ rml:logicalSource [
 There are 4 types of test case folders:
 * rml-original-testcases
 * rml-testcases
+    * json-ld
 * stream
+    * kafka
+    * tcp
+* json-ld 
     * kafka
     * tcp
 * negative_test_cases
@@ -254,14 +259,18 @@ There are 4 types of test case folders:
 1. rml-original-testcases contains all the original test cases without edits in the sub files/folders.  
 
 2. rml-testcases contains all the test cases for which, the current implementation should pass. 
+    * json-ld folder contains test cases where the expected output is in json-ld format.
 
 3. stream contains all streaming test cases which should be checked using the stream-test.sh in the root folder.
     * kafka contains all the test cases with kafka cluster as logical source.
     * tcp contains all the test cases with tcp socket as a logical source. 
+    
+4. json-ld contains the streaming test cases which are checked just like test cases in number 3).
+   The expected output is in json-ld format.  
+   
+5. negative_test_cases contains cases for which, the current implementation should throw exceptions/fail.  
 
-4. negative_test_cases contains cases for which, the current implementation should throw exceptions/fail.  
-
-5. temp_ignored_testcases contains cases for which, the current implementation cannot pass due to missing features. 
+6. temp_ignored_testcases contains cases for which, the current implementation cannot pass due to missing features. 
 
 ##### Kafka Test
 
