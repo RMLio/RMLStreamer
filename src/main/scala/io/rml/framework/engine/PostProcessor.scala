@@ -1,10 +1,10 @@
 package io.rml.framework.engine
 
-import io.rml.framework.core.model.Uri
+import java.io.{IOException, ObjectInputStream}
+
 import io.rml.framework.core.model.rdf.RDFGraph
 import io.rml.framework.core.model.rdf.jena.JenaGraph
 import io.rml.framework.core.util.{JSON_LD, JenaUtil, NTriples}
-import org.apache.jena.rdf.model.ModelFactory
 
 /**
   * Processes the generated triples from one record.
@@ -40,12 +40,18 @@ class BulkPostProcessor extends PostProcessor {
   *
   * Format the generated triples into json-ld format
   */
-class JsonLDProcessor(prefix:String = "") extends PostProcessor {
+class JsonLDProcessor(prefix:String = "", @transient var graph:RDFGraph = JenaGraph()) extends PostProcessor with Serializable {
   override def process(quadStrings: List[String]): List[String] = {
     val quads =  quadStrings.mkString("\n")
-    val graph = JenaGraph()
     graph.read(quads, JenaUtil.format(NTriples))
     val result = List(graph.write(JSON_LD).trim().replaceAll("\n", " "))
+    graph.clear()
     result
+  }
+
+  @throws(classOf[IOException])
+  private def readObject(in: ObjectInputStream): Unit =  {
+    in.defaultReadObject()
+    graph = JenaGraph()
   }
 }

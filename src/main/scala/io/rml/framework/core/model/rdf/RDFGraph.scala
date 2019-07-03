@@ -132,8 +132,7 @@ trait RDFGraph extends RDFNode {
 
 
   /**
-    *
-    * Clears the stored statements in the model
+    * Reset the model to it's initial/blank state.
     */
   def clear():Unit
 
