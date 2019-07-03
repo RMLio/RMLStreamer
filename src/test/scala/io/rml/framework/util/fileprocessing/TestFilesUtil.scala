@@ -32,6 +32,8 @@ trait TestFilesUtil[R] {
     val result = if (file_1.isAbsolute) {
       new File(path)
     } else {
+
+      println(path)
       new File(classLoader.getResource(path).getFile)
     }
     result
