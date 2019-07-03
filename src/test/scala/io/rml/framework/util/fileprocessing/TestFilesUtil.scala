@@ -76,6 +76,13 @@ trait TestFilesUtil[R] {
   def processFilesInTestFolder(testFolderPath: String): List[R] = {
 
     val files = getHelperSpecificFiles(testFolderPath)
+
+    files.foreach(file => {
+      println(file)
+      if(file.exists()){
+        println("kjlsmqdfjie")
+      }
+    })
     files
       .filter(_.exists())
       .map(processFile)

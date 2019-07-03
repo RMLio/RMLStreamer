@@ -1,5 +1,7 @@
 package io.rml.framework
 
+import java.io.File
+
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.shared.TermTypeException
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
@@ -12,10 +14,13 @@ import scala.util.control.Exception
 class OutputGenerationTest extends FlatSpec with Matchers {
 
   val failing = "negative_test_cases/liter_typecast_fail"
-  val passing = Array(("bugs","noopt"), ("rml-testcases","noopt"), ("rml-testcases/jsonld","json-ld"))
+  val passing = Array( ("rml-testcases/jsonld","json-ld"))
   val temp = "temp_ignored_testcases/nq"
   "Output from the generator" should "match the output from output.ttl" in {
 
+    if (new File("/home/sitt/Documents/rml-streamer/target/test-classes/rml-testcases/jsonld/RMLTC0010b-CSV/mapping.ttl").exists()){
+      println("OMFALKEYFUIKDSFE")
+    }
     passing.foreach(test =>  {
       implicit val postProcessor: PostProcessor= TestUtil.pickPostProcessor(test._2)
       ExpectedOutputTestUtil.test(test._1, checkGeneratedOutput)
