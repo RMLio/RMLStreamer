@@ -42,6 +42,9 @@ class BulkPostProcessor extends PostProcessor {
   */
 class JsonLDProcessor(prefix:String = "", @transient var graph:RDFGraph = JenaGraph()) extends PostProcessor with Serializable {
   override def process(quadStrings: List[String]): List[String] = {
+    if (quadStrings.isEmpty || quadStrings.mkString("").isEmpty) {
+      return List()
+    }
     val quads =  quadStrings.mkString("\n")
     graph.read(quads, JenaUtil.format(NTriples))
     val result = List(graph.write(JSON_LD).trim().replaceAll("\n", " "))
