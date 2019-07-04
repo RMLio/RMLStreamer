@@ -39,6 +39,7 @@ Options:
 -s --socket                        The port number of the socket.
 -b --kafkaBrokerList KAFKA BROKERS The (list of) hosts where Kafka runs on
 -a --parallelism                   The parallelism to assign to the job. The default is 1.
+-t --kafkaTopic                    The kafka topic to which the output will be streamed to. 
 -pp --post-process                 The name of the post processing that will be done on generated triples 
                                    Default is: None
                                    Currently supports:  bulk, json-ld
