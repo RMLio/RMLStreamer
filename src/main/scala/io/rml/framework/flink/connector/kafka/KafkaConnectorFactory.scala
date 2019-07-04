@@ -26,7 +26,7 @@ abstract class KafkaConnectorFactory {
 
     val properties = getProducerConfig(brokerList)
 
-    applySink(properties, topic, new KeyedSerializationSchemaWrapper[T](serializationSchema), dataStream, generatePartitioner[T](properties))
+    applySink(properties, topic, new KeyedSerializationSchemaWrapper[T](serializationSchema), dataStream, generatePartitioner[T](partitionerProperty))
 
   }
 
