@@ -20,7 +20,7 @@ abstract class RMLPartitioner[T](properties:Properties) extends FlinkKafkaPartit
 class RMLFixedPartitioner[T](properties: Properties) extends RMLPartitioner[T](properties){
 
 
-  private val partitionID =  properties.getProperty("partition-id").toInt
+  private val partitionID =  properties.getProperty(RMLPartitioner.PARTITION_ID_PROPERTY).toInt
   /**
     * Send the record to a particular partition.
     *
@@ -38,4 +38,9 @@ class RMLFixedPartitioner[T](properties: Properties) extends RMLPartitioner[T](p
 
     partitionID % partitions.length
   }
+}
+
+object RMLPartitioner {
+  val PARTITION_ID_PROPERTY =  "partition-id"
+  val PARTITION_FORMAT_PROPERTY = "partition-format"
 }

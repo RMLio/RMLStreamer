@@ -20,13 +20,14 @@ package io.rml.framework
 
 
 import java.io.File
+import java.util.Properties
 
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
 import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
 import io.rml.framework.engine.statement.StatementEngine
-import io.rml.framework.flink.connector.kafka.KafkaConnectorVersionFactory
+import io.rml.framework.flink.connector.kafka.{FixedPartitioner, KafkaConnectorVersionFactory, PartitionerFormat, RMLPartitioner}
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
 import org.apache.flink.api.common.functions.RichMapFunction
@@ -72,6 +73,8 @@ object Main extends Logging {
 
     val partitionID = if (parameters.has("partition-id")) parameters.get("partition-id")
     else EMPTY_VALUE
+
+    val partitionFormat: PartitionerFormat = PartitionerFormat.fromString(parameters.get("partition-format"))
 
     implicit val postProcessor:PostProcessor =
       parameters.get("post-process") match {
@@ -132,7 +135,10 @@ object Main extends Logging {
 
       else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE){
         val optConnectFact = KafkaConnectorVersionFactory(Kafka010)
-        val kafkaPartitionerProperties =  null
+        val kafkaPartitionerProperties =  new Properties()
+
+        kafkaPartitionerProperties.setProperty(RMLPartitioner.PARTITION_ID_PROPERTY,  partitionID)
+        kafkaPartitionerProperties.setProperty(RMLPartitioner.PARTITION_FORMAT_PROPERTY, partitionFormat.string())
         val fact = optConnectFact.get
         fact.applySink[String](kafkaBrokers,kafkaTopic, kafkaPartitionerProperties, new SimpleStringSchema(), stream)
       }

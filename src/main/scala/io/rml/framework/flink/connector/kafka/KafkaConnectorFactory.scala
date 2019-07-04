@@ -43,7 +43,7 @@ abstract class KafkaConnectorFactory {
 
   def generatePartitioner[T](properties: Properties): FlinkKafkaPartitioner[T] = {
 
-    val formatString =  properties.getProperty("partitioner-format")
+    val formatString =  properties.getProperty(RMLPartitioner.PARTITION_FORMAT_PROPERTY)
     val format = PartitionerFormat.fromString(formatString)
     format match {
       case FixedPartitioner => new RMLFixedPartitioner(properties)
@@ -123,7 +123,7 @@ case object KafkaConnector09Factory extends KafkaConnectorFactory {
   }
 
   override def applySink[T](properties: Properties, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: DataStream[T], partitioner: FlinkKafkaPartitioner[T]): Unit = {
-    val producer = new FlinkKafkaProducer09[T](topic, serializationSchema, properties)
+    val producer = new FlinkKafkaProducer09[T](topic, serializationSchema, properties, partitioner)
     producer.setFlushOnCheckpoint(true)
     producer.setLogFailuresOnly(false)
     dataStream.addSink(producer)

@@ -9,18 +9,31 @@ package io.rml.framework.flink.connector.kafka
   * DefaultPartitioner will use the default partitioning scheme by Flink.
   *
   */
-sealed trait PartitionerFormat
+sealed trait PartitionerFormat {
+  def string():String
+}
 object PartitionerFormat {
 
   def fromString(string: String): PartitionerFormat = {
     string.toLowerCase() match{
       case "fixed" => FixedPartitioner
-      case "default" => DefaultPartitioner
       case "kafka" => KafkaPartitioner
-      case _ => throw new IllegalArgumentException(s"Partitioner format of type $string is not supported.")
+      case _ => DefaultPartitioner
     }
   }
 }
-case object FixedPartitioner extends PartitionerFormat
-case object DefaultPartitioner extends  PartitionerFormat
-case object KafkaPartitioner extends PartitionerFormat
+case object FixedPartitioner extends PartitionerFormat{
+  def string():String ={
+    "fixed"
+  }
+}
+case object DefaultPartitioner extends  PartitionerFormat {
+  override def string(): String = {
+    "default"
+  }
+}
+case object KafkaPartitioner extends PartitionerFormat {
+  override def string(): String = {
+    "kafka"
+  }
+}
