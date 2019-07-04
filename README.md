@@ -42,7 +42,12 @@ Options:
 -t --kafkaTopic                    The kafka topic to which the output will be streamed to. 
 -pp --post-process                 The name of the post processing that will be done on generated triples 
                                    Default is: None
-                                   Currently supports:  bulk, json-ld
+                                   Currently supports:  "bulk", "json-ld"
+-pi --partition-id                 The partition id of kafka topic to which the output will be written to. 
+                                   Required with --partition-type 
+-pt --partition-type               The type of the partitioner which will be used to partition the output
+                                   Default is: flink's default partitioner
+                                   Currently supports: "fixed", "kafka", "default"  
 -c --config CONFIG FILE	           The path to a configuration file. Every parameter can be put in its long form in the 
                                    configuration file. e.g:
                                     flinkBin=/opt/flink-1.8.0/bin/flink
