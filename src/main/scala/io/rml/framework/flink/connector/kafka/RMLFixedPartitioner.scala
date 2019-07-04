@@ -1,13 +1,26 @@
 package io.rml.framework.flink.connector.kafka
 
+import java.util.Properties
+
 import org.apache.flink.streaming.connectors.kafka.partitioner.FlinkKafkaPartitioner
 
 /**
-  * The partitioner will send all the records to a partition with id specified by the user.
-  * @param partitionID partition id specified by the user
+  *
+  * Abstract custom RML partitioner which will be used to partition the output
+  * @param properties Properties containing extra information needed by the custom partitioner
+  * @tparam T type of record
   */
-class RMLFixedPartitioner(partitionID : Int) extends FlinkKafkaPartitioner[String]{
+abstract class RMLPartitioner[T](properties:Properties) extends FlinkKafkaPartitioner[T]
 
+
+
+/**
+  * The partitioner will send all the records to a partition with id specified by the user.
+  */
+class RMLFixedPartitioner[T](properties: Properties) extends RMLPartitioner[T](properties){
+
+
+  private val partitionID =  properties.getProperty("partition-id").toInt
   /**
     * Send the record to a particular partition.
     *
@@ -18,7 +31,7 @@ class RMLFixedPartitioner(partitionID : Int) extends FlinkKafkaPartitioner[Strin
     * @param partitions  array of partitions
     * @return index of the partition to which the record will be sent
     */
-  override def partition(record: String, key: Array[Byte], value: Array[Byte], targetTopic: String, partitions: Array[Int]): Int = {
+  override def partition(record: T, key: Array[Byte], value: Array[Byte], targetTopic: String, partitions: Array[Int]): Int = {
     if (partitions == null && partitions.length <= 0) {
       throw new IllegalArgumentException("Partitions of the target topic is empty.")
     }

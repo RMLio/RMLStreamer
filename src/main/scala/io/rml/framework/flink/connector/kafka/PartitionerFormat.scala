@@ -10,6 +10,17 @@ package io.rml.framework.flink.connector.kafka
   *
   */
 sealed trait PartitionerFormat
+object PartitionerFormat {
 
+  def fromString(string: String): PartitionerFormat = {
+    string.toLowerCase() match{
+      case "fixed" => FixedPartitioner
+      case "default" => DefaultPartitioner
+      case "kafka" => KafkaPartitioner
+      case _ => throw new IllegalArgumentException(s"Partitioner format of type $string is not supported.")
+    }
+  }
+}
 case object FixedPartitioner extends PartitionerFormat
 case object DefaultPartitioner extends  PartitionerFormat
+case object KafkaPartitioner extends PartitionerFormat
