@@ -28,7 +28,7 @@ under the License.
 
     <name>RMLStreamer</name>
     <url>http://rml.io/</url>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <flink.version>1.8.0</flink.version>
@@ -270,8 +270,8 @@ under the License.
     </dependencies>
 
     <!-- This profile helps to make things run out of the box in IntelliJ -->
-	<!-- Its adds Flink's core classes to the runtime class path. -->
-	<!-- Otherwise they are missing in IntelliJ, because the dependency is 'provided' -->
+    <!-- Its adds Flink's core classes to the runtime class path. -->
+    <!-- Otherwise they are missing in IntelliJ, because the dependency is 'provided' -->
     <profiles>
         <profile>
             <id>add-dependencies-for-IDEA</id>
@@ -280,7 +280,7 @@ under the License.
                     <name>idea.version</name>
                 </property>
             </activation>
-            
+
             <dependencies>
                 <dependency>
                     <groupId>org.apache.flink</groupId>
@@ -370,6 +370,15 @@ under the License.
                                     </excludes>
                                 </filter>
                             </filters>
+
+                            <!-- Apache Jena's initialize uses Java's ServiceLoader mechanism to locate initialization steps.
+                                Therefore it requires a number of resources in Jena jars thus making it requirement
+                                to use the transformer to include those files in the fat-jar.
+                            -->
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
                             <!-- If you want to use ./bin/flink run <quickstart jar> uncomment the following lines.
                             This will add a Main-Class entry to the manifest file -->
                             <!--
