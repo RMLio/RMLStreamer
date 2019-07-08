@@ -22,6 +22,8 @@
 
 package io.rml.framework.core.util
 
+import org.apache.jena.riot.RDFFormat
+
 object JenaUtil {
 
   def format(format: Format): String = {
@@ -29,6 +31,14 @@ object JenaUtil {
       case Turtle => "TURTLE"
       case NTriples => "N-TRIPLES"
       case JSON_LD => "JSON-LD"
+    }
+  }
+
+  def toRDFFormat(format: Format): RDFFormat = {
+    format match {
+      case Turtle => RDFFormat.TURTLE
+      case NTriples => RDFFormat.NTRIPLES
+      case JSON_LD => RDFFormat.JSONLD
     }
   }
 

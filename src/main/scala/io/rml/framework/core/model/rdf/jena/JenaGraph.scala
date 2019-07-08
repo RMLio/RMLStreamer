@@ -32,6 +32,7 @@ import io.rml.framework.core.util.{Format, JenaUtil, Turtle}
 import io.rml.framework.core.vocabulary.RDFVoc
 import io.rml.framework.shared.{RMLException, ReadException}
 import org.apache.jena.rdf.model.{Model, ModelFactory, Statement}
+import org.apache.jena.riot.{RDFDataMgr, RDFFormat}
 import org.apache.jena.shared.JenaException
 
 import scala.collection.JavaConverters._
@@ -71,7 +72,7 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
 
   override def write(format: Format): String = {
     val stream = new ByteArrayOutputStream()
-    model.write(stream, JenaUtil.format(format))
+    RDFDataMgr.write(stream,model, JenaUtil.toRDFFormat(format))
     stream.toString("UTF-8")
   }
 
