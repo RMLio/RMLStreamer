@@ -437,8 +437,6 @@ object Main extends Logging {
 
     override def map(in: T): List[String] = {
       val quadStrings = engine.process(in)
-        .map(quad => quad.toString)
-
       postProcessor.process(quadStrings)
     }
   }
