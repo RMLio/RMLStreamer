@@ -38,6 +38,11 @@ Options:
 -f --flinkBin FLINK PATH           The path to the Flink binary.
 -s --socket                        The port number of the socket.
 -b --kafkaBrokerList KAFKA BROKERS The (list of) hosts where Kafka runs on
+-t --kafkaTopic                    The kafka topic to which the output will be streamed to. 
+--pp --post-process                 The name of the post processing that will be done on generated triples 
+                                   Default is: None
+                                   Currently supports:  "bulk", "json-ld"
+
 -a --parallelism                   The parallelism to assign to the job. The default is 1.
 -c --config CONFIG FILE	           The path to a configuration file. Every parameter can be put in its long form in the 
                                    configuration file. e.g:
