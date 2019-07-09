@@ -49,7 +49,7 @@ function setProperties {
             shift # past value
             ;;
 
-        -pp|--post-process)
+        --pp|--post-process)
             POSTPROCESS="$2"
             shift # past argument
             shift # past value
@@ -65,8 +65,13 @@ function setProperties {
             shift # past argument
             shift # past value
             ;;
-        -pp|--post-process)
-            POSTPROCESS="$2"
+        --pt|--partition-type)
+            PARTITIONTYPE="$2"
+            shift
+            shift
+            ;;
+        --pi|--partition-id)
+            PARTITIONID="$2"
             shift
             shift
             ;;
@@ -139,7 +144,7 @@ echo ""
 # Check if $MAPPINGPATH is set
 if [ ! -z "$MAPPINGPATH"  ]; then
 	# Execute
-	bash $FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main $STREAMER_JAR --post-process $POSTPROCESS --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
+	bash $FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main $STREAMER_JAR --partition-id $PARTITIONID --partition-type $PARTITIONTYPE --post-process $POSTPROCESS --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
 else
 	echo "Execution aborted: -p|--path must be given."
 	echo ""
