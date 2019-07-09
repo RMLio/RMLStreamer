@@ -58,7 +58,7 @@ function setProperties {
             shift # past argument
             shift # past value
             ;;
-        -pp|--post-process)
+        --pp|--post-process)
             POSTPROCESS="$2"
             shift
             shift
