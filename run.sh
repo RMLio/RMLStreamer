@@ -65,6 +65,11 @@ function setProperties {
             shift # past argument
             shift # past value
             ;;
+        -pp|--post-process)
+            POSTPROCESS="$2"
+            shift
+            shift
+            ;;
         -a|--parallelism)
             PARALLELISM="$2"
             shift # past argument

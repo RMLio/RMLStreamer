@@ -30,5 +30,10 @@
   rr:predicateObjectMap [
     rr:predicate foaf:name;
     rr:objectMap [ rml:reference "FirstName" ]
-  ].
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate foaf:name;
+    rr:objectMap [ rml:reference "LastName" ]
+   ].
 
