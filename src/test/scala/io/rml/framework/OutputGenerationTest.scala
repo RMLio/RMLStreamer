@@ -13,7 +13,7 @@ class OutputGenerationTest extends FlatSpec with Matchers {
 
   val failing = "negative_test_cases/liter_typecast_fail"
   val passing = Array(("bugs","noopt"), ("rml-testcases","noopt"), ("rml-testcases/jsonld","json-ld"))
-  val temp = "temp_ignored_testcases/nq"
+  val temp = Array(("rml-testcases/temp","noopt") )
   "Output from the generator" should "match the output from output.ttl" in {
 
     passing.foreach(test =>  {

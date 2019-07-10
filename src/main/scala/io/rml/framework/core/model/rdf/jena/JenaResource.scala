@@ -41,6 +41,8 @@ class JenaResource(val resource: Resource) extends RDFResource {
   }
 
   override def listProperties(propertyUri: String): List[RDFNode] = {
+
+
     val property = resource.getModel.createProperty(propertyUri)
     val properties = resource.listProperties(property).asScala
     properties.map(property => JenaNode(property.getObject)).toList
