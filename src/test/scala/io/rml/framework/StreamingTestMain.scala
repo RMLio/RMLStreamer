@@ -45,7 +45,7 @@ object StreamingTestMain {
     val parameters = ParameterTool.fromArgs(args)
 
     val fileName = if (parameters.has(PATH_PARAM)) parameters.get(PATH_PARAM)
-    else "/home/sitt/Documents/rml-streamer/src/test/resources/json-ld/stream/tcp/RMLTC0012a-XML-STREAM-SPLIT"
+    else "json-ld/stream/tcp/RMLTC0012a-XML-STREAM-SPLIT"
 
     val testType = if (parameters.has(TYPE_PARAM)) parameters.get(TYPE_PARAM)
     else "tcp"

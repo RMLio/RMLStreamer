@@ -20,13 +20,14 @@ package io.rml.framework
 
 
 import java.io.File
+import java.util.Properties
 
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
 import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
 import io.rml.framework.engine.statement.StatementEngine
-import io.rml.framework.flink.connector.kafka.KafkaConnectorVersionFactory
+import io.rml.framework.flink.connector.kafka.{FixedPartitioner, KafkaConnectorVersionFactory, PartitionerFormat, RMLPartitioner}
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
 import org.apache.flink.api.common.functions.RichMapFunction
@@ -70,6 +71,11 @@ object Main extends Logging {
     val kafkaTopic = if (parameters.has("topic")) parameters.get("topic")
     else EMPTY_VALUE
 
+    val partitionID = if (parameters.has("partition-id")) parameters.get("partition-id")
+    else EMPTY_VALUE
+
+    val partitionFormat: PartitionerFormat = PartitionerFormat.fromString(parameters.get("partition-type"))
+
     implicit val postProcessor:PostProcessor =
       parameters.get("post-process") match {
         case "bulk" => new BulkPostProcessor
@@ -84,6 +90,8 @@ object Main extends Logging {
     logInfo("Output socket: " + outputSocket)
     logInfo("Kafka brokers: " +  kafkaBrokers)
     logInfo("Kafka Topic: " +  kafkaTopic)
+    logInfo("Post-process: "  + postProcessor.toString)
+    logInfo("Kafka Partition: " +  partitionID)
 
 
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.
@@ -93,6 +101,9 @@ object Main extends Logging {
     // set up execution environments, Flink needs these to know how to operate (local, cluster mode, ...)
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
+
+
     senv.enableCheckpointing(5000, CheckpointingMode.AT_LEAST_ONCE);  // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
 
 
@@ -124,9 +135,12 @@ object Main extends Logging {
 
       else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE){
         val optConnectFact = KafkaConnectorVersionFactory(Kafka010)
+        val kafkaPartitionerProperties =  new Properties()
 
+        kafkaPartitionerProperties.setProperty(RMLPartitioner.PARTITION_ID_PROPERTY,  partitionID)
+        kafkaPartitionerProperties.setProperty(RMLPartitioner.PARTITION_FORMAT_PROPERTY, partitionFormat.string())
         val fact = optConnectFact.get
-        fact.applySink[String](kafkaBrokers,kafkaTopic, new SimpleStringSchema(), stream)
+        fact.applySink[String](kafkaBrokers,kafkaTopic, kafkaPartitionerProperties, new SimpleStringSchema(), stream)
       }
       // write to a file if the parameter is given
       else if (!outputPath.contains(EMPTY_VALUE)) stream.writeAsText(outputPath, WriteMode.OVERWRITE)

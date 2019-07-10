@@ -30,14 +30,12 @@ case class KafkaStream(uri: Uri,
 
 
 sealed abstract  class KafkaVersion(val version: String) extends Serializable
-case object Kafka08 extends KafkaVersion("0.8.x")
 case object Kafka09 extends KafkaVersion("0.9.x")
 case object Kafka010 extends KafkaVersion("0.10.x")
 
 object KafkaVersion{
   def apply(ver:String):KafkaVersion = ver match {
 
-    case Kafka08.version => Kafka08
     case Kafka09.version => Kafka09
     case Kafka010.version => Kafka010
     case _ =>
@@ -46,6 +44,6 @@ object KafkaVersion{
 
   }
 
-  val SUPPORTED_VERSIONS = Set(Kafka08, Kafka09, Kafka010)
+  val SUPPORTED_VERSIONS = Set(Kafka09, Kafka010)
 }
 
