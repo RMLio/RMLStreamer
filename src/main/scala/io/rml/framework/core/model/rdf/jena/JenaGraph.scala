@@ -31,6 +31,7 @@ import io.rml.framework.core.model.rdf.{RDFGraph, RDFLiteral, RDFResource, RDFTr
 import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.util.{Format, JenaUtil, Turtle, Util}
 import io.rml.framework.core.vocabulary.RDFVoc
+import io.rml.framework.engine.statement.TermMapGenerators
 import io.rml.framework.shared.{RMLException, ReadException}
 import org.apache.commons.lang3.StringUtils
 import org.apache.jena.rdf.model.{Model, ModelFactory, Statement}
@@ -102,7 +103,7 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
 
 
       val baseUrl = Util.getBaseDirective(baseStream)
-
+      TermMapGenerators.setBaseURL(baseUrl)
       RDFDataMgr.read(model, inputStream,JenaUtil.toRDFFormat(Turtle).getLang)
 
       withUri(Uri(file.getName)) // overwrite the graph uri with the file path

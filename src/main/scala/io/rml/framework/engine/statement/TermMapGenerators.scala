@@ -22,14 +22,31 @@
 
 package io.rml.framework.engine.statement
 
+
+import java.net.{URI, URISyntaxException, URL}
+
 import io.rml.framework.core.model._
 import io.rml.framework.engine.Engine
 import io.rml.framework.flink.item.Item
+import org.apache.commons.validator.routines.UrlValidator
+import org.apache.jena.riot.system.IRIResolver
 
 /**
   *
   */
 object TermMapGenerators {
+
+  private var BASE_URL = ""
+  private var BASE_IS_SET = false
+  private val VALIDATOR = new UrlValidator()
+
+  def setBaseURL(url: String): Unit = {
+    if (BASE_URL.isEmpty & !BASE_IS_SET) {
+      BASE_URL = url
+      BASE_IS_SET = true
+    }
+
+  }
 
   def constantUriGenerator(constant: Entity): Item => Option[Iterable[Uri]] = {
     // return a function that just returns the constant
@@ -38,7 +55,7 @@ object TermMapGenerators {
     }
   }
 
-  def constantLiteralGenerator(constant: Entity, datatype: Option[Uri] = None, language: Option[Literal]): Item => Option[Iterable[Literal]]  = {
+  def constantLiteralGenerator(constant: Entity, datatype: Option[Uri] = None, language: Option[Literal]): Item => Option[Iterable[Literal]] = {
     // return a function that just returns the constant
     (item: Item) => {
       Some(List(Literal(constant.toString, datatype, language)))
@@ -105,10 +122,44 @@ object TermMapGenerators {
         iter <- Engine.processReference(termMap.reference.get, item)
 
       } yield for {
-        value <- iter
-        uri = Uri(value)
+        iri <- iter
+        processed <- processIRI(iri)
+        uri = Uri(processed)
       } yield uri
     }
   }
+
+  def processIRI(origIRI: String): Iterable[String] = {
+    /**
+      * Extra check to prevent calling validator which costs more time if
+      * done repeatedly per item since it uses regex
+      */
+    val default = origIRI
+    if (BASE_IS_SET) {
+
+      val appended = BASE_URL + origIRI
+
+      if (VALIDATOR.isValid(appended)) {
+
+        List(appended)
+
+      } else if (VALIDATOR.isValid(default)) {
+      cd
+        List(default)
+
+      } else {
+
+        List()
+
+      }
+
+
+    } else {
+      List(default)
+    }
+
+
+  }
+
 
 }
