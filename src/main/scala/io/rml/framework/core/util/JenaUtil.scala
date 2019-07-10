@@ -38,7 +38,7 @@ object JenaUtil {
     format match {
       case Turtle => RDFFormat.TURTLE
       case NTriples => RDFFormat.NTRIPLES
-      case JSON_LD => RDFFormat.JSONLD
+      case JSON_LD => RDFFormat.JSONLD_COMPACT_FLAT
     }
   }
 

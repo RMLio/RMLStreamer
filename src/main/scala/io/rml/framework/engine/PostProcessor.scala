@@ -5,6 +5,7 @@ import java.io.{IOException, ObjectInputStream}
 import io.rml.framework.core.model.rdf.RDFGraph
 import io.rml.framework.core.model.rdf.jena.JenaGraph
 import io.rml.framework.core.util.{JSON_LD, JenaUtil, NTriples}
+import io.rml.framework.flink.sink.FlinkRDFQuad
 
 /**
   * Processes the generated triples from one record.
@@ -12,15 +13,15 @@ import io.rml.framework.core.util.{JSON_LD, JenaUtil, NTriples}
   */
 trait PostProcessor extends Serializable{
 
-  def process(quadStrings: List[String]): List[String]
+  def process(quadStrings: List[FlinkRDFQuad]): List[String]
 }
 
 /**
   * Does nothing, returns the input list of strings
   */
 class NopPostProcessor extends PostProcessor {
-  override def process(quadStrings: List[String]): List[String] = {
-    quadStrings
+  override def process(quadStrings: List[FlinkRDFQuad]): List[String] = {
+    quadStrings.map(_.toString)
   }
 
 }
@@ -31,7 +32,7 @@ class NopPostProcessor extends PostProcessor {
   * string.
   */
 class BulkPostProcessor extends PostProcessor {
-  override def process(quadStrings: List[String]): List[String] = {
+  override def process(quadStrings: List[FlinkRDFQuad]): List[String] = {
     List(quadStrings.mkString("\n"))
   }
 }
@@ -41,13 +42,13 @@ class BulkPostProcessor extends PostProcessor {
   * Format the generated triples into json-ld format
   */
 class JsonLDProcessor(prefix:String = "", @transient var graph:RDFGraph = JenaGraph()) extends PostProcessor with Serializable {
-  override def process(quadStrings: List[String]): List[String] = {
+  override def process(quadStrings: List[FlinkRDFQuad]): List[String] = {
     if (quadStrings.isEmpty || quadStrings.mkString("").isEmpty) {
       return List()
     }
     val quads =  quadStrings.mkString("\n")
     graph.read(quads, JenaUtil.format(NTriples))
-    val result = List(graph.write(JSON_LD).trim().replaceAll("\n", " "))
+    val result = List(graph.write(JSON_LD))
     graph.clear()
     result
   }
