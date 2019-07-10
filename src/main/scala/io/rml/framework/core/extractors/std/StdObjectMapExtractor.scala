@@ -25,6 +25,7 @@ package io.rml.framework.core.extractors.std
 import io.rml.framework.core.extractors.{JoinConditionExtractor, ObjectMapExtractor, TripleMapExtractor}
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
+import io.rml.framework.core.util.Util
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
@@ -151,10 +152,17 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
       throw new RMLException(resource.uri + ": invalid amount of language properties.")
     if (properties.isEmpty) return None
 
-    properties.head match {
+    val languageLiteral = properties.head match {
       case literal: Literal => Some(literal)
       case resource: RDFResource => throw new RMLException(resource.uri + ": invalid language type.")
     }
+    val tag = languageLiteral.get.toString
+
+    if (!Util.isValidrrLanguage(tag))
+      throw new RMLException(s"Language tag '$tag' does not conform to BCP 47 standards")
+
+
+    languageLiteral
   }
 
   private def extractParentTriplesMap(resource: RDFResource): Option[TripleMap] = {
