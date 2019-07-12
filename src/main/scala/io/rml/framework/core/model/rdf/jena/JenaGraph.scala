@@ -24,13 +24,16 @@ package io.rml.framework.core.model.rdf.jena
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, OutputStream}
 import java.nio.charset.StandardCharsets
+import java.nio.file.{Files, Path, Paths}
 
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFLiteral, RDFResource, RDFTriple}
 import io.rml.framework.core.model.{Literal, Uri}
-import io.rml.framework.core.util.{Format, JenaUtil, Turtle}
+import io.rml.framework.core.util.{Format, JenaUtil, Turtle, Util}
 import io.rml.framework.core.vocabulary.RDFVoc
+import io.rml.framework.engine.statement.TermMapGenerators
 import io.rml.framework.shared.{RMLException, ReadException}
+import org.apache.commons.lang3.StringUtils
 import org.apache.jena.rdf.model.{Model, ModelFactory, Statement}
 import org.apache.jena.riot.{RDFDataMgr, RDFFormat}
 import org.apache.jena.shared.JenaException
@@ -80,6 +83,8 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   override def read(dump: String, format: String = "TURTLE"): Unit = {
     val stream = new ByteArrayInputStream(dump.getBytes(StandardCharsets.UTF_8))
     try {
+      val baseUrl = Util.getBaseDirective(dump)
+      TermMapGenerators.setBaseUrl(baseUrl)
       model.read(stream, null, format)
       logModelWhenDebugEnabled()
     } catch {
@@ -93,7 +98,15 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   override def read(file: File): Unit = {
     try {
       val protocol = "file://" // needed for loading from a file
-      model.read(protocol + file.getAbsolutePath, JenaUtil.format(Turtle))
+
+      val inputStream = Util.getFileInputStream(file)
+      val baseStream = Util.getFileInputStream(file)
+
+
+      val baseUrl = Util.getBaseDirective(baseStream)
+      TermMapGenerators.setBaseUrl(baseUrl)
+      RDFDataMgr.read(model, inputStream,JenaUtil.toRDFFormat(Turtle).getLang)
+
       withUri(Uri(file.getName)) // overwrite the graph uri with the file path
       logModelWhenDebugEnabled()
     } catch {

@@ -22,7 +22,9 @@
 
 package io.rml.framework.engine.statement
 
+
 import io.rml.framework.core.model._
+import io.rml.framework.core.util.Util
 import io.rml.framework.engine.Engine
 import io.rml.framework.flink.item.Item
 
@@ -31,6 +33,16 @@ import io.rml.framework.flink.item.Item
   */
 object TermMapGenerators {
 
+  private var BASE_URL = ""
+
+  def setBaseUrl(url: String): Unit = {
+    BASE_URL = url
+  }
+
+  def getBaseUrl: String = {
+    BASE_URL
+  }
+
   def constantUriGenerator(constant: Entity): Item => Option[Iterable[Uri]] = {
     // return a function that just returns the constant
     (item: Item) => {
@@ -38,9 +50,9 @@ object TermMapGenerators {
     }
   }
 
-  def constantLiteralGenerator(constant: Entity, datatype: Option[Uri] = None, language: Option[Literal]): Item => Option[Iterable[Literal]]  = {
+  def constantLiteralGenerator(constant: Entity, datatype: Option[Uri] = None, language: Option[Literal]): Item => Option[Iterable[Literal]] = {
     // return a function that just returns the constant
-    (item: Item) => {
+    item: Item => {
       Some(List(Literal(constant.toString, datatype, language)))
     }
 
@@ -48,20 +60,21 @@ object TermMapGenerators {
 
   def templateUriGenerator(termMap: TermMap): Item => Option[Iterable[Uri]] = {
     // return a function that processes the template
-    (item: Item) => {
+    item: Item => {
 
       for {
         iter <- Engine.processTemplate(termMap.template.get, item, encode = true)
       } yield for {
         value <- iter
-        uri = Uri(value)
+        processed <- processIRI(value)
+        uri = Uri(processed)
       } yield uri
     }
   }
 
   def templateLiteralGenerator(termMap: TermMap): Item => Option[Iterable[Literal]] = {
     // return a function that processes the template
-    (item: Item) => {
+    item: Item => {
       for {
         iter <- Engine.processTemplate(termMap.template.get, item)
       } yield for {
@@ -73,7 +86,7 @@ object TermMapGenerators {
   }
 
   def templateBlankNodeGenerator(termMap: TermMap): Item => Option[Iterable[Blank]] = {
-    (item: Item) => {
+    item: Item => {
 
       for {
         iter <- Engine.processTemplate(termMap.template.get, item, encode = true)
@@ -86,7 +99,7 @@ object TermMapGenerators {
 
   def referenceLiteralGenerator(termMap: TermMap): Item => Option[Iterable[Literal]] = {
     // return a function that processes a reference
-    (item: Item) => {
+    item: Item => {
       for {
         iter <- Engine.processReference(termMap.reference.get, item)
 
@@ -100,15 +113,50 @@ object TermMapGenerators {
 
   def referenceUriGenerator(termMap: TermMap): Item => Option[Iterable[Uri]] = {
     // return a function that processes a reference
-    (item: Item) => {
+
+    item: Item => {
       for {
         iter <- Engine.processReference(termMap.reference.get, item)
 
       } yield for {
-        value <- iter
-        uri = Uri(value)
+        iri <- iter
+        processed <- processIRI(iri)
+        uri = Uri(processed)
       } yield uri
     }
   }
+
+  def processIRI(origIRI: String): Iterable[String] = {
+    /**
+      * Extra check to prevent calling validator which costs more time if
+      * done repeatedly per item since it uses regex
+      */
+    val default = origIRI
+    if (BASE_URL.length > 0) {
+
+      val appended = BASE_URL + origIRI
+
+      if (Util.isValidUri(appended)) {
+
+        List(appended)
+
+      } else if (Util.isValidUri(default)) {
+
+        List(default)
+
+      } else {
+
+        List()
+
+      }
+
+
+    } else {
+      List(default)
+    }
+
+
+  }
+
 
 }
