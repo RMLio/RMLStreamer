@@ -83,7 +83,8 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   override def read(dump: String, format: String = "TURTLE"): Unit = {
     val stream = new ByteArrayInputStream(dump.getBytes(StandardCharsets.UTF_8))
     try {
-
+      val baseUrl = Util.getBaseDirective(dump)
+      TermMapGenerators.setBaseUrl(baseUrl)
       model.read(stream, null, format)
       logModelWhenDebugEnabled()
     } catch {
@@ -103,7 +104,7 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
 
 
       val baseUrl = Util.getBaseDirective(baseStream)
-      TermMapGenerators.setBaseURL(baseUrl)
+      TermMapGenerators.setBaseUrl(baseUrl)
       RDFDataMgr.read(model, inputStream,JenaUtil.toRDFFormat(Turtle).getLang)
 
       withUri(Uri(file.getName)) // overwrite the graph uri with the file path
