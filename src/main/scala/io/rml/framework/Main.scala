@@ -74,7 +74,10 @@ object Main extends Logging {
     val partitionID = if (parameters.has("partition-id")) parameters.get("partition-id")
     else EMPTY_VALUE
 
-    val partitionFormat: PartitionerFormat = PartitionerFormat.fromString(parameters.get("partition-type"))
+    val partitionFormatString = if (parameters.has("partition-type")) parameters.get("partition-type")
+    else EMPTY_VALUE
+
+    val partitionFormat: PartitionerFormat = PartitionerFormat.fromString(partitionFormatString)
 
     implicit val postProcessor:PostProcessor =
       parameters.get("post-process") match {
