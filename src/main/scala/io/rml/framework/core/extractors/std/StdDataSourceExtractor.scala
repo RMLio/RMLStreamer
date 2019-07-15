@@ -99,7 +99,7 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     val kafkaVersion = Kafka010
 
 
-    KafkaStream(resource.uri, List(zookeeper.value), List(broker.value), groupId.value, topic.value, kafkaVersion)
+    KafkaStream(List(zookeeper.value), List(broker.value), groupId.value, topic.value, kafkaVersion)
   }
 
   private def extractTCPSocketStream(resource: RDFResource): StreamDataSource = {

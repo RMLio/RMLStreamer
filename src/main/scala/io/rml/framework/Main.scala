@@ -191,12 +191,12 @@ object Main extends Logging {
     val triplesMaps = formattedMapping.streamTripleMaps
 
     // group triple maps by logical sources
-    val grouped = triplesMaps.groupBy(tripleMap => tripleMap.logicalSource)
+    val grouped = triplesMaps.groupBy(tripleMap => tripleMap.logicalSource.identifier)
 
     // create a map with as key a Source and as value an Engine with loaded statements
     // the loaded statements are the mappings to execute
     val sourceEngineMap = grouped.map(entry => {
-      val logicalSource = entry._1
+      val logicalSource = entry._2.head.logicalSource
       val tripleMaps = entry._2
       // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
       Source(logicalSource) -> {

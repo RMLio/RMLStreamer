@@ -22,6 +22,8 @@
 
 package io.rml.framework.core.model
 
+import java.util.Objects
+
 import io.rml.framework.core.model.std.StdLogicalSource
 
 /**
@@ -48,7 +50,14 @@ trait LogicalSource extends Node {
   def referenceFormulation: Uri
 
 
-  override def identifier: String = source.uri.toString
+  override def identifier: String = {
+    val iteratorVal = iterator match {
+
+      case Some(literal) => literal.toString
+      case None => ""
+    }
+    Objects.hash(source.identifier,iteratorVal).toHexString
+  }
 
 }
 
