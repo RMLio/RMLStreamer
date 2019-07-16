@@ -81,7 +81,7 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
         ", referenceFormulation -> " + referenceFormulation)
     }
 
-    LogicalSource(referenceFormulation, List(iterator).flatten, source)
+    LogicalSource(referenceFormulation, List(iterator), source)
 
   }
 

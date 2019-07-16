@@ -41,6 +41,8 @@ import io.rml.framework.flink.sink.FlinkRDFQuad
   * @param statements
   */
 class StatementEngine[T](val statements: List[Statement[T]], val iterator: Option[Literal]) extends Engine[T] {
+  val noCheck:Boolean =  statements.isEmpty
+
 
   /**
     * Process an item.
@@ -70,6 +72,8 @@ object StatementEngine extends Logging {
 
   def fromTripleMaps(tripleMaps:List[TripleMap], iterator: Option[Literal]): StatementEngine[Item] = {
     // assemble the statements
+    val iteratorGroup = tripleMaps.groupBy(tm => tm.logicalSource.iterators.head)
+
     val statements = tripleMaps.flatMap(StatementsAssembler.assembleStatements)
 
     // do some logging
