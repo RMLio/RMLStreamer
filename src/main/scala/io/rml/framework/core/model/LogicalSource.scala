@@ -50,14 +50,15 @@ trait LogicalSource extends Node {
   def referenceFormulation: Uri
 
 
+  /**
+    * Logical sources are the same if the source identifier and the referenceFormulation are
+    * the same.
+    *
+    * @return
+    */
   override def identifier: String = {
-    val iteratorVal = iterator match {
 
-      case Some(literal) => literal.toString
-      case None => ""
-    }
-
-    Objects.hash(source.identifier,iteratorVal, referenceFormulation.identifier).toHexString
+    Objects.hash(source.identifier, referenceFormulation.identifier).toHexString
   }
 
 }

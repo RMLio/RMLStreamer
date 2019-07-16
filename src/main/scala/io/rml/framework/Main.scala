@@ -25,7 +25,7 @@ import java.util.Properties
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
-import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
+import io.rml.framework.engine.{BulkPostProcessor, AtMostOneProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{FixedPartitioner, KafkaConnectorVersionFactory, PartitionerFormat, RMLPartitioner}
 import io.rml.framework.flink.item.{Item, JoinedItem}
@@ -193,8 +193,13 @@ object Main extends Logging {
     require(formattedMapping.streamTripleMaps.nonEmpty)
     val triplesMaps = formattedMapping.streamTripleMaps
 
-    // group triple maps by logical sources
-    val grouped = triplesMaps.groupBy(tripleMap => tripleMap.logicalSource.identifier)
+    // group triple maps by logical sources based on if the postprocessor is supposed to emit at most one response
+    val grouped =
+      postProcessor match {
+        case _:AtMostOneProcessor => triplesMaps.groupBy(tripleMap => tripleMap.logicalSource.identifier)
+        case _:PostProcessor => triplesMaps.groupBy(tripleMap => tripleMap.logicalSource)
+      }
+
 
     // create a map with as key a Source and as value an Engine with loaded statements
     // the loaded statements are the mappings to execute

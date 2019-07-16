@@ -23,7 +23,7 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.{JoinedTripleMap, TripleMap}
+import io.rml.framework.core.model.{JoinedTripleMap, Literal, TripleMap}
 import io.rml.framework.engine.Engine
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.sink.FlinkRDFQuad
@@ -40,7 +40,7 @@ import io.rml.framework.flink.sink.FlinkRDFQuad
   *
   * @param statements
   */
-class StatementEngine[T](val statements: List[Statement[T]]) extends Engine[T] {
+class StatementEngine[T](val statements: List[Statement[T]], val iterator: Option[Literal]) extends Engine[T] {
 
   /**
     * Process an item.
@@ -65,6 +65,10 @@ object StatementEngine extends Logging {
     * @return
     */
   def fromTripleMaps(tripleMaps: List[TripleMap]): StatementEngine[Item] = {
+    fromTripleMaps(tripleMaps, None)
+  }
+
+  def fromTripleMaps(tripleMaps:List[TripleMap], iterator: Option[Literal]): StatementEngine[Item] = {
     // assemble the statements
     val statements = tripleMaps.flatMap(StatementsAssembler.assembleStatements)
 
@@ -72,7 +76,7 @@ object StatementEngine extends Logging {
     if (isDebugEnabled) logDebug(statements.size + " statements were generated.")
     logDebug(statements.size + " statements were generated.")
     // create the engine instance
-    new StatementEngine(statements)
+    new StatementEngine(statements, iterator)
   }
 
   /**
@@ -86,7 +90,7 @@ object StatementEngine extends Logging {
     val parentStatements = StatementsAssembler.assembleParentStatements(tripleMap)
     // do some logging
     if (isDebugEnabled) logDebug((childStatements.size + parentStatements.size) + " statements were generated.")
-    new StatementEngine(childStatements ++ parentStatements)
+    new StatementEngine(childStatements ++ parentStatements, None)
   }
 
 }
