@@ -26,5 +26,5 @@ import io.rml.framework.core.model.{DataSource, Literal, LogicalSource, Uri}
 
 case class StdLogicalSource(
                              referenceFormulation: Uri,
-                             iterator: Option[Literal],
+                             iterators: List[Literal],
                              source: DataSource) extends LogicalSource

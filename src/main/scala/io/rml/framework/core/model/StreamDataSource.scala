@@ -34,7 +34,7 @@ object StreamDataSource {
   //TODO: this belongs in the io.rml.framework.flink package!
   //TODO: this package should now nothing about the io.rml.framework.flink package
   def fromLogicalSource(logicalSource: LogicalSource)(implicit env: StreamExecutionEnvironment): Stream = {
-    val iterator = if (logicalSource.iterator.isDefined) Some(logicalSource.iterator.get.value) else None
+    val iterator = if (logicalSource.iterators.nonEmpty) Some(logicalSource.iterators.head.value) else None
     logicalSource.source match {
       case source: StreamDataSource =>
         logicalSource.referenceFormulation match {
