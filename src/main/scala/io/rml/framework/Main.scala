@@ -204,8 +204,10 @@ object Main extends Logging {
     // create a map with as key a Source and as value an Engine with loaded statements
     // the loaded statements are the mappings to execute
     val sourceEngineMap = grouped.map(entry => {
-      val logicalSource = entry._2.head.logicalSource
+      var logicalSource = entry._2.head.logicalSource
       val tripleMaps = entry._2
+      val iterators = tripleMaps.flatMap(tm => tm.logicalSource.iterators)
+      logicalSource = LogicalSource(logicalSource.referenceFormulation, iterators, logicalSource.source)
       // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
       Source(logicalSource) -> {
         logInfo(entry._2.size + " Triple Maps are found.")
