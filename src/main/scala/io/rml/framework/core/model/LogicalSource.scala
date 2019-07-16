@@ -56,7 +56,8 @@ trait LogicalSource extends Node {
       case Some(literal) => literal.toString
       case None => ""
     }
-    Objects.hash(source.identifier,iteratorVal).toHexString
+
+    Objects.hash(source.identifier,iteratorVal, referenceFormulation.identifier).toHexString
   }
 
 }
