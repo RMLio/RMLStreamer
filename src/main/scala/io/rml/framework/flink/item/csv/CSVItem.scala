@@ -34,7 +34,7 @@ import scala.collection.JavaConverters._
   *
   * @param record
   */
-class CSVItem(record: CSVRecord) extends Item {
+class CSVItem(record: CSVRecord, val tag:Option[String]= None) extends Item {
 
   /**
     *

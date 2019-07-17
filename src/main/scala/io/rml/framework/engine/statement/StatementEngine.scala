@@ -38,10 +38,9 @@ import io.rml.framework.flink.sink.FlinkRDFQuad
   * iterating over the RML mapping model objects each time an item is being referred and
   * only needs to iterate over the prepared statements (which will be maximally equal in amount).
   *
-  * @param statements
+  * @param statementMap
   */
-class StatementEngine[T](val statements: List[Statement[T]], val iterator: Option[Literal]) extends Engine[T] {
-  val noCheck:Boolean =  statements.isEmpty
+class StatementEngine[T](val statementMap: Map[Option[String], List[Statement[T]]], val IS_GROUPING:Boolean = false) extends Engine[T] {
 
 
   /**
@@ -50,7 +49,8 @@ class StatementEngine[T](val statements: List[Statement[T]], val iterator: Optio
     * @param item
     * @return
     */
-  override def process(item: T): List[FlinkRDFQuad] = {
+  override def process(item: T): List[FlinkRDFQuad] ={
+    val statements = statementMap.getOrElse(None, List())
     statements.flatMap(statement => statement.process(item)).flatten // flat map to filter out None
   }
 
@@ -66,21 +66,29 @@ object StatementEngine extends Logging {
     * @param tripleMaps
     * @return
     */
-  def fromTripleMaps(tripleMaps: List[TripleMap]): StatementEngine[Item] = {
-    fromTripleMaps(tripleMaps, None)
-  }
-
-  def fromTripleMaps(tripleMaps:List[TripleMap], iterator: Option[Literal]): StatementEngine[Item] = {
+  def fromTripleMaps(tripleMaps: List[TripleMap], isGrouping:Boolean = false ): StatementEngine[Item] = {
     // assemble the statements
     val iteratorGroup = tripleMaps.groupBy(tm => tm.logicalSource.iterators.head)
 
-    val statements = tripleMaps.flatMap(StatementsAssembler.assembleStatements)
+    // scala bug not serializing after mapValues solved by applying identity function
+    // https://github.com/scala/bug/issues/7005
+    val groupedStatements: Map[Option[String], List[Statement[Item]]] =
+    if (isGrouping) {
+      iteratorGroup
+        .mapValues(tms => tms.flatMap(StatementsAssembler.assembleStatements))
+        .map{
+          case (Some(k),v) => (Some(k.toString), v)
+          case (None, v) => (None, v)
+        }
+    } else {
+      Map(None -> tripleMaps.flatMap(StatementsAssembler.assembleStatements))
+    }
 
     // do some logging
-    if (isDebugEnabled) logDebug(statements.size + " statements were generated.")
-    logDebug(statements.size + " statements were generated.")
+    if (isDebugEnabled) logDebug(groupedStatements.values.flatten.size + " statements were generated.")
+
     // create the engine instance
-    new StatementEngine(statements, iterator)
+    new StatementEngine(groupedStatements, isGrouping)
   }
 
   /**
@@ -94,7 +102,7 @@ object StatementEngine extends Logging {
     val parentStatements = StatementsAssembler.assembleParentStatements(tripleMap)
     // do some logging
     if (isDebugEnabled) logDebug((childStatements.size + parentStatements.size) + " statements were generated.")
-    new StatementEngine(childStatements ++ parentStatements, None)
+    new StatementEngine( Map(None -> {childStatements ++ parentStatements}))
   }
 
 }

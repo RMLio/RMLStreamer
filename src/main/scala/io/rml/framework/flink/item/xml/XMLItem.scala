@@ -16,7 +16,7 @@ import org.w3c.dom.{Document, NodeList}
 import scala.util.control.NonFatal
 //import scala.xml.{PrettyPrinter, XML}
 
-class XMLItem(xml: Document, namespaces: Map[String, String]) extends Item {
+class XMLItem(xml: Document, namespaces: Map[String, String], val tag: Option[String] = None) extends Item {
 
   @transient private lazy val xPath = XPathFactory.newInstance().newXPath()
 

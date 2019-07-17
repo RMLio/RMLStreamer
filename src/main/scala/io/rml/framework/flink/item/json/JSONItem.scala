@@ -26,6 +26,7 @@ import java.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jayway.jsonpath.JsonPath
+import io.rml.framework.core.model.Literal
 import io.rml.framework.flink.item.Item
 import org.jsfr.json.provider.JacksonProvider
 import org.jsfr.json.{JacksonParser, JsonSurfer}
@@ -34,7 +35,7 @@ import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.JavaConversions._
 import scala.util.control.NonFatal
 
-class JSONItem(map: java.util.Map[String, Object]) extends Item {
+class JSONItem(map: java.util.Map[String, Object], val tag: Option[String] = None) extends Item {
 
   val LOG: Logger = LoggerFactory.getLogger(JSONItem.getClass)
 
