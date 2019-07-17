@@ -44,9 +44,9 @@ class XMLItem(xml: Document, namespaces: Map[String, String], val tag: Option[St
       }
 
     if (nodes.getLength > 0) {
-      var results: List[String] =  List.empty
-      for(i <- 0 until nodes.getLength){
-        results =  nodes.item(i).getTextContent.trim :: results
+      var results: List[String] = List.empty
+      for (i <- 0 until nodes.getLength) {
+        results = nodes.item(i).getTextContent.trim :: results
       }
       if (results.isEmpty) None
       Some(results)
@@ -85,20 +85,19 @@ object XMLItem {
   }
 
   // Since this is being used in other working parts of the code, it won't be refactored for now 20/7/18
-  def fromString(xml: String, namespaces: Map[String, String] = Map()): XMLItem = {
+  def fromString(xml: String, namespaces: Map[String, String] = Map(), xpath:String): XMLItem = {
     val documentBuilderFactory = DocumentBuilderFactory.newInstance()
     documentBuilderFactory.setNamespaceAware(true)
     val documentBuilder = documentBuilderFactory.newDocumentBuilder()
 
     val document: Document = documentBuilder.parse(IOUtils.toInputStream(xml))
 
-    new XMLItem(document, namespaces)
+    new XMLItem(document, namespaces, Some(xpath))
 
   }
 
-  def fromStringOptionable(orgXml: String, xpath: String): Option[Array[Item]] = {
+  def fromStringOptionable(orgXml: String, iterators: Iterable[String]): List[Item] = {
     try {
-
 
       val namespaces = getNSpacesFromString(orgXml)
       val xml = orgXml
@@ -106,6 +105,7 @@ object XMLItem {
 
       val bytes = xml.getBytes()
       val xmlBuffer = new XMLBuffer(bytes)
+
       // parse the xml string as bytes using VTD5
 
       vg.setDoc(xmlBuffer)
@@ -115,15 +115,26 @@ object XMLItem {
       namespaces.foreach(tuple => {
         ap.declareXPathNameSpace(tuple._1, tuple._2)
       })
-      // set the xpath expression
-      ap.selectXPath(xpath)
 
+      val resultingList: List[Item] = iterators.flatMap { xpath =>
 
+        try {
+          // set the xpath expression
+          ap.selectXPath(xpath)
+          val result = XMLIterator(ap, vn, namespaces).flatten
+          Some(result)
 
-      val result = XMLIterator(ap,vn,namespaces).flatten.toArray
-      Some(result)
+        } catch {
+          case NonFatal(e) => None
+        }
+      }
+        .flatten
+        .toList
+
+      resultingList
+
     } catch {
-      case NonFatal(e) => None
+      case NonFatal(e) => List()
     }
   }
 

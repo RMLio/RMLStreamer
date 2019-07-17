@@ -9,13 +9,18 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.slf4j.LoggerFactory
 
-case class XMLStream(stream: DataStream[Item]) extends Stream
+case class XMLStream(stream: DataStream[Iterable[Item]]) extends Stream
 
 object XMLStream {
+  val DEFAULT_PATH_OPTION = "/"
 
-  def apply(source: StreamDataSource, iter: Option[String])(implicit env: StreamExecutionEnvironment): Stream = {
+  def apply(source: StreamDataSource, iter: List[Option[String]])(implicit env: StreamExecutionEnvironment): Stream = {
+    val iterator = iter.map({
+      case Some(x) => x.toString
+      case _ => DEFAULT_PATH_OPTION
+    })
+      .distinct
 
-    val iterator =  iter.getOrElse("/*")
 
     source match {
       case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, iterator)
@@ -24,26 +29,26 @@ object XMLStream {
     }
   }
 
-  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream,iterator:String)(implicit env: StreamExecutionEnvironment): XMLStream = {
-    val stream: DataStream[Item] = StreamUtil.createTcpSocketSource(tCPSocketStream)
-      .flatMap(item => {
+  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream, iterator: List[String])(implicit env: StreamExecutionEnvironment): XMLStream = {
+    val stream: DataStream[Iterable[Item]] = StreamUtil.createTcpSocketSource(tCPSocketStream)
+      .map(item => {
         XMLItem.fromStringOptionable(item, iterator)
-      }).flatMap( a => a )
+      })
     XMLStream(stream)
   }
 
-  def fromFileStream(path: String, xpath: String)(implicit senv: StreamExecutionEnvironment): XMLStream = {
+  def fromFileStream(path: String, xpath: List[String])(implicit senv: StreamExecutionEnvironment): XMLStream = {
     val source = new XMLSource(path, xpath)
     XMLStream(senv.addSource(source))
   }
 
-  def fromKafkaStream(kafkaStream: KafkaStream,iterator:String)(implicit env: StreamExecutionEnvironment): XMLStream = {
+  def fromKafkaStream(kafkaStream: KafkaStream, iterator: List[String])(implicit env: StreamExecutionEnvironment): XMLStream = {
     val properties = kafkaStream.getProperties
-    val consumer =  kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
-    val stream: DataStream[Item] = env.addSource(consumer)
-      .flatMap(item => {
+    val consumer = kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
+    val stream: DataStream[Iterable[Item]] = env.addSource(consumer)
+      .map(item => {
         XMLItem.fromStringOptionable(item, iterator)
-      }).flatMap( a => a )
+      })
     XMLStream(stream)
   }
 
