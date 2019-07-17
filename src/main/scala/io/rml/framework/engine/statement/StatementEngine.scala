@@ -40,7 +40,7 @@ import io.rml.framework.flink.sink.FlinkRDFQuad
   *
   * @param statementMap
   */
-class StatementEngine[T](val statementMap: Map[Option[String], List[Statement[T]]], val IS_GROUPING:Boolean = false) extends Engine[T] {
+class StatementEngine[T <: Item](val statementMap: Map[Option[String], List[Statement[T]]], val IS_GROUPING:Boolean = false) extends Engine[T] {
 
 
   /**
@@ -50,7 +50,7 @@ class StatementEngine[T](val statementMap: Map[Option[String], List[Statement[T]
     * @return
     */
   override def process(item: T): List[FlinkRDFQuad] ={
-    val statements = statementMap.getOrElse(None, List())
+    val statements = statementMap.getOrElse(item.tag, List())
     statements.flatMap(statement => statement.process(item)).flatten // flat map to filter out None
   }
 

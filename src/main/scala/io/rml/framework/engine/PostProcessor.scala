@@ -15,7 +15,7 @@ import io.rml.framework.flink.sink.FlinkRDFQuad
   */
 trait PostProcessor extends Serializable{
 
-  def process(quadStrings: List[FlinkRDFQuad]): List[String]
+  def process(quadStrings: Iterable[FlinkRDFQuad]): List[String]
 }
 
 trait AtMostOneProcessor extends PostProcessor
@@ -25,8 +25,8 @@ trait AtMostOneProcessor extends PostProcessor
   * Does nothing, returns the input list of strings
   */
 class NopPostProcessor extends PostProcessor {
-  override def process(quadStrings: List[FlinkRDFQuad]): List[String] = {
-    quadStrings.map(_.toString)
+  override def process(quadStrings: Iterable[FlinkRDFQuad]): List[String] = {
+    quadStrings.map(_.toString).toList
   }
 
 }
@@ -37,7 +37,7 @@ class NopPostProcessor extends PostProcessor {
   * string.
   */
 class BulkPostProcessor extends AtMostOneProcessor {
-  override def process(quadStrings: List[FlinkRDFQuad]): List[String] = {
+  override def process(quadStrings: Iterable[FlinkRDFQuad]): List[String] = {
     List(quadStrings.mkString("\n"))
   }
 }
@@ -47,7 +47,7 @@ class BulkPostProcessor extends AtMostOneProcessor {
   * Format the generated triples into json-ld format
   */
 class JsonLDProcessor(prefix:String = "", @transient var graph:RDFGraph = JenaGraph()) extends AtMostOneProcessor {
-  override def process(quadStrings: List[FlinkRDFQuad]): List[String] = {
+  override def process(quadStrings: Iterable[FlinkRDFQuad]): List[String] = {
     if (quadStrings.isEmpty || quadStrings.mkString("").isEmpty) {
       return List()
     }

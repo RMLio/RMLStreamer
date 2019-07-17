@@ -200,18 +200,17 @@ object Main extends Logging {
         case _:PostProcessor => triplesMaps.groupBy(tripleMap => tripleMap.logicalSource)
       }
 
-
     // create a map with as key a Source and as value an Engine with loaded statements
     // the loaded statements are the mappings to execute
     val sourceEngineMap = grouped.map(entry => {
       var logicalSource = entry._2.head.logicalSource
       val tripleMaps = entry._2
-      val iterators = tripleMaps.flatMap(tm => tm.logicalSource.iterators)
+      val iterators = tripleMaps.flatMap(tm => tm.logicalSource.iterators).distinct
       logicalSource = LogicalSource(logicalSource.referenceFormulation, iterators, logicalSource.source)
       // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
       Source(logicalSource) -> {
         logInfo(entry._2.size + " Triple Maps are found.")
-        StatementEngine.fromTripleMaps(tripleMaps)
+        StatementEngine.fromTripleMaps(tripleMaps, iterators.size > 1 )
       }
     })
 
@@ -222,7 +221,6 @@ object Main extends Logging {
         val engine = entry._2
         // link the different steps in each pipeline
         source.stream // this will generate a stream of items
-          .map(item => item)
           // process every item by a processor with a loaded engine
           .map(new StdProcessor(engine))
           .name("Execute statements on items.")
@@ -457,10 +455,13 @@ object Main extends Logging {
 
   // Abstract class for creating a custom processing mapping step in a pipeline.
   // extend a RichFunction to have access to the RuntimeContext
-  abstract class Processor[T](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends RichMapFunction[T, List[String]] {
+  abstract class Processor[T<:Item](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends RichMapFunction[Iterable[T], List[String]] {
 
-    override def map(in: T): List[String] = {
-      val quadStrings = engine.process(in)
+    override def map(in: Iterable[T]): List[String] = {
+      if (in.isEmpty) return List()
+
+      val quadStrings = in flatMap engine.process
+
       postProcessor.process(quadStrings)
     }
   }
