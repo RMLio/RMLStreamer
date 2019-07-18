@@ -12,10 +12,10 @@ import org.slf4j.LoggerFactory
 case class XMLStream(stream: DataStream[Iterable[Item]]) extends Stream
 
 object XMLStream {
-  val DEFAULT_PATH_OPTION = "/"
+  val DEFAULT_PATH_OPTION: String = "/"
 
-  def apply(source: StreamDataSource, iter: List[Option[String]])(implicit env: StreamExecutionEnvironment): Stream = {
-    val iterator = iter.map({
+  def apply(source: StreamDataSource, xpaths: List[Option[String]])(implicit env: StreamExecutionEnvironment): Stream = {
+    val xpathStrings = xpaths.map({
       case Some(x) => x.toString
       case _ => DEFAULT_PATH_OPTION
     })
@@ -23,38 +23,38 @@ object XMLStream {
 
 
     source match {
-      case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, iterator)
-      case fileStream: FileStream => fromFileStream(fileStream.path, iterator)
-      case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, iterator)
+      case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, xpathStrings)
+      case fileStream: FileStream => fromFileStream(fileStream.path, xpathStrings)
+      case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, xpathStrings)
     }
   }
 
-  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream, iterator: List[String])(implicit env: StreamExecutionEnvironment): XMLStream = {
+  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream, xpaths: List[String])(implicit env: StreamExecutionEnvironment): XMLStream = {
     val stream: DataStream[Iterable[Item]] = StreamUtil.createTcpSocketSource(tCPSocketStream)
       .map(item => {
-        XMLItem.fromStringOptionable(item, iterator)
+        XMLItem.fromStringOptionable(item, xpaths)
       })
     XMLStream(stream)
   }
 
-  def fromFileStream(path: String, xpath: List[String])(implicit senv: StreamExecutionEnvironment): XMLStream = {
-    val source = new XMLSource(path, xpath)
+  def fromFileStream(path: String, xpaths: List[String])(implicit senv: StreamExecutionEnvironment): XMLStream = {
+    val source = new XMLSource(path, xpaths)
     XMLStream(senv.addSource(source))
   }
 
-  def fromKafkaStream(kafkaStream: KafkaStream, iterator: List[String])(implicit env: StreamExecutionEnvironment): XMLStream = {
+  def fromKafkaStream(kafkaStream: KafkaStream, xpaths: List[String])(implicit env: StreamExecutionEnvironment): XMLStream = {
     val properties = kafkaStream.getProperties
     val consumer = kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
     val stream: DataStream[Iterable[Item]] = env.addSource(consumer)
       .map(item => {
-        XMLItem.fromStringOptionable(item, iterator)
+        XMLItem.fromStringOptionable(item, xpaths)
       })
     XMLStream(stream)
   }
 
 }
 
-class XMLSource(path: String, xpath: String) extends SourceFunction[Item] {
+class XMLSource(path: String, xpaths: List[String]) extends SourceFunction[Iterable[Item]] {
 
   val serialVersionUID = 1L
   @volatile private var isRunning = true
@@ -62,7 +62,7 @@ class XMLSource(path: String, xpath: String) extends SourceFunction[Item] {
 
   override def cancel(): Unit = isRunning = false
 
-  override def run(ctx: SourceFunction.SourceContext[Item]): Unit = {
+  override def run(ctx: SourceFunction.SourceContext[Iterable[Item]]): Unit = {
 
   }
 }

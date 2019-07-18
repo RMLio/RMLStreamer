@@ -75,17 +75,17 @@ object JSONItem {
     null //new JSONItem(node)
   }
 
-  def fromStringOptionableList(json: String, iterators: List[String]): List[Item] = {
-    val result: List[Item] = iterators
+  def fromStringOptionableList(json: String, jsonPaths: List[String]): List[Item] = {
+    val result: List[Item] = jsonPaths
       .flatMap(
 
-        iterator => {
+        jsonPath => {
           try {
-            val tag = iterator match {
+            val tag = jsonPath match {
               case JSONStream.DEFAULT_PATH_OPTION => None
-              case _ => Some(iterator)
+              case _ => Some(jsonPath)
             }
-            val collection = surfer.collectAll(json, iterator)
+            val collection = surfer.collectAll(json, jsonPath)
             val listOfJson = collection.toArray()
             val mapper = new ObjectMapper()
 

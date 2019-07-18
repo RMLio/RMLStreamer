@@ -13,42 +13,42 @@ case class JSONStream(stream: DataStream[Iterable[Item]]) extends Stream
 object JSONStream extends Logging {
   val DEFAULT_PATH_OPTION: String = "$"
 
-  def apply(source: StreamDataSource, iter: List[Option[Literal]])(implicit env: StreamExecutionEnvironment): Stream = {
-    val iteratorList = iter.map({
+  def apply(source: StreamDataSource, jsonPaths: List[Option[Literal]])(implicit env: StreamExecutionEnvironment): Stream = {
+    val jsonPathStrings = jsonPaths.map({
       case Some(x) => x.toString
       case _ => DEFAULT_PATH_OPTION
     })
       .distinct
 
     source match {
-      case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, iteratorList)
-      case fileStream: FileStream => fromFileStream(fileStream.path, iteratorList)
-      case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, iteratorList)
+      case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, jsonPathStrings)
+      case fileStream: FileStream => fromFileStream(fileStream.path, jsonPathStrings)
+      case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, jsonPathStrings)
     }
   }
 
-  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream, iterator: List[String])(implicit env: StreamExecutionEnvironment): JSONStream = {
+  def fromTCPSocketStream(tCPSocketStream: TCPSocketStream, jsonPaths: List[String])(implicit env: StreamExecutionEnvironment): JSONStream = {
     val stream: DataStream[Iterable[Item]] = StreamUtil.createTcpSocketSource(tCPSocketStream)
       .map { item =>
-        JSONItem.fromStringOptionableList(item, iterator)
+        JSONItem.fromStringOptionableList(item, jsonPaths)
       }
 
     JSONStream(stream)
   }
 
-  def fromFileStream(path: String, jsonPath: List[String])(implicit env: StreamExecutionEnvironment): JSONStream = {
-    val stream: DataStream[Iterable[Item]] = env.createInput(new JSONInputFormat(path, jsonPath))
+  def fromFileStream(path: String, jsonPaths: List[String])(implicit env: StreamExecutionEnvironment): JSONStream = {
+    val stream: DataStream[Iterable[Item]] = env.createInput(new JSONInputFormat(path, jsonPaths))
     JSONStream(stream)
   }
 
-  def fromKafkaStream(kafkaStream: KafkaStream, iterator: List[String])(implicit env: StreamExecutionEnvironment): JSONStream = {
+  def fromKafkaStream(kafkaStream: KafkaStream, jsonPaths: List[String])(implicit env: StreamExecutionEnvironment): JSONStream = {
     val properties = kafkaStream.getProperties
     val consumer = kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
 
     logDebug(consumer.getProducedType.toString)
     val stream: DataStream[Iterable[Item]] = env.addSource(consumer)
       .map { item =>
-        JSONItem.fromStringOptionableList(item, iterator)
+        JSONItem.fromStringOptionableList(item, jsonPaths)
       }
     JSONStream(stream)
   }
