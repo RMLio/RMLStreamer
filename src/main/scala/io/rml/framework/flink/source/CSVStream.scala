@@ -16,7 +16,7 @@ import org.apache.flink.table.api.{Table, Types}
 import org.apache.flink.table.sources.CsvTableSource
 import org.apache.flink.types.Row
 
-case class CSVStream(stream: DataStream[Item], headers: Array[String]) extends Stream
+case class CSVStream(stream: DataStream[Iterable[Item]] ) extends Stream
 
 object CSVStream {
 
@@ -25,7 +25,7 @@ object CSVStream {
     source match {
       case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream)
       case fileStream: FileStream => fromFileStream(fileStream.path)
-      case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, Array.empty)
+      case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream)
       case _ => null
     }
   }
@@ -42,15 +42,16 @@ object CSVStream {
       .withTrim()
       .withFirstRecordAsHeader()
 
-    val stream = StreamUtil.createTcpSocketSource(tCPSocketStream, csvConfig.recordDelimiter)
-      .flatMap(batchString => {
+    val stream: DataStream[Iterable[Item]] = StreamUtil.createTcpSocketSource(tCPSocketStream, csvConfig.recordDelimiter)
+      .map(batchString => {
         CSVItem.fromDataBatch(batchString, format)
       })
-      .flatMap(item => item)
-    CSVStream(stream, Array.empty)
+
+
+    CSVStream(stream)
   }
 
-  def fromKafkaStream(kafkaStream: KafkaStream, headers: Array[String])(implicit env: StreamExecutionEnvironment): CSVStream = {
+  def fromKafkaStream(kafkaStream: KafkaStream)(implicit env: StreamExecutionEnvironment): CSVStream = {
     // var's set up
     val defaultConfig = DefaultCSVConfig()
     val csvConfig = CustomCSVConfig(defaultConfig.delimiter, defaultConfig.quoteCharacter, "\n\n")
@@ -64,12 +65,11 @@ object CSVStream {
 
     val properties = kafkaStream.getProperties
     val consumer =  kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
-    val stream: DataStream[Item] = env.addSource(consumer)
-      .flatMap(batchString => {
+    val stream: DataStream[Iterable[Item]] = env.addSource(consumer)
+      .map(batchString => {
         CSVItem.fromDataBatch(batchString, format)
       })
-      .flatMap(item => item)
-    CSVStream(stream, headers)
+    CSVStream(stream)
   }
 
   def fromFileStream(path: String)(implicit senv: StreamExecutionEnvironment): CSVStream = {
@@ -112,7 +112,8 @@ object CSVStream {
       .asInstanceOf[Item]) // needed since types of datastreams can't be subclasses due to Flink implementation
 
     // create the CSV Stream
-    new CSVStream(dataSet, headersMap.keySet.toArray)
+    //new CSVStream(dataSet)
+    throw new NotImplementedError("FileStream is not implemented properly yet ")
   }
 
   private def convertToSelection(headers: Array[String]): String = {

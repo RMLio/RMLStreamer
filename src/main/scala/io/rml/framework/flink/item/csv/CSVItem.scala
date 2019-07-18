@@ -69,13 +69,13 @@ object CSVItem {
       .withTrim())
   }
 
-  def fromDataBatch(dataBatch: String, csvFormat: CSVFormat): Option[Array[Item]] = {
+  def fromDataBatch(dataBatch: String, csvFormat: CSVFormat): List[Item] = {
 
     //jdata batch string must not contain any leading whitespaces
     val sanitizedData = dataBatch.replaceAll("^\\s+", "").replace("\n\n", "")
     val parser = csvFormat.parse(new StringReader(sanitizedData))
-    val result:Array[Item] = parser.getRecords.asScala.toArray.map(new CSVItem(_))
-    if(result.isEmpty) None else Some(result)
+    val result:List[Item] = parser.getRecords.asScala.toList.map(new CSVItem(_))
+    result
   }
 
   def apply(csvLine: String, cSVFormat: CSVFormat): Item = {

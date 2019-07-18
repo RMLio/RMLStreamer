@@ -13,7 +13,7 @@ import org.jsfr.json.compiler.JsonPathCompiler
 import org.jsfr.json.provider.JacksonProvider
 import org.jsfr.json.{JacksonParser, JsonSurfer}
 
-class JSONInputFormat(path: String, jsonPath: List[String]) extends GenericInputFormat[Item] with NonParallelInput {
+class JSONInputFormat(path: String, jsonPath: String) extends GenericInputFormat[Item] with NonParallelInput {
 
   private var iterator: util.Iterator[Object] = _
   private var inputStream: InputStream = _

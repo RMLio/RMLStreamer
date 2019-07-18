@@ -37,8 +37,10 @@ object JSONStream extends Logging {
   }
 
   def fromFileStream(path: String, jsonPaths: List[String])(implicit env: StreamExecutionEnvironment): JSONStream = {
-    val stream: DataStream[Iterable[Item]] = env.createInput(new JSONInputFormat(path, jsonPaths))
-    JSONStream(stream)
+    //val stream: DataStream[Iterable[Item]] = env.createInput(new JSONInputFormat(path, jsonPaths.head))
+    //JSONStream(stream)
+    throw new NotImplementedError("FileStream is not implemented properly yet ")
+
   }
 
   def fromKafkaStream(kafkaStream: KafkaStream, jsonPaths: List[String])(implicit env: StreamExecutionEnvironment): JSONStream = {
