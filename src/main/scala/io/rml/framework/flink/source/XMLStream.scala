@@ -1,6 +1,7 @@
 package io.rml.framework.flink.source
 
 import io.rml.framework.core.model.{FileStream, KafkaStream, Literal, StreamDataSource, TCPSocketStream}
+import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.xml.XMLItem
 import org.apache.flink.api.common.serialization.SimpleStringSchema
@@ -12,7 +13,7 @@ import org.slf4j.LoggerFactory
 case class XMLStream(stream: DataStream[Iterable[Item]]) extends Stream
 
 object XMLStream {
-  val DEFAULT_PATH_OPTION: String = "/*"
+  val DEFAULT_PATH_OPTION: String = Source.DEFAULT_ITERATOR_MAP(RMLVoc.Class.XPATH).getOrElse("/*")
 
   def apply(source: StreamDataSource, xpaths: List[Option[Literal]])(implicit env: StreamExecutionEnvironment): Stream = {
     val xpathStrings = xpaths.map({
