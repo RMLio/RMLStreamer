@@ -25,7 +25,7 @@ import java.util.Properties
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
-import io.rml.framework.engine.{BulkPostProcessor, AtMostOneProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
+import io.rml.framework.engine.{AtMostOneProcessor, BulkPostProcessor, JoinedStreamProcessor, JoinedStaticProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor, StdStreamProcessor, StdStaticProcessor}
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{FixedPartitioner, KafkaConnectorVersionFactory, PartitionerFormat, RMLPartitioner}
 import io.rml.framework.flink.item.{Item, JoinedItem}
@@ -222,7 +222,7 @@ object Main extends Logging {
         // link the different steps in each pipeline
         source.stream // this will generate a stream of items
           // process every item by a processor with a loaded engine
-          .map(new StdProcessor(engine))
+          .map(new StdStreamProcessor(engine))
           .name("Execute statements on items.")
 
           // format every list of triples (as strings)
@@ -316,7 +316,7 @@ object Main extends Logging {
         source.dataset // this will generate a dataset of items
 
           // process every item by a processor with a loaded engine
-          .map(new StdProcessor(engine))
+          .map(new StdStaticProcessor(engine))
           .name("Execute statements on items.")
 
           // format every list of triples (as strings)
@@ -398,7 +398,7 @@ object Main extends Logging {
         })
 
           // process the JoinedItems in an engine
-          .map(new JoinedProcessor(engine)).name("Execute statements.")
+          .map(new JoinedStaticProcessor(engine)).name("Execute statements.")
 
           // format the list of triples as strings
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
@@ -410,7 +410,7 @@ object Main extends Logging {
         val crossed = childDataset.cross(parentDataset)
 
         crossed.map(items => JoinedItem(items._1, items._2)) // create a JoinedItem from the crossed items
-          .map(new JoinedProcessor(engine)).name("Execute statements.") // process the joined items
+          .map(new JoinedStaticProcessor(engine)).name("Execute statements.") // process the joined items
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None) // format the triples
           .name("Reduce to strings.")
       }
@@ -452,28 +452,6 @@ object Main extends Logging {
       streams.tail.foldLeft(head)((a, b) => a.union(b))
     } else head
   }
-
-  // Abstract class for creating a custom processing mapping step in a pipeline.
-  // extend a RichFunction to have access to the RuntimeContext
-  abstract class Processor[T<:Item](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends RichMapFunction[Iterable[T], List[String]] {
-
-    override def map(in: Iterable[T]): List[String] = {
-      if (in.isEmpty) return List()
-
-      val quadStrings = in flatMap engine.process
-
-      postProcessor.process(quadStrings)
-    }
-  }
-
-
-
-  // Custom processing class with normal items
-  class StdProcessor(engine: StatementEngine[Item])(implicit postProcessor: PostProcessor) extends Processor[Item](engine)
-
-
-  // Custom processing class with joined items
-  class JoinedProcessor(engine: StatementEngine[JoinedItem])(implicit postProcessor: PostProcessor) extends Processor[JoinedItem](engine)
 
 
 }

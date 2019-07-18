@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 case class XMLStream(stream: DataStream[Iterable[Item]]) extends Stream
 
 object XMLStream {
-  val DEFAULT_PATH_OPTION: String = "/"
+  val DEFAULT_PATH_OPTION: String = "/*"
 
   def apply(source: StreamDataSource, xpaths: List[Option[Literal]])(implicit env: StreamExecutionEnvironment): Stream = {
     val xpathStrings = xpaths.map({

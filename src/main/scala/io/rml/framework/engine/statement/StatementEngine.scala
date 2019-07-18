@@ -50,8 +50,10 @@ class StatementEngine[T <: Item](val statementMap: Map[Option[String], List[Stat
     * @return
     */
   override def process(item: T): List[FlinkRDFQuad] ={
-    val statements = statementMap.getOrElse(item.tag, List())
-    statements.flatMap(statement => statement.process(item)).flatten // flat map to filter out None
+
+    val statements = if(!IS_GROUPING) statementMap.values.flatten else statementMap.getOrElse(item.tag, List())
+
+    statements.flatMap(statement => statement.process(item)).flatten.toList// flat map to filter out None
   }
 
 }

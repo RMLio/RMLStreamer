@@ -50,7 +50,10 @@ object StreamingTestMain {
     val testType = if (parameters.has(TYPE_PARAM)) parameters.get(TYPE_PARAM)
     else "tcp"
 
-    implicit val postProcessor:PostProcessor = TestUtil.pickPostProcessor(parameters.get(POST_PROCESS_PARAM))
+    val postProcessorType = if(parameters.has(POST_PROCESS_PARAM)) parameters.get(POST_PROCESS_PARAM)
+    else "json-ld"
+
+    implicit val postProcessor:PostProcessor = TestUtil.pickPostProcessor(postProcessorType)
 
     val folder = MappingTestUtil.getFile(fileName)
     val server = serverFactoryMap(testType).createServer()
