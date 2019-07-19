@@ -116,7 +116,7 @@ object Main extends Logging {
       val dataset: DataSet[String] = createDataSetFromFormattedMapping(formattedMapping)
 
       // write dataset to file, depending on the given parameters
-      dataset.writeAsText("file://" + outputPath, WriteMode.OVERWRITE).setParallelism(1)
+      dataset.writeAsText("file://" + outputPath, WriteMode.OVERWRITE)
         .name("Write to output")
 
       // execute data set job

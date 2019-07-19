@@ -8,12 +8,11 @@ import org.apache.flink.api.common.io.{GenericInputFormat, NonParallelInput}
 import org.apache.flink.core.io.GenericInputSplit
 import org.slf4j.LoggerFactory
 
-class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Item]{
+class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Item] with NonParallelInput {
 
   val LOG = LoggerFactory.getLogger(classOf[XMLInputFormat])
 
   private var iterator: Iterator[Option[Item]] = _
-  private var numSplits: Int = _
 
   override def open(inputSplit: GenericInputSplit): Unit = {
     super.open(inputSplit)
@@ -34,13 +33,6 @@ class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Ite
       // create the iterator for the Akka Source
       iterator = XMLIterator(ap, vn, namespaces)
       LOG.info("Run the XML source!")
-
-      for(i <- 0 until inputSplit.getSplitNumber){
-        if(iterator.hasNext)
-          iterator.next()
-      }
-      this.numSplits = numSplits
-
     } else {
       throw new RMLException("Can't parse XML with VTD.")
     }
@@ -49,12 +41,6 @@ class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Ite
   override def reachedEnd() = !iterator.hasNext
 
   override def nextRecord(reuse: Item) = {
-
-    for(i <- 0 until numSplits-1){
-      if(iterator.hasNext)
-        iterator.next()
-    }
-
     LOG.info("Going for the next!")
     val next = iterator.next()
     if (next.isDefined) next.get
