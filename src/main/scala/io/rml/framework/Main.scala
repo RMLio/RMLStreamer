@@ -248,6 +248,8 @@ object Main extends Logging {
                                         senv: StreamExecutionEnvironment,
                                         postProcessor: PostProcessor): DataSet[String] = {
 
+    require(!postProcessor.isInstanceOf[AtMostOneProcessor], "Bulk output is not supported in the static version")
+
     /**
       * check if the mapping has standard triple maps and triple maps with joined triple maps
       * Joined triple maps are created from triple maps that contain parent triple maps. The triple maps are split per
