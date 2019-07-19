@@ -1,6 +1,14 @@
 package io.rml.framework.core.model
 
-case class TCPSocketStream(uri: Uri, hostName: String, port: Int, _type: String) extends StreamDataSource
+import java.util.Objects
+
+case class TCPSocketStream(hostName: String, port: Int, _type: String) extends StreamDataSource {
+  override def uri: ExplicitNode = {
+    val hashValue = Objects.hash(hostName, new Integer(port), _type)
+
+    Uri(hashValue.toHexString)
+  }
+}
 
 object TCPSocketStream {
 

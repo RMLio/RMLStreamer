@@ -1,12 +1,12 @@
 package io.rml.framework.core.model
 
-import java.util.Properties
+import java.util.{Objects, Properties}
 
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.connector.kafka.{KafkaConnectorFactory, KafkaConnectorVersionFactory}
 import io.rml.framework.shared.RMLException
 
-case class KafkaStream(uri: Uri,
+case class KafkaStream(
                        zookeepers: List[String],
                        brokers: List[String],
                        groupId: String,
@@ -25,6 +25,13 @@ case class KafkaStream(uri: Uri,
     properties.setProperty("group.id", groupId)
     properties.setProperty("auto.offset.reset", "earliest")
     properties
+  }
+
+  override def uri: ExplicitNode = {
+
+    val totalHash = Objects.hash(groupId, topic, version, brokers.reduce((a,b)=> a + "," + b), zookeepers.reduce((a,b)=> a + "," + b))
+
+    Uri(totalHash.toHexString)
   }
 }
 

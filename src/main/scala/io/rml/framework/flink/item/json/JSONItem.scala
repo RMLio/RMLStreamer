@@ -26,7 +26,9 @@ import java.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jayway.jsonpath.JsonPath
+import io.rml.framework.core.model.Literal
 import io.rml.framework.flink.item.Item
+import io.rml.framework.flink.source.JSONStream
 import org.jsfr.json.provider.JacksonProvider
 import org.jsfr.json.{JacksonParser, JsonSurfer}
 import org.slf4j.{Logger, LoggerFactory}
@@ -34,7 +36,7 @@ import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.JavaConversions._
 import scala.util.control.NonFatal
 
-class JSONItem(map: java.util.Map[String, Object]) extends Item {
+class JSONItem(map: java.util.Map[String, Object], val tag: Option[String] = None) extends Item {
 
   val LOG: Logger = LoggerFactory.getLogger(JSONItem.getClass)
 
@@ -45,11 +47,11 @@ class JSONItem(map: java.util.Map[String, Object]) extends Item {
       val sanitizedReference: String = if (reference.contains(' ')) s"['$reference']" else reference
       val checkedReference = if (sanitizedReference.contains('$')) sanitizedReference else "$." + sanitizedReference
       // Some(next.toString.replaceAll("\"", "")) still necessary?
-      val _object : Object = JsonPath.read(map, checkedReference)
+      val _object: Object = JsonPath.read(map, checkedReference)
 
-      _object match{
+      _object match {
         case arr: java.util.List[_] => Some(arr.toList.map(_.toString))
-        case jsonObj: util.HashMap[_,_]  =>
+        case jsonObj: util.HashMap[_, _] =>
           logDebug(jsonObj.toString)
           None
         case e => Some(List(e.toString))
@@ -73,19 +75,32 @@ object JSONItem {
     null //new JSONItem(node)
   }
 
-  def fromStringOptionableList(json: String, iterator: String): Option[Array[Item]] = {
-    try {
-      val collection = surfer.collectAll(json, iterator)
-      val listOfJson = collection.toArray()
-      val mapper = new ObjectMapper()
+  def fromStringOptionableList(json: String, jsonPaths: List[String]): List[Item] = {
+    val result: List[Item] = jsonPaths
+      .flatMap(
 
-      val result: Array[Item] = listOfJson
-        .map(node => mapper.convertValue(node, classOf[java.util.Map[String, Object]]))
-        .map(map => new JSONItem(map))
+        jsonPath => {
+          try {
+            val tag = jsonPath match {
+              case JSONStream.DEFAULT_PATH_OPTION => None
+              case _ => Some(jsonPath)
+            }
+            val collection = surfer.collectAll(json, jsonPath)
+            val listOfJson = collection.toArray()
+            val mapper = new ObjectMapper()
 
-      Some(result)
-    } catch {
-      case NonFatal(e) => e.printStackTrace(); None
-    }
+            val result: Array[Item] = listOfJson
+              .map(node => mapper.convertValue(node, classOf[java.util.Map[String, Object]]))
+              .map(map => new JSONItem(map, tag))
+
+            Some(result)
+          } catch {
+            case NonFatal(e) => e.printStackTrace(); None
+          }
+        }
+      )
+      .flatten
+
+    result
   }
 }

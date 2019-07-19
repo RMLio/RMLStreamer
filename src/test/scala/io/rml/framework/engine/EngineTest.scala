@@ -33,6 +33,8 @@ class EngineTest extends FunSuite with Matchers {
       if(reference.equals("reference")) Some(List("value"))
       else None
     }
+
+    override def tag(): Option[String] = None
   }
 
   test("testProcessTemplate") {

@@ -175,7 +175,7 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
           throw new RuntimeException("Error converting to String", ex)
       }
 
-      val result = Some(XMLItem.fromString(xmlString, namespaces))
+      val result = Some(XMLItem.fromString(xmlString, namespaces, ap.getExprString))
       result
     } else {
       LOG.info("It's done.. without errors though.")

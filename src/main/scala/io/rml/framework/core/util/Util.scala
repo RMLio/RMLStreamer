@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
 import java.util.regex.Pattern
 
+import io.rml.framework.core.model.Literal
 import org.apache.commons.validator.routines.UrlValidator
 
 import scala.collection.mutable.ListBuffer
@@ -105,4 +106,14 @@ object Util {
   def isValidUri(uri: String): Boolean = {
     VALIDATOR.isValid(uri)
   }
+
+
+
+  def isRootIteratorTag(tag:Option[Literal]): Boolean = {
+    tag match {
+      case None => true
+      case Some(x) =>  io.rml.framework.flink.source.Source.DEFAULT_ITERATOR_SET.contains(x.toString)
+    }
+  }
+
 }

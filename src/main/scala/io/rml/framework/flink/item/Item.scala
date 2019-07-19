@@ -34,4 +34,7 @@ trait Item extends Serializable with Logging {
 
   val blankNodeId: BlankNodeId = BlankNodeId.create()
 
+
+  def tag:Option[String]
+
 }
