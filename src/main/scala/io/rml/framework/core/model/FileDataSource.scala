@@ -26,6 +26,7 @@ import java.io.File
 
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.std.StdFileDataSource
+import io.rml.framework.shared.RMLException
 
 /**
   *
@@ -50,7 +51,7 @@ object FileDataSource extends Logging {
       StdFileDataSource(Uri(file.getAbsolutePath))
     } else {
       val url = ClassLoader.getSystemResource(uri.toString)
-      if (url == null) throw new IllegalArgumentException(uri.toString + " can't be found.")
+      if (url == null) throw new RMLException(uri.toString + " can't be found.")
       val file_2 = new File(url.toURI)
       StdFileDataSource(Uri(file_2.getAbsolutePath))
     }

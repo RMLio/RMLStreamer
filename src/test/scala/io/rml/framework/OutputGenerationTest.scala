@@ -1,7 +1,7 @@
 package io.rml.framework
 
 import io.rml.framework.engine.PostProcessor
-import io.rml.framework.shared.TermTypeException
+import io.rml.framework.shared.{RMLException, TermTypeException}
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
 import io.rml.framework.util.{Logger, Sanitizer, TestUtil}
 import org.scalatest.{FlatSpec, Matchers}
@@ -11,7 +11,7 @@ import scala.util.control.Exception
 
 class OutputGenerationTest extends FlatSpec with Matchers {
 
-  val failing = "negative_test_cases/liter_typecast_fail"
+  val failing = Array( "negative_test_cases","negative_test_cases/liter_typecast_fail")
   val passing = Array(("bugs","noopt"), ("rml-testcases","noopt"))
   val temp = Array(("rml-testcases/temp","noopt") )
   "Output from the generator" should "match the output from output.ttl" in {
@@ -23,11 +23,13 @@ class OutputGenerationTest extends FlatSpec with Matchers {
     //checkGeneratedOutput(OutputTestHelper.getFile("example2-object").toString)
   }
 
-  it should "throw TermTypeException if the termType of the subject is a Literal" in {
-    
-    assertThrows[TermTypeException] {
-      ExpectedOutputTestUtil.test(failing, checkForTermTypeException)
-      throw new TermTypeException("")
+  it should "throw RMLException since the mapper is expected to fail" in {
+    failing.foreach { test =>
+      assertThrows[RMLException] {
+        ExpectedOutputTestUtil.test(test, checkForTermTypeException)
+        throw new RMLException("")
+
+      }
     }
   }
 
@@ -39,12 +41,13 @@ class OutputGenerationTest extends FlatSpec with Matchers {
     * @param testFolderPath
     */
   def checkForTermTypeException(testFolderPath: String): Unit = {
-    val catcher = Exception.catching(classOf[TermTypeException])
+    val catcher = Exception.catching(classOf[Throwable])
     val eitherGenerated = catcher.either(TripleGeneratorTestUtil.processFilesInTestFolder(testFolderPath).flatten)
 
 
-    if (eitherGenerated.isRight) {
+    if (eitherGenerated.isRight & testFolderPath.contains("RMLTC")) {
       val generatedOutput = Sanitizer.sanitize(eitherGenerated.right.get)
+      Logger.logInfo(testFolderPath)
       Logger.logInfo("Generated output: \n" + generatedOutput.mkString("\n"))
       fail
     }
