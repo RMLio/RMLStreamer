@@ -11,7 +11,7 @@
   a rr:TriplesMap;
     
   rml:logicalSource [ 
-    rml:source "negative_test_cases/liter_typecast_fail/RMLTC0004b-JSON/student.json";
+    rml:source "negative_test_cases/RMLTC0004b-JSON/student.json";
     rml:referenceFormulation ql:JSONPath;
     rml:iterator "$.students[*]"
   ];
