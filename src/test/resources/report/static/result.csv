@@ -262,7 +262,7 @@ RMLTC0012d-XML,passing
 RMLTC0012e-MySQL,inapplicable
 RMLTC0012e-PostgreSQL,inapplicable
 RMLTC0012e-SQLServer,inapplicable
-RMLTC0013a-JSON,failed
+RMLTC0013a-JSON,passing
 RMLTC0013a-MySQL,inapplicable
 RMLTC0013a-PostgreSQL,inapplicable
 RMLTC0013a-SQLServer,inapplicable

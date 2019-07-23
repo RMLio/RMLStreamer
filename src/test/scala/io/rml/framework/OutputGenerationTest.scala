@@ -11,7 +11,7 @@ import scala.util.control.Exception
 
 class OutputGenerationTest extends FlatSpec with Matchers {
 
-  val failing = Array( "negative_test_cases","negative_test_cases/liter_typecast_fail")
+  val failing = Array( "negative_test_cases")
   val passing = Array(("bugs","noopt"), ("rml-testcases","noopt"))
   val temp = Array(("rml-testcases/temp","noopt") )
   "Output from the generator" should "match the output from output.ttl" in {
