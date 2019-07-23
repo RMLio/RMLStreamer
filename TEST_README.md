@@ -215,3 +215,32 @@ The script will run all the test cases of the specified stream type under the "s
 
 Any failed test cases will be identified, in the console, at the end of the script with their 
 output. If any test case doesn't get evaluated by the script, running with --clean might solve it. 
+
+## Report Generation 
+
+Once you have implemented new test cases and features, it is advisable to run the report generation `updateResults.sh` script under the {root}/scripts/aux
+
+Execute the script by changing the working directory to the 
+{root}/scripts/aux first. Will fix later on to work properly with properties file.
+
+The script takes can be used as follows: 
+
+``` 
+Usage: 
+updateResults.sh [-t [static|stream]]
+
+Options:
+    
+    -t|--type: specifies the type of streamer 
+               mode for which the test cases will be updated 
+
+
+
+``` 
+
+
+
+
+
+
+
