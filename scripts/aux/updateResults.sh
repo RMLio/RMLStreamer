@@ -6,11 +6,6 @@ while [[ $# -gt 0 ]]
 do
     key="$1"
     case $key in
-        -p|--passing)
-            PASSING="$2"
-        shift
-        shift
-        ;;
 
         -t|--type)
         TYPE="$2"
