@@ -54,6 +54,7 @@ class JSONItem(map: java.util.Map[String, Object], val tag: Option[String] = Non
         case jsonObj: util.HashMap[_, _] =>
           logDebug(jsonObj.toString)
           None
+        case null => None
         case e => Some(List(e.toString))
       }
 
