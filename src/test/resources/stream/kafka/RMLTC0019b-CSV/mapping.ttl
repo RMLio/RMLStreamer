@@ -1,0 +1,35 @@
+
+@prefix rmls: <http://semweb.mmlab.be/ns/rmls#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+
+@base <http://example.com/base/> .
+
+<TriplesMap1>
+  a rr:TriplesMap;
+
+  rml:logicalSource [
+    rml:source _:kafka_source;
+    rml:referenceFormulation ql:CSV
+  ];
+
+  rr:subjectMap [ rml:reference "FirstName" ];
+
+  rr:predicateObjectMap [
+    rr:predicate foaf:name;
+    rr:objectMap [
+      rml:reference "FirstName"
+    ]
+  ] .
+
+_:kafka_source  rdf:type rmls:KafkaStream ;
+             rmls:zookeeper "localhost:2181";
+             rmls:broker "localhost:9092";
+             rmls:groupId "2";
+             rmls:topic "demo".
