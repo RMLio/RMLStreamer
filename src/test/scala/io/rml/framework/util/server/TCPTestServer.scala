@@ -8,7 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.util.CharsetUtil
-import io.rml.framework.util.Logger
+import io.rml.framework.util.{Logger, TestData}
 
 import scala.concurrent.{ExecutionContextExecutor, Future, Promise}
 
@@ -47,17 +47,18 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
     }
   }
 
-  override def writeData(messages: Iterable[String])(implicit executur: ExecutionContextExecutor): Unit = {
-
+  override def writeData(messages:  List[TestData])(implicit executur: ExecutionContextExecutor): Unit = {
+    //TODO: Start new connection for every batch if required!!
     getChCtxFuture map { ctx =>
       Logger.logInfo(ctx.channel().toString)
-
-      for (el <- messages) {
-        el.split("\n").foreach(Logger.logInfo)
-        val byteBuff = ctx.alloc.buffer(el.length)
-        byteBuff.writeBytes(el.getBytes())
-        ctx.channel.writeAndFlush(byteBuff)
-        Thread.sleep(2000)
+      for (batch <- messages) {
+        for (el <- batch.data) {
+          el.split("\n").foreach(Logger.logInfo)
+          val byteBuff = ctx.alloc.buffer(el.length)
+          byteBuff.writeBytes(el.getBytes())
+          ctx.channel.writeAndFlush(byteBuff)
+          Thread.sleep(2000)
+        }
       }
     }
   }

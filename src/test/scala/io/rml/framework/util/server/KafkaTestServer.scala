@@ -3,27 +3,26 @@ package io.rml.framework.util.server
 import java.io.File
 import java.util.Properties
 
-import io.rml.framework.util.Logger
+import io.rml.framework.util.{FutureUtil, Logger, TestData}
 import kafka.admin.AdminUtils
 import kafka.server.{KafkaConfig, KafkaServerStartable}
 import kafka.utils.ZkUtils
-import org.I0Itec.zkclient.serialize.ZkSerializer
-import org.I0Itec.zkclient.{ZkClient, ZkConnection}
+import org.I0Itec.zkclient.ZkClient
 import org.apache.commons.io.FileUtils
 import org.apache.curator.test.TestingServer
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
-import scala.concurrent.ExecutionContextExecutor
-
-case class KafkaTestServer() extends TestServer {
+import scala.concurrent.{Await, ExecutionContextExecutor, Future}
+import scala.concurrent.duration._
+case class KafkaTestServer(var topics:List[String]) extends TestServer {
 
   var zk: Option[TestingServer] = None
   var kafka: Option[KafkaServerStartable] = None
   var zkClient: Option[ZkClient] = None
-  var zkUtils: Option[ZkUtils] =  None
+  var zkUtils: Option[ZkUtils] = None
   val producer: KafkaProducer[String, String] = new KafkaProducer[String, String](producerProps())
   val defaultTopic = "demo"
-  var logDirs:Seq[String] = List()
+  var logDirs: Seq[String] = List()
 
   override def setup(): Unit = {
     val properties = serverProperties()
@@ -31,29 +30,60 @@ case class KafkaTestServer() extends TestServer {
     zk.get.start()
     val config = new KafkaConfig(properties)
 
-    logDirs =  config.logDirs
+    logDirs = config.logDirs
     kafka = Some(new KafkaServerStartable(config))
 
 
     kafka.get.startup()
-    topicSetup(topicProps())
+    topicSetup(topicProps(defaultTopic))
 
   }
 
-  override def writeData(input: Iterable[String])(implicit executur: ExecutionContextExecutor): Unit = {
-    for(in <- input){
+  private def removeExtensions(fileName:String):String= {
+    fileName.replaceAll("\\..*", "")
+  }
+
+  override def writeData(input: List[TestData])(implicit executur: ExecutionContextExecutor): Unit = {
+
+    val edited = input.map( t => {
+      val topic = removeExtensions(t.filename)
+      val prop = topicProps(topic)
+      topicSetup(prop)
+      TestData(topic, t.data)
+    })
+
+
+    val futures = edited.map( batch => {
+
+      val topic = if (edited.size == 1 ) defaultTopic else batch.filename
+      Future {
+       writeOneBatch(batch.data, topic)
+      }
+    })
+
+    Await.result(FutureUtil.waitAll(futures),5 seconds)
+
+  }
+
+  def writeOneBatch(input: Iterable[String], topic: String = defaultTopic): Unit = {
+    for (in <- input) {
+
       in.split("\n").foreach(Logger.logInfo)
 
-      producer.send(new ProducerRecord[String,String](defaultTopic, in))
+      producer.send(new ProducerRecord[String, String](topic, in))
+
     }
   }
 
   override def tearDown(): Unit = {
-    val props = topicProps()
+    val props = topicProps(defaultTopic)
 
     producer.close()
     if (zkClient.isDefined) {
-      AdminUtils.deleteTopic(zkUtils.get, props.getProperty("topic"))
+
+      for (t <- topics) {
+        AdminUtils.deleteTopic(zkUtils.get, t)
+      }
     }
     if (kafka.isDefined) kafka.get.shutdown()
     kafka.get.awaitShutdown()
@@ -69,7 +99,7 @@ case class KafkaTestServer() extends TestServer {
 
 
     zkClient = Some(clientConnectionTuple._1)
-    zkUtils = Some(new ZkUtils(clientConnectionTuple._1, clientConnectionTuple._2, false ))
+    zkUtils = Some(new ZkUtils(clientConnectionTuple._1, clientConnectionTuple._2, false))
 
     val topicName = prop.getProperty("topic")
     val numPartitions = 1
@@ -86,9 +116,9 @@ case class KafkaTestServer() extends TestServer {
   }
 
 
-  def topicProps(): Properties = {
+  def topicProps(topic:String): Properties = {
     val props = serverProperties()
-    props.put("topic", defaultTopic)
+    props.put("topic", topic)
     props
   }
 

@@ -9,7 +9,9 @@
 <TriplesMap1> a rr:TriplesMap;
     
   rml:logicalSource [ 
-    rml:source "rml-testcases/RMLTC0004a-CSV/student_sport.csv";
+    rml:source "rml-testcasRMLTC0004a-CSV
+                           RMLTC0004a-JSON
+                           RMLTC0004a-XMLes/RMLTC0004a-CSV/student_sport.csv";
     rml:referenceFormulation ql:CSV
   ];
 
