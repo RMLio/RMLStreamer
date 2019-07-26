@@ -1,4 +1,4 @@
-package io.rml.framework.util
+package io.rml.framework.util.logging
 
 import io.rml.framework.core.internal.Logging
 

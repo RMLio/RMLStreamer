@@ -3,9 +3,9 @@ package io.rml.framework
 import java.io.File
 
 import io.rml.TestTags.MappingReadSeqTest
-import io.rml.framework.util.Logger
 import io.rml.framework.util.fileprocessing.MappingTestUtil
 import io.rml.framework.shared.RMLException
+import io.rml.framework.util.logging.Logger
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.control.Exception

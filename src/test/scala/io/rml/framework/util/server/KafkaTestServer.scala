@@ -3,7 +3,8 @@ package io.rml.framework.util.server
 import java.io.File
 import java.util.Properties
 
-import io.rml.framework.util.{FutureUtil, Logger, TestData}
+import io.rml.framework.util.logging.Logger
+import io.rml.framework.util.FutureUtil
 import kafka.admin.AdminUtils
 import kafka.server.{KafkaConfig, KafkaServerStartable}
 import kafka.utils.ZkUtils

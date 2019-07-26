@@ -1,7 +1,5 @@
 package io.rml.framework.util.server
 
-import io.rml.framework.util.TestData
-
 import scala.concurrent.ExecutionContextExecutor
 
 trait TestServer {

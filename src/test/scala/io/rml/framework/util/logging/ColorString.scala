@@ -1,4 +1,4 @@
-package io.rml.framework.util
+package io.rml.framework.util.logging
 
 /**
   * Credits to:
@@ -26,4 +26,3 @@ trait ColorString {
   }
 
 }
-

@@ -6,7 +6,7 @@ import java.nio.file.Path
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.RDFGraph
 import io.rml.framework.core.model.rdf.jena.JenaGraph
-import io.rml.framework.util.Logger
+import io.rml.framework.util.logging.Logger
 import org.apache.jena.rdf.model.ModelFactory
 
 import scala.util.Sorting

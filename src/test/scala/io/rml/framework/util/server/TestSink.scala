@@ -1,5 +1,4 @@
-package io.rml.framework.util
-
+package io.rml.framework.util.server
 
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
 

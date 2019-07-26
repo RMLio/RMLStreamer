@@ -8,7 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.util.CharsetUtil
-import io.rml.framework.util.{Logger, TestData}
+import io.rml.framework.util.logging.Logger
 
 import scala.concurrent.{ExecutionContextExecutor, Future, Promise}
 

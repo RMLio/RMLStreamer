@@ -2,7 +2,7 @@ package io.rml.framework.util.fileprocessing
 
 import java.io.File
 
-import io.rml.framework.util.TestData
+import io.rml.framework.util.server.TestData
 
 object StreamDataSourceTestUtil extends FileProcessingUtil[TestData] {
 

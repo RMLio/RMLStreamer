@@ -4,9 +4,10 @@ import java.io.File
 import java.util.concurrent.{CompletableFuture, Executors}
 
 import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
-import io.rml.framework.util.{Logger, _}
+import io.rml.framework.util._
 import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil, MappingTestUtil, StreamDataSourceTestUtil}
-import io.rml.framework.util.server.{TCPTestServer, TestServer}
+import io.rml.framework.util.logging.Logger
+import io.rml.framework.util.server.{KafkaTestServerFactory, StreamTestServerFactory, TCPTestServer, TCPTestServerFactory, TestServer}
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala.ExecutionEnvironment
@@ -19,7 +20,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
 
 
-object StreamingTestMain {
+class StreamingTestMain  extends  TestSpec {
   Logger.lineBreak(50)
   implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
   implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment

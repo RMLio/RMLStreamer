@@ -3,7 +3,8 @@ package io.rml.framework
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.shared.{RMLException, TermTypeException}
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
-import io.rml.framework.util.{Logger, Sanitizer, TestUtil}
+import io.rml.framework.util.logging.Logger
+import io.rml.framework.util.{Sanitizer, TestUtil}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.control.Exception
