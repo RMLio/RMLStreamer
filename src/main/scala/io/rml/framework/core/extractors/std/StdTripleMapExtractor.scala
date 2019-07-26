@@ -103,7 +103,7 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
         e.printStackTrace()
         logWarning(e.getMessage)
         logWarning(resource.uri + ": Skipping triple map.")
-        None
+        throw e
     }
   }
 

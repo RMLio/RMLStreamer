@@ -14,8 +14,12 @@ object TCPTestServerFactory extends StreamTestServerFactory {
 }
 
 object KafkaTestServerFactory extends StreamTestServerFactory{
-  override def createServer(): TestServer = {
-    KafkaTestServer()
+  def createServer(topics: List[String]): TestServer = {
+    KafkaTestServer(topics)
+  }
+
+  override def createServer():TestServer = {
+    createServer(List("demo"))
   }
 }
 

@@ -13,7 +13,7 @@ object DataSourceTestUtil extends FileProcessingUtil[List[String]] {
     var result = List[String]()
     var entry = ""
     //TODO: REFACTOR THIS UGLY QUICKIE WICKIE CODE FIX FOR CSV DATA READING
-    val regex = candidateFiles(2).r
+    val regex = "csv".r
 
     val csvMatches = regex.findAllMatchIn(file.getName)
     val tail = if (csvMatches.hasNext) "\n\n" else "\n"

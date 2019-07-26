@@ -1,0 +1,54 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ex: <http://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix rmls: <http://semweb.mmlab.be/ns/rmls#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+@base <http://example.com/base/> .
+
+_:kafka_source  rdf:type rmls:KafkaStream ;
+             rmls:zookeeper "localhost:2181";
+             rmls:broker "localhost:9092";
+             rmls:groupId "2";
+             rmls:topic "demo".
+
+<TriplesMap1> a rr:TriplesMap;
+    
+  rml:logicalSource [ 
+    rml:source _:kafka_source ;
+    rml:referenceFormulation ql:CSV
+  ];
+
+  rr:subjectMap [ 
+    rr:template "http://example.com/{Student}";
+    rr:class ex:Student
+  ];
+
+  rr:predicateObjectMap [ 
+    rr:predicate foaf:name ; 
+    rr:objectMap [ 
+      rml:reference "Student"
+    ]
+  ].
+
+<TriplesMap2> a rr:TriplesMap;
+    
+  rml:logicalSource [ 
+    rml:source _:kafka_source ;
+    rml:referenceFormulation ql:CSV
+  ];
+
+  rr:subjectMap [ 
+    rr:template "http://example.com/{Sport}";
+    rr:class ex:Sport
+  ];
+
+  rr:predicateObjectMap [ 
+    rr:predicate foaf:name ; 
+    rr:objectMap [ 
+      rml:reference "Sport"
+    ]
+  ].

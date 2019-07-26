@@ -5,7 +5,7 @@ import java.util.concurrent.{CompletableFuture, Executors}
 
 import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
 import io.rml.framework.util.{Logger, _}
-import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil, MappingTestUtil}
+import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil, MappingTestUtil, StreamDataSourceTestUtil}
 import io.rml.framework.util.server.{TCPTestServer, TestServer}
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.java.utils.ParameterTool
@@ -45,13 +45,12 @@ object StreamingTestMain {
     val parameters = ParameterTool.fromArgs(args)
 
     val fileName = if (parameters.has(PATH_PARAM)) parameters.get(PATH_PARAM)
-    else "json-ld/stream/tcp/RMLTC0012a-XML-STREAM-SPLIT"
-
+    else "stream/temp/RMLTC0020b-XML"
     val testType = if (parameters.has(TYPE_PARAM)) parameters.get(TYPE_PARAM)
-    else "tcp"
+    else "kafka"
 
     val postProcessorType = if(parameters.has(POST_PROCESS_PARAM)) parameters.get(POST_PROCESS_PARAM)
-    else "json-ld"
+    else "noopt"
 
     implicit val postProcessor:PostProcessor = TestUtil.pickPostProcessor(postProcessorType)
 
@@ -87,12 +86,11 @@ object StreamingTestMain {
         /**
           * Send the input data as a stream of strings to port 9999
           */
-        val inputData = DataSourceTestUtil.processFilesInTestFolder(folder.toString).flatten
+        val inputData = StreamDataSourceTestUtil.processFilesInTestFolder(folder.toString)
 
         serverOpt.get.writeData(inputData)
-        Thread.sleep(6000)
 
-
+        Thread.sleep(5000)
         StreamingTestMain.compareResults(folder,  TestSink.getTriples.filter(!_.isEmpty))
         val waitfor = resetTestStates(jobID, cluster)
         waitfor.get
