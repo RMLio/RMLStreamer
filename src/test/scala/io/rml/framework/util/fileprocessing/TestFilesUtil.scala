@@ -39,6 +39,13 @@ trait TestFilesUtil[R] {
     result
   }
 
+
+  /**
+    * Gets RMLTC* folders located inside the parentTestCaseDir  directory.
+    *
+    * @param parentTestCaseDir directory where RMLTC* test case folders are located
+    * @return Array[Path] an array containing the path of all RMLTC* test case folders.
+    */
   def getTestCaseFolders(parentTestCaseDir: String): Array[Path] = {
 
 

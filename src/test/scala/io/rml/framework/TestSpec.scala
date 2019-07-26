@@ -1,7 +1,11 @@
 package io.rml.framework
 
-import org.scalatest.{FlatSpec, Inside, Inspectors, Matchers, OptionValues}
+import org.scalatest._
 
-abstract  class TestSpec extends FlatSpec with  Matchers with OptionValues  with Inside with Inspectors{
+trait TestSpec extends Matchers with OptionValues with Inside with Inspectors
 
-}
+
+abstract class StaticTestSpec extends FlatSpec with TestSpec
+
+
+abstract class StreamTestSpec extends AsyncFlatSpec with TestSpec

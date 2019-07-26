@@ -12,6 +12,8 @@ object TestSink {
 
   private var triples: List[String] = List[String]()
 
+  private var setTriples: Set[String] = Set[String]()
+
 
   def apply(): TestSink = new TestSink()
 
@@ -23,6 +25,7 @@ object TestSink {
 
   def empty(): Unit = lock.synchronized {
     triples = List()
+    setTriples = Set()
   }
 
 
@@ -36,6 +39,7 @@ class TestSink extends SinkFunction[String] {
         TestSink.lock.synchronized {
           // List in scala is linked list so prepending is faster
           TestSink.triples = el :: TestSink.triples
+          TestSink.setTriples += el
         }
       }
     }

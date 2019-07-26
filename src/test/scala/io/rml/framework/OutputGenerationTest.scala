@@ -1,21 +1,23 @@
 package io.rml.framework
 
 import io.rml.framework.engine.PostProcessor
-import io.rml.framework.shared.{RMLException, TermTypeException}
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
 import io.rml.framework.util.logging.Logger
 import io.rml.framework.util.{Sanitizer, TestUtil}
-import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.control.Exception
 
 
-class OutputGenerationTest extends FlatSpec with Matchers {
+class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
 
   val failing = Array( "negative_test_cases")
   val passing = Array(("bugs","noopt"), ("rml-testcases","noopt"))
   val temp = Array(("rml-testcases/temp","noopt") )
-  "Output from the generator" should "match the output from output.ttl" in {
+
+
+  "Valid mapping file" should behave like validMappingFile("rml-testcases")
+
+  "Valid mapping output generation" should "match the output from output.ttl" in {
 
     passing.foreach(test =>  {
       implicit val postProcessor: PostProcessor= TestUtil.pickPostProcessor(test._2)
@@ -24,14 +26,10 @@ class OutputGenerationTest extends FlatSpec with Matchers {
     //checkGeneratedOutput(OutputTestHelper.getFile("example2-object").toString)
   }
 
-  it should "throw RMLException since the mapper is expected to fail" in {
-    failing.foreach { test =>
-      assertThrows[RMLException] {
-        ExpectedOutputTestUtil.test(test, checkForTermTypeException)
-        throw new RMLException("")
+  failing foreach  {
+    el  =>
 
-      }
-    }
+      s"Reading invalid mapping files in $el" should behave like invalidMappingFile(el)
   }
 
 
