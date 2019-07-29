@@ -38,8 +38,6 @@ object StreamTestUtil{
     val formattedMapping = MappingTestUtil.processFilesInTestFolder(testCaseFolder.getAbsolutePath)
     val stream = Main.createStreamFromFormattedMapping(formattedMapping.head)
 
-
-    stream.addSink(TestSink())
     stream
   }
 

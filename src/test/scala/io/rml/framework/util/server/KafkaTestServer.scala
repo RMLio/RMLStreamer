@@ -54,15 +54,13 @@ case class KafkaTestServer(var topics:List[String]) extends TestServer {
     })
 
 
-    val futures = edited.map( batch => {
+    edited.map( batch => {
 
       val topic = if (edited.size == 1 ) defaultTopic else batch.filename
       Future {
        writeOneBatch(batch.data, topic)
       }
     })
-
-    Await.result(FutureUtil.waitAll(futures),5 seconds)
 
   }
 
@@ -73,6 +71,11 @@ case class KafkaTestServer(var topics:List[String]) extends TestServer {
 
       producer.send(new ProducerRecord[String, String](topic, in))
 
+    }
+  }
+  override def reset(): Unit = {
+    if (zkClient.isDefined) {
+      topics foreach {t  =>  AdminUtils.deleteTopic(zkUtils.get, t)}
     }
   }
 

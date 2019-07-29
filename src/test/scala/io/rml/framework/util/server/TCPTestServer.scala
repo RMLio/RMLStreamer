@@ -119,5 +119,5 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
     }
   }
 
-
+  override def reset(): Unit = ???
 }

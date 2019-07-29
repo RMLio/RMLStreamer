@@ -15,13 +15,15 @@ class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour{
   implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
   implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
   val cluster: Future[MiniCluster] = StreamTestUtil.getClusterFuture
-  var serverOpt:TestServer = KafkaTestServerFactory.createServer()
+  var server:TestServer = KafkaTestServerFactory.createServer()
+  server.setup()
 
   val passing = Array(("stream/kafka","noopt"))
 
   "A streamer mapping reader" should behave like validMappingFile("stream/kafka")
 
   it should behave like invalidMappingFile("negative_test_cases")
+
 
 
 }

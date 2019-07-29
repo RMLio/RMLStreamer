@@ -17,20 +17,21 @@ import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
+import scala.util.{Failure, Success}
 
 
-object  StreamingTestMain{
+object StreamingTestMain {
   Logger.lineBreak(50)
   implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
   implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
   implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
   val cluster: Future[MiniCluster] = StreamTestUtil.getClusterFuture
-  var serverOpt:Option[TestServer] =  None
+  var serverOpt: Option[TestServer] = None
 
-  val serverFactoryMap: Map[String,StreamTestServerFactory] =  Map("tcp" -> TCPTestServerFactory, "kafka" -> KafkaTestServerFactory)
+  val serverFactoryMap: Map[String, StreamTestServerFactory] = Map("tcp" -> TCPTestServerFactory, "kafka" -> KafkaTestServerFactory)
 
   val PATH_PARAM = "path"
-  val TYPE_PARAM =  "type"
+  val TYPE_PARAM = "type"
   val POST_PROCESS_PARAM = "post-process"
 
 
@@ -39,76 +40,101 @@ object  StreamingTestMain{
     val EMPTY_VALUE = "__NO_VALUE_KEY"
 
     // get parameters
-    if(args.nonEmpty)
+    if (args.nonEmpty)
       Logger.logInfo(s"Arguments: ${args.mkString(" ")}")
 
     val parameters = ParameterTool.fromArgs(args)
 
     val fileName = if (parameters.has(PATH_PARAM)) parameters.get(PATH_PARAM)
-    else "stream/temp/RMLTC0020b-XML"
+    else "stream/kafka/RMLTC0008a-XML-STREAM-KAFKA"
     val testType = if (parameters.has(TYPE_PARAM)) parameters.get(TYPE_PARAM)
     else "kafka"
 
-    val postProcessorType = if(parameters.has(POST_PROCESS_PARAM)) parameters.get(POST_PROCESS_PARAM)
+    val postProcessorType = if (parameters.has(POST_PROCESS_PARAM)) parameters.get(POST_PROCESS_PARAM)
     else "noopt"
 
-    implicit val postProcessor:PostProcessor = TestUtil.pickPostProcessor(postProcessorType)
+    implicit val postProcessor: PostProcessor = TestUtil.pickPostProcessor(postProcessorType)
 
     val folder = MappingTestUtil.getFile(fileName)
+    Logger.logInfo(s"Creating $testType server")
     val server = serverFactoryMap(testType).createServer()
-    serverOpt =  Some(server)
+    serverOpt = Some(server)
     server.setup()
 
+    Logger.logInfo("Server setup done")
+    val awaited = Await.ready(executeTestCase(folder), Duration.Inf)
 
-    Await.result(executeTestCase(folder), Duration.Inf)
+    awaited andThen {
+      case Success(_) =>
+        Logger.logSuccess(s"Test passed!!")
+    } andThen {
+      case Failure(exception) =>
+        Logger.logError(exception.toString)
 
-    server.tearDown()
-    Logger.lineBreak(50)
-    sys.exit(1)
-
+    } andThen {
+      case _ =>
+        server.tearDown()
+        Logger.lineBreak(50)
+        sys.exit(1)
+    }
   }
 
 
   def executeTestCase(folder: File)(implicit postProcessor: PostProcessor): Future[Unit] = {
     cluster flatMap { cluster =>
-      cluster.synchronized {
+      if (serverOpt.isEmpty) {
+        throw new IllegalStateException("Set up the server first!!!")
+      }
+      Logger.logInfo(folder.toString)
+      val dataStream = StreamTestUtil.createDataStream(folder)
 
-        if(serverOpt.isEmpty){
-          throw new IllegalStateException("Set up the server first!!!")
-        }
-        Logger.logInfo(folder.toString)
-        val dataStream = StreamTestUtil.createDataStream(folder)
-        val eventualJobID = StreamTestUtil.submitJobToCluster(cluster, dataStream, folder.getName)
-        Await.result(eventualJobID, Duration.Inf)
-        val jobID = eventualJobID.value.get.get
-        Logger.logInfo(s"Cluster job $jobID started")
 
-        /**
-          * Send the input data as a stream of strings to port 9999
-          */
-        val inputData = StreamDataSourceTestUtil.processFilesInTestFolder(folder.toString)
+      Logger.logInfo("Datastream created")
+      val sink = TestSink()
+      val expectedOutput = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
+      TestSink.setExpectedTriples(Sanitizer.sanitize(expectedOutput))
+      Logger.logInfo("sink created")
+      dataStream.addSink(sink)
 
-        serverOpt.get.writeData(inputData)
+      Logger.logInfo("Sink added")
+      val eventualJobID = StreamTestUtil.submitJobToCluster(cluster, dataStream, folder.getName)
+      Await.result(eventualJobID, Duration.Inf)
+      val jobID = eventualJobID.value.get.get
+      Logger.logInfo(s"Cluster job $jobID started")
 
-        Thread.sleep(5000)
-        StreamingTestMain.compareResults(folder,  TestSink.getTriples.filter(!_.isEmpty))
-        val waitfor = resetTestStates(jobID, cluster)
-        waitfor.get
-        //Await.result(resetTestStates(jobID, cluster), Duration.Inf)
-        Future.successful(s"Cluster job $jobID done")
+
+      val inputData = StreamDataSourceTestUtil.processFilesInTestFolder(folder.toString)
+
+      Logger.logInfo(s"Start reading input data")
+      TestSink.startCountDown(10 second)
+
+      Logger.logInfo(inputData.toString())
+      serverOpt.get.writeData(inputData)
+
+      Logger.logInfo("Input Data sent to server")
+
+
+      TestSink.sinkFuture flatMap {
+        _ =>
+          Logger.logInfo( s"Sink's promise completion status: ${TestSink.sinkPromise.isCompleted}")
+          StreamingTestMain.compareResults(folder, TestSink.getTriples.filter(!_.isEmpty))
+          TestSink.reset()
+          val waitfor = resetTestStates(jobID, cluster)
+          waitfor.get
+          //Await.result(resetTestStates(jobID, cluster), Duration.Inf)
+          Logger.logInfo(s"Cluster job $jobID done")
+          Future.successful()
       }
     }
   }
 
   def resetTestStates(jobID: JobID, cluster: MiniCluster): CompletableFuture[Acknowledge] = {
-    // Clear the collected results in the sink
-    TestSink.empty()
+
     // Cancel the job
     StreamTestUtil.cancelJob(jobID, cluster)
   }
 
   def compareResults(folder: File, unsanitizedOutput: List[String]): Unit = {
-
 
     var expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
     expectedOutputs = Sanitizer.sanitize(expectedOutputs)
@@ -131,13 +157,13 @@ object  StreamingTestMain{
       s"Test case: ${folder.getName}").mkString("\n")
 
 
-    if (expectedOutputs.nonEmpty && expectedOutputs.size  > generatedOutputs.size  ) {
+    if (expectedOutputs.nonEmpty && expectedOutputs.size > generatedOutputs.size) {
       errorMsgMismatch.split("\n").foreach(Logger.logError)
       return
     }
 
     for (generatedTriple <- generatedOutputs) {
-      if(!expectedOutputs.contains(generatedTriple)){
+      if (!expectedOutputs.contains(generatedTriple)) {
         errorMsgMismatch.split("\n").foreach(Logger.logError)
         return
       }

@@ -2,14 +2,18 @@ package io.rml.framework
 
 import java.io.File
 
-import io.rml.framework.util.fileprocessing.MappingTestUtil
 import io.rml.framework.shared.RMLException
+import io.rml.framework.util.fileprocessing.MappingTestUtil
 import io.rml.framework.util.logging.Logger
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.FlatSpecLike
 
 import scala.util.control.Exception
 
-trait ReadMappingBehaviour { this : FlatSpec =>
+/**
+  * A stackable fixture which will be used to check the mapping files in the respective test folders.
+  * http://www.scalatest.org/user_guide/sharing_tests
+  */
+trait ReadMappingBehaviour { this : FlatSpecLike =>
 
   def validMappingFile(rootDir: String) {
     it must "not fail if mapping file is valid" in {
