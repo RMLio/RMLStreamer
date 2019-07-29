@@ -46,10 +46,17 @@ case class KafkaTestServer(var topics:List[String]) extends TestServer {
 
   override def writeData(input: List[TestData])(implicit executur: ExecutionContextExecutor): Unit = {
 
+
+    /**
+      * Create topics for each test data defined by TestData(topic, data)
+      * and add them to [[topics]]
+      */
     val edited = input.map( t => {
       val topic = removeExtensions(t.filename)
       val prop = topicProps(topic)
       topicSetup(prop)
+
+      topics ::=  topic
       TestData(topic, t.data)
     })
 
@@ -64,6 +71,12 @@ case class KafkaTestServer(var topics:List[String]) extends TestServer {
 
   }
 
+
+  /**
+    * Write one batch of data to a topic
+    * @param input list of input data
+    * @param topic kafka topic to which the `input` will be written to
+    */
   def writeOneBatch(input: Iterable[String], topic: String = defaultTopic): Unit = {
     for (in <- input) {
 
@@ -77,20 +90,22 @@ case class KafkaTestServer(var topics:List[String]) extends TestServer {
     if (zkClient.isDefined) {
       topics foreach {t  =>  AdminUtils.deleteTopic(zkUtils.get, t)}
     }
+
+    topics = List(defaultTopic)
   }
 
   override def tearDown(): Unit = {
-    val props = topicProps(defaultTopic)
-
     producer.close()
+
+    Logger.logInfo(s"Server deleting topics: $topics")
     if (zkClient.isDefined) {
 
       for (t <- topics) {
         AdminUtils.deleteTopic(zkUtils.get, t)
       }
     }
+    Logger.logInfo("Server finish deleting kafka topics! ")
     if (kafka.isDefined) kafka.get.shutdown()
-    kafka.get.awaitShutdown()
     if (zk.isDefined) zk.get.close()
     cleanUpLogs()
   }

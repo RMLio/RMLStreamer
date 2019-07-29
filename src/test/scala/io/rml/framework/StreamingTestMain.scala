@@ -21,21 +21,21 @@ import scala.util.{Failure, Success}
 
 
 object StreamingTestMain {
-  Logger.lineBreak(50)
-  implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
-  implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
-  implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
-  val cluster: Future[MiniCluster] = StreamTestUtil.getClusterFuture
-  var serverOpt: Option[TestServer] = None
-
-  val serverFactoryMap: Map[String, StreamTestServerFactory] = Map("tcp" -> TCPTestServerFactory, "kafka" -> KafkaTestServerFactory)
-
-  val PATH_PARAM = "path"
-  val TYPE_PARAM = "type"
-  val POST_PROCESS_PARAM = "post-process"
 
 
   def main(args: Array[String]): Unit = {
+    Logger.lineBreak(50)
+    implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
+    implicit val cluster: Future[MiniCluster] = StreamTestUtil.getClusterFuture
+    var serverOpt: Option[TestServer] = None
+
+    val serverFactoryMap: Map[String, StreamTestServerFactory] = Map("tcp" -> TCPTestServerFactory, "kafka" -> KafkaTestServerFactory)
+
+    val PATH_PARAM = "path"
+    val TYPE_PARAM = "type"
+    val POST_PROCESS_PARAM = "post-process"
 
     val EMPTY_VALUE = "__NO_VALUE_KEY"
 
@@ -62,7 +62,7 @@ object StreamingTestMain {
     server.setup()
 
     Logger.logInfo("Server setup done")
-    val awaited = Await.ready(executeTestCase(folder), Duration.Inf)
+    val awaited = Await.ready(executeTestCase(folder, server), Duration.Inf)
 
     awaited andThen {
       case Success(_) =>
@@ -80,9 +80,13 @@ object StreamingTestMain {
   }
 
 
-  def executeTestCase(folder: File)(implicit postProcessor: PostProcessor): Future[Unit] = {
+  def executeTestCase(folder: File, server: TestServer)(implicit postProcessor: PostProcessor,
+                                                        cluster: Future[MiniCluster],
+                                                        executionContextExecutor: ExecutionContextExecutor,
+                                                        streamExecutionEnvironment: StreamExecutionEnvironment,
+                                                        executionEnvironment: ExecutionEnvironment): Future[Unit] = {
     cluster flatMap { cluster =>
-      if (serverOpt.isEmpty) {
+      if (server == null) {
         throw new IllegalStateException("Set up the server first!!!")
       }
       Logger.logInfo(folder.toString)
@@ -109,14 +113,14 @@ object StreamingTestMain {
       TestSink.startCountDown(10 second)
 
       Logger.logInfo(inputData.toString())
-      serverOpt.get.writeData(inputData)
+      server.writeData(inputData)
 
       Logger.logInfo("Input Data sent to server")
 
 
       TestSink.sinkFuture flatMap {
         _ =>
-          Logger.logInfo( s"Sink's promise completion status: ${TestSink.sinkPromise.isCompleted}")
+          Logger.logInfo(s"Sink's promise completion status: ${TestSink.sinkPromise.isCompleted}")
           StreamingTestMain.compareResults(folder, TestSink.getTriples.filter(!_.isEmpty))
           TestSink.reset()
           val waitfor = resetTestStates(jobID, cluster)
@@ -128,7 +132,7 @@ object StreamingTestMain {
     }
   }
 
-  def resetTestStates(jobID: JobID, cluster: MiniCluster): CompletableFuture[Acknowledge] = {
+  def resetTestStates(jobID: JobID, cluster: MiniCluster)(implicit executionContextExecutor: ExecutionContextExecutor): CompletableFuture[Acknowledge] = {
 
     // Cancel the job
     StreamTestUtil.cancelJob(jobID, cluster)
