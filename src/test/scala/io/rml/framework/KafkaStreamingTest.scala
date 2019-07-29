@@ -65,7 +65,6 @@ class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour {
 
         TestUtil.tmpCleanup()
       }
-
   }
 
 
