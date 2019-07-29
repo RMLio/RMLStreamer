@@ -1,13 +1,14 @@
 package io.rml.framework
 
 import java.io.File
-import java.util.concurrent.{CompletableFuture, Executors}
+import java.util.concurrent.{CompletableFuture, Executors, TimeUnit}
 
-import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
+import io.rml.framework.engine.PostProcessor
+import io.rml.framework.shared.RMLException
 import io.rml.framework.util._
-import io.rml.framework.util.fileprocessing.{DataSourceTestUtil, ExpectedOutputTestUtil, MappingTestUtil, StreamDataSourceTestUtil}
+import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, MappingTestUtil, StreamDataSourceTestUtil}
 import io.rml.framework.util.logging.Logger
-import io.rml.framework.util.server.{KafkaTestServerFactory, StreamTestServerFactory, TCPTestServer, TCPTestServerFactory, TestServer, TestSink}
+import io.rml.framework.util.server._
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala.ExecutionEnvironment
@@ -46,7 +47,7 @@ object StreamingTestMain {
     val parameters = ParameterTool.fromArgs(args)
 
     val fileName = if (parameters.has(PATH_PARAM)) parameters.get(PATH_PARAM)
-    else "stream/kafka/RMLTC0008a-XML-STREAM-KAFKA"
+    else "stream/kafka/RMLTC0007e-XML-STREAM-KAFKA"
     val testType = if (parameters.has(TYPE_PARAM)) parameters.get(TYPE_PARAM)
     else "kafka"
 
@@ -74,6 +75,8 @@ object StreamingTestMain {
     } andThen {
       case _ =>
         server.tearDown()
+        TestUtil.tmpCleanup()
+
         Logger.lineBreak(50)
         sys.exit(1)
     }
@@ -121,24 +124,34 @@ object StreamingTestMain {
       TestSink.sinkFuture flatMap {
         _ =>
           Logger.logInfo(s"Sink's promise completion status: ${TestSink.sinkPromise.isCompleted}")
-          StreamingTestMain.compareResults(folder, TestSink.getTriples.filter(!_.isEmpty))
+          val either = StreamingTestMain.compareResults(folder, TestSink.getTriples.filter(!_.isEmpty))
           TestSink.reset()
-          val waitfor = resetTestStates(jobID, cluster)
-          waitfor.get
-          //Await.result(resetTestStates(jobID, cluster), Duration.Inf)
-          Logger.logInfo(s"Cluster job $jobID done")
-          Future.successful()
+          either match {
+            case Left(e) => Future.failed(new RMLException(e))
+            case Right(e) => Future.successful()
+          }
+      } flatMap {
+        _ =>
+        //Await.result(resetTestStates(jobID, cluster), Duration.Inf)
+        Logger.logInfo(s"Cluster job $jobID done")
+        resetTestStates(jobID, cluster)
       }
     }
   }
 
-  def resetTestStates(jobID: JobID, cluster: MiniCluster)(implicit executionContextExecutor: ExecutionContextExecutor): CompletableFuture[Acknowledge] = {
+  def resetTestStates(jobID: JobID, cluster: MiniCluster)(implicit executionContextExecutor: ExecutionContextExecutor): Future[Unit] = {
 
     // Cancel the job
-    StreamTestUtil.cancelJob(jobID, cluster)
+    StreamingTestMain.synchronized {
+      Future {
+        StreamTestUtil.cancelJob(jobID, cluster)
+        while(!cluster.getJobStatus(jobID).get().isTerminalState){
+        }
+      }
+    }
   }
 
-  def compareResults(folder: File, unsanitizedOutput: List[String]): Unit = {
+  def compareResults(folder: File, unsanitizedOutput: List[String]): Either[String,String] = {
 
     var expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
     expectedOutputs = Sanitizer.sanitize(expectedOutputs)
@@ -163,16 +176,16 @@ object StreamingTestMain {
 
     if (expectedOutputs.nonEmpty && expectedOutputs.size > generatedOutputs.size) {
       errorMsgMismatch.split("\n").foreach(Logger.logError)
-      return
+      return Left(errorMsgMismatch)
     }
 
     for (generatedTriple <- generatedOutputs) {
       if (!expectedOutputs.contains(generatedTriple)) {
         errorMsgMismatch.split("\n").foreach(Logger.logError)
-        return
+        return Left(errorMsgMismatch)
       }
     }
 
-    Logger.logSuccess(s"Testcase ${folder.getName} passed streaming test!")
+    Right(s"Testcase ${folder.getName} passed streaming test!")
   }
 }
