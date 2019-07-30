@@ -17,6 +17,8 @@ import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Futu
 import scala.util.{Failure, Success}
 
 class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour {
+
+
   val passing = Array(("stream/kafka", "noopt"))
   val testCases: Array[(Path, String)] = for {
     (folder, postProcessor) <- passing
@@ -27,13 +29,14 @@ class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour {
 
   it should behave like invalidMappingFile("negative_test_cases")
 
+
+
   testCases foreach {
     case (folderPath, postProcName) =>
       it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
         implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
         implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
         implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
-
         Logger.logInfo("Starting server")
         val server: TestServer = KafkaTestServerFactory.createServer()
         server.setup()
@@ -60,10 +63,6 @@ class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour {
             Logger.lineBreak(50)
 
             fail
-        }
-
-        sys addShutdownHook {
-          TestUtil.tmpCleanup()
         }
 
         Await.result(result, Duration.Inf)
