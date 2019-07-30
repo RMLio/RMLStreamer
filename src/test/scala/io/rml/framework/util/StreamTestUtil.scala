@@ -112,7 +112,7 @@ object StreamTestUtil {
     customConfig.setString("io.tmp.dirs", TestProperties.getTempDir.toString)
     val configuration = new MiniClusterConfiguration.Builder()
       .setConfiguration(customConfig)
-      .setNumTaskManagers(2)
+      .setNumTaskManagers(1)
       .setNumSlotsPerTaskManager(100)
       .build()
     // start cluster
