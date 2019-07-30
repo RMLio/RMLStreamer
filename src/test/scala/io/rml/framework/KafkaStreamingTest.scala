@@ -1,5 +1,6 @@
 package io.rml.framework
 
+import java.nio.file.Path
 import java.util.concurrent.Executors
 
 import io.rml.framework.engine.PostProcessor
@@ -17,7 +18,7 @@ import scala.util.{Failure, Success}
 
 class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour {
   val passing = Array(("stream/kafka", "noopt"))
-  val testCases = for {
+  val testCases: Array[(Path, String)] = for {
     (folder, postProcessor) <- passing
     testCase <- StreamDataSourceTestUtil.getTestCaseFolders(folder)
   } yield (testCase, postProcessor)
@@ -46,6 +47,8 @@ class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour {
           case _ =>
             server.tearDown()
             cluster.map( c => c.close())
+            TestUtil.tmpCleanup()
+
         } andThen {
           case Success(_) =>
             Logger.logSuccess(s"Test passed!!")
@@ -62,8 +65,6 @@ class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour {
 
         Await.result(result, Duration.Inf)
 
-
-        TestUtil.tmpCleanup()
       }
   }
 
