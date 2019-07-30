@@ -1,10 +1,11 @@
 package io.rml.framework.util.server
 
 import java.io.File
+import java.nio.file.Paths
 import java.util.Properties
 
 import io.rml.framework.util.logging.Logger
-import io.rml.framework.util.FutureUtil
+import io.rml.framework.util.{FutureUtil, TestProperties}
 import kafka.admin.AdminUtils
 import kafka.server.{KafkaConfig, KafkaServerStartable}
 import kafka.utils.ZkUtils
@@ -24,7 +25,9 @@ case class KafkaTestServer(var topics: List[String]) extends TestServer {
   var zkUtils: Option[ZkUtils] = None
   val producer: KafkaProducer[String, String] = new KafkaProducer[String, String](producerProps())
   val defaultTopic = "demo"
-  val defaultDir = "tmp/kafka"
+  val defaultDir = TestProperties.getTempDir.toString
+
+
 
   override def setup(): Unit = {
     val properties = serverProperties()

@@ -20,7 +20,7 @@ class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour {
   val passing = Array(("stream/kafka", "noopt"))
   val testCases: Array[(Path, String)] = for {
     (folder, postProcessor) <- passing
-    testCase <- StreamDataSourceTestUtil.getTestCaseFolders(folder)
+    testCase <- StreamDataSourceTestUtil.getTestCaseFolders(folder).sorted
   } yield (testCase, postProcessor)
 
   "A streamer mapping reader" should behave like validMappingFile("stream/kafka")
@@ -33,10 +33,9 @@ class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour {
         implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
         implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
         implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
-        var server: TestServer = KafkaTestServerFactory.createServer()
 
         Logger.logInfo("Starting server")
-        server = KafkaTestServerFactory.createServer()
+        val server: TestServer = KafkaTestServerFactory.createServer()
         server.setup()
         implicit val cluster: Future[MiniCluster] = StreamTestUtil.getClusterFuture
         implicit val postProcessor: PostProcessor = TestUtil.pickPostProcessor(postProcName)
