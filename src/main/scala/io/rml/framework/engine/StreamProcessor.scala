@@ -7,9 +7,15 @@ abstract class StreamProcessor[T<:Item](engine: StatementEngine[T]) (implicit po
   override def map(in: Iterable[T]): List[String] = {
     if (in.isEmpty) return List()
 
-    val triples = in flatMap engine.process
+    try {
+      val triples = in flatMap engine.process
+      postProcessor.process(triples)
 
-    postProcessor.process(triples)
+
+    }catch{
+      case e => println(e)
+                List()
+    }
   }
 }
 

@@ -24,6 +24,7 @@ package io.rml.framework.flink.item.csv
 
 import java.io.{IOException, StringReader}
 
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.source.EmptyItem
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
@@ -46,7 +47,7 @@ class CSVItem(record: CSVRecord, val tag:Option[String]= None) extends Item {
       Some(List(record.get(reference)))
     } catch {
       case ex: IllegalArgumentException => {
-        logError("Could not find reference. ", ex)
+        CSVItem.logDebug(s"Cannot refer reference: \n $ex")
         None
       }
     }
@@ -55,7 +56,7 @@ class CSVItem(record: CSVRecord, val tag:Option[String]= None) extends Item {
 }
 
 
-object CSVItem {
+object CSVItem  extends  Logging{
 
 
   def apply(record: CSVRecord): CSVItem = new CSVItem(record)
