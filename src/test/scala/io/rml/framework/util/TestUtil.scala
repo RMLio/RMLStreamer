@@ -35,7 +35,7 @@ object TestUtil {
 
   def tmpCleanup(): Unit = {
     val temp = TestProperties.getTempDir
-    temp.listFiles().foreach(e => FileUtils.deleteQuietly(e))
+    FileUtils.deleteQuietly(temp)
   }
 
 }

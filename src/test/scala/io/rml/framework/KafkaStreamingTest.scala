@@ -62,6 +62,10 @@ class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour {
             fail
         }
 
+        sys addShutdownHook {
+          TestUtil.tmpCleanup()
+        }
+
         Await.result(result, Duration.Inf)
 
       }
