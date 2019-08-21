@@ -54,50 +54,48 @@ object Engine extends Logging {
     val regex = "(\\{[^\\{\\}]*\\})".r
     val replaced = template.value.replaceAll("\\$", "#")
     val result: mutable.Queue[String] = mutable.Queue.empty[String]
-    val matches = regex.findAllMatchIn(replaced)
+    val matches = regex.findAllMatchIn(replaced).toList
 
 
-    // Matches is ie List("{foo}", "{bar}")
-    for (m <- matches) {
-      val sanitizedRef = removeBrackets(m.toString()).replaceAll("#", "\\$")
-      val optReferred = if (encode) item.refer(sanitizedRef).map(lString => lString.map(el => Uri.encode(el))) else item.refer(sanitizedRef)
-      val quotedSanitizedRef = Pattern.quote(sanitizedRef)
-      //This is to get the value of Some(refList) (Not a for-loop over list!!!)
-      optReferred.foreach(refList => {
+    val tuples = for {
+      m <- matches
+      sanitizedRef = removeBrackets(m.toString()).replaceAll("#", "\\$")
+      optReferred = if (encode) item.refer(sanitizedRef).map(lString => lString.map(el => Uri.encode(el))) else item.refer(sanitizedRef)
+      quotedSanitizedRef = Pattern.quote(sanitizedRef)
+      if optReferred.isDefined
+    } yield (optReferred, quotedSanitizedRef)
 
-        // Using fifo queue to create a list of template string with the combination of referenced resources
-          if(result.isEmpty){
+
+    if (tuples.size != matches.size) {
+      None
+    } else {
+      for ((optReferred, quotedSanitizedRef) <- tuples) {
+
+        optReferred.foreach(refList => {
+
+          // Using fifo queue to create a list of template string with the combination of referenced resources
+          if (result.isEmpty) {
             //Used string template since we still have to escape the curly brackets
-            result ++=  refList.map( referred =>  replaced.replaceAll(s"\\{$quotedSanitizedRef\\}",referred))
-          }else{
+            result ++= refList.map(referred => replaced.replaceAll(s"\\{$quotedSanitizedRef\\}", referred))
+          } else {
 
             // Previously edited templates need to be reused for combination with new referenced resources
             var count = 0
             val maxLen = result.length
-            while (count !=  maxLen) {
-              val candid =  result.dequeue()
-              result  ++=  refList.map(referred =>  candid.replaceAll(s"\\{$quotedSanitizedRef\\}",  referred))
+            while (count != maxLen) {
+              val candid = result.dequeue()
+              result ++= refList.map(referred => candid.replaceAll(s"\\{$quotedSanitizedRef\\}", referred))
 
               count += 1
             }
 
 
           }
+        })
+      }
+      Some(result)
 
-      })
     }
-
-    if(result.isEmpty) None else Some(result)
-
-    //    val result = regex.replaceAllIn(replaced, m => {
-    //      val reference = removeBrackets(m.toString()).replaceAll("#", "\\$")
-    //
-    //      val referred = if (encode)
-    //      val referred = if (encode) item.refer(reference).flatMap(referred => Some(Uri.encode(referred))) else item.refer(reference) // if encode, this means this is an Uri
-    //      if (referred.isDefined) referred.get
-    //      else m.toString()
-    //    })
-    //    if (regex.findFirstIn(result).isEmpty) Some(result) else None
   }
 
   /**
@@ -117,7 +115,9 @@ object Engine extends Logging {
     * @param s
     * @return
     */
-  private def removeBrackets(s: String): String = {
+  private def removeBrackets(s: String): String
+
+  = {
     s.replace("{", "")
       .replace("}", "")
   }

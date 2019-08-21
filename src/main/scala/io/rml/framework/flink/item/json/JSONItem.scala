@@ -26,19 +26,17 @@ import java.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jayway.jsonpath.JsonPath
-import io.rml.framework.core.model.Literal
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.source.JSONStream
 import org.jsfr.json.provider.JacksonProvider
 import org.jsfr.json.{JacksonParser, JsonSurfer}
-import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConversions._
 import scala.util.control.NonFatal
 
-class JSONItem(map: java.util.Map[String, Object], val tag: Option[String] = None) extends Item {
+class JSONItem(map: java.util.Map[String, Object], val tag: Option[String] = None) extends Item  {
 
-  val LOG: Logger = LoggerFactory.getLogger(JSONItem.getClass)
 
 
   override def refer(reference: String): Option[List[String]] = {
@@ -52,29 +50,26 @@ class JSONItem(map: java.util.Map[String, Object], val tag: Option[String] = Non
       _object match {
         case arr: java.util.List[_] => Some(arr.toList.map(_.toString))
         case jsonObj: util.HashMap[_, _] =>
-          logDebug(jsonObj.toString)
+          JSONItem.logDebug(s"Cannot be object: \n $jsonObj")
           None
         case null => None
+
         case e => Some(List(e.toString))
       }
 
     } catch {
-      case NonFatal(e) =>
-        logError("Could not refer JSON Item", e)
+      case e: Throwable =>
+        JSONItem.logDebug(s"Cannot do referencing: \n $e")
         None
     }
   }
 }
 
-object JSONItem {
+object JSONItem extends Logging {
 
   private val surfer = new JsonSurfer(JacksonParser.INSTANCE, JacksonProvider.INSTANCE)
 
-  def fromString(json: String): JSONItem = {
-    val mapper = new ObjectMapper()
-    val node = mapper.readTree(json)
-    null //new JSONItem(node)
-  }
+
 
   def fromStringOptionableList(json: String, jsonPaths: List[String]): List[Item] = {
     val result: List[Item] = jsonPaths
