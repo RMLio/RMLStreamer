@@ -4,10 +4,13 @@ import java.io.File
 import java.util.concurrent.CompletableFuture
 
 import io.rml.framework.Main
-import io.rml.framework.engine.{NopPostProcessor, PostProcessor}
+import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.fileprocessing.MappingTestUtil
+import io.rml.framework.util.logging.Logger
+import io.rml.framework.util.server.TestSink
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
+import org.apache.flink.configuration.Configuration
 import org.apache.flink.runtime.jobgraph.JobGraph
 import org.apache.flink.runtime.messages.Acknowledge
 import org.apache.flink.runtime.minicluster.{MiniCluster, MiniClusterConfiguration}
@@ -16,7 +19,7 @@ import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironm
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-object StreamTestUtil{
+object StreamTestUtil {
 
   /**
     * Create a data stream from mapping file in de specified test case folder.
@@ -36,8 +39,6 @@ object StreamTestUtil{
     val formattedMapping = MappingTestUtil.processFilesInTestFolder(testCaseFolder.getAbsolutePath)
     val stream = Main.createStreamFromFormattedMapping(formattedMapping.head)
 
-
-    stream.addSink(TestSink())
     stream
   }
 
@@ -52,7 +53,7 @@ object StreamTestUtil{
     * @param duration
     */
 
-  def cancelJob(jobID: JobID, cluster: MiniCluster, duration: FiniteDuration = FiniteDuration(4, "seconds"))(implicit executur: ExecutionContextExecutor) : CompletableFuture[Acknowledge] = {
+  def cancelJob(jobID: JobID, cluster: MiniCluster, duration: FiniteDuration = FiniteDuration(4, "seconds"))(implicit executur: ExecutionContextExecutor): CompletableFuture[Acknowledge] = {
     cluster.cancelJob(jobID)
     /*val actorGateFuture = cluster
     for {
@@ -68,16 +69,17 @@ object StreamTestUtil{
     *
     * @param cluster a flink cluster
     * @param dataStream
-    * @param name    tag for the job whic will be submitted to cluster
+    * @param name    tag for the job which will be submitted to cluster
     * @tparam T result type of the data stream
     * @return JobID of the submitted job which can be used later on to cancel/stop
     */
-  def submitJobToCluster[T](cluster: MiniCluster, dataStream: DataStream[T], name: String)(implicit executur: ExecutionContextExecutor) : Future[JobID] =
+  def submitJobToCluster[T](cluster: MiniCluster, dataStream: DataStream[T], name: String)(implicit executur: ExecutionContextExecutor): Future[JobID] =
 
     Future {
-      while(cluster.requestClusterOverview().get().getNumJobsRunningOrPending > 1 ){
+      while (cluster.requestClusterOverview().get().getNumJobsRunningOrPending > 1) {
         Thread.sleep(100)
       }
+
       val graph = dataStream.executionEnvironment.getStreamGraph
       graph.setJobName(name)
       val jobGraph: JobGraph = graph.getJobGraph
@@ -85,8 +87,8 @@ object StreamTestUtil{
       Logger.logInfo(cluster.requestClusterOverview().get().getNumJobsRunningOrPending().toString)
 
       jobGraph.getJobID
-    }
 
+    }
 
 
   /**
@@ -103,12 +105,16 @@ object StreamTestUtil{
     *         which can be used for stopping/cancelling and starting jobs
     */
 
-  def getClusterFuture(implicit executur: ExecutionContextExecutor) : Future[MiniCluster] = {
+  def getClusterFuture(implicit executur: ExecutionContextExecutor): Future[MiniCluster] = {
     Logger.logInfo("Starting up cluster....")
+
+    val customConfig = new Configuration()
+    customConfig.setString("io.tmp.dirs", TestProperties.getTempDir.toString)
     val configuration = new MiniClusterConfiguration.Builder()
-      .setNumTaskManagers(2)
+      .setConfiguration(customConfig)
+      .setNumTaskManagers(1)
       .setNumSlotsPerTaskManager(100)
-        .build()
+      .build()
     // start cluster
     val cluster = new MiniCluster(configuration)
 

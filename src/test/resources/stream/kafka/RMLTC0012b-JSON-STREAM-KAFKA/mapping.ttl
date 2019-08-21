@@ -15,16 +15,17 @@
 
   rml:logicalSource [
     rml:source _:kafka_source1;
-    rml:referenceFormulation ql:CSV
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$.persons[*]"
   ];
-	
+
   rr:subjectMap [
     rr:template "{fname}{lname}";
     rr:termType rr:BlankNode ;
   ];
-	
-  rr:predicateObjectMap [ 
-    rr:predicate foaf:name ; 
+
+  rr:predicateObjectMap [
+    rr:predicate foaf:name ;
     rr:objectMap [
       rr:template "{fname} {lname}";
       rr:termType rr:Literal ;
@@ -37,7 +38,8 @@
 
   rml:logicalSource [
     rml:source _:kafka_source;
-    rml:referenceFormulation ql:CSV
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$.lives[*]"
 ];
 
   rr:subjectMap [
@@ -60,7 +62,7 @@ _:kafka_source  rdf:type rmls:KafkaStream ;
              rmls:groupId "2";
              rmls:topic "datasource".
 
-_:kafka_source  rdf:type rmls:KafkaStream ;
+_:kafka_source1  rdf:type rmls:KafkaStream ;
              rmls:zookeeper "localhost:2181";
              rmls:broker "localhost:9092";
              rmls:groupId "2";

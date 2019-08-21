@@ -6,7 +6,7 @@ import java.nio.file.Path
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.RDFGraph
 import io.rml.framework.core.model.rdf.jena.JenaGraph
-import io.rml.framework.util.Logger
+import io.rml.framework.util.logging.Logger
 import org.apache.jena.rdf.model.ModelFactory
 
 import scala.util.Sorting
@@ -39,6 +39,13 @@ trait TestFilesUtil[R] {
     result
   }
 
+
+  /**
+    * Gets RMLTC* folders located inside the parentTestCaseDir  directory.
+    *
+    * @param parentTestCaseDir directory where RMLTC* test case folders are located
+    * @return Array[Path] an array containing the path of all RMLTC* test case folders.
+    */
   def getTestCaseFolders(parentTestCaseDir: String): Array[Path] = {
 
 
