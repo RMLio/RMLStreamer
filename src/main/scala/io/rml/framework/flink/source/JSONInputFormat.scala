@@ -34,11 +34,11 @@ class JSONInputFormat(path: String, jsonPath: String) extends GenericInputFormat
     val mapper = new ObjectMapper()
     val map = mapper.convertValue(asInstanceOf, classOf[java.util.Map[String, Object]])
 
-    new JSONItem(map)
+    new JSONItem(map, Some(jsonPath))
   }
 
   override def close(): Unit = {
-    inputStream.close();
+    inputStream.close()
     super.close()
   }
 }

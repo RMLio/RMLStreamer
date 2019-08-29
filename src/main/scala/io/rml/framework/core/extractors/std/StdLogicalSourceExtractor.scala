@@ -81,7 +81,7 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
         ", referenceFormulation -> " + referenceFormulation)
     }
 
-    LogicalSource(referenceFormulation, iterator, source)
+    LogicalSource(referenceFormulation, List(iterator), source)
 
   }
 

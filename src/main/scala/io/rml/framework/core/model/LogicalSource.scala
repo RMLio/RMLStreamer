@@ -22,6 +22,8 @@
 
 package io.rml.framework.core.model
 
+import java.util.Objects
+
 import io.rml.framework.core.model.std.StdLogicalSource
 
 /**
@@ -33,7 +35,7 @@ trait LogicalSource extends Node {
     *
     * @return
     */
-  def iterator: Option[Literal]
+  def iterators: List[Option[Literal]]
 
   /**
     *
@@ -48,7 +50,16 @@ trait LogicalSource extends Node {
   def referenceFormulation: Uri
 
 
-  override def identifier: String = source.uri.toString
+  /**
+    * Logical sources are the same if the source identifier and the referenceFormulation are
+    * the same.
+    *
+    * @return
+    */
+  override def identifier: String = {
+
+    Objects.hash(source.identifier, referenceFormulation.identifier).toHexString
+  }
 
 }
 
@@ -59,12 +70,12 @@ object LogicalSource {
 
   def apply(
              referenceFormulation: Uri,
-             iterator: Option[Literal],
+             iterators: List[Option[Literal]],
              source: DataSource): LogicalSource = {
 
     StdLogicalSource(
       referenceFormulation,
-      iterator,
+      iterators,
       source)
 
   }

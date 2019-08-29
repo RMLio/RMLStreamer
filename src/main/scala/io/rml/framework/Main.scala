@@ -25,7 +25,7 @@ import java.util.Properties
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
-import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
+import io.rml.framework.engine.{AtMostOneProcessor, BulkPostProcessor, JoinedStreamProcessor, JoinedStaticProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor, StdStreamProcessor, StdStaticProcessor}
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{FixedPartitioner, KafkaConnectorVersionFactory, PartitionerFormat, RMLPartitioner}
 import io.rml.framework.flink.item.{Item, JoinedItem}
@@ -74,7 +74,10 @@ object Main extends Logging {
     val partitionID = if (parameters.has("partition-id")) parameters.get("partition-id")
     else EMPTY_VALUE
 
-    val partitionFormat: PartitionerFormat = PartitionerFormat.fromString(parameters.get("partition-type"))
+    val partitionFormatString = if (parameters.has("partition-type")) parameters.get("partition-type")
+    else EMPTY_VALUE
+
+    val partitionFormat: PartitionerFormat = PartitionerFormat.fromString(partitionFormatString)
 
     implicit val postProcessor:PostProcessor =
       parameters.get("post-process") match {
@@ -190,18 +193,24 @@ object Main extends Logging {
     require(formattedMapping.streamTripleMaps.nonEmpty)
     val triplesMaps = formattedMapping.streamTripleMaps
 
-    // group triple maps by logical sources
-    val grouped = triplesMaps.groupBy(tripleMap => tripleMap.logicalSource)
+    // group triple maps by logical sources based on if the postprocessor is supposed to emit at most one response
+    val grouped =
+      postProcessor match {
+        case _:AtMostOneProcessor => triplesMaps.groupBy(tripleMap => tripleMap.logicalSource.identifier)
+        case _:PostProcessor => triplesMaps.groupBy(tripleMap => tripleMap.logicalSource)
+      }
 
     // create a map with as key a Source and as value an Engine with loaded statements
     // the loaded statements are the mappings to execute
     val sourceEngineMap = grouped.map(entry => {
-      val logicalSource = entry._1
+      var logicalSource = entry._2.head.logicalSource
       val tripleMaps = entry._2
+      val iterators = tripleMaps.flatMap(tm => tm.logicalSource.iterators).distinct
+      logicalSource = LogicalSource(logicalSource.referenceFormulation, iterators, logicalSource.source)
       // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
       Source(logicalSource) -> {
         logInfo(entry._2.size + " Triple Maps are found.")
-        StatementEngine.fromTripleMaps(tripleMaps)
+        StatementEngine.fromTripleMaps(tripleMaps, iterators.size > 1 )
       }
     })
 
@@ -212,9 +221,8 @@ object Main extends Logging {
         val engine = entry._2
         // link the different steps in each pipeline
         source.stream // this will generate a stream of items
-          .map(item => item)
           // process every item by a processor with a loaded engine
-          .map(new StdProcessor(engine))
+          .map(new StdStreamProcessor(engine))
           .name("Execute statements on items.")
 
           // format every list of triples (as strings)
@@ -239,6 +247,8 @@ object Main extends Logging {
                                        (implicit env: ExecutionEnvironment,
                                         senv: StreamExecutionEnvironment,
                                         postProcessor: PostProcessor): DataSet[String] = {
+
+    require(!postProcessor.isInstanceOf[AtMostOneProcessor], "Bulk output is not supported in the static version")
 
     /**
       * check if the mapping has standard triple maps and triple maps with joined triple maps
@@ -308,7 +318,7 @@ object Main extends Logging {
         source.dataset // this will generate a dataset of items
 
           // process every item by a processor with a loaded engine
-          .map(new StdProcessor(engine))
+          .map(new StdStaticProcessor(engine))
           .name("Execute statements on items.")
 
           // format every list of triples (as strings)
@@ -390,7 +400,7 @@ object Main extends Logging {
         })
 
           // process the JoinedItems in an engine
-          .map(new JoinedProcessor(engine)).name("Execute statements.")
+          .map(new JoinedStaticProcessor(engine)).name("Execute statements.")
 
           // format the list of triples as strings
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
@@ -402,7 +412,7 @@ object Main extends Logging {
         val crossed = childDataset.cross(parentDataset)
 
         crossed.map(items => JoinedItem(items._1, items._2)) // create a JoinedItem from the crossed items
-          .map(new JoinedProcessor(engine)).name("Execute statements.") // process the joined items
+          .map(new JoinedStaticProcessor(engine)).name("Execute statements.") // process the joined items
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None) // format the triples
           .name("Reduce to strings.")
       }
@@ -444,25 +454,6 @@ object Main extends Logging {
       streams.tail.foldLeft(head)((a, b) => a.union(b))
     } else head
   }
-
-  // Abstract class for creating a custom processing mapping step in a pipeline.
-  // extend a RichFunction to have access to the RuntimeContext
-  abstract class Processor[T](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends RichMapFunction[T, List[String]] {
-
-    override def map(in: T): List[String] = {
-      val quadStrings = engine.process(in)
-      postProcessor.process(quadStrings)
-    }
-  }
-
-
-
-  // Custom processing class with normal items
-  class StdProcessor(engine: StatementEngine[Item])(implicit postProcessor: PostProcessor) extends Processor[Item](engine)
-
-
-  // Custom processing class with joined items
-  class JoinedProcessor(engine: StatementEngine[JoinedItem])(implicit postProcessor: PostProcessor) extends Processor[JoinedItem](engine)
 
 
 }

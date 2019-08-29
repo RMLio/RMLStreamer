@@ -93,7 +93,12 @@ class StdSubjectMapExtractor(graphMapExtractor: GraphMapExtractor) extends Subje
 
   override def extractTermType(resource: RDFResource): Option[Uri] = {
     val result = super.extractTermType(resource)
-    if (result.isDefined) result else Some(Uri(RMLVoc.Class.IRI))
+
+    result match{
+      case Some(Uri(RMLVoc.Class.LITERAL)) => throw new RMLException("Subject cannot be literal type")
+      case Some(e) => Some(e)
+      case _ => Some(Uri(RMLVoc.Class.IRI))
+    }
   }
 
   /**

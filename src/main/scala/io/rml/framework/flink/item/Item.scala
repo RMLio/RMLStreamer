@@ -28,10 +28,13 @@ import org.apache.jena.graph.BlankNodeId
 /**
   * Represents a data item.
   */
-trait Item extends Serializable with Logging {
+trait Item extends Serializable {
 
   def refer(reference: String): Option[List[String]]
 
   val blankNodeId: BlankNodeId = BlankNodeId.create()
+
+
+  def tag:Option[String]
 
 }

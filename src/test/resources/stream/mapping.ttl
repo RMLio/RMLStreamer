@@ -8,6 +8,15 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @base <http://example.com/base> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+
+_:kafka_source  rdf:type rmls:KafkaStream ;
+             rmls:zookeeper "localhost:2181";
+             rmls:broker "localhost:9092";
+             rmls:groupId "2";
+             rmls:topic "demo".
+
+
  <#TripleMap>
 
     a rr:TriplesMap;

@@ -1,20 +1,23 @@
 package io.rml.framework
 
 import io.rml.framework.engine.PostProcessor
-import io.rml.framework.shared.TermTypeException
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
-import io.rml.framework.util.{Logger, Sanitizer, TestUtil}
-import org.scalatest.{FlatSpec, Matchers}
+import io.rml.framework.util.logging.Logger
+import io.rml.framework.util.{Sanitizer, TestUtil}
 
 import scala.util.control.Exception
 
 
-class OutputGenerationTest extends FlatSpec with Matchers {
+class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
 
-  val failing = "negative_test_cases/liter_typecast_fail"
-  val passing = Array(("bugs","noopt"), ("rml-testcases","noopt"), ("rml-testcases/jsonld","json-ld"))
+  val failing = Array( "negative_test_cases")
+  val passing = Array(("bugs","noopt"), ("rml-testcases","noopt"))
   val temp = Array(("rml-testcases/temp","noopt") )
-  "Output from the generator" should "match the output from output.ttl" in {
+
+
+  "Valid mapping file" should behave like validMappingFile("rml-testcases")
+
+  "Valid mapping output generation" should "match the output from output.ttl" in {
 
     passing.foreach(test =>  {
       implicit val postProcessor: PostProcessor= TestUtil.pickPostProcessor(test._2)
@@ -23,12 +26,10 @@ class OutputGenerationTest extends FlatSpec with Matchers {
     //checkGeneratedOutput(OutputTestHelper.getFile("example2-object").toString)
   }
 
-  it should "throw TermTypeException if the termType of the subject is a Literal" in {
-    
-    assertThrows[TermTypeException] {
-      ExpectedOutputTestUtil.test(failing, checkForTermTypeException)
-      throw new TermTypeException("")
-    }
+  failing foreach  {
+    el  =>
+
+      s"Reading invalid mapping files in $el" should behave like invalidMappingFile(el)
   }
 
 
@@ -39,12 +40,13 @@ class OutputGenerationTest extends FlatSpec with Matchers {
     * @param testFolderPath
     */
   def checkForTermTypeException(testFolderPath: String): Unit = {
-    val catcher = Exception.catching(classOf[TermTypeException])
+    val catcher = Exception.catching(classOf[Throwable])
     val eitherGenerated = catcher.either(TripleGeneratorTestUtil.processFilesInTestFolder(testFolderPath).flatten)
 
 
-    if (eitherGenerated.isRight) {
+    if (eitherGenerated.isRight & testFolderPath.contains("RMLTC")) {
       val generatedOutput = Sanitizer.sanitize(eitherGenerated.right.get)
+      Logger.logInfo(testFolderPath)
       Logger.logInfo("Generated output: \n" + generatedOutput.mkString("\n"))
       fail
     }

@@ -23,7 +23,8 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.{JoinedTripleMap, TripleMap}
+import io.rml.framework.core.model.{JoinedTripleMap, Literal, TripleMap}
+import io.rml.framework.core.util.Util
 import io.rml.framework.engine.Engine
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.sink.FlinkRDFQuad
@@ -38,9 +39,10 @@ import io.rml.framework.flink.sink.FlinkRDFQuad
   * iterating over the RML mapping model objects each time an item is being referred and
   * only needs to iterate over the prepared statements (which will be maximally equal in amount).
   *
-  * @param statements
+  * @param statementMap
   */
-class StatementEngine[T](val statements: List[Statement[T]]) extends Engine[T] {
+class StatementEngine[T <: Item](val statementMap: Map[Option[String], List[Statement[T]]], val IS_GROUPING: Boolean = false) extends Engine[T] {
+
 
   /**
     * Process an item.
@@ -49,7 +51,10 @@ class StatementEngine[T](val statements: List[Statement[T]]) extends Engine[T] {
     * @return
     */
   override def process(item: T): List[FlinkRDFQuad] = {
-    statements.flatMap(statement => statement.process(item)).flatten // flat map to filter out None
+
+    val statements = if (!IS_GROUPING) statementMap.values.flatten else statementMap.getOrElse(item.tag, List())
+
+    statements.flatMap(statement => statement.process(item)).flatten.toList // flat map to filter out None
   }
 
 }
@@ -64,15 +69,41 @@ object StatementEngine extends Logging {
     * @param tripleMaps
     * @return
     */
-  def fromTripleMaps(tripleMaps: List[TripleMap]): StatementEngine[Item] = {
+  def fromTripleMaps(tripleMaps: List[TripleMap], isGrouping: Boolean = false): StatementEngine[Item] = {
     // assemble the statements
-    val statements = tripleMaps.flatMap(StatementsAssembler.assembleStatements)
+
+
+    val groupedStatements: Map[Option[String], List[Statement[Item]]] =
+    if (isGrouping) {
+
+      //Group the triple maps with their iterator as the key
+      val iteratorGroup = tripleMaps.groupBy(tm => {
+
+        val iteratorTag = tm.logicalSource.iterators.head
+
+        if (Util.isRootIteratorTag(iteratorTag)) {
+          None
+        } else {
+          iteratorTag
+        }
+      })
+
+      // Transform key from Option[Literal] -> Option[String]
+      iteratorGroup
+        .mapValues(tms => tms.flatMap(StatementsAssembler.assembleStatements))
+        .map {
+          case (Some(k), v) => (Some(k.toString), v)
+          case (None, v) => (None, v)
+        }
+    } else {
+      Map(None -> tripleMaps.flatMap(StatementsAssembler.assembleStatements))
+    }
 
     // do some logging
-    if (isDebugEnabled) logDebug(statements.size + " statements were generated.")
-    logDebug(statements.size + " statements were generated.")
+    if (isDebugEnabled) logDebug(groupedStatements.values.flatten.size + " statements were generated.")
+
     // create the engine instance
-    new StatementEngine(statements)
+    new StatementEngine(groupedStatements, isGrouping)
   }
 
   /**
@@ -86,7 +117,9 @@ object StatementEngine extends Logging {
     val parentStatements = StatementsAssembler.assembleParentStatements(tripleMap)
     // do some logging
     if (isDebugEnabled) logDebug((childStatements.size + parentStatements.size) + " statements were generated.")
-    new StatementEngine(childStatements ++ parentStatements)
+    new StatementEngine(Map(None -> {
+      childStatements ++ parentStatements
+    }))
   }
 
 }

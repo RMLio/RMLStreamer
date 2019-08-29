@@ -26,17 +26,17 @@ import java.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jayway.jsonpath.JsonPath
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.flink.item.Item
+import io.rml.framework.flink.source.JSONStream
 import org.jsfr.json.provider.JacksonProvider
 import org.jsfr.json.{JacksonParser, JsonSurfer}
-import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConversions._
 import scala.util.control.NonFatal
 
-class JSONItem(map: java.util.Map[String, Object]) extends Item {
+class JSONItem(map: java.util.Map[String, Object], val tag: Option[String] = None) extends Item  {
 
-  val LOG: Logger = LoggerFactory.getLogger(JSONItem.getClass)
 
 
   override def refer(reference: String): Option[List[String]] = {
@@ -45,47 +45,58 @@ class JSONItem(map: java.util.Map[String, Object]) extends Item {
       val sanitizedReference: String = if (reference.contains(' ')) s"['$reference']" else reference
       val checkedReference = if (sanitizedReference.contains('$')) sanitizedReference else "$." + sanitizedReference
       // Some(next.toString.replaceAll("\"", "")) still necessary?
-      val _object : Object = JsonPath.read(map, checkedReference)
+      val _object: Object = JsonPath.read(map, checkedReference)
 
-      _object match{
+      _object match {
         case arr: java.util.List[_] => Some(arr.toList.map(_.toString))
-        case jsonObj: util.HashMap[_,_]  =>
-          logDebug(jsonObj.toString)
+        case jsonObj: util.HashMap[_, _] =>
+          JSONItem.logDebug(s"Cannot be object: \n $jsonObj")
           None
+        case null => None
+
         case e => Some(List(e.toString))
       }
 
     } catch {
-      case NonFatal(e) =>
-        logError("Could not refer JSON Item", e)
+      case e: Throwable =>
+        JSONItem.logDebug(s"Cannot do referencing: \n $e")
         None
     }
   }
 }
 
-object JSONItem {
+object JSONItem extends Logging {
 
   private val surfer = new JsonSurfer(JacksonParser.INSTANCE, JacksonProvider.INSTANCE)
 
-  def fromString(json: String): JSONItem = {
-    val mapper = new ObjectMapper()
-    val node = mapper.readTree(json)
-    null //new JSONItem(node)
-  }
 
-  def fromStringOptionableList(json: String, iterator: String): Option[Array[Item]] = {
-    try {
-      val collection = surfer.collectAll(json, iterator)
-      val listOfJson = collection.toArray()
-      val mapper = new ObjectMapper()
 
-      val result: Array[Item] = listOfJson
-        .map(node => mapper.convertValue(node, classOf[java.util.Map[String, Object]]))
-        .map(map => new JSONItem(map))
+  def fromStringOptionableList(json: String, jsonPaths: List[String]): List[Item] = {
+    val result: List[Item] = jsonPaths
+      .flatMap(
 
-      Some(result)
-    } catch {
-      case NonFatal(e) => e.printStackTrace(); None
-    }
+        jsonPath => {
+          try {
+            val tag = jsonPath match {
+              case JSONStream.DEFAULT_PATH_OPTION => None
+              case _ => Some(jsonPath)
+            }
+            val collection = surfer.collectAll(json, jsonPath)
+            val listOfJson = collection.toArray()
+            val mapper = new ObjectMapper()
+
+            val result: Array[Item] = listOfJson
+              .map(node => mapper.convertValue(node, classOf[java.util.Map[String, Object]]))
+              .map(map => new JSONItem(map, tag))
+
+            Some(result)
+          } catch {
+            case NonFatal(e) => e.printStackTrace(); None
+          }
+        }
+      )
+      .flatten
+
+    result
   }
 }

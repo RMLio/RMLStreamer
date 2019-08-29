@@ -24,6 +24,7 @@ package io.rml.framework.flink.item.csv
 
 import java.io.{IOException, StringReader}
 
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.source.EmptyItem
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
@@ -34,7 +35,7 @@ import scala.collection.JavaConverters._
   *
   * @param record
   */
-class CSVItem(record: CSVRecord) extends Item {
+class CSVItem(record: CSVRecord, val tag:Option[String]= None) extends Item {
 
   /**
     *
@@ -46,7 +47,7 @@ class CSVItem(record: CSVRecord) extends Item {
       Some(List(record.get(reference)))
     } catch {
       case ex: IllegalArgumentException => {
-        logError("Could not find reference. ", ex)
+        CSVItem.logDebug(s"Cannot refer reference: \n $ex")
         None
       }
     }
@@ -55,7 +56,7 @@ class CSVItem(record: CSVRecord) extends Item {
 }
 
 
-object CSVItem {
+object CSVItem  extends  Logging{
 
 
   def apply(record: CSVRecord): CSVItem = new CSVItem(record)
@@ -69,13 +70,13 @@ object CSVItem {
       .withTrim())
   }
 
-  def fromDataBatch(dataBatch: String, csvFormat: CSVFormat): Option[Array[Item]] = {
+  def fromDataBatch(dataBatch: String, csvFormat: CSVFormat): List[Item] = {
 
     //jdata batch string must not contain any leading whitespaces
     val sanitizedData = dataBatch.replaceAll("^\\s+", "").replace("\n\n", "")
     val parser = csvFormat.parse(new StringReader(sanitizedData))
-    val result:Array[Item] = parser.getRecords.asScala.toArray.map(new CSVItem(_))
-    if(result.isEmpty) None else Some(result)
+    val result:List[Item] = parser.getRecords.asScala.toList.map(new CSVItem(_))
+    result
   }
 
   def apply(csvLine: String, cSVFormat: CSVFormat): Item = {

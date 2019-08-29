@@ -74,7 +74,7 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     val pathProperties = resource.listProperties(RMLVoc.Property.PATH)
     require(pathProperties.length == 1, "exactly 1 path needed.")
     val path = ExtractorUtil.matchLiteral(pathProperties.head)
-    FileStream(resource.uri, path.value)
+    FileStream(path.value)
   }
 
   private def extractKafkaStream(resource: RDFResource): StreamDataSource = {
@@ -99,7 +99,7 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     val kafkaVersion = Kafka010
 
 
-    KafkaStream(resource.uri, List(zookeeper.value), List(broker.value), groupId.value, topic.value, kafkaVersion)
+    KafkaStream(List(zookeeper.value), List(broker.value), groupId.value, topic.value, kafkaVersion)
   }
 
   private def extractTCPSocketStream(resource: RDFResource): StreamDataSource = {
@@ -120,6 +120,6 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     }
 
     val _type = ExtractorUtil.matchLiteral(typeProperties.head)
-    TCPSocketStream(resource.uri, hostName, port.toInt, _type.value)
+    TCPSocketStream(hostName, port.toInt, _type.value)
   }
 }
