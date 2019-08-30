@@ -20,7 +20,7 @@ class KafkaStreamingTest extends StaticTestSpec with ReadMappingBehaviour {
 
 
   val passing = Array(
-    ("stream/kafka", "noopt"),            // standard streaming tests
+    //("stream/kafka", "noopt"),            // standard streaming tests
     ("stream/kafka_json_ld", "json-ld")   // test with json-ld as output
   )
   val testCases: Array[(Path, String)] = for {
