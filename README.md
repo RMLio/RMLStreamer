@@ -4,7 +4,7 @@
 The RML Streamer runs its jobs on Flink clusters.
 More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.7/tutorials/local_setup.html).
 At least a local cluster must be running in order to start executing RML Mappings with the RML Streamer.
-It is not necessary to install Hadoop. Please note that the current repository works with Flink 1.8.0 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.8.0/flink-1.8.0-bin-scala_2.11.tgz).
+It is not necessary to install Hadoop. Please note that the current repository works with Flink 1.9.0 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.0/flink-1.9.0-bin-scala_2.11.tgz).
 
 ## Installing RML Framework
 
