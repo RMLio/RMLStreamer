@@ -3,7 +3,11 @@
 # Test
 
 The following section goes into detail on what the test case folders are and how you could 
-run the test scripts for RMLStreamer. 
+run the test scripts for RMLStreamer.
+
+**Note**: While you can still run the tests manually as described below, they are also part of the
+unit tests. Running these tests via maven with `mvn test` don't require Flink or Kafka to be installed or started.
+ 
 ## Folders
 
 There are 4 types of test case folders:
@@ -106,7 +110,7 @@ write data from test.txt to the topic specified in the kafka_test.properties
 
 While executing the test script, you will have to keep in mind the connector being used in the implementation.
 
-For more info, check out the official [documentation](https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/kafka.html)
+For more info, check out the official [documentation](https://ci.apache.org/projects/flink/flink-docs-release-1.9/dev/connectors/kafka.html)
 
 Here are steps the script will take:
 
