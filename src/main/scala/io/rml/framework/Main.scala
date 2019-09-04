@@ -25,12 +25,11 @@ import java.util.Properties
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
-import io.rml.framework.engine.{AtMostOneProcessor, BulkPostProcessor, JoinedStreamProcessor, JoinedStaticProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor, StdStreamProcessor, StdStaticProcessor}
 import io.rml.framework.engine.statement.StatementEngine
-import io.rml.framework.flink.connector.kafka.{FixedPartitioner, KafkaConnectorVersionFactory, PartitionerFormat, RMLPartitioner}
+import io.rml.framework.engine._
+import io.rml.framework.flink.connector.kafka.{KafkaConnectorVersionFactory, PartitionerFormat, RMLPartitioner}
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
-import org.apache.flink.api.common.functions.RichMapFunction
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala._
@@ -248,7 +247,7 @@ object Main extends Logging {
                                         senv: StreamExecutionEnvironment,
                                         postProcessor: PostProcessor): DataSet[String] = {
 
-    require(!postProcessor.isInstanceOf[AtMostOneProcessor], "Bulk output is not supported in the static version")
+    require(!postProcessor.isInstanceOf[AtMostOneProcessor], "Bulk output and JSON-LD output are not supported in the static version")
 
     /**
       * check if the mapping has standard triple maps and triple maps with joined triple maps

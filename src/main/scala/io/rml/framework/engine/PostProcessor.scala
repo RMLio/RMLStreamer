@@ -18,7 +18,7 @@ trait PostProcessor extends Serializable{
   def process(quadStrings: Iterable[FlinkRDFQuad]): List[String]
 }
 
-trait AtMostOneProcessor extends PostProcessor
+trait AtMostOneProcessor extends PostProcessor  // TODO: define exact semantics of AtMostOneProcessor
 
 
 /**
