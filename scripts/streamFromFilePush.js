@@ -30,7 +30,7 @@ ports.forEach(function(port, index) {
 		console.log("client " + index + " connected on port " + port )
 	});
 	client.on('end', () => {
-		console.log("client " + index + "disconnected from server");
+		console.log("client " + index + " disconnected from server");
 	});
 	clients.push(client);
 });
