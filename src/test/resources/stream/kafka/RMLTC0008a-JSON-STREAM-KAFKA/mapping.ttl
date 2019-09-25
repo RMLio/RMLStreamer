@@ -11,7 +11,7 @@
   a rr:TriplesMap;
 
   rml:logicalSource [ 
-    rml:source [ rdf:type rmls:KafkaStream ;  rmls:zookeeper "localhost:2181"; rmls:broker "localhost:9092"; rmls:groupId "2";  rmls:topic "demo"         ];
+    rml:source [ rdf:type rmls:KafkaStream ;  rmls:broker "localhost:9092"; rmls:groupId "2";  rmls:topic "demo"         ];
     rml:referenceFormulation ql:JSONPath;
     rml:iterator "$.students[*]"
   ];
