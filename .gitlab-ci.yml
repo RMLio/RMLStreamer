@@ -50,9 +50,19 @@ cache:
 # Validate merge requests using JDK8
 validate:jdk8:
   <<: *validate
-  image: maven:3.3.9-jdk-8
+  image: maven:3-jdk-8
 
 # Verify merge requests using JDK8
 verify:jdk8:
   <<: *verify
-  image: maven:3.3.9-jdk-8
+  image: maven:3-jdk-8
+
+# Validate merge requests using JDK12
+validate:jdk8:
+  <<: *validate
+  image: maven:3-jdk-12
+
+# Verify merge requests using JDK12
+verify:jdk8:
+  <<: *verify
+  image: maven:3-jdk-12
