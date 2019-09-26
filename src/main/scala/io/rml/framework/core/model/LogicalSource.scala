@@ -51,13 +51,21 @@ trait LogicalSource extends Node {
 
 
   /**
-    * Logical sources are the same if the source identifier and the referenceFormulation are
+    * Logical sources are the same if their source identifier, their referenceFormulation and their iterator are
     * the same.
     *
     * @return
     */
   override def identifier: String = {
+    Objects.hash(source.identifier, referenceFormulation.identifier, iterators).toHexString
+  }
 
+  /**
+    * Logical sources are "semantically" the same if their source identifier and their referenceFormulation are
+    * the same. This is used for grouping the sources, regardless of the iterators
+    * @return
+    */
+  def semanticIdentifier: String = {
     Objects.hash(source.identifier, referenceFormulation.identifier).toHexString
   }
 

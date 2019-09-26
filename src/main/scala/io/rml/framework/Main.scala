@@ -25,8 +25,8 @@ import java.util.Properties
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
-import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.engine._
+import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{KafkaConnectorVersionFactory, PartitionerFormat, RMLPartitioner}
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
@@ -195,7 +195,10 @@ object Main extends Logging {
     // group triple maps by logical sources based on if the postprocessor is supposed to emit at most one response
     val grouped =
       postProcessor match {
-        case _:AtMostOneProcessor => triplesMaps.groupBy(tripleMap => tripleMap.logicalSource.identifier)
+        // group by logicalSource (source + reference formulation)
+        case _:AtMostOneProcessor => triplesMaps.groupBy(tripleMap => tripleMap.logicalSource.semanticIdentifier)
+
+        // group on object instance of logicalSource, i.e., don't group
         case _:PostProcessor => triplesMaps.groupBy(tripleMap => tripleMap.logicalSource)
       }
 
