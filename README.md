@@ -1,12 +1,13 @@
-## RML Framework
+## RML Streamer
 
 ### Installing Flink
-The RML Streamer runs its jobs on Flink clusters.
+RMLStreamer runs its jobs on Flink clusters.
 More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.7/tutorials/local_setup.html).
-At least a local cluster must be running in order to start executing RML Mappings with the RML Streamer.
-It is not necessary to install Hadoop. Please note that the current repository works with Flink 1.9.0 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.0/flink-1.9.0-bin-scala_2.11.tgz).
+At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
+Please note that this version works with Flink 1.9.0 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.0/flink-1.9.0-bin-scala_2.11.tgz).
+Note that the latest release version might require another version of Flink, check the README for that version.
 
-## Installing RML Framework
+## Installing RMLStreamer
 
 Clone or download and then build the code in this repository:
 
@@ -20,7 +21,7 @@ The resulting `RMLStreamer-<version>.jar` can be deployed on a Flink cluster.
 
 ### Executing RML Mappings
 
-The script `run.sh` helps running the RML Streamer on a given Flink cluster.
+The script `run.sh` helps running RMLStreamer on a given Flink cluster.
 
 ```
 Usage:
@@ -45,7 +46,7 @@ Options:
 
 -a --parallelism                   The parallelism to assign to the job. The default is 1.
 -t --kafkaTopic                    The kafka topic to which the output will be streamed to. 
---pp --post-process                 The name of the post processing that will be done on generated triples 
+--pp --post-process                The name of the post processing that will be done on generated triples 
                                    Default is: None
                                    Currently supports:  "bulk", "json-ld"
 --pi --partition-id                The partition id of kafka topic to which the output will be written to. 
@@ -206,7 +207,7 @@ An example of how to define the generation of an RDF stream from a stream in an 
  
  ![alt txt] (images/rml-stream-uml-simplified.png "Uml diagram")
 
-#### RML Stream Vocabulary 
+#### RML Stream Vocabulary (non-normative)
 
 Namespace: <http://semweb.mmlab.be/ns/rmls#> 
 
