@@ -131,7 +131,6 @@ An example of how to define the generation of an RDF stream from a stream in an 
     rml:logicalSource [
         rml:source [
             rdf:type rmls:KafkaStream ;
-            rmls:zookeeper "zookeeper";
             rmls:broker "broker" ;
             rmls:groupid "groupid";
             rmls:topic "topic";
@@ -172,7 +171,7 @@ An example of how to define the generation of an RDF stream from a stream in an 
         ].
 ```
 
-##### Generating a dataset from a dataset
+##### Generating a stream from a dataset
 
 ```
  <#TripleMap>
