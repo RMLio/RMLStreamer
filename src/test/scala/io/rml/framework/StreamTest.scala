@@ -54,7 +54,6 @@ abstract class StreamTest(val streamType: String, val passing: Array[(String, St
             server.tearDown()
             cluster.map( c => c.close())
             TestUtil.tmpCleanup(streamType)
-            Logger.logError("DELETE TMP DIR")
         } andThen {
           case Success(_) =>
             Logger.logSuccess(s"Test passed!!")
@@ -70,7 +69,6 @@ abstract class StreamTest(val streamType: String, val passing: Array[(String, St
         }
 
         Await.result(result, Duration.Inf)
-        Logger.logError("RESULT DONE")
       }
   }
 
