@@ -7,7 +7,6 @@ import io.rml.framework.Main
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.fileprocessing.MappingTestUtil
 import io.rml.framework.util.logging.Logger
-import io.rml.framework.util.server.TestSink
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.configuration.Configuration
@@ -105,11 +104,11 @@ object StreamTestUtil {
     *         which can be used for stopping/cancelling and starting jobs
     */
 
-  def getClusterFuture(implicit executur: ExecutionContextExecutor): Future[MiniCluster] = {
+  def getClusterFuture(test: String)(implicit executor: ExecutionContextExecutor): Future[MiniCluster] = {
     Logger.logInfo("Starting up cluster....")
 
     val customConfig = new Configuration()
-    customConfig.setString("io.tmp.dirs", TestProperties.getTempDir.toString)
+    customConfig.setString("io.tmp.dirs", TestProperties.getTempDir(test).toString)
     val configuration = new MiniClusterConfiguration.Builder()
       .setConfiguration(customConfig)
       .setNumTaskManagers(1)

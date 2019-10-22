@@ -8,8 +8,8 @@ import io.rml.framework.util.logging.Logger
 import org.apache.commons.io.FileUtils
 
 object TestProperties {
-  def getTempDir: File = {
-    val file = Paths.get(System.getProperty("java.io.tmpdir"), "rml-streamer").toFile
+  def getTempDir(test: String): File = {
+    val file = Paths.get(System.getProperty("java.io.tmpdir"), "rml-streamer", test).toFile
     if (!file.exists()) {
       file.mkdir()
     }
@@ -33,8 +33,8 @@ object TestUtil {
   }
 
 
-  def tmpCleanup(): Unit = {
-    val temp = TestProperties.getTempDir
+  def tmpCleanup(test: String): Unit = {
+    val temp = TestProperties.getTempDir(test)
     FileUtils.deleteQuietly(temp)
   }
 

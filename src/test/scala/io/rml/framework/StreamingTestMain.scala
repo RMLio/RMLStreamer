@@ -1,7 +1,7 @@
 package io.rml.framework
 
 import java.io.File
-import java.util.concurrent.{CompletableFuture, Executors, TimeUnit}
+import java.util.concurrent.Executors
 
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.shared.RMLException
@@ -12,7 +12,6 @@ import io.rml.framework.util.server._
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala.ExecutionEnvironment
-import org.apache.flink.runtime.messages.Acknowledge
 import org.apache.flink.runtime.minicluster.MiniCluster
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 
@@ -29,7 +28,7 @@ object StreamingTestMain {
     implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
     implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
-    implicit val cluster: Future[MiniCluster] = StreamTestUtil.getClusterFuture
+    implicit val cluster: Future[MiniCluster] = StreamTestUtil.getClusterFuture("main")
     var serverOpt: Option[TestServer] = None
 
     val serverFactoryMap: Map[String, StreamTestServerFactory] = Map("tcp" -> TCPTestServerFactory, "kafka" -> KafkaTestServerFactory)
@@ -58,7 +57,7 @@ object StreamingTestMain {
 
     val folder = MappingTestUtil.getFile(fileName)
     Logger.logInfo(s"Creating $testType server")
-    val server = serverFactoryMap(testType).createServer()
+    val server = serverFactoryMap(testType).createServer("main")
     serverOpt = Some(server)
     server.setup()
 
@@ -75,7 +74,7 @@ object StreamingTestMain {
     } andThen {
       case _ =>
         server.tearDown()
-        TestUtil.tmpCleanup()
+        TestUtil.tmpCleanup("main")
 
         Logger.lineBreak(50)
         sys.exit(1)

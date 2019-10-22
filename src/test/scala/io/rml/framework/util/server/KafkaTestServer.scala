@@ -1,11 +1,9 @@
 package io.rml.framework.util.server
 
-import java.io.File
-import java.nio.file.Paths
 import java.util.Properties
 
+import io.rml.framework.util.TestProperties
 import io.rml.framework.util.logging.Logger
-import io.rml.framework.util.{FutureUtil, TestProperties}
 import kafka.admin.AdminUtils
 import kafka.server.{KafkaConfig, KafkaServerStartable}
 import kafka.utils.ZkUtils
@@ -14,10 +12,9 @@ import org.apache.commons.io.FileUtils
 import org.apache.curator.test.TestingServer
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
-import scala.concurrent.{Await, ExecutionContextExecutor, Future}
-import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
-case class KafkaTestServer(var topics: List[String]) extends TestServer {
+case class KafkaTestServer(var topics: List[String], test: String) extends TestServer {
 
   var zk: Option[TestingServer] = None
   var kafka: Option[KafkaServerStartable] = None
@@ -25,7 +22,7 @@ case class KafkaTestServer(var topics: List[String]) extends TestServer {
   var zkUtils: Option[ZkUtils] = None
   val producer: KafkaProducer[String, String] = new KafkaProducer[String, String](producerProps())
   val defaultTopic = "demo"
-  val defaultDir = TestProperties.getTempDir.toString
+  val defaultDir = TestProperties.getTempDir(test).toString
 
 
 

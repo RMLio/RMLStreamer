@@ -57,7 +57,7 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
           val byteBuff = ctx.alloc.buffer(el.length)
           byteBuff.writeBytes(el.getBytes())
           ctx.channel.writeAndFlush(byteBuff)
-          Thread.sleep(2000)
+          //Thread.sleep(2000)
         }
       }
     }
@@ -67,7 +67,7 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
     if (serverChannel.isDefined) {
       val ch = serverChannel.get
 
-      ch.channel().close().sync()
+      ch.channel().close().sync().await()
     }
   }
 
