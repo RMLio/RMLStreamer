@@ -5,7 +5,7 @@ import io.rml.framework.core.model.std.StdStreamTripleMap
 abstract class StreamTripleMap(tripleMap: TripleMap) extends TripleMap {
 
   require(tripleMap.logicalSource.source.isInstanceOf[StreamDataSource], "Source must be a stream.")
-  require(!tripleMap.containsParentTripleMap, "No parent triple maps allowed.")
+  //require(!tripleMap.containsParentTripleMap, "No parent triple maps allowed.")
 
   /**
     *
