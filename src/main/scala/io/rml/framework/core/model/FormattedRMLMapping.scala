@@ -11,7 +11,7 @@ trait FormattedRMLMapping extends RMLMapping {
 
 
   /**
-    * Standard triple maps are triple maps that come from a static data set and do not contain joins
+    * Standard triple maps are triple maps that come from a static data set and do not contain joins (i.e. are child)
     *
     * @return
     */
@@ -81,7 +81,7 @@ object FormattedRMLMapping {
       streamTripleMaps,
       mapping.identifier,
       mapping.containsParentTripleMaps,
-      extractedStandardTripleMaps ++ standardTripleMaps.filter(tm => !parentTms.contains(tm.identifier)),
+      extractedStandardTripleMaps ++ standardTripleMaps/*.filter(tm => !parentTms.contains(tm.identifier))*/,
       joinedTripleMaps)
   }
 
