@@ -23,6 +23,11 @@ function setProperties {
     key="$1"
 
     case $key in
+        -n|--job-name)
+            JOBNAME="$2"
+            shift # past argument
+            shift # past value
+            ;;
         -p|--path)
             MAPPINGPATH="$2"
             shift
@@ -92,6 +97,10 @@ function setProperties {
         PROPERTY_FILE=$CONFIG;
         echo "# Reading property from $PROPERTY_FILE"
 
+        if [ -z "$JOBNAME" ]; then
+          JOBNAME=$(getPropertyFromConfig "jobName")
+        fi
+
         if [ -z "$MAPPINGPATH" ]; then
           MAPPINGPATH=$(getPropertyFromConfig "mappingPath")
         fi
@@ -129,6 +138,7 @@ setProperties $@
 STREAMER_JAR=$(ls target/RMLStreamer*)
 
 echo "streamer jar: $STREAMER_JAR"
+echo "job name: ${JOBNAME}"
 echo "mapping: $MAPPINGPATH"
 echo "output: $OUTPUTPATH"
 echo "socket: $SOCKET"
@@ -144,7 +154,7 @@ echo ""
 # Check if $MAPPINGPATH is set
 if [ ! -z "$MAPPINGPATH"  ]; then
 	# Execute
-	bash $FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main $STREAMER_JAR --partition-id $PARTITIONID --partition-type $PARTITIONTYPE --post-process $POSTPROCESS --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
+	bash $FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main $STREAMER_JAR --job-name "$JOBNAME" --partition-id $PARTITIONID --partition-type $PARTITIONTYPE --post-process $POSTPROCESS --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
 else
 	echo "Execution aborted: -p|--path must be given."
 	echo ""

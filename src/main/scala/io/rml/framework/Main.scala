@@ -78,6 +78,9 @@ object Main extends Logging {
 
     val partitionFormat: PartitionerFormat = PartitionerFormat.fromString(partitionFormatString)
 
+    var jobName = if (parameters.has("job-name")) parameters.get("job-name")
+    else EMPTY_VALUE
+
     implicit val postProcessor:PostProcessor =
       parameters.get("post-process") match {
         case "bulk" => new BulkPostProcessor
@@ -86,7 +89,7 @@ object Main extends Logging {
       }
 
 
-    // TODO: do logging correctly
+    logInfo("Job name: " + jobName)
     logInfo("Mapping path: " + mappingPath)
     logInfo("Output path: " + outputPath)
     logInfo("Output socket: " + outputSocket)
@@ -122,7 +125,7 @@ object Main extends Logging {
         .name("Write to output")
 
       // execute data set job
-      env.execute("DATASET JOB")
+      env.execute(jobName + " (DATASET JOB)")
 
       // check if the mapping contains streamed mappings
     } else if (formattedMapping.streamTripleMaps.nonEmpty) {
@@ -148,7 +151,7 @@ object Main extends Logging {
       else if (!outputPath.contains(EMPTY_VALUE)) stream.writeAsText(outputPath, WriteMode.OVERWRITE)
 
       // execute stream job
-      senv.execute("DATASTREAM JOB")
+      senv.execute(jobName + " (DATASTREAM JOB)")
 
     }
 
@@ -225,11 +228,11 @@ object Main extends Logging {
         source.stream // this will generate a stream of items
           // process every item by a processor with a loaded engine
           .map(new StdStreamProcessor(engine))
-          .name("Execute statements on items.")
+          .name("Execute mapping statements on items")
 
           // format every list of triples (as strings)
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b) + "\n\n") else None)
-          .name("Reduce to strings.")
+          .name("Convert triples to strings")
       })
 
     // union all streams to one final stream
@@ -321,11 +324,11 @@ object Main extends Logging {
 
           // process every item by a processor with a loaded engine
           .map(new StdStaticProcessor(engine))
-          .name("Execute statements on items.")
+          .name("Execute mapping statements on items")
 
           // format every list of triples (as strings)
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b) + "\n\n") else None)
-          .name("Reduce to strings.")
+          .name("Convert triples to strings")
       })
 
     unionDataSets(processedDataSets.toList)
@@ -402,11 +405,11 @@ object Main extends Logging {
         })
 
           // process the JoinedItems in an engine
-          .map(new JoinedStaticProcessor(engine)).name("Execute statements.")
+          .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements")
 
           // format the list of triples as strings
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
-          .name("Reduce to strings.")
+          .name("Convert triples to strings")
 
       } else { // if there are no join conditions a cross join will be executed
 
@@ -414,9 +417,9 @@ object Main extends Logging {
         val crossed = childDataset.cross(parentDataset)
 
         crossed.map(items => JoinedItem(items._1, items._2)) // create a JoinedItem from the crossed items
-          .map(new JoinedStaticProcessor(engine)).name("Execute statements.") // process the joined items
+          .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items") // process the joined items
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None) // format the triples
-          .name("Reduce to strings.")
+          .name("Convert joined triples to strings")
       }
 
 
