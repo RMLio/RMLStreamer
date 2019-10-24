@@ -111,9 +111,16 @@ object Main extends Logging {
 
     senv.enableCheckpointing(5000, CheckpointingMode.AT_LEAST_ONCE);  // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
 
+    if (formattedMapping.containsDatasetTriplesMaps() && formattedMapping.containsStreamTriplesMaps()) {
+
+      logInfo("Both Dataset and Stream job found.")
+
+      // At this moment, we only support the case that there is a "streaming" triples map that has a "static" parent triples map.
+      // Only the subject(s) of the parent triples map will be generated
+    }
 
     // check if the mapping contains standard dataset mappings
-    if (formattedMapping.standardTripleMaps.nonEmpty) {
+    else if (formattedMapping.containsDatasetTriplesMaps()) {
 
       logInfo("Dataset Job Found.")
 
@@ -128,7 +135,7 @@ object Main extends Logging {
       env.execute(jobName + " (DATASET JOB)")
 
       // check if the mapping contains streamed mappings
-    } else if (formattedMapping.streamTripleMaps.nonEmpty) {
+    } else if (formattedMapping.containsStreamTriplesMaps()) {
 
       logInfo("Datastream Job found.")
 
@@ -289,18 +296,18 @@ object Main extends Logging {
   /**
     * Creates a pipeline from standard triple maps.
     *
-    * @param triplesMaps Triple maps which are standard.
+    * @param standardTriplesMaps Triple maps which are standard.
     * @param env         The execution environment needs to be given implicitly
     * @param senv        The execution environment needs to be given implicitly
     * @return
     */
-  private def createStandardTripleMapPipeline(triplesMaps: List[TriplesMap])
+  private def createStandardTripleMapPipeline(standardTriplesMaps: List[TriplesMap])
                                              (implicit env: ExecutionEnvironment,
                                               senv: StreamExecutionEnvironment,
                                               postProcessor: PostProcessor): DataSet[String] = {
 
     // group triple maps by logical sources
-    val grouped = triplesMaps.groupBy(triplesMap => triplesMap.logicalSource)
+    val grouped = standardTriplesMaps.groupBy(triplesMap => triplesMap.logicalSource)
 
     // create a map with as key a Source and as value an Engine with loaded statements
     // the loaded statements are the mappings to execute

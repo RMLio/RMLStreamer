@@ -6,6 +6,9 @@ import scala.collection.immutable
   * A formatted RML Mapping that reorganizes the content of a normal RML Mapping for easier processing.
   */
 trait FormattedRMLMapping extends RMLMapping {
+  def containsStreamTriplesMaps(): Boolean
+  def containsDatasetTriplesMaps(): Boolean
+
 
   /**
     * Standard triple maps are triple maps that come from a static data set and do not contain joins
@@ -39,9 +42,9 @@ case class StdFormattedRMLMapping(triplesMaps: List[TriplesMap],
                                   standardTripleMaps: List[TriplesMap],
                                   joinedTripleMaps: List[JoinedTriplesMap]) extends FormattedRMLMapping() {
 
-  def containsStreamTripleMaps(): Boolean = streamTripleMaps.nonEmpty
+  def containsStreamTriplesMaps(): Boolean = streamTripleMaps.nonEmpty
 
-  def containsDatasetTripleMaps(): Boolean = standardTripleMaps.nonEmpty
+  def containsDatasetTriplesMaps(): Boolean = standardTripleMaps.nonEmpty
 
 }
 
