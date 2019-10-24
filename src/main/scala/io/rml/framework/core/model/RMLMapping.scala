@@ -40,7 +40,7 @@ trait RMLMapping extends Graph {
     *
     * @return
     */
-  def triplesMaps: List[TripleMap]
+  def triplesMaps: List[TriplesMap]
 
   def containsParentTripleMaps: Boolean
 
@@ -54,7 +54,7 @@ object RMLMapping {
     * @param identifier
     * @return
     */
-  def apply(tripleMaps: List[TripleMap], identifier: String): RMLMapping = {
+  def apply(tripleMaps: List[TriplesMap], identifier: String): RMLMapping = {
     // separating triple maps that contain parent triple maps
     val tmWithParentTripleMaps = tripleMaps.filter(tm => tm.containsParentTripleMap)
     val parentTriplesMaps = tmWithParentTripleMaps.flatMap(tm =>

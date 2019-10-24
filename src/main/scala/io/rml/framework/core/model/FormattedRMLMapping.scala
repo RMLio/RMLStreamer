@@ -12,14 +12,14 @@ trait FormattedRMLMapping extends RMLMapping {
     *
     * @return
     */
-  def standardTripleMaps: List[TripleMap]
+  def standardTripleMaps: List[TriplesMap]
 
   /**
     * Stream triple maps are triple maps that come from a streamed data
     *
     * @return
     */
-  def streamTripleMaps: List[StreamTripleMap]
+  def streamTripleMaps: List[StreamTriplesMap]
 
   /**
     * Joined triple maps are triple maps extracted from triple maps with parent triple maps. Per joined triple map
@@ -28,16 +28,16 @@ trait FormattedRMLMapping extends RMLMapping {
     *
     * @return
     */
-  def joinedTripleMaps: List[JoinedTripleMap]
+  def joinedTripleMaps: List[JoinedTriplesMap]
 
 }
 
-case class StdFormattedRMLMapping(triplesMaps: List[TripleMap],
-                                  streamTripleMaps: List[StreamTripleMap],
+case class StdFormattedRMLMapping(triplesMaps: List[TriplesMap],
+                                  streamTripleMaps: List[StreamTriplesMap],
                                   identifier: String,
                                   containsParentTripleMaps: Boolean,
-                                  standardTripleMaps: List[TripleMap],
-                                  joinedTripleMaps: List[JoinedTripleMap]) extends FormattedRMLMapping() {
+                                  standardTripleMaps: List[TriplesMap],
+                                  joinedTripleMaps: List[JoinedTriplesMap]) extends FormattedRMLMapping() {
 
   def containsStreamTripleMaps(): Boolean = streamTripleMaps.nonEmpty
 
@@ -59,11 +59,11 @@ object FormattedRMLMapping {
     val tmWithParentTM = triplesMaps.filter(_.containsParentTripleMap)
 
     // extract all parent triple maps
-    val ptms: Seq[String] = tmWithParentTM.flatMap(tm => tm.predicateObjectMaps.flatMap(pm => pm.objectMaps.flatMap(om => om.parentTriplesMap))).map(item => item.identifier)
+    val parentTms: Seq[String] = tmWithParentTM.flatMap(tm => tm.predicateObjectMaps.flatMap(pm => pm.objectMaps.flatMap(om => om.parentTriplesMap))).map(item => item.identifier)
 
     // extract all triple maps with streamed data source
     val streamTripleMaps = triplesMaps.filter(_.logicalSource.source.isInstanceOf[StreamDataSource])
-      .map(item => StreamTripleMap.fromTripleMap(item))
+      .map(item => StreamTriplesMap.fromTripleMap(item))
 
     // extract all joined triple maps
     val joinedTripleMaps = tmWithParentTM.flatMap(extractJoinedTripleMapsFromTripleMap)
@@ -78,19 +78,19 @@ object FormattedRMLMapping {
       streamTripleMaps,
       mapping.identifier,
       mapping.containsParentTripleMaps,
-      extractedStandardTripleMaps ++ standardTripleMaps.filter(tm => !ptms.contains(tm.identifier)),
+      extractedStandardTripleMaps ++ standardTripleMaps.filter(tm => !parentTms.contains(tm.identifier)),
       joinedTripleMaps)
   }
 
   /**
     * Extract one or more joined triple maps from triple maps
     *
-    * @param tripleMap
+    * @param triplesMap
     * @return
     */
-  private def extractJoinedTripleMapsFromTripleMap(tripleMap: TripleMap): List[JoinedTripleMap] = {
+  private def extractJoinedTripleMapsFromTripleMap(triplesMap: TriplesMap): List[JoinedTriplesMap] = {
     // get for every predicate object map, every object map, the parent triple map
-    val list = tripleMap.predicateObjectMaps.flatMap(pm => pm.objectMaps.map(om => (pm, om, om.parentTriplesMap)))
+    val list = triplesMap.predicateObjectMaps.flatMap(pm => pm.objectMaps.map(om => (pm, om, om.parentTriplesMap)))
     val newPoms: immutable.Iterable[PredicateObjectMap] = list.groupBy(item => item._3) // group by parent triple map
       .filter(item => item._1.isDefined) // filter out undefined parent triple maps
 
@@ -100,7 +100,7 @@ object FormattedRMLMapping {
     })
     // every new pom will have exactly one parent triple map, create a JoinedTripleMap from these poms
     newPoms.map(pom => {
-      JoinedTripleMap(TripleMap(List(pom), tripleMap.logicalSource, tripleMap.subjectMap, tripleMap.identifier))
+      JoinedTriplesMap(TriplesMap(List(pom), triplesMap.logicalSource, triplesMap.subjectMap, triplesMap.identifier))
     }).toList
 
   }
@@ -108,12 +108,12 @@ object FormattedRMLMapping {
   /**
     * Extract every standard triples map from a triples map, if there are parent triple maps, skip these.
     *
-    * @param tripleMap  a triplesMap which might contain multiple predicateObjectMaps.
+    * @param triplesMap  a triplesMap which might contain multiple predicateObjectMaps.
     * @return For every predicateObjectMap in the input triplesMap: a new triplesMap with one predicateObjectMap.
     *         PredicateObjectMaps with parentTriplesMap(s) are filtered out.
     */
-  private def extractStandardTripleMapsFromTripleMap(tripleMap: TripleMap): TripleMap = {
-    val list = tripleMap.predicateObjectMaps.flatMap(pm => pm.objectMaps.map(om => (pm, om, om.parentTriplesMap)))
+  private def extractStandardTripleMapsFromTripleMap(triplesMap: TriplesMap): TriplesMap = {
+    val list = triplesMap.predicateObjectMaps.flatMap(pm => pm.objectMaps.map(om => (pm, om, om.parentTriplesMap)))
     val newPoms = list.groupBy(item => item._3)
       .filter(item => item._1.isEmpty)
       .flatMap(item => {
@@ -121,7 +121,7 @@ object FormattedRMLMapping {
           PredicateObjectMap(item._1.identifier, List(item._2), item._1.functionMaps, item._1.predicateMaps,item._1.graphMap)
         })
       })
-    TripleMap(newPoms.toList, tripleMap.logicalSource, tripleMap.subjectMap, tripleMap.identifier)
+    TriplesMap(newPoms.toList, triplesMap.logicalSource, triplesMap.subjectMap, triplesMap.identifier)
   }
 
 }

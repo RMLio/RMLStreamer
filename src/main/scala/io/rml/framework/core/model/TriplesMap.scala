@@ -39,7 +39,7 @@ import io.rml.framework.core.model.std.StdTriplesMap
   * Spec: http://rml.io/spec.html#triples-map
   *
   */
-trait TripleMap extends Node {
+trait TriplesMap extends Node {
 
 
   /**
@@ -74,7 +74,7 @@ trait TripleMap extends Node {
 
 }
 
-object TripleMap {
+object TriplesMap {
 
   /**
     *
@@ -89,7 +89,7 @@ object TripleMap {
             subjectMap: SubjectMap,
             identifier: String,
             graphMap: Option[GraphMap] = None
-           ): TripleMap = {
+           ): TriplesMap = {
 
     StdTriplesMap(predicateObjectMaps,
       logicalSource,

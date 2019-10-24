@@ -23,12 +23,12 @@
 package io.rml.framework.core.extractors
 
 import io.rml.framework.core.extractors.std.StdTripleMapExtractor
-import io.rml.framework.core.model.TripleMap
+import io.rml.framework.core.model.TriplesMap
 import io.rml.framework.core.model.rdf.RDFResource
 
-trait TripleMapExtractor extends GraphExtractor[List[TripleMap]] {
+trait TripleMapExtractor extends GraphExtractor[List[TriplesMap]] {
 
-  def extractTripleMapProperties(resource: RDFResource): Option[TripleMap]
+  def extractTripleMapProperties(resource: RDFResource): Option[TriplesMap]
 
 }
 

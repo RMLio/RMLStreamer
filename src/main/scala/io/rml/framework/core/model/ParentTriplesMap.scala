@@ -2,11 +2,11 @@ package io.rml.framework.core.model
 
 import io.rml.framework.core.model.std.StdParentTriplesMap
 
-trait ParentTriplesMap extends TripleMap
+trait ParentTriplesMap extends TriplesMap
 
 object ParentTriplesMap {
-  def apply(tripleMap: TripleMap): ParentTriplesMap = {
-    StdParentTriplesMap(tripleMap)
+  def apply(triplesMap: TriplesMap): ParentTriplesMap = {
+    StdParentTriplesMap(triplesMap)
   }
 
 } 

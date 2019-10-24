@@ -22,9 +22,9 @@
 
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{RMLMapping, TripleMap}
+import io.rml.framework.core.model.{RMLMapping, TriplesMap}
 
-case class StdRMLMapping(triplesMaps: List[TripleMap], identifier: String) extends RMLMapping {
+case class StdRMLMapping(triplesMaps: List[TriplesMap], identifier: String) extends RMLMapping {
   override def containsParentTripleMaps: Boolean = {
     triplesMaps.exists(tm => tm.containsParentTripleMap)
   }

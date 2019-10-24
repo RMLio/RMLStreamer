@@ -28,7 +28,7 @@ case class StdTriplesMap(predicateObjectMaps: List[PredicateObjectMap],
                          logicalSource: LogicalSource,
                          subjectMap: SubjectMap,
                          graphMap: Option[GraphMap],
-                         identifier: String) extends TripleMap {
+                         identifier: String) extends TriplesMap {
   /**
     *
     * @return

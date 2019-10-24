@@ -196,10 +196,10 @@ object Main extends Logging {
     val grouped =
       postProcessor match {
         // group by logicalSource (source + reference formulation)
-        case _:AtMostOneProcessor => triplesMaps.groupBy(tripleMap => tripleMap.logicalSource.semanticIdentifier)
+        case _:AtMostOneProcessor => triplesMaps.groupBy(triplesMap => triplesMap.logicalSource.semanticIdentifier)
 
         // group on object instance of logicalSource, i.e., don't group
-        case _:PostProcessor => triplesMaps.groupBy(tripleMap => tripleMap.logicalSource)
+        case _:PostProcessor => triplesMaps.groupBy(triplesMap => triplesMap.logicalSource)
       }
 
     // create a map with as key a Source and as value an Engine with loaded statements
@@ -291,13 +291,13 @@ object Main extends Logging {
     * @param senv        The execution environment needs to be given implicitly
     * @return
     */
-  private def createStandardTripleMapPipeline(triplesMaps: List[TripleMap])
+  private def createStandardTripleMapPipeline(triplesMaps: List[TriplesMap])
                                              (implicit env: ExecutionEnvironment,
                                               senv: StreamExecutionEnvironment,
                                               postProcessor: PostProcessor): DataSet[String] = {
 
     // group triple maps by logical sources
-    val grouped = triplesMaps.groupBy(tripleMap => tripleMap.logicalSource)
+    val grouped = triplesMaps.groupBy(triplesMap => triplesMap.logicalSource)
 
     // create a map with as key a Source and as value an Engine with loaded statements
     // the loaded statements are the mappings to execute
@@ -339,7 +339,7 @@ object Main extends Logging {
     * @param senv        The execution environment needs to be given implicitly
     * @return
     */
-  private def createTMWithPTMPipeline(triplesMaps: List[JoinedTripleMap])(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataSet[String] = {
+  private def createTMWithPTMPipeline(triplesMaps: List[JoinedTriplesMap])(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataSet[String] = {
     // TODO: Check if CoGroup is more efficient than Filter + Join
 
     val datasets = triplesMaps.map(tm => {

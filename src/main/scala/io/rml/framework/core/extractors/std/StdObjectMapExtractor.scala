@@ -165,7 +165,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     languageLiteral
   }
 
-  private def extractParentTriplesMap(resource: RDFResource): Option[TripleMap] = {
+  private def extractParentTriplesMap(resource: RDFResource): Option[TriplesMap] = {
 
     val property = RMLVoc.Property.PARENTTRIPLESMAP
     val properties = resource.listProperties(property)

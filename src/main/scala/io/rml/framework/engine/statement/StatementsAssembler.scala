@@ -36,19 +36,19 @@ class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectG
   /**
     * Creates statements from a triple map.
     *
-    * @param tripleMap
+    * @param triplesMap
     * @return
     */
-  def assembleStatements(tripleMap: TripleMap): List[(Item => Option[Iterable[TermNode]], Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
-    val subjectGraphGenerator = graphAssembler.assemble(tripleMap.subjectMap.graphMap)
+  def assembleStatements(triplesMap: TriplesMap): List[(Item => Option[Iterable[TermNode]], Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
+    val subjectGraphGenerator = graphAssembler.assemble(triplesMap.subjectMap.graphMap)
 
 
     // assemble subject
-    val subjectGenerator = subjectAssembler.assemble(tripleMap.subjectMap)
+    val subjectGenerator = subjectAssembler.assemble(triplesMap.subjectMap)
     // check for class mappings (rr:class)
-    val classMappings = getClassMappingStatements(subjectGenerator, tripleMap.subjectMap.`class`, subjectGraphGenerator)
+    val classMappings = getClassMappingStatements(subjectGenerator, triplesMap.subjectMap.`class`, subjectGraphGenerator)
     // assemble predicate and object
-    val predicateObjects = tripleMap.predicateObjectMaps.flatMap(predicateObjectMap => {
+    val predicateObjects = triplesMap.predicateObjectMaps.flatMap(predicateObjectMap => {
       predicateObjectAssembler.assemble(predicateObjectMap)
     })
     // create the statements
@@ -76,21 +76,21 @@ object StatementsAssembler {
 
   //TODO: Refactor these three methods to use pattern matching/polymorphism  (StatementType Enum might be useful)
 
-  def assembleStatements(tripleMap: TripleMap): List[Statement[Item]] = {
+  def assembleStatements(triplesMap: TriplesMap): List[Statement[Item]] = {
     val quads = new StatementsAssembler()
-      .assembleStatements(tripleMap)
+      .assembleStatements(triplesMap)
     quads.map(quad => StdStatement(quad._1, quad._2, quad._3,quad._4))
   }
 
-  def assembleChildStatements(joinedTripleMap: JoinedTripleMap): List[Statement[JoinedItem]] = {
+  def assembleChildStatements(joinedTriplesMap: JoinedTriplesMap): List[Statement[JoinedItem]] = {
     val triples = new StatementsAssembler()
-      .assembleStatements(joinedTripleMap)
+      .assembleStatements(joinedTriplesMap)
     triples.map(triple => ChildStatement(triple._1, triple._2, triple._3, triple._4))
   }
 
-  def assembleParentStatements(joinedTripleMap: JoinedTripleMap): List[Statement[JoinedItem]] = {
+  def assembleParentStatements(joinedTriplesMap: JoinedTriplesMap): List[Statement[JoinedItem]] = {
     val triples = new StatementsAssembler()
-      .assembleStatements(joinedTripleMap.parentTriplesMap)
+      .assembleStatements(joinedTriplesMap.parentTriplesMap)
     triples.map(triple => ParentStatement(triple._1, triple._2, triple._3, triple._4))
   }
 

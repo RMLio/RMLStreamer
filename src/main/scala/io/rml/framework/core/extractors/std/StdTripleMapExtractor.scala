@@ -25,7 +25,7 @@ package io.rml.framework.core.extractors.std
 import io.rml.framework.core.extractors._
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFResource}
-import io.rml.framework.core.model.{TripleMap, Uri}
+import io.rml.framework.core.model.{TriplesMap, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
@@ -46,7 +46,7 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     * @param graph Graph to extract an Array of triple maps from.
     * @return
     */
-  override def extract(graph: RDFGraph): List[TripleMap] = {
+  override def extract(graph: RDFGraph): List[TriplesMap] = {
 
     val tripleMapResources = filterTripleMaps(graph)
 
@@ -64,7 +64,7 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
   private def filterTripleMaps(graph: RDFGraph): List[RDFResource] = {
 
     // filter all triple map resources from the graph
-    val typeUri = Uri(RMLVoc.Class.TRIPLEMAP)
+    val typeUri = Uri(RMLVoc.Class.TRIPLESMAP)
     val tripleMapResources = (graph.filterResources(typeUri) ++
       graph.filterProperties(Uri(RMLVoc.Property.LOGICALSOURCE))).distinct
 
@@ -84,18 +84,18 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     * @param resource
     * @return
     */
-  def extractTripleMapProperties(resource: RDFResource): Option[TripleMap] = {
+  def extractTripleMapProperties(resource: RDFResource): Option[TriplesMap] = {
     // errors can occur during extraction of sub structures
     try {
 
       // create a new triple map by extracting all sub structures
-      val tripleMap = TripleMap(predicateObjectMapExtractor.extract(resource),
+      val triplesMap = TriplesMap(predicateObjectMapExtractor.extract(resource),
         logicalSourceExtractor.extract(resource),
         subjectMapExtractor.extract(resource),
         resource.uri.toString,
         graphMapExtractor.extract(resource)
       )
-      Some(tripleMap)
+      Some(triplesMap)
 
     } catch {
       // in case of an error, skip this triple map and log warnings

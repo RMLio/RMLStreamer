@@ -38,9 +38,9 @@ case class FunctionMapExtractor() extends ResourceExtractor[List[FunctionMap]] {
     require(functionValues.head.isInstanceOf[RDFResource], "FunctionValue must be a resource.")
 
     val functionValue = functionValues.head.asInstanceOf[RDFResource]
-    val tripleMap = tripleMapExtractor.extractTripleMapProperties(functionValue)
-    require(tripleMap.isDefined)
-    FunctionMap(functionValue.uri.toString, tripleMap.get)
+    val triplesMap = tripleMapExtractor.extractTripleMapProperties(functionValue)
+    require(triplesMap.isDefined)
+    FunctionMap(functionValue.uri.toString, triplesMap.get)
   }
 
 }
