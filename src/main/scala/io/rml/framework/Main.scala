@@ -267,7 +267,7 @@ object Main extends Logging {
       val joinParentSource = joinedStreamTm.joinCondition.get.parent.identifier
       //joinedStreamTm.joinCondition.head
       val source = Source(joinedStreamTm.logicalSource).asInstanceOf[io.rml.framework.flink.source.Stream]
-      source.stream
+      .stream
         .flatMap(_.iterator)
         .map(childItem => {
           val childRef = childItem.refer(joinedStreamTm.joinCondition.get.child.identifier).get.head
@@ -280,12 +280,17 @@ object Main extends Logging {
           triples.headOption
         })
 
+      //source
+
         // now process
         .writeAsText("/tmp/datastream", FileSystem.WriteMode.OVERWRITE)
 
     })
 
+    
+
     // TODO process rest of child stream...
+    // TODO make difference std stream triples map and join streaming triples map
 
   }
 
@@ -348,10 +353,10 @@ object Main extends Logging {
       * parent triple map with unique join conditions. Joined triple maps will contain only one join condition.
       * This makes it easier for setting up pipelines that need the joining of two sources.
       */
-    if (formattedMapping.standardTripleMaps.nonEmpty && formattedMapping.joinedTriplesMaps.nonEmpty) {
+    if (formattedMapping.standardStaticTripleMaps.nonEmpty && formattedMapping.joinedTriplesMaps.nonEmpty) {
 
       // create a pipeline from the standard triple maps
-      val standardTMDataset = createStandardTripleMapPipeline(formattedMapping.standardTripleMaps)
+      val standardTMDataset = createStandardTripleMapPipeline(formattedMapping.standardStaticTripleMaps)
 
       // create a pipeline from the triple maps that contain parent triple maps
       val tmWithPTMDataSet = createTMWithPTMPipeline(formattedMapping.joinedTriplesMaps)
@@ -360,10 +365,10 @@ object Main extends Logging {
       standardTMDataset.union(tmWithPTMDataSet)
 
       // check if the formatted mapping only contains triple maps
-    } else if (formattedMapping.standardTripleMaps.nonEmpty) {
+    } else if (formattedMapping.standardStaticTripleMaps.nonEmpty) {
 
       // create a standard pipeline
-      createStandardTripleMapPipeline(formattedMapping.standardTripleMaps)
+      createStandardTripleMapPipeline(formattedMapping.standardStaticTripleMaps)
 
     } else { // the formatted mapping only contains joined triple maps
 

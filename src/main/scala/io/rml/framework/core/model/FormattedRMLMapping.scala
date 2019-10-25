@@ -15,7 +15,7 @@ trait FormattedRMLMapping extends RMLMapping {
     *
     * @return
     */
-  def standardTripleMaps: List[TriplesMap]
+  def standardStaticTripleMaps: List[TriplesMap]
 
   /**
     * Stream triple maps are triple maps that come from a streamed data
@@ -39,12 +39,13 @@ case class StdFormattedRMLMapping(triplesMaps: List[TriplesMap],
                                   streamTripleMaps: List[StreamTriplesMap],
                                   identifier: String,
                                   containsParentTripleMaps: Boolean,
-                                  standardTripleMaps: List[TriplesMap],
+                                  standardStaticTripleMaps: List[TriplesMap],
+                                  standardStreamTriplesMaps: List[TriplesMap],
                                   joinedTriplesMaps: List[JoinedTriplesMap]) extends FormattedRMLMapping() {
 
   def containsStreamTriplesMaps(): Boolean = streamTripleMaps.nonEmpty
 
-  def containsDatasetTriplesMaps(): Boolean = standardTripleMaps.nonEmpty
+  def containsDatasetTriplesMaps(): Boolean = standardStaticTripleMaps.nonEmpty
 
 }
 
@@ -57,6 +58,9 @@ object FormattedRMLMapping {
     // extract standard triple maps
     val standardTripleMaps = triplesMaps.filter(!_.containsParentTripleMap)
       .filter(!_.logicalSource.source.isInstanceOf[StreamDataSource])
+
+    val standardStreamTriplesMaps = triplesMaps.filter(!_.containsParentTripleMap)
+      .filter(_.logicalSource.source.isInstanceOf[StreamDataSource])
 
     // extract triple maps with parent triple maps
     val tmWithParentTM = triplesMaps.filter(_.containsParentTripleMap)
@@ -74,14 +78,20 @@ object FormattedRMLMapping {
     // extract all standard triples maps (i.e. non streaming) with a parent TM
     val nonStreamTmWithParentTM = tmWithParentTM.filter(!_.logicalSource.source.isInstanceOf[StreamDataSource])
 
+    // extract all streaming triples maps with a parent TM
+    val streamTmWithParentTM = tmWithParentTM.filter(_.logicalSource.source.isInstanceOf[StreamDataSource])
+
     // extract all standard triple maps from a triple map that has parent triple maps
     val extractedStandardTripleMaps = nonStreamTmWithParentTM.map(extractStandardTripleMapsFromTripleMap)
 
-    StdFormattedRMLMapping(mapping.triplesMaps,
+    val extractedStandardStreamTriplesMaps = streamTmWithParentTM.map(extractStandardTripleMapsFromTripleMap)
+
+    StdFormattedRMLMapping(triplesMaps,
       streamTripleMaps,
       mapping.identifier,
       mapping.containsParentTripleMaps,
       extractedStandardTripleMaps ++ standardTripleMaps/*.filter(tm => !parentTms.contains(tm.identifier))*/,
+      extractedStandardStreamTriplesMaps ++ standardStreamTriplesMaps,
       joinedTripleMaps)
   }
 

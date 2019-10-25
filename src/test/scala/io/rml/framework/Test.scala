@@ -19,7 +19,7 @@ object Test extends App {
   val mapping = MappingReader().read(file)
 
   val formattedMapping = FormattedRMLMapping.fromRMLMapping(mapping)
-  Logger.logInfo("" + formattedMapping.standardTripleMaps.size)
+  Logger.logInfo("" + formattedMapping.standardStaticTripleMaps.size)
   val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
   System.out.println(result)
 }
