@@ -110,8 +110,6 @@ object Main extends Logging {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
-
-
     senv.enableCheckpointing(5000, CheckpointingMode.AT_LEAST_ONCE);  // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
 
     if (formattedMapping.containsDatasetTriplesMaps() && formattedMapping.containsStreamTriplesMaps()) {
@@ -257,68 +255,70 @@ object Main extends Logging {
     require(formattedMapping.containsStreamTriplesMaps() && formattedMapping.containsDatasetTriplesMaps() && formattedMapping.containsParentTripleMaps)
 
     // map: (parent triples map identiefier, name of the variable to join on, the value of it) => generated subject string
-    //val parentTriplesMap2JoinParentSource2JoinParentValue2Subject = generateSubjectsFromStatic(formattedMapping)
-
+    val parentTriplesMap2JoinParentSource2JoinParentValue2Subject = generateSubjectsFromStatic(formattedMapping)
 
     // now process the stream(s)
-    // termtype = IRI,
-    print()
-
     formattedMapping.joinedTriplesMaps.foreach(joinedStreamTm => {
+
+      // create the engine that will process the joined items
+      val engine = StatementEngine.fromJoinedTriplesMap(joinedStreamTm)
+
       val parentTmId = joinedStreamTm.parentTriplesMap.identifier
       val joinParentSource = joinedStreamTm.joinCondition.get.parent.identifier
       //joinedStreamTm.joinCondition.head
       val source = Source(joinedStreamTm.logicalSource).asInstanceOf[io.rml.framework.flink.source.Stream]
       source.stream
         .flatMap(_.iterator)
-        .map(item => {
-          //items.foreach(item => {
-            val childRef = item.refer(joinedStreamTm.joinCondition.get.child.identifier)
-            println(item.toString)
-          //})
+        .map(childItem => {
+          val childRef = childItem.refer(joinedStreamTm.joinCondition.get.child.identifier).get.head
+          val parentItem = parentTriplesMap2JoinParentSource2JoinParentValue2Subject((parentTmId, joinParentSource, childRef))
+          val joinedItem = JoinedItem(childItem, parentItem)
+          joinedItem
         })
+        .map(new JoinedStaticProcessor(engine))
+        .flatMap(triples => {
+          triples.headOption
+        })
+
+        // now process
         .writeAsText("/tmp/datastream", FileSystem.WriteMode.OVERWRITE)
 
     })
 
+    // TODO process rest of child stream...
+
   }
 
   def generateSubjectsFromStatic(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor)
-  : Map[(String, String, String), String] = {
+  : Map[(String, String, String), Item] = {
     // map: (parent triples map identiefier, name of the variable to join on, the value of it) => generated subject string
-    var parentTriplesMap2JoinParentSource2JoinParentValue2Subject = mutable.HashMap.empty[(String, String, String), String]
+    var parentTriplesMap2JoinParentSource2JoinParentValue2Subject = mutable.HashMap.empty[(String, String, String), Item]
 
     formattedMapping.joinedTriplesMaps.foreach(joinedTm => {
       // identify the parent triples map
       val parentTm = joinedTm.parentTriplesMap
 
-      // create engine and processor that will convert to triples
-      val statementEngine = StatementEngine.fromTripleMaps(List(parentTm))
-      val staticProcessor = new StdStaticProcessor(statementEngine)
-
       // find the parent source of the join condition
       val joinParentSource = joinedTm.joinCondition.get.parent.identifier
 
       // get the subjects from the static logical source
-      val parentDataset =
-      // Create a Source from the parents logical source
-        Source(joinedTm.parentTriplesMap.logicalSource).asInstanceOf[FileDataSet]
-          .dataset
-          // only keep items where the parent source of the join condition is defined
-          .filter(item => {
-            item.refer(joinParentSource).isDefined
-          })
-          // get the value of the join parent source and generate the subject
-          .map(item => {
-            val generated = staticProcessor.map(item)
-            // quick hack to get subject!
-            val joinParentValue = item.refer(joinParentSource).get.head
-            val subject = generated.map(tripleStr => tripleStr.substring(0, tripleStr.indexOf(' '))).head // should only be one subjefct!
-            (joinParentSource, joinParentValue, subject)
-          })
-          // now put everything in the map
-          .collect()
-          .iterator.foreach(tuple => {
+      val parentDataset = Source(joinedTm.parentTriplesMap.logicalSource).asInstanceOf[FileDataSet].dataset
+
+      parentDataset
+        // only keep items where the parent source of the join condition is defined
+        .filter(item => {
+          item.refer(joinParentSource).isDefined
+        })
+        // get the value of the join parent source and generate the subject
+        .map(item => {
+          // get the value of the parent source
+          val joinParentValue = item.refer(joinParentSource).get.head
+          //val subject = generated.map(tripleStr => tripleStr.substring(0, tripleStr.indexOf(' '))).head // should only be one subjefct!
+          (joinParentSource, joinParentValue, item)
+        })
+        // now put everything in the map
+        .collect()
+        .iterator.foreach(tuple => {
           val parentTriplesMap2JoinId2JoinValue = (parentTm.identifier, tuple._1, tuple._2)
           parentTriplesMap2JoinParentSource2JoinParentValue2Subject.put(parentTriplesMap2JoinId2JoinValue, tuple._3)
         })
