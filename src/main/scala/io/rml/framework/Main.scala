@@ -33,7 +33,6 @@ import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala._
-import org.apache.flink.core.fs.FileSystem
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
@@ -202,8 +201,8 @@ object Main extends Logging {
                                        postProcessor: PostProcessor): DataStream[String] = {
 
     // to create a Flink Data Stream there must be triple maps that contain streamed logical sources
-    require(formattedMapping.streamTripleMaps.nonEmpty)
-    val triplesMaps = formattedMapping.streamTripleMaps
+    require(formattedMapping.containsStreamTriplesMaps())
+    val triplesMaps = formattedMapping.standardStreamTriplesMaps ++ formattedMapping.joinedSteamTriplesMaps
 
     // group triple maps by logical sources based on if the postprocessor is supposed to emit at most one response
     val grouped =
@@ -219,13 +218,13 @@ object Main extends Logging {
     // the loaded statements are the mappings to execute
     val sourceEngineMap = grouped.map(entry => {
       var logicalSource = entry._2.head.logicalSource
-      val tripleMaps = entry._2
-      val iterators = tripleMaps.flatMap(tm => tm.logicalSource.iterators).distinct
+      val triplesMaps = entry._2
+      val iterators = triplesMaps.flatMap(tm => tm.logicalSource.iterators).distinct
       logicalSource = LogicalSource(logicalSource.referenceFormulation, iterators, logicalSource.source)
       // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
       Source(logicalSource) -> {
         logInfo(entry._2.size + " Triple Maps are found.")
-        StatementEngine.fromTripleMaps(tripleMaps, iterators.size > 1 )
+        StatementEngine.fromTriplesMaps(triplesMaps, iterators.size > 1 )
       }
     })
 
@@ -252,22 +251,21 @@ object Main extends Logging {
 
   def createMixedPipeline(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): Unit = {
     // we assume a streaming child triples map and a static parent triples map
-    require(formattedMapping.containsStreamTriplesMaps() && formattedMapping.containsDatasetTriplesMaps() && formattedMapping.containsParentTripleMaps)
+    require(formattedMapping.containsStreamTriplesMaps() && formattedMapping.containsDatasetTriplesMaps() && formattedMapping.containsParentTriplesMaps)
 
-    // map: (parent triples map identiefier, name of the variable to join on, the value of it) => generated subject string
-    val parentTriplesMap2JoinParentSource2JoinParentValue2Subject = generateSubjectsFromStatic(formattedMapping)
+    // map: (parent triples map identifier, name of the variable to join on, the value of it) => generated subject string
+    val parentTriplesMap2JoinParentSource2JoinParentValue2Subject = getStaticParentSourceItems(formattedMapping)
 
-    // now process the stream(s)
-    formattedMapping.joinedTriplesMaps.foreach(joinedStreamTm => {
+    // generate stream(s) with joins
+    val streamsWithJoins = formattedMapping.joinedSteamTriplesMaps.map(joinedStreamTm => {
 
       // create the engine that will process the joined items
       val engine = StatementEngine.fromJoinedTriplesMap(joinedStreamTm)
 
       val parentTmId = joinedStreamTm.parentTriplesMap.identifier
       val joinParentSource = joinedStreamTm.joinCondition.get.parent.identifier
-      //joinedStreamTm.joinCondition.head
-      val source = Source(joinedStreamTm.logicalSource).asInstanceOf[io.rml.framework.flink.source.Stream]
-      .stream
+      Source(joinedStreamTm.logicalSource).asInstanceOf[io.rml.framework.flink.source.Stream]
+        .stream
         .flatMap(_.iterator)
         .map(childItem => {
           val childRef = childItem.refer(joinedStreamTm.joinCondition.get.child.identifier).get.head
@@ -279,27 +277,21 @@ object Main extends Logging {
         .flatMap(triples => {
           triples.headOption
         })
-
-      //source
-
-        // now process
-        .writeAsText("/tmp/datastream", FileSystem.WriteMode.OVERWRITE)
-
     })
 
-    
+    // generate streams without joins
 
     // TODO process rest of child stream...
     // TODO make difference std stream triples map and join streaming triples map
 
   }
 
-  def generateSubjectsFromStatic(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor)
+  def getStaticParentSourceItems(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor)
   : Map[(String, String, String), Item] = {
     // map: (parent triples map identiefier, name of the variable to join on, the value of it) => generated subject string
     var parentTriplesMap2JoinParentSource2JoinParentValue2Subject = mutable.HashMap.empty[(String, String, String), Item]
 
-    formattedMapping.joinedTriplesMaps.foreach(joinedTm => {
+    formattedMapping.joinedSteamTriplesMaps.foreach(joinedTm => {
       // identify the parent triples map
       val parentTm = joinedTm.parentTriplesMap
 
@@ -353,27 +345,27 @@ object Main extends Logging {
       * parent triple map with unique join conditions. Joined triple maps will contain only one join condition.
       * This makes it easier for setting up pipelines that need the joining of two sources.
       */
-    if (formattedMapping.standardStaticTripleMaps.nonEmpty && formattedMapping.joinedTriplesMaps.nonEmpty) {
+    if (formattedMapping.standardStaticTriplesMaps.nonEmpty && formattedMapping.joinedStaticTriplesMaps.nonEmpty) {
 
       // create a pipeline from the standard triple maps
-      val standardTMDataset = createStandardTripleMapPipeline(formattedMapping.standardStaticTripleMaps)
+      val standardTMDataset = createStandardTriplesMapPipeline(formattedMapping.standardStaticTriplesMaps)
 
       // create a pipeline from the triple maps that contain parent triple maps
-      val tmWithPTMDataSet = createTMWithPTMPipeline(formattedMapping.joinedTriplesMaps)
+      val tmWithPTMDataSet = createTMWithPTMPipeline(formattedMapping.joinedStaticTriplesMaps)
 
       // combine the two previous pipeline into one
       standardTMDataset.union(tmWithPTMDataSet)
 
       // check if the formatted mapping only contains triple maps
-    } else if (formattedMapping.standardStaticTripleMaps.nonEmpty) {
+    } else if (formattedMapping.standardStaticTriplesMaps.nonEmpty) {
 
       // create a standard pipeline
-      createStandardTripleMapPipeline(formattedMapping.standardStaticTripleMaps)
+      createStandardTriplesMapPipeline(formattedMapping.standardStaticTriplesMaps)
 
     } else { // the formatted mapping only contains joined triple maps
 
       // create a joined pipeline
-      createTMWithPTMPipeline(formattedMapping.joinedTriplesMaps)
+      createTMWithPTMPipeline(formattedMapping.joinedStaticTriplesMaps)
     }
 
   }
@@ -386,7 +378,7 @@ object Main extends Logging {
     * @param senv        The execution environment needs to be given implicitly
     * @return
     */
-  private def createStandardTripleMapPipeline(standardTriplesMaps: List[TriplesMap])
+  private def createStandardTriplesMapPipeline(standardTriplesMaps: List[TriplesMap])
                                              (implicit env: ExecutionEnvironment,
                                               senv: StreamExecutionEnvironment,
                                               postProcessor: PostProcessor): DataSet[String] = {
@@ -398,11 +390,11 @@ object Main extends Logging {
     // the loaded statements are the mappings to execute
     val sourceEngineMap = grouped.map(entry => {
       val logicalSource = entry._1
-      val tripleMaps = entry._2
+      val triplesMaps = entry._2
       // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
       Source(logicalSource) -> {
         logInfo(entry._2.size + " Triple Maps are found.")
-        StatementEngine.fromTripleMaps(tripleMaps)
+        StatementEngine.fromTriplesMaps(triplesMaps)
       }
     })
 

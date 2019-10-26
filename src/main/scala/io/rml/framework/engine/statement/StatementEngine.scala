@@ -66,10 +66,10 @@ object StatementEngine extends Logging {
 
   /**
     *
-    * @param tripleMaps
+    * @param triplesMaps
     * @return
     */
-  def fromTripleMaps(tripleMaps: List[TriplesMap], isGrouping: Boolean = false): StatementEngine[Item] = {
+  def fromTriplesMaps(triplesMaps: List[TriplesMap], isGrouping: Boolean = false): StatementEngine[Item] = {
     // assemble the statements
 
 
@@ -77,7 +77,7 @@ object StatementEngine extends Logging {
     if (isGrouping) {
 
       //Group the triple maps with their iterator as the key
-      val iteratorGroup = tripleMaps.groupBy(tm => {
+      val iteratorGroup = triplesMaps.groupBy(tm => {
 
         val iteratorTag = tm.logicalSource.iterators.head
 
@@ -96,7 +96,7 @@ object StatementEngine extends Logging {
           case (None, v) => (None, v)
         }
     } else {
-      Map(None -> tripleMaps.flatMap(StatementsAssembler.assembleStatements))
+      Map(None -> triplesMaps.flatMap(StatementsAssembler.assembleStatements))
     }
 
     // do some logging

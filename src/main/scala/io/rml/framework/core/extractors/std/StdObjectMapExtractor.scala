@@ -22,7 +22,7 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{JoinConditionExtractor, ObjectMapExtractor, TripleMapExtractor}
+import io.rml.framework.core.extractors.{JoinConditionExtractor, ObjectMapExtractor, TriplesMapExtractor}
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.util.Util
@@ -175,7 +175,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     if (properties.isEmpty) return None
 
     properties.head match {
-      case resource: RDFResource => TripleMapExtractor().extractTripleMapProperties(resource)
+      case resource: RDFResource => TriplesMapExtractor().extractTriplesMapProperties(resource)
         .flatMap(tm => Some(ParentTriplesMap(tm))) // transform to PTM
       case literal: Literal =>
         throw new RMLException(literal.toString + ": invalid parent triple map.")

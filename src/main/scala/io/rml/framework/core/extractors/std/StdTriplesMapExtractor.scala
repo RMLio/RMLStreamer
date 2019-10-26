@@ -32,12 +32,12 @@ import io.rml.framework.shared.RMLException
 /**
   * Extractor for extracting triple maps from a graph.
   */
-class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
-                            subjectMapExtractor: SubjectMapExtractor,
-                            graphMapExtractor: GraphMapExtractor,
-                            predicateObjectMapExtractor: PredicateObjectMapExtractor)
+class StdTriplesMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
+                             subjectMapExtractor: SubjectMapExtractor,
+                             graphMapExtractor: GraphMapExtractor,
+                             predicateObjectMapExtractor: PredicateObjectMapExtractor)
 
-  extends TripleMapExtractor with Logging {
+  extends TriplesMapExtractor with Logging {
 
   /**
     * Extracts a set of triple maps from a graph.
@@ -48,11 +48,11 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     */
   override def extract(graph: RDFGraph): List[TriplesMap] = {
 
-    val tripleMapResources = filterTripleMaps(graph)
+    val triplesMapResources = filterTriplesMaps(graph)
 
     // iterate over each triple map resource
-    tripleMapResources.flatMap {
-      resource: RDFResource => extractTripleMapProperties(resource)
+    triplesMapResources.flatMap {
+      resource: RDFResource => extractTriplesMapProperties(resource)
     }
 
   }
@@ -61,11 +61,11 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     *
     * @param graph
     */
-  private def filterTripleMaps(graph: RDFGraph): List[RDFResource] = {
+  private def filterTriplesMaps(graph: RDFGraph): List[RDFResource] = {
 
     // filter all triple map resources from the graph
     val typeUri = Uri(RMLVoc.Class.TRIPLESMAP)
-    val tripleMapResources = (graph.filterResources(typeUri) ++
+    val triplesMapResources = (graph.filterResources(typeUri) ++
       graph.filterProperties(Uri(RMLVoc.Property.LOGICALSOURCE))).distinct
 
 
@@ -73,10 +73,10 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     if (isDebugEnabled) {
       logDebug(graph.uri + ": Extracting triple maps from graph.")
       logDebug(graph.uri + ": Triple maps found: " +
-        tripleMapResources.size + ", " + tripleMapResources)
+        triplesMapResources.size + ", " + triplesMapResources)
     }
 
-    tripleMapResources
+    triplesMapResources
   }
 
   /**
@@ -84,7 +84,7 @@ class StdTripleMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     * @param resource
     * @return
     */
-  def extractTripleMapProperties(resource: RDFResource): Option[TriplesMap] = {
+  def extractTriplesMapProperties(resource: RDFResource): Option[TriplesMap] = {
     // errors can occur during extraction of sub structures
     try {
 

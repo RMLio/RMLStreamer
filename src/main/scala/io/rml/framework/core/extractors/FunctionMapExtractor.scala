@@ -7,7 +7,7 @@ import io.rml.framework.shared.RMLException
 
 case class FunctionMapExtractor() extends ResourceExtractor[List[FunctionMap]] {
 
-  lazy val tripleMapExtractor: TripleMapExtractor = TripleMapExtractor()
+  lazy val triplesMapExtractor: TriplesMapExtractor = TriplesMapExtractor()
 
   /**
     * Extract.
@@ -38,7 +38,7 @@ case class FunctionMapExtractor() extends ResourceExtractor[List[FunctionMap]] {
     require(functionValues.head.isInstanceOf[RDFResource], "FunctionValue must be a resource.")
 
     val functionValue = functionValues.head.asInstanceOf[RDFResource]
-    val triplesMap = tripleMapExtractor.extractTripleMapProperties(functionValue)
+    val triplesMap = triplesMapExtractor.extractTriplesMapProperties(functionValue)
     require(triplesMap.isDefined)
     FunctionMap(functionValue.uri.toString, triplesMap.get)
   }

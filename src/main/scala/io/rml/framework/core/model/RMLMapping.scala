@@ -42,7 +42,7 @@ trait RMLMapping extends Graph {
     */
   def triplesMaps: List[TriplesMap]
 
-  def containsParentTripleMaps: Boolean
+  def containsParentTriplesMaps: Boolean
 
 }
 
@@ -50,22 +50,22 @@ object RMLMapping {
 
   /**
     *
-    * @param tripleMaps
+    * @param triplesMaps
     * @param identifier
     * @return
     */
-  def apply(tripleMaps: List[TriplesMap], identifier: String): RMLMapping = {
+  def apply(triplesMaps: List[TriplesMap], identifier: String): RMLMapping = {
     // separating triple maps that contain parent triple maps
-    val tmWithParentTripleMaps = tripleMaps.filter(tm => tm.containsParentTripleMap)
-    val parentTriplesMaps = tmWithParentTripleMaps.flatMap(tm =>
+    val tmWithParentTriplesMaps = triplesMaps.filter(tm => tm.containsParentTriplesMap)
+    val parentTriplesMaps = tmWithParentTriplesMaps.flatMap(tm =>
       tm.predicateObjectMaps.flatMap(pm =>
         pm.objectMaps.flatMap(om => om.parentTriplesMap)))
     val transformedPTM = parentTriplesMaps.map(ParentTriplesMap(_))
 
     // filter out all triple maps that are not parent triple maps themselves
-    val nonPTMTripleMaps = tripleMaps.filter(tm => !transformedPTM.contains(ParentTriplesMap(tm)))
+    val nonPTMTriplesMaps = triplesMaps.filter(tm => !transformedPTM.contains(ParentTriplesMap(tm)))
 
-    StdRMLMapping(nonPTMTripleMaps, identifier)
+    StdRMLMapping(nonPTMTriplesMaps, identifier)
   }
 
 }

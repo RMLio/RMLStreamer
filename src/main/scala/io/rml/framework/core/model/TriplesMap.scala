@@ -70,7 +70,7 @@ trait TriplesMap extends Node {
     *
     * @return
     */
-  def containsParentTripleMap: Boolean
+  def containsParentTriplesMap: Boolean
 
 }
 

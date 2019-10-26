@@ -5,7 +5,7 @@ import io.rml.framework.core.model.std.StdStreamTriplesMap
 abstract class StreamTriplesMap(triplesMap: TriplesMap) extends TriplesMap {
 
   require(triplesMap.logicalSource.source.isInstanceOf[StreamDataSource], "Source must be a stream.")
-  //require(!tripleMap.containsParentTripleMap, "No parent triple maps allowed.")
+  //require(!triplesMap.containsParentTriplesMap, "No parent triple maps allowed.")
 
   /**
     *
@@ -29,7 +29,7 @@ abstract class StreamTriplesMap(triplesMap: TriplesMap) extends TriplesMap {
     *
     * @return
     */
-  override def containsParentTripleMap = triplesMap.containsParentTripleMap
+  override def containsParentTriplesMap = triplesMap.containsParentTriplesMap
 
   override def identifier(): String = triplesMap.identifier
 
@@ -42,7 +42,7 @@ abstract class StreamTriplesMap(triplesMap: TriplesMap) extends TriplesMap {
 }
 
 object StreamTriplesMap {
-  def fromTripleMap(triplesMap: TriplesMap): StdStreamTriplesMap = {
+  def fromTriplesMap(triplesMap: TriplesMap): StdStreamTriplesMap = {
     StdStreamTriplesMap(triplesMap)
   }
 }

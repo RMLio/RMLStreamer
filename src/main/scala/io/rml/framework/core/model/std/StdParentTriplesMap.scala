@@ -26,7 +26,7 @@ case class StdParentTriplesMap(triplesMap: TriplesMap) extends ParentTriplesMap 
     *
     * @return
     */
-  override def containsParentTripleMap = triplesMap.containsParentTripleMap
+  override def containsParentTriplesMap = triplesMap.containsParentTriplesMap
 
   override def identifier(): String = triplesMap.identifier
 

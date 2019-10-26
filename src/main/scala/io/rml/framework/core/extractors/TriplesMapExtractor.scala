@@ -22,23 +22,23 @@
 
 package io.rml.framework.core.extractors
 
-import io.rml.framework.core.extractors.std.StdTripleMapExtractor
+import io.rml.framework.core.extractors.std.StdTriplesMapExtractor
 import io.rml.framework.core.model.TriplesMap
 import io.rml.framework.core.model.rdf.RDFResource
 
-trait TripleMapExtractor extends GraphExtractor[List[TriplesMap]] {
+trait TriplesMapExtractor extends GraphExtractor[List[TriplesMap]] {
 
-  def extractTripleMapProperties(resource: RDFResource): Option[TriplesMap]
+  def extractTriplesMapProperties(resource: RDFResource): Option[TriplesMap]
 
 }
 
 /**
   * Companion
   */
-object TripleMapExtractor {
+object TriplesMapExtractor {
 
   /**
-    * Creates a TripleMapExtractor through dependency-injection.
+    * Creates a TriplesMapExtractor through dependency-injection.
     *
     * @param logicalSourceExtractor      Extractor for logical sources.
     * @param subjectMapExtractor         Extractor for subject maps.
@@ -50,9 +50,9 @@ object TripleMapExtractor {
             predicateObjectMapExtractor: PredicateObjectMapExtractor =
             PredicateObjectMapExtractor(), graphMapExtractor: GraphMapExtractor = GraphMapExtractor())
 
-  : TripleMapExtractor = {
+  : TriplesMapExtractor = {
 
-    lazy val extractor = new StdTripleMapExtractor(
+    lazy val extractor = new StdTriplesMapExtractor(
       logicalSourceExtractor,
       subjectMapExtractor,
       graphMapExtractor,
