@@ -22,7 +22,7 @@
 
 package io.rml.framework.core.model
 
-import io.rml.framework.core.model.std.StdTriplesMap
+import io.rml.framework.core.model.std.{StdStreamTriplesMap, StdTriplesMap}
 
 /**
   * This trait represents a triples map.
@@ -91,12 +91,17 @@ object TriplesMap {
             graphMap: Option[GraphMap] = None
            ): TriplesMap = {
 
-    StdTriplesMap(predicateObjectMaps,
+    val triplesMap = StdTriplesMap(predicateObjectMaps,
       logicalSource,
       subjectMap,
       graphMap,
       identifier)
 
+    if (logicalSource.source.isInstanceOf[StreamDataSource]) {
+      StdStreamTriplesMap(triplesMap)
+    } else {
+      triplesMap
+    }
   }
 
 }
