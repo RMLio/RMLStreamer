@@ -31,6 +31,7 @@ trait Item extends Serializable {
 
   def refer(reference: String): Option[List[String]]
 
+  // TODO check if valid!!
   @transient lazy val blankNodeId: BlankNodeId = BlankNodeId.create()
 
 

@@ -111,18 +111,7 @@ object Main extends Logging {
 
     senv.enableCheckpointing(5000, CheckpointingMode.AT_LEAST_ONCE);  // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
 
-    if (formattedMapping.containsDatasetTriplesMaps() && formattedMapping.containsStreamTriplesMaps()) {
-
-      logInfo("Both Dataset and Stream job found.")
-
-      // At this moment, we only support the case that there is a "streaming" triples map that has a "static" parent triples map.
-      // Only the subject(s) of the parent triples map will be generated
-      createMixedPipeline(formattedMapping)
-      senv.execute("Boe")
-    }
-
-    // check if the mapping contains standard dataset mappings
-    else if (formattedMapping.containsDatasetTriplesMaps()) {
+    if (formattedMapping.containsDatasetTriplesMaps() && !formattedMapping.containsStreamTriplesMaps()) {
 
       logInfo("Dataset Job Found.")
 
@@ -139,10 +128,16 @@ object Main extends Logging {
       // check if the mapping contains streamed mappings
     } else if (formattedMapping.containsStreamTriplesMaps()) {
 
-      logInfo("Datastream Job found.")
-
-      // create a flink stream from the formatted mapping
-      val stream = createStreamFromFormattedMapping(formattedMapping)
+      val stream = if (formattedMapping.containsDatasetTriplesMaps()) {
+        logInfo("Mixed dataset and datastream job found.")
+        // At this moment, we only support the case that there is a "streaming" triples map that has a "static" parent triples map.
+        // Only the subject(s) of the parent triples map will be generated
+        createMixedPipelineFromFormattedMapping(formattedMapping)
+      } else {
+        // create a flink stream from the formatted mapping
+        logInfo("Datastream Job found.")
+        createStreamFromFormattedMapping(formattedMapping)
+      }
 
       // write to a socket if the parameter is given
       if (outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
@@ -249,9 +244,13 @@ object Main extends Logging {
 
   }
 
-  def createMixedPipeline(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): Unit = {
+  def createMixedPipelineFromFormattedMapping(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[String] = {
     // we assume a streaming child triples map and a static parent triples map
     require(formattedMapping.containsStreamTriplesMaps() && formattedMapping.containsDatasetTriplesMaps() && formattedMapping.containsParentTriplesMaps)
+
+    // TODO create a "dispatcher" by splitting the stream into "standard" and "joined".
+
+    ///// generate stream(s) for streaming child triples maps /////
 
     // map: (parent triples map identifier, name of the variable to join on, the value of it) => generated subject string
     val parentTriplesMap2JoinParentSource2JoinParentValue2Subject = getStaticParentSourceItems(formattedMapping)
@@ -272,18 +271,54 @@ object Main extends Logging {
           val parentItem = parentTriplesMap2JoinParentSource2JoinParentValue2Subject((parentTmId, joinParentSource, childRef))
           val joinedItem = JoinedItem(childItem, parentItem)
           joinedItem
-        })
+        }).name("Joining items from static data and streaming data")
         .map(new JoinedStaticProcessor(engine))
-        .flatMap(triples => {
+        .name("Executing mapping statements on joined items")
+        .flatMap(triples =>
           triples.headOption
-        })
+        )
     })
 
-    // generate streams without joins
+    ///// generate stream(s) for streaming "standard" triples maps /////
+    // TODO this mainly copy-paste. See if we can refactor this.
 
-    // TODO process rest of child stream...
-    // TODO make difference std stream triples map and join streaming triples map
+    val triplesMaps = formattedMapping.standardStreamTriplesMaps
 
+    val grouped = triplesMaps.groupBy(triplesMap => triplesMap.logicalSource)
+
+    // create a map with as key a Source and as value an Engine with loaded statements
+    // the loaded statements are the mappings to execute
+    val sourceEngineMap = grouped.map(entry => {
+      var logicalSource = entry._2.head.logicalSource
+      val triplesMaps = entry._2
+      val iterators = triplesMaps.flatMap(tm => tm.logicalSource.iterators).distinct
+      logicalSource = LogicalSource(logicalSource.referenceFormulation, iterators, logicalSource.source)
+      // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
+      Source(logicalSource) -> {
+        logInfo(entry._2.size + " Triple Maps are found.")
+        StatementEngine.fromTriplesMaps(triplesMaps, iterators.size > 1 )
+      }
+    })
+
+    // This is the collection of all data streams that are created by the current mapping
+    val processedStreams: immutable.Iterable[DataStream[String]] =
+      sourceEngineMap.map(entry => {
+        val source = entry._1.asInstanceOf[io.rml.framework.flink.source.Stream]
+        val engine = entry._2
+        // link the different steps in each pipeline
+        source.stream // this will generate a stream of items
+          // process every item by a processor with a loaded engine
+          .map(new StdStreamProcessor(engine))
+          .name("Execute mapping statements on items")
+
+          // format every list of triples (as strings)
+          .flatMap(list =>
+              if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b) + "\n\n") else None
+          )
+          .name("Convert triples to strings")
+      }) ++ streamsWithJoins
+
+    unionStreams(processedStreams)
   }
 
   def getStaticParentSourceItems(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor)
