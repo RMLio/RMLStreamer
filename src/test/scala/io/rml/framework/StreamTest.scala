@@ -32,19 +32,21 @@ abstract class StreamTest(val streamType: String, val passing: Array[(String, St
   "A streamer mapping reader" should behave like validMappingFile("stream/tcp")
   it should behave like invalidMappingFile("negative_test_cases")
 
+  val random = scala.util.Random
   testCases foreach {
     case (folderPath, postProcName) =>
+      val test = streamType + '_' + random.nextLong
       it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
         implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
         implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
         implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
         Logger.logInfo("Starting server")
         val server: TestServer = streamType match {
-          case "TCP" => TCPTestServerFactory.createServer(streamType)
-          case _ => KafkaTestServerFactory.createServer(streamType)
+          case "TCP" => TCPTestServerFactory.createServer(test)
+          case _ => KafkaTestServerFactory.createServer(test)
         }
         server.setup()
-        implicit val cluster: Future[MiniCluster] = StreamTestUtil.getClusterFuture(streamType)
+        implicit val cluster: Future[MiniCluster] = StreamTestUtil.getClusterFuture(test)
         implicit val postProcessor: PostProcessor = TestUtil.pickPostProcessor(postProcName)
         val folder = MappingTestUtil.getFile(folderPath.toString)
         val executedFuture = StreamingTestMain.executeTestCase(folder, server)
@@ -53,7 +55,7 @@ abstract class StreamTest(val streamType: String, val passing: Array[(String, St
           case _ =>
             server.tearDown()
             cluster.map( c => c.close())
-            TestUtil.tmpCleanup(streamType)
+            TestUtil.tmpCleanup(test)
         } andThen {
           case Success(_) =>
             Logger.logSuccess(s"Test passed!!")

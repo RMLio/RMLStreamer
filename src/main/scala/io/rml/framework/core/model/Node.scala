@@ -30,7 +30,7 @@ package io.rml.framework.core.model
 trait Node extends Serializable{
 
   /**
-    * Used as an id for each inheriting objects for debugging ( maybe equivalence checking? e.g. in TermMap and TripleMap).
+    * Used as an id for each inheriting objects for debugging ( maybe equivalence checking? e.g. in TermMap and TriplesMap).
     * @return
     */
   def identifier: String

@@ -12,7 +12,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
     require(termMap.isInstanceOf[FunctionMap], "Wrong TermMap instance.")
 
     val functionMap = termMap.asInstanceOf[FunctionMap]
-    val functionEngine = StatementEngine.fromTripleMaps(List(functionMap.functionValue))
+    val functionEngine = StatementEngine.fromTriplesMaps(List(functionMap.functionValue))
     (item: Item) => {
       val triples: List[FlinkRDFQuad] = functionEngine.process(item)
       val parameters: Map[Uri, String] = triples.filter(triple => triple.predicate.uri != Uri(RMLVoc.Property.EXECUTES))

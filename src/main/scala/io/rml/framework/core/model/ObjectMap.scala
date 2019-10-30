@@ -35,7 +35,7 @@ trait ObjectMap extends TermMap {
 
   def joinCondition: Option[JoinCondition]
 
-  def parentTriplesMap: Option[TripleMap]
+  def parentTriplesMap: Option[TriplesMap]
 
 }
 
@@ -49,7 +49,7 @@ object ObjectMap {
             termType: Option[Uri] = None,
             datatype: Option[Uri] = None,
             language: Option[Literal] = None,
-            parentTriplesMap: Option[TripleMap] = None,
+            parentTriplesMap: Option[TriplesMap] = None,
             joinCondition: Option[JoinCondition] = None): ObjectMap =
 
     StdObjectMap(identifier,

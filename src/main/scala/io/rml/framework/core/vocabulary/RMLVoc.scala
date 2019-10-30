@@ -102,7 +102,7 @@ object RMLVoc {
     ///////////////////////////////////////////////////////////////////////////
     val PREDICATEOBJECTMAP = Namespaces("rr", "PredicateObjectMap")
     val OBJECTMAP = Namespaces("rr", "ObjectMap")
-    val TRIPLEMAP = Namespaces("rr", "TriplesMap")
+    val TRIPLESMAP = Namespaces("rr", "TriplesMap")
     val IRI = Namespaces("rr", "IRI")
     val BLANKNODE = Namespaces("rr", "BlankNode")
     val LITERAL = Namespaces("rr", "Literal")

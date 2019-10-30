@@ -28,12 +28,12 @@ case class StdTriplesMap(predicateObjectMaps: List[PredicateObjectMap],
                          logicalSource: LogicalSource,
                          subjectMap: SubjectMap,
                          graphMap: Option[GraphMap],
-                         identifier: String) extends TripleMap {
+                         identifier: String) extends TriplesMap {
   /**
     *
     * @return
     */
-  override def containsParentTripleMap: Boolean = {
+  override def containsParentTriplesMap: Boolean = {
     predicateObjectMaps.flatMap(pm => pm.objectMaps.flatMap(om => om.parentTriplesMap)).nonEmpty
   }
 

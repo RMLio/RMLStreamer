@@ -22,7 +22,7 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{MappingExtractor, TripleMapExtractor}
+import io.rml.framework.core.extractors.{MappingExtractor, TriplesMapExtractor}
 import io.rml.framework.core.model.RMLMapping
 import io.rml.framework.core.model.rdf.RDFGraph
 
@@ -39,8 +39,8 @@ class StdMappingExtractor extends MappingExtractor {
     * @return
     */
   override def extract(graph: RDFGraph): RMLMapping = {
-    val tripleMapsExtractor = TripleMapExtractor()
-    val triplesMaps = tripleMapsExtractor.extract(graph)
+    val triplesMapsExtractor = TriplesMapExtractor()
+    val triplesMaps = triplesMapsExtractor.extract(graph)
     RMLMapping(triplesMaps, graph.uri.toString)
   }
 

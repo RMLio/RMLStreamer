@@ -22,7 +22,6 @@
 
 package io.rml.framework.flink.item
 
-import io.rml.framework.core.internal.Logging
 import org.apache.jena.graph.BlankNodeId
 
 /**
@@ -32,7 +31,8 @@ trait Item extends Serializable {
 
   def refer(reference: String): Option[List[String]]
 
-  val blankNodeId: BlankNodeId = BlankNodeId.create()
+  // TODO check if valid!!
+  @transient lazy val blankNodeId: BlankNodeId = BlankNodeId.create()
 
 
   def tag:Option[String]
