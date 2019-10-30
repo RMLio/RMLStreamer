@@ -288,6 +288,7 @@ object Main extends Logging {
       })
 
     // map: (parent triples map identifier, name of the variable to join on, the value of it) => generated subject string
+    // this map contains the subjects from the static data source in order to perform the join.
     val parentTriplesMap2JoinParentSource2JoinParentValue2Subject = getStaticParentSourceItems(formattedMapping)
 
     val processedDataStreams: Iterable[DataStream[String]] = tm2Stream.map(entry => {
@@ -306,7 +307,9 @@ object Main extends Logging {
           .flatMap(_.iterator)
           .map(childItem => {
             val childRef = childItem.refer(joinedStreamTm.joinCondition.get.child.identifier).get.head
+            // for every child ref from the streaming data, we look up the subject item from the static data (saved before in a map)
             val parentItem = parentTriplesMap2JoinParentSource2JoinParentValue2Subject((parentTmId, joinParentSource, childRef))
+            // the actual join
             val joinedItem = JoinedItem(childItem, parentItem)
             joinedItem
           }).name("Joining items from static data and streaming data")
