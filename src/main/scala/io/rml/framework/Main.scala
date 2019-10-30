@@ -35,7 +35,9 @@ import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala._
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.CheckpointingMode
-import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
+import org.apache.flink.streaming.api.functions.ProcessFunction
+import org.apache.flink.streaming.api.scala.{DataStream, OutputTag, StreamExecutionEnvironment}
+import org.apache.flink.util.Collector
 
 import scala.collection.mutable
 //import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaProducer09}
@@ -152,7 +154,9 @@ object Main extends Logging {
         fact.applySink[String](kafkaBrokers,kafkaTopic, kafkaPartitionerProperties, new SimpleStringSchema(), stream)
       }
       // write to a file if the parameter is given
-      else if (!outputPath.contains(EMPTY_VALUE)) stream.writeAsText(outputPath, WriteMode.OVERWRITE)
+      else if (!outputPath.contains(EMPTY_VALUE)) {
+        stream.writeAsText(outputPath, WriteMode.OVERWRITE)
+      }
 
       // execute stream job
       senv.execute(jobName + " (DATASTREAM JOB)")
@@ -248,77 +252,93 @@ object Main extends Logging {
     // we assume a streaming child triples map and a static parent triples map
     require(formattedMapping.containsStreamTriplesMaps() && formattedMapping.containsDatasetTriplesMaps() && formattedMapping.containsParentTriplesMaps)
 
-    // TODO create a "dispatcher" by splitting the stream into "standard" and "joined".
+    val tm2Stream = mutable.HashMap.empty[TriplesMap, DataStream[Iterable[Item]]]
+   (formattedMapping.standardStreamTriplesMaps ++ formattedMapping.joinedSteamTriplesMaps)
+     // group all mappings by logical source
+      .groupBy(_.logicalSource.semanticIdentifier)
+      .map(entry => {
+        val triplesMaps = entry._2
+        val firstSource = triplesMaps.head.logicalSource
+        val allIterators = triplesMaps
+          .flatMap( triplesMap => triplesMap.logicalSource.iterators)
+          .distinct
+        // create a new logical source with all iterators
+        val logicalSource = LogicalSource(firstSource.referenceFormulation, allIterators, firstSource.source)
+        (logicalSource, triplesMaps)
+      })
+      .foreach(logicalSource2triplesMaps => {
+        val triplesMaps = logicalSource2triplesMaps._2
+        val outputTags = triplesMaps.map(triplesMap => OutputTag[Iterable[Item]](triplesMap.hashCode().toHexString))
 
-    ///// generate stream(s) for streaming child triples maps /////
+        // Dispatch the stream to every triples map by
+        // creating a side output stream for every triples map (i.e. split the stream)
+        val logicalSource = logicalSource2triplesMaps._1
+        val dataStream = Source(logicalSource).asInstanceOf[io.rml.framework.flink.source.Stream].stream
+          .process(new ProcessFunction[Iterable[Item], Iterable[Item]] {
+            override def processElement(items: Iterable[Item], context: ProcessFunction[Iterable[Item], Iterable[Item]]#Context, out: Collector[Iterable[Item]]): Unit = {
+              // we don't need to write the items to 'out' because 
+              outputTags.foreach(context.output(_, items))
+            }
+          })
+        triplesMaps.foreach(triplesMap => {
+          val outputTag = OutputTag[Iterable[Item]](triplesMap.hashCode().toHexString)
+          val streamForTriplesMap = dataStream.getSideOutput(outputTag)
+          tm2Stream.put(triplesMap, streamForTriplesMap)
+        })
+      })
 
     // map: (parent triples map identifier, name of the variable to join on, the value of it) => generated subject string
     val parentTriplesMap2JoinParentSource2JoinParentValue2Subject = getStaticParentSourceItems(formattedMapping)
 
-    // generate stream(s) with joins
-    val streamsWithJoins = formattedMapping.joinedSteamTriplesMaps.map(joinedStreamTm => {
+    val processedDataStreams: Iterable[DataStream[String]] = tm2Stream.map(entry => {
+      val triplesMap = entry._1
+      val stream = entry._2
 
-      // create the engine that will process the joined items
-      val engine = StatementEngine.fromJoinedTriplesMap(joinedStreamTm)
+      if (triplesMap.containsParentTriplesMap) {
+        // the join scenario
+        // create the engine that will process the joined items
+        val joinedStreamTm = triplesMap.asInstanceOf[JoinedTriplesMap]
+        val engine = StatementEngine.fromJoinedTriplesMap(joinedStreamTm)
 
-      val parentTmId = joinedStreamTm.parentTriplesMap.identifier
-      val joinParentSource = joinedStreamTm.joinCondition.get.parent.identifier
-      Source(joinedStreamTm.logicalSource).asInstanceOf[io.rml.framework.flink.source.Stream]
-        .stream
-        .flatMap(_.iterator)
-        .map(childItem => {
-          val childRef = childItem.refer(joinedStreamTm.joinCondition.get.child.identifier).get.head
-          val parentItem = parentTriplesMap2JoinParentSource2JoinParentValue2Subject((parentTmId, joinParentSource, childRef))
-          val joinedItem = JoinedItem(childItem, parentItem)
-          joinedItem
-        }).name("Joining items from static data and streaming data")
-        .map(new JoinedStaticProcessor(engine))
-        .name("Executing mapping statements on joined items")
-        .flatMap(triples =>
-          triples.headOption
-        )
-    })
+        val parentTmId = joinedStreamTm.parentTriplesMap.identifier
+        val joinParentSource = joinedStreamTm.joinCondition.get.parent.identifier
+        stream
+          .flatMap(_.iterator)
+          .map(childItem => {
+            val childRef = childItem.refer(joinedStreamTm.joinCondition.get.child.identifier).get.head
+            val parentItem = parentTriplesMap2JoinParentSource2JoinParentValue2Subject((parentTmId, joinParentSource, childRef))
+            val joinedItem = JoinedItem(childItem, parentItem)
+            joinedItem
+          }).name("Joining items from static data and streaming data")
+          .map(new JoinedStaticProcessor(engine))
+          .name("Executing mapping statements on joined items")
+          .flatMap(triples =>
+            if (triples.nonEmpty) {
+              Some(triples.head + "\n\n")
+            } else {
+              None
+            }
+          )
+      } else {
 
-    ///// generate stream(s) for streaming "standard" triples maps /////
-    // TODO this mainly copy-paste. See if we can refactor this.
-
-    val triplesMaps = formattedMapping.standardStreamTriplesMaps
-
-    val grouped = triplesMaps.groupBy(triplesMap => triplesMap.logicalSource)
-
-    // create a map with as key a Source and as value an Engine with loaded statements
-    // the loaded statements are the mappings to execute
-    val sourceEngineMap = grouped.map(entry => {
-      var logicalSource = entry._2.head.logicalSource
-      val triplesMaps = entry._2
-      val iterators = triplesMaps.flatMap(tm => tm.logicalSource.iterators).distinct
-      logicalSource = LogicalSource(logicalSource.referenceFormulation, iterators, logicalSource.source)
-      // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
-      Source(logicalSource) -> {
-        logInfo(entry._2.size + " Triple Maps are found.")
-        StatementEngine.fromTriplesMaps(triplesMaps, iterators.size > 1 )
-      }
-    })
-
-    // This is the collection of all data streams that are created by the current mapping
-    val processedStreams: immutable.Iterable[DataStream[String]] =
-      sourceEngineMap.map(entry => {
-        val source = entry._1.asInstanceOf[io.rml.framework.flink.source.Stream]
-        val engine = entry._2
-        // link the different steps in each pipeline
-        source.stream // this will generate a stream of items
-          // process every item by a processor with a loaded engine
+        // the "normal" scenario.
+        val engine = StatementEngine.fromTriplesMaps(List(triplesMap))
+        stream
           .map(new StdStreamProcessor(engine))
           .name("Execute mapping statements on items")
 
           // format every list of triples (as strings)
           .flatMap(list =>
-              if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b) + "\n\n") else None
+            if (list.nonEmpty) {
+              Some(list.reduce((a, b) => a + "\n" + b) + "\n\n")
+            } else None
           )
           .name("Convert triples to strings")
-      }) ++ streamsWithJoins
+      }
 
-    unionStreams(processedStreams)
+    })
+
+    unionStreams(processedDataStreams)
   }
 
   def getStaticParentSourceItems(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor)
