@@ -9,7 +9,7 @@
   "author": "Pieter Heyvaert <pheyvaer.heyvaert@ugent.be>",
   "license": "MIT",
   "dependencies": {
-    "csv-parse": "^2.0.4",
+    "csv-parse": "^4.4.6",
     "json-socket": "^0.3.0",
     "jsonld": "^1.0.1",
     "line-by-line": "^0.1.6",
