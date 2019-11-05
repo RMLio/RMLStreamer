@@ -1,6 +1,6 @@
 This document lists the changes for every version.
 
-## 1.1.1
+## 1.2.0
 
 * Added JSON-LD as output format
 * Added option to output every triple coming from one message at once
