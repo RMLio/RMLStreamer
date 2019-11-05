@@ -1,8 +1,12 @@
-package io.rml.framework.core.model.std
+package io.rml.framework.core.model
 
-import io.rml.framework.core.model.{ParentTriplesMap, TriplesMap}
+import io.rml.framework.core.model.std.StdStreamTriplesMap
 
-case class StdParentTriplesMap(triplesMap: TriplesMap) extends ParentTriplesMap {
+abstract class StreamTriplesMap(triplesMap: TriplesMap) extends TriplesMap {
+
+  require(triplesMap.logicalSource.source.isInstanceOf[StreamDataSource], "Source must be a stream.")
+  //require(!triplesMap.containsParentTriplesMap, "No parent triple maps allowed.")
+
   /**
     *
     * @return
@@ -22,7 +26,6 @@ case class StdParentTriplesMap(triplesMap: TriplesMap) extends ParentTriplesMap 
   override def subjectMap = triplesMap.subjectMap
 
   /**
-    * cd f
     *
     * @return
     */
@@ -35,4 +38,11 @@ case class StdParentTriplesMap(triplesMap: TriplesMap) extends ParentTriplesMap 
     * @return
     */
   override def graphMap = ???
+
+}
+
+object StreamTriplesMap {
+  def fromTriplesMap(triplesMap: TriplesMap): StdStreamTriplesMap = {
+    StdStreamTriplesMap(triplesMap)
+  }
 }

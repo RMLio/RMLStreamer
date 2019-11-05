@@ -15,7 +15,7 @@
 	|				     									
 	-------------------------------------------------------------------------------------------------				     						
 		|		        |		        |			                |			    |		        |
-	  TermMap	     TripleMap	    PredicateObjectMap	     LogicalSource	      Graph	     DataSource
+	  TermMap	     TriplesMap	    PredicateObjectMap	     LogicalSource	      Graph	     DataSource
 		|
 	------------------
    GraphMap  ObjectMap  SubjectMap

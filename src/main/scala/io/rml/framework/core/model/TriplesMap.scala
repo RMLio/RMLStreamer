@@ -22,7 +22,7 @@
 
 package io.rml.framework.core.model
 
-import io.rml.framework.core.model.std.StdTriplesMap
+import io.rml.framework.core.model.std.{StdStreamTriplesMap, StdTriplesMap}
 
 /**
   * This trait represents a triples map.
@@ -39,7 +39,7 @@ import io.rml.framework.core.model.std.StdTriplesMap
   * Spec: http://rml.io/spec.html#triples-map
   *
   */
-trait TripleMap extends Node {
+trait TriplesMap extends Node {
 
 
   /**
@@ -70,11 +70,11 @@ trait TripleMap extends Node {
     *
     * @return
     */
-  def containsParentTripleMap: Boolean
+  def containsParentTriplesMap: Boolean
 
 }
 
-object TripleMap {
+object TriplesMap {
 
   /**
     *
@@ -89,14 +89,19 @@ object TripleMap {
             subjectMap: SubjectMap,
             identifier: String,
             graphMap: Option[GraphMap] = None
-           ): TripleMap = {
+           ): TriplesMap = {
 
-    StdTriplesMap(predicateObjectMaps,
+    val triplesMap = StdTriplesMap(predicateObjectMaps,
       logicalSource,
       subjectMap,
       graphMap,
       identifier)
 
+    if (logicalSource.source.isInstanceOf[StreamDataSource]) {
+      StdStreamTriplesMap(triplesMap)
+    } else {
+      triplesMap
+    }
   }
 
 }

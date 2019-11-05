@@ -34,6 +34,7 @@ Every option can be defined in its long form in the CONFIG FILE.
 E.g. flinkBin=/opt/flink-1.8.0/flink
 
 Options:
+-n --job-name                      The name of the Flink job
 -p --path RML MAPPING PATH         The path to an RML mapping file.
 -o --outputPath FILE OUTPUT PATH   The path to an output file.
 -f --flinkBin FLINK PATH           The path to the Flink binary.

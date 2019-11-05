@@ -23,7 +23,7 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.{JoinedTripleMap, Literal, TripleMap}
+import io.rml.framework.core.model.{JoinedTriplesMap, TriplesMap}
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.Engine
 import io.rml.framework.flink.item.{Item, JoinedItem}
@@ -66,10 +66,10 @@ object StatementEngine extends Logging {
 
   /**
     *
-    * @param tripleMaps
+    * @param triplesMaps
     * @return
     */
-  def fromTripleMaps(tripleMaps: List[TripleMap], isGrouping: Boolean = false): StatementEngine[Item] = {
+  def fromTriplesMaps(triplesMaps: List[TriplesMap], isGrouping: Boolean = false): StatementEngine[Item] = {
     // assemble the statements
 
 
@@ -77,7 +77,7 @@ object StatementEngine extends Logging {
     if (isGrouping) {
 
       //Group the triple maps with their iterator as the key
-      val iteratorGroup = tripleMaps.groupBy(tm => {
+      val iteratorGroup = triplesMaps.groupBy(tm => {
 
         val iteratorTag = tm.logicalSource.iterators.head
 
@@ -96,7 +96,7 @@ object StatementEngine extends Logging {
           case (None, v) => (None, v)
         }
     } else {
-      Map(None -> tripleMaps.flatMap(StatementsAssembler.assembleStatements))
+      Map(None -> triplesMaps.flatMap(StatementsAssembler.assembleStatements))
     }
 
     // do some logging
@@ -109,12 +109,12 @@ object StatementEngine extends Logging {
   /**
     * Assumes that the triple map only contains predicate object maps with the same PTM and join conditions (JoinedTripleMap).
     *
-    * @param tripleMap
+    * @param triplesMap
     * @return
     */
-  def fromJoinedTriplesMap(tripleMap: JoinedTripleMap): StatementEngine[JoinedItem] = {
-    val childStatements = StatementsAssembler.assembleChildStatements(tripleMap)
-    val parentStatements = StatementsAssembler.assembleParentStatements(tripleMap)
+  def fromJoinedTriplesMap(triplesMap: JoinedTriplesMap): StatementEngine[JoinedItem] = {
+    val childStatements = StatementsAssembler.assembleChildStatements(triplesMap)
+    val parentStatements = StatementsAssembler.assembleParentStatements(triplesMap)
     // do some logging
     if (isDebugEnabled) logDebug((childStatements.size + parentStatements.size) + " statements were generated.")
     new StatementEngine(Map(None -> {

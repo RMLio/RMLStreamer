@@ -1,8 +1,8 @@
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{ParentTriplesMap, TriplesMap}
+import io.rml.framework.core.model.{JoinedTriplesMap, TriplesMap}
 
-case class StdParentTriplesMap(triplesMap: TriplesMap) extends ParentTriplesMap {
+case class StdJoinedTriplesMap(triplesMap: TriplesMap) extends JoinedTriplesMap(triplesMap) {
   /**
     *
     * @return
@@ -22,7 +22,6 @@ case class StdParentTriplesMap(triplesMap: TriplesMap) extends ParentTriplesMap 
   override def subjectMap = triplesMap.subjectMap
 
   /**
-    * cd f
     *
     * @return
     */
