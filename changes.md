@@ -10,4 +10,5 @@ This document lists the changes for every version.
 * Dropped support for Kafka 0.9 or earlier
 * Remove rmls:zookeeper statements from mappings since Kafka 0.10 and higher don't need it
 
-## 1.2.1  
+## 1.2.1
+* Bump Flink to version 1.9.1  
