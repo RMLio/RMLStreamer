@@ -48,7 +48,7 @@ class BulkPostProcessor extends AtMostOneProcessor {
   */
 class JsonLDProcessor(prefix:String = "", @transient var graph:RDFGraph = JenaGraph()) extends AtMostOneProcessor {
   override def process(quadStrings: Iterable[FlinkRDFQuad]): List[String] = {
-    if (quadStrings.isEmpty || quadStrings.mkString("").isEmpty) {
+    if (quadStrings.isEmpty || quadStrings.mkString.isEmpty) {
       return List()
     }
     val quads =  quadStrings.mkString("\n")
