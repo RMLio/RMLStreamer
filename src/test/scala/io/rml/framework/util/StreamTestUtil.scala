@@ -109,6 +109,7 @@ object StreamTestUtil {
 
     val customConfig = new Configuration()
     customConfig.setString("io.tmp.dirs", TestProperties.getTempDir(test).toString)
+    customConfig.setString("rest.bind-port", "50000-51000") // see https://github.com/apache/flink/commit/730eed71ef3f718d61f85d5e94b1060844ca56db
     val configuration = new MiniClusterConfiguration.Builder()
       .setConfiguration(customConfig)
       .setNumTaskManagers(1)
