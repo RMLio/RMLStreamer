@@ -98,9 +98,10 @@ object Main extends Logging {
     logInfo("Output path: " + outputPath)
     logInfo("Output socket: " + outputSocket)
     logInfo("Kafka brokers: " +  kafkaBrokers)
-    logInfo("Kafka Topic: " +  kafkaTopic)
+    logInfo("Kafka output topic: " +  kafkaTopic)
     logInfo("Post-process: "  + postProcessor.toString)
     logInfo("Kafka Partition: " +  partitionID)
+    logInfo("Kafka partition format: " + partitionFormatString)
 
 
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.

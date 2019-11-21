@@ -3,6 +3,7 @@ package io.rml.framework.flink.connector.kafka
 import java.util
 import java.util.{Optional, Properties}
 
+import io.rml.framework.core.internal.Logging
 import org.apache.flink.api.common.serialization.{DeserializationSchema, SerializationSchema}
 import org.apache.flink.streaming.api.scala.DataStream
 import org.apache.flink.streaming.connectors.kafka._
@@ -66,8 +67,7 @@ object KafkaConnectorVersionFactory {
   }
 }
 
-case object UniversalKafkaConnectorFactory extends KafkaConnectorFactory {
-  override def applySink[T](brokerList: String, topic: String, partitionerProperty: Properties, serializationSchema: SerializationSchema[T], dataStream: DataStream[T]): Unit = super.applySink(brokerList, topic, partitionerProperty, serializationSchema, dataStream)
+case object UniversalKafkaConnectorFactory extends KafkaConnectorFactory with Logging {
 
   override def getSource[T](topic: String, valueDeserializer: DeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T] = {
     new FlinkKafkaConsumer[T](topic, valueDeserializer, props)
@@ -86,7 +86,14 @@ case object UniversalKafkaConnectorFactory extends KafkaConnectorFactory {
   }
 
   override def applySink[T](properties: Properties, topic: String, serializationSchema: KeyedSerializationSchema[T], dataStream: DataStream[T], partitioner: Optional[FlinkKafkaPartitioner[T]]): Unit = {
+    logInfo("Connecting output to Kafka topic [" + topic + "]. SerializationSchema: [" + serializationSchema.getClass.getName + "]")
+    if (partitioner.isPresent) {
+      logInfo("Partitioner: [" + partitioner.get().getClass.getName + "].")
+    }
     val producer = new FlinkKafkaProducer[T](topic, serializationSchema, properties, partitioner)
+    //producer.setFlushOnCheckpoint(true)
+    producer.setLogFailuresOnly(false)
+    dataStream.addSink(producer)
   }
 
 
