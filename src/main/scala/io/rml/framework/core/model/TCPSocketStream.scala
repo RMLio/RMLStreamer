@@ -4,7 +4,7 @@ import java.util.Objects
 
 case class TCPSocketStream(hostName: String, port: Int, _type: String) extends StreamDataSource {
   override def uri: ExplicitNode = {
-    val hashValue = Objects.hash(hostName, new Integer(port), _type)
+    val hashValue = Objects.hash(hostName, port, _type)
 
     Uri(hashValue.toHexString)
   }
