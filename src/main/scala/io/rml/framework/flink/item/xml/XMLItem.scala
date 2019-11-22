@@ -4,6 +4,7 @@ import java.io.{ByteArrayInputStream, InputStreamReader}
 import java.nio.charset.StandardCharsets
 
 import com.ximpleware.extended.{AutoPilotHuge, VTDGenHuge, XMLBuffer}
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.source.XMLIterator
 import io.rml.framework.flink.util.XMLNamespace
@@ -70,7 +71,7 @@ class XMLItem(xml: Document, namespaces: Map[String, String], var tag: Option[St
 
 }
 
-object XMLItem {
+object XMLItem extends Logging {
 
 
   def getNSpacesFromString(xml: String): Map[String, String] = {
@@ -125,7 +126,7 @@ object XMLItem {
           Some(result)
 
         } catch {
-          case NonFatal(e) => None
+          case NonFatal(e) => logError("Error while parsing XML: " + e.getMessage + " | " + xml); None
         }
       }
         .flatten

@@ -91,7 +91,7 @@ object JSONItem extends Logging {
 
             Some(result)
           } catch {
-            case NonFatal(e) => e.printStackTrace(); None
+            case NonFatal(e) => logError("Error while parsing JSON: " + e.getMessage + " | " + json); None
           }
         }
       )
