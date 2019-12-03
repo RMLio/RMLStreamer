@@ -1,12 +1,11 @@
 package io.rml.framework.flink.source
 
-import javax.xml.parsers.DocumentBuilderFactory
-
 import com.ximpleware.VTDNav
 import com.ximpleware.extended.{AutoPilotHuge, VTDNavHuge}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.xml.XMLItem
+import javax.xml.parsers.DocumentBuilderFactory
 import org.slf4j.LoggerFactory
 
 import scala.collection.mutable
@@ -19,7 +18,7 @@ import scala.collection.mutable
   * @param ap
   * @param vn
   */
-class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String, String]) extends Iterator[Option[Item]] with Logging {
+class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String, String], xPath: String) extends Iterator[Option[Item]] with Logging {
 
   private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
   documentBuilderFactory.setNamespaceAware(true)
@@ -157,6 +156,7 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
       // return the item
       //Some(item)
       import java.io.StringWriter
+
       import javax.xml.transform.dom.DOMSource
       import javax.xml.transform.stream.StreamResult
       import javax.xml.transform.{OutputKeys, TransformerFactory}
@@ -175,7 +175,7 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
           throw new RuntimeException("Error converting to String", ex)
       }
 
-      val result = Some(XMLItem.fromString(xmlString, namespaces, ap.getExprString))
+      val result = Some(XMLItem.fromString(xmlString, namespaces, xPath))
       result
     } else {
       LOG.info("It's done.. without errors though.")
@@ -189,7 +189,7 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
 }
 
 object XMLIterator {
-  def apply(ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String, String]): XMLIterator = new XMLIterator(ap, vn, namespaces)
+  def apply(ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String, String], xPath: String): XMLIterator = new XMLIterator(ap, vn, namespaces, xPath)
 }
 
 
