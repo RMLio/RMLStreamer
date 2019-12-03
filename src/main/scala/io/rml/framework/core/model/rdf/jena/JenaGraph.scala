@@ -22,9 +22,8 @@
 
 package io.rml.framework.core.model.rdf.jena
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, OutputStream}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File}
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Path, Paths}
 
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFLiteral, RDFResource, RDFTriple}
@@ -33,9 +32,8 @@ import io.rml.framework.core.util.{Format, JenaUtil, Turtle, Util}
 import io.rml.framework.core.vocabulary.RDFVoc
 import io.rml.framework.engine.statement.TermMapGenerators
 import io.rml.framework.shared.{RMLException, ReadException}
-import org.apache.commons.lang3.StringUtils
 import org.apache.jena.rdf.model.{Model, ModelFactory, Statement}
-import org.apache.jena.riot.{RDFDataMgr, RDFFormat}
+import org.apache.jena.riot.RDFDataMgr
 import org.apache.jena.shared.JenaException
 
 import scala.collection.JavaConverters._
@@ -75,7 +73,28 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
 
   override def write(format: Format): String = {
     val stream = new ByteArrayOutputStream()
-    RDFDataMgr.write(stream,model, JenaUtil.toRDFFormat(format))
+    val jenaFormat = JenaUtil.toRDFFormat(format)
+    RDFDataMgr.write(stream,model, jenaFormat)
+    // if we ever want to control JSON-LD options (needed for dyversify)
+    /*format match {
+      case JSON_LD => {
+        import com.github.jsonldjava.core.JsonLdOptions
+        val opts = new JsonLdOptions
+        opts.setCompactArrays(false)
+        import org.apache.jena.riot.JsonLDWriteContext
+        val ctx = new JsonLDWriteContext
+        ctx.setOptions(opts)
+        RDFWriter.create()
+            .format(jenaFormat)
+            .source(model)
+            .context(ctx)
+            .build()
+          .output(stream)
+      }
+      case _ => {
+        RDFDataMgr.write(stream, model, jenaFormat)
+      }
+    }*/
     stream.toString("UTF-8")
   }
 
