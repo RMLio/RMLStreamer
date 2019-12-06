@@ -31,7 +31,7 @@ class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Ite
       // set the xpath expression
       ap.selectXPath(xpath)
       // create the iterator for the Akka Source
-      iterator = XMLIterator(ap, vn, namespaces)
+      iterator = XMLIterator(ap, vn, namespaces, xpath)
       LOG.info("Run the XML source!")
     } else {
       throw new RMLException("Can't parse XML with VTD.")

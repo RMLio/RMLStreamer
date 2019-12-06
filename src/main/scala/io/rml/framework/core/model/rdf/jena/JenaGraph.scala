@@ -121,10 +121,13 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
       val inputStream = Util.getFileInputStream(file)
       val baseStream = Util.getFileInputStream(file)
 
-
-      val baseUrl = Util.getBaseDirective(baseStream)
+      val baseUrl = tryWith(baseStream) { bs =>
+        Util.getBaseDirective(bs)
+      }
       TermMapGenerators.setBaseUrl(baseUrl)
-      RDFDataMgr.read(model, inputStream,JenaUtil.toRDFFormat(Turtle).getLang)
+      tryWith(inputStream) { in =>
+        RDFDataMgr.read(model, in, JenaUtil.toRDFFormat(Turtle).getLang)
+      }
 
       withUri(Uri(file.getName)) // overwrite the graph uri with the file path
       logModelWhenDebugEnabled()
@@ -132,6 +135,23 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
       case jenaException: JenaException =>
         logDebug(jenaException.toString)
         throw new ReadException(jenaException.getMessage)
+    }
+  }
+
+  // auto-close resources, seems to be missing in Scala
+  def tryWith[R, T <: AutoCloseable](resource: T)(doWork: T => R): R = {
+    try {
+      doWork(resource)
+    }
+    finally {
+      try {
+        if (resource != null) {
+          resource.close()
+        }
+      }
+      catch {
+        case e: Exception => e.printStackTrace()
+      }
     }
   }
 
