@@ -107,15 +107,15 @@ SOFTWARE.
 
         <dependency>
             <groupId>org.apache.bahir</groupId>
-            <artifactId>flink-connector-netty_2.11</artifactId>
+            <artifactId>flink-connector-netty_${scala.binary.version}</artifactId>
             <version>1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.flink</groupId>
-                    <artifactId>flink-streaming-scala_2.11</artifactId>
+                    <artifactId>flink-streaming-scala_${scala.binary.version}</artifactId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>flink-streaming-java_2.11</artifactId>
+                    <artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
                     <groupId>org.apache.flink</groupId>
                 </exclusion>
             </exclusions>
@@ -137,7 +137,7 @@ SOFTWARE.
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-hadoop-compatibility_2.11</artifactId>
+            <artifactId>flink-hadoop-compatibility_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
         </dependency>
 
@@ -149,15 +149,15 @@ SOFTWARE.
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-table-planner_2.11</artifactId>
+            <artifactId>flink-table-planner_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.flink</groupId>
-                    <artifactId>flink-streaming-scala_2.11</artifactId>
+                    <artifactId>flink-streaming-scala_${scala.binary.version}</artifactId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>flink-streaming-java_2.11</artifactId>
+                    <artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
                     <groupId>org.apache.flink</groupId>
                 </exclusion>
             </exclusions>
@@ -165,15 +165,15 @@ SOFTWARE.
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-table-api-scala-bridge_2.11</artifactId>
+            <artifactId>flink-table-api-scala-bridge_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.flink</groupId>
-                    <artifactId>flink-streaming-scala_2.11</artifactId>
+                    <artifactId>flink-streaming-scala_${scala.binary.version}</artifactId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>flink-streaming-java_2.11</artifactId>
+                    <artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
                     <groupId>org.apache.flink</groupId>
                 </exclusion>
             </exclusions>
@@ -195,7 +195,7 @@ SOFTWARE.
         <!-- https://mvnrepository.com/artifact/org.scalatest/scalatest_2.10 -->
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
+            <artifactId>scalatest_${scala.binary.version}</artifactId>
             <version>3.0.6</version>
             <scope>test</scope>
         </dependency>
@@ -226,32 +226,32 @@ SOFTWARE.
         <!-- Apache Flink dependencies -->
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-scala_2.11</artifactId>
+            <artifactId>flink-scala_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-streaming-scala_2.11</artifactId>
+            <artifactId>flink-streaming-scala_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-clients_2.11</artifactId>
+            <artifactId>flink-clients_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-kafka_2.11</artifactId>
+            <artifactId>flink-connector-kafka_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka_2.11</artifactId>
+            <artifactId>kafka_${scala.binary.version}</artifactId>
             <version>2.2.0</version>
             <scope>test</scope>
             <exclusions>
@@ -299,19 +299,19 @@ SOFTWARE.
             <dependencies>
                 <dependency>
                     <groupId>org.apache.flink</groupId>
-                    <artifactId>flink-scala_2.11</artifactId>
+                    <artifactId>flink-scala_${scala.binary.version}</artifactId>
                     <version>${flink.version}</version>
                     <scope>compile</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.apache.flink</groupId>
-                    <artifactId>flink-streaming-scala_2.11</artifactId>
+                    <artifactId>flink-streaming-scala_${scala.binary.version}</artifactId>
                     <version>${flink.version}</version>
                     <scope>compile</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.apache.flink</groupId>
-                    <artifactId>flink-clients_2.11</artifactId>
+                    <artifactId>flink-clients_${scala.binary.version}</artifactId>
                     <version>${flink.version}</version>
                     <scope>compile</scope>
                 </dependency>
@@ -338,9 +338,9 @@ SOFTWARE.
                             <rules>
                                 <bannedDependencies>
                                     <excludes>
-                                        <exclude>org.apache.flink:flink-streaming-scala_2.11:*:*:compile</exclude>
-                                        <exclude>org.apache.flink:flink-streaming-java_2.11:*:*:compile</exclude>
-                                        <exclude>org.apache.flink:flink-clients_2.11:*:*:compile</exclude>
+                                        <exclude>org.apache.flink:flink-streaming-scala_${scala.binary.version}:*:*:compile</exclude>
+                                        <exclude>org.apache.flink:flink-streaming-java_${scala.binary.version}:*:*:compile</exclude>
+                                        <exclude>org.apache.flink:flink-clients_${scala.binary.version}:*:*:compile</exclude>
                                     </excludes>
                                 </bannedDependencies>
                             </rules>
