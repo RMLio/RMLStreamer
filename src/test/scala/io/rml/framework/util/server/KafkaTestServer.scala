@@ -23,6 +23,7 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
   val producer: KafkaProducer[String, String] = new KafkaProducer[String, String](producerProps())
   val defaultTopic = "demo"
   val defaultDir = TestProperties.getTempDir(test).toString
+  //val adminClient =
 
 
 
@@ -170,6 +171,7 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
     props.put("log.dir", defaultDir)
     props.put("host.name", "localhost")
     props.put("delete.topic.enable", "true")
+    props.put("offsets.topic.replication.factor", "1")  // by default it will expect 3
     props
   }
 

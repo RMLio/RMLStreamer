@@ -98,9 +98,10 @@ object Main extends Logging {
     logInfo("Output path: " + outputPath)
     logInfo("Output socket: " + outputSocket)
     logInfo("Kafka brokers: " +  kafkaBrokers)
-    logInfo("Kafka Topic: " +  kafkaTopic)
+    logInfo("Kafka output topic: " +  kafkaTopic)
     logInfo("Post-process: "  + postProcessor.toString)
     logInfo("Kafka Partition: " +  partitionID)
+    logInfo("Kafka partition format: " + partitionFormatString)
 
 
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.
@@ -145,7 +146,7 @@ object Main extends Logging {
       if (outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
 
       else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE){
-        val optConnectFact = KafkaConnectorVersionFactory(Kafka010)
+        val optConnectFact = KafkaConnectorVersionFactory()
         val kafkaPartitionerProperties =  new Properties()
 
         kafkaPartitionerProperties.setProperty(RMLPartitioner.PARTITION_ID_PROPERTY,  partitionID)
@@ -289,7 +290,7 @@ object Main extends Logging {
 
     // map: (parent triples map identifier, name of the variable to join on, the value of it) => generated subject string
     // this map contains the subjects from the static data source in order to perform the join.
-    val parentTriplesMap2JoinParentSource2JoinParentValue2Subject = getStaticParentSourceItems(formattedMapping)
+    val parentTriplesMapId2JoinParentSource2JoinParentValue2ParentItem = getStaticParentSourceItems(formattedMapping)
 
     val processedDataStreams: Iterable[DataStream[String]] = tm2Stream.map(entry => {
       val triplesMap = entry._1
@@ -308,7 +309,7 @@ object Main extends Logging {
           .map(childItem => {
             val childRef = childItem.refer(joinedStreamTm.joinCondition.get.child.identifier).get.head
             // for every child ref from the streaming data, we look up the subject item from the static data (saved before in a map)
-            val parentItem = parentTriplesMap2JoinParentSource2JoinParentValue2Subject((parentTmId, joinParentSource, childRef))
+            val parentItem = parentTriplesMapId2JoinParentSource2JoinParentValue2ParentItem((parentTmId, joinParentSource, childRef))
             // the actual join
             val joinedItem = JoinedItem(childItem, parentItem)
             joinedItem
@@ -347,7 +348,7 @@ object Main extends Logging {
   def getStaticParentSourceItems(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor)
   : Map[(String, String, String), Item] = {
     // map: (parent triples map identiefier, name of the variable to join on, the value of it) => generated subject string
-    var parentTriplesMap2JoinParentSource2JoinParentValue2Subject = mutable.HashMap.empty[(String, String, String), Item]
+    var parentTriplesMapId2JoinParentSource2JoinParentValue2ParentItem = mutable.HashMap.empty[(String, String, String), Item]
 
     formattedMapping.joinedSteamTriplesMaps.foreach(joinedTm => {
       // identify the parent triples map
@@ -375,11 +376,11 @@ object Main extends Logging {
         .collect()
         .iterator.foreach(tuple => {
           val parentTriplesMap2JoinId2JoinValue = (parentTm.identifier, tuple._1, tuple._2)
-          parentTriplesMap2JoinParentSource2JoinParentValue2Subject.put(parentTriplesMap2JoinId2JoinValue, tuple._3)
+          parentTriplesMapId2JoinParentSource2JoinParentValue2ParentItem.put(parentTriplesMap2JoinId2JoinValue, tuple._3)
         })
     })
 
-    parentTriplesMap2JoinParentSource2JoinParentValue2Subject.toMap
+    parentTriplesMapId2JoinParentSource2JoinParentValue2ParentItem.toMap
   }
 
   /**
@@ -547,7 +548,7 @@ object Main extends Logging {
           })
 
           // process the JoinedItems in an engine
-          .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements")
+          .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items")
 
           // format the list of triples as strings
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)

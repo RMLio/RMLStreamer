@@ -88,7 +88,7 @@ object CSVItem  extends  Logging{
 
       CSVItem(record)
     } catch {
-      case e: IOException => new EmptyItem
+      case e: IOException => logError("Error while parsing CSV: " + e.getMessage + " | " + csvLine); new EmptyItem
       case e: IndexOutOfBoundsException => new EmptyItem
     }
 
