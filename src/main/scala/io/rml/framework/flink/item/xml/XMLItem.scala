@@ -122,7 +122,7 @@ object XMLItem extends Logging {
         try {
           // set the xpath expression
           ap.selectXPath(xpath)
-          val result = XMLIterator(ap, vn, namespaces).flatten
+          val result = XMLIterator(ap, vn, namespaces, xpath).flatten
           Some(result)
 
         } catch {
