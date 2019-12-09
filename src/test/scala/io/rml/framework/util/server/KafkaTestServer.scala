@@ -4,14 +4,15 @@ import java.util.Properties
 
 import io.rml.framework.util.TestProperties
 import io.rml.framework.util.logging.Logger
-import kafka.admin.AdminUtils
 import kafka.server.{KafkaConfig, KafkaServerStartable}
-import kafka.utils.ZkUtils
 import org.I0Itec.zkclient.ZkClient
 import org.apache.commons.io.FileUtils
 import org.apache.curator.test.TestingServer
+import org.apache.kafka.clients.admin.{AdminClient, NewTopic}
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
+import scala.collection.JavaConverters._
+import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
 case class KafkaTestServer(var topics: List[String], test: String) extends TestServer {
@@ -19,13 +20,10 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
   var zk: Option[TestingServer] = None
   var kafka: Option[KafkaServerStartable] = None
   var zkClient: Option[ZkClient] = None
-  var zkUtils: Option[ZkUtils] = None
+  var adminClient: Option[AdminClient] = None
   val producer: KafkaProducer[String, String] = new KafkaProducer[String, String](producerProps())
   val defaultTopic = "demo"
-  val defaultDir = TestProperties.getTempDir(test).toString
-  //val adminClient =
-
-
+  val defaultDir: String = TestProperties.getTempDir(test).getAbsolutePath
 
   override def setup(): Unit = {
     val properties = serverProperties()
@@ -34,11 +32,9 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
     val config = new KafkaConfig(properties)
 
     kafka = Some(new KafkaServerStartable(config))
-
-
     kafka.get.startup()
+    adminClient = Some(AdminClient.create(properties))
     topicSetup(topicProps(defaultTopic))
-
   }
 
   private def removeExtensions(fileName: String): String = {
@@ -46,7 +42,6 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
   }
 
   override def writeData(input: List[TestData])(implicit executur: ExecutionContextExecutor): Unit = {
-
 
     /**
       * Create topics for each test data defined by TestData(topic, data)
@@ -72,7 +67,6 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
 
   }
 
-
   /**
     * Write one batch of data to a topic
     *
@@ -91,32 +85,19 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
 
   override def reset(): Unit = {
     if (zkClient.isDefined) {
-      topics foreach { t => {
-        AdminUtils.deleteTopic(zkUtils.get, t)
-        zkClient.get.deleteRecursive(ZkUtils.getTopicPath(t))
-      }
-
-      }
-
-
+      adminClient.get.deleteTopics(topics.asJava)
     }
-
-
     topics = List(defaultTopic)
   }
 
   override def tearDown(): Unit = {
     producer.close()
-
-    Logger.logInfo(s"Server deleting topics: $topics")
-    if (zkClient.isDefined) {
-
-      for (t <- topics) {
-        AdminUtils.deleteTopic(zkUtils.get, t)
-      }
-
+    if (adminClient.isDefined)  {
+      Logger.logInfo(s"Server deleting topics: $topics")
+      adminClient.get.deleteTopics(topics.asJava)
+      adminClient.get.close()
+      Logger.logInfo("Server finish deleting kafka topics! ")
     }
-    Logger.logInfo("Server finish deleting kafka topics! ")
     if (kafka.isDefined) kafka.get.shutdown()
     if (zk.isDefined) zk.get.close()
     cleanUpLogs()
@@ -124,29 +105,16 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
 
   //https://stackoverflow.com/questions/16946778/how-can-we-create-a-topic-in-kafka-from-the-ide-using-api
   def topicSetup(prop: Properties): Unit = {
-    if (zkClient.isEmpty) {
-      val sessionTimeoutMs = 10000
-      val connectionTimeoutMs = 10000
-      val clientConnectionTuple = ZkUtils.createZkClientAndConnection(prop.getProperty("zookeeper.connect"), sessionTimeoutMs, connectionTimeoutMs)
-
-
-      zkClient = Some(clientConnectionTuple._1)
-      zkUtils = Some(new ZkUtils(clientConnectionTuple._1, clientConnectionTuple._2, false))
-    }
     val topicName = prop.getProperty("topic")
     val numPartitions = 1
     val replicationFactor = 1
-    val topicConfig = new Properties
-
-    AdminUtils.createTopic(zkUtils.get, topicName, numPartitions, replicationFactor, topicConfig)
+    val topic = new NewTopic(topicName, numPartitions, replicationFactor.toShort)
+    adminClient.get.createTopics(ArrayBuffer(topic).asJava)
   }
-
 
   def cleanUpLogs(): Unit = {
     FileUtils.deleteDirectory(FileUtils.getFile(defaultDir))
-
   }
-
 
   def topicProps(topic: String): Properties = {
     val props = serverProperties()
@@ -166,6 +134,7 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
   def serverProperties(): Properties = {
     val props = new Properties()
     props.put("zookeeper.connect", "localhost:2181")
+    props.put("bootstrap.servers", "localhost:9092")
     props.put("broker.id", "1")
     props.put("port", "9092")
     props.put("log.dir", defaultDir)
@@ -179,9 +148,6 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
     if (inetAddress == null || inetAddress.isEmpty || !inetAddress.contains(":")) {
       throw new IllegalArgumentException("The given connection address in string is invalid.")
     }
-
     inetAddress.split(":")(1).toInt
-
   }
-
 }
