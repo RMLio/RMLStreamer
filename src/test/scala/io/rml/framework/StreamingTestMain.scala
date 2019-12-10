@@ -133,7 +133,7 @@ object StreamingTestMain {
         _ =>
         //Await.result(resetTestStates(jobID, cluster), Duration.Inf)
         Logger.logInfo(s"Cluster job $jobID done")
-        resetTestStates(jobID, cluster)
+        Await.ready(resetTestStates(jobID, cluster), Duration.Inf)
       }
     }
   }
@@ -145,6 +145,7 @@ object StreamingTestMain {
       Future {
         StreamTestUtil.cancelJob(jobID, cluster)
         while(!cluster.getJobStatus(jobID).get().isTerminalState){
+          Thread.sleep(100)
         }
       }
     }

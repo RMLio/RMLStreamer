@@ -94,12 +94,23 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
     producer.close()
     if (adminClient.isDefined)  {
       Logger.logInfo(s"Server deleting topics: $topics")
-      adminClient.get.deleteTopics(topics.asJava)
+      val deleteResults = adminClient.get.deleteTopics(topics.asJava)
+      deleteResults.all().get() // wait until topics are really deleted!
       adminClient.get.close()
-      Logger.logInfo("Server finish deleting kafka topics! ")
+      Logger.logInfo("Server deleting kafka topics complete")
     }
-    if (kafka.isDefined) kafka.get.shutdown()
-    if (zk.isDefined) zk.get.close()
+    if (kafka.isDefined) {
+      Logger.logInfo("Shutting down Kafka server")
+      kafka.get.shutdown()
+      kafka.get.awaitShutdown() // wait untile server has really been shut down.
+      Logger.logInfo("Shutting down Kafka server complete")
+
+    }
+    if (zk.isDefined) {
+      Logger.logInfo("Closing down zookeeper")
+      zk.get.close()
+      Logger.logInfo("Closing down zookeeper done.")
+    }
     cleanUpLogs()
   }
 
@@ -113,7 +124,10 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
   }
 
   def cleanUpLogs(): Unit = {
-    FileUtils.deleteDirectory(FileUtils.getFile(defaultDir))
+    val logsFile = FileUtils.getFile(defaultDir)
+    Logger.logInfo(s"Cleaning up logs in ${logsFile.getAbsolutePath}")
+    FileUtils.deleteDirectory(logsFile)
+    Logger.logInfo(s"Cleaning up logs in ${logsFile.getAbsolutePath} done.")
   }
 
   def topicProps(topic: String): Properties = {
@@ -141,6 +155,7 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
     props.put("host.name", "localhost")
     props.put("delete.topic.enable", "true")
     props.put("offsets.topic.replication.factor", "1")  // by default it will expect 3
+    props.put("offsets.topic.num.partitions", "1")  // by default it will expect 3
     props
   }
 

@@ -73,17 +73,17 @@ object StreamTestUtil {
     * @return JobID of the submitted job which can be used later on to cancel/stop
     */
   def submitJobToCluster[T](cluster: MiniCluster, dataStream: DataStream[T], name: String)(implicit executur: ExecutionContextExecutor): Future[JobID] =
-
     Future {
-      while (cluster.requestClusterOverview().get().getNumJobsRunningOrPending > 1) {
-        Thread.sleep(100)
+      Logger.logInfo(s"Submitting job ${name} to cluster")
+      while (cluster.requestClusterOverview().get().getNumJobsRunningOrPending > 0) {
+        Thread.sleep(500)
       }
 
       val graph = dataStream.executionEnvironment.getStreamGraph
       graph.setJobName(name)
       val jobGraph: JobGraph = graph.getJobGraph
       cluster.runDetached(jobGraph)
-      Logger.logInfo(cluster.requestClusterOverview().get().getNumJobsRunningOrPending().toString)
+      Logger.logInfo("Submitted. Jobs running: " + cluster.requestClusterOverview().get().getNumJobsRunningOrPending.toString)
 
       jobGraph.getJobID
 
@@ -113,7 +113,7 @@ object StreamTestUtil {
     val configuration = new MiniClusterConfiguration.Builder()
       .setConfiguration(customConfig)
       .setNumTaskManagers(1)
-      .setNumSlotsPerTaskManager(100)
+      .setNumSlotsPerTaskManager(50)
       .build()
     // start cluster
     val cluster = new MiniCluster(configuration)
