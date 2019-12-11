@@ -117,7 +117,7 @@ object StreamTestUtil {
     */
 
   def getClusterFuture(test: String)(implicit executor: ExecutionContextExecutor): Future[MiniCluster] = {
-    Logger.logInfo("Starting up cluster....")
+    Logger.logInfo("Starting up Flink cluster....")
 
     val customConfig = new Configuration()
     customConfig.setString("io.tmp.dirs", TestProperties.getTempDir(test).toString)
@@ -131,7 +131,7 @@ object StreamTestUtil {
     val cluster = new MiniCluster(configuration)
 
     cluster.start()
-    Logger.logInfo("Cluster started")
+    Logger.logInfo("Flink cluster started")
     Future.successful(cluster)
   }
 

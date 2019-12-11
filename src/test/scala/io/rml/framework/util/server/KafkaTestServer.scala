@@ -26,6 +26,7 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
   val defaultDir: String = TestProperties.getTempDir(test).getAbsolutePath
 
   override def setup(): Unit = {
+    Logger.logInfo("Setting up Kafka server...")
     val properties = serverProperties()
     zk = Some(new TestingServer(getZkPort(properties.getProperty("zookeeper.connect"))))
     zk.get.start()
@@ -35,6 +36,7 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
     kafka.get.startup()
     adminClient = Some(AdminClient.create(properties))
     topicSetup(topicProps(defaultTopic))
+    Logger.logInfo("Setting up Kafka server done.")
   }
 
   private def removeExtensions(fileName: String): String = {
@@ -116,11 +118,14 @@ case class KafkaTestServer(var topics: List[String], test: String) extends TestS
 
   //https://stackoverflow.com/questions/16946778/how-can-we-create-a-topic-in-kafka-from-the-ide-using-api
   def topicSetup(prop: Properties): Unit = {
+    Logger.logInfo("Setting up topics...")
     val topicName = prop.getProperty("topic")
     val numPartitions = 1
     val replicationFactor = 1
     val topic = new NewTopic(topicName, numPartitions, replicationFactor.toShort)
-    adminClient.get.createTopics(ArrayBuffer(topic).asJava)
+    val createTopicsResult = adminClient.get.createTopics(ArrayBuffer(topic).asJava)
+    createTopicsResult.all().get()  // wait for completion of creating topics
+    Logger.logInfo("Setting up topics done.")
   }
 
   def cleanUpLogs(): Unit = {

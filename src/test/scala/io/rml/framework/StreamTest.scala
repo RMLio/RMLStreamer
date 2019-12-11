@@ -53,21 +53,28 @@ abstract class StreamTest(val streamType: String, val passing: Array[(String, St
 
         val result = executedFuture andThen {
           case _ =>
+            cluster.map(c => {
+              Logger.logInfo("Stopping Flink cluster...")
+              c.close()
+              Logger.logInfo("Flink cluster stopped!")
+            }).wait()
             server.tearDown()
-            cluster.map( c => c.close())
             TestUtil.tmpCleanup(test)
+
         } andThen {
           case Success(_) =>
             Logger.logSuccess(s"Test passed!!")
             Logger.lineBreak(50)
 
             succeed
+
         } andThen {
           case Failure(exception) =>
             Logger.logError(exception.toString)
             Logger.lineBreak(50)
 
             fail
+
         }
 
         Await.result(result, Duration.Inf)

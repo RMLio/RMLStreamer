@@ -45,7 +45,7 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
       serverChannel = Some(serverBootstrap.bind.sync)
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Logger.logError("Error while setting up TCP server: ", e)
     }
   }
 
@@ -65,6 +65,7 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
   }
 
   override def tearDown(): Unit = {
+    Logger.logInfo("Stopping TCP server")
     if (serverChannel.isDefined) {
       val ch = serverChannel.get
 
@@ -73,6 +74,7 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
     if (group.isDefined) {
       group.get.shutdownGracefully().await()
     }
+    Logger.logInfo("TCP server stopped")
   }
 
 
@@ -119,7 +121,7 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
 
     @throws[Exception]
     override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = {
-      cause.printStackTrace()
+      Logger.logError("Error while using TCP server: ", cause)
       ctx.close
     }
   }
