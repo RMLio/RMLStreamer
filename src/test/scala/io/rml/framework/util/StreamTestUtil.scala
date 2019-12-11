@@ -15,6 +15,7 @@ import org.apache.flink.runtime.messages.Acknowledge
 import org.apache.flink.runtime.minicluster.{MiniCluster, MiniClusterConfiguration}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 
+import scala.collection.JavaConverters._
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -78,13 +79,16 @@ object StreamTestUtil {
         Thread.sleep(500)
       }
 
-      dataStream.executionConfig.setParallelism(4).setMaxParallelism(4)
-      dataStream.executionEnvironment.setParallelism(4)
-      dataStream.executionEnvironment.setMaxParallelism(4)
+      // limit the parallelism in a dozen of places in order to not consume all slots on the integration test server.
+      val parallelism = 2
+      dataStream.executionConfig.setParallelism(parallelism).setMaxParallelism(parallelism)
+      dataStream.executionEnvironment.setParallelism(parallelism)
+      dataStream.executionEnvironment.setMaxParallelism(parallelism)
+
       val graph = dataStream.executionEnvironment.getStreamGraph
       graph.setJobName(name)
+      graph.getStreamNodes.asScala.foreach(node => {node.setParallelism(parallelism)})
       val jobGraph: JobGraph = graph.getJobGraph
-      
       cluster.runDetached(jobGraph)
       Logger.logInfo("Submitted. Jobs running: " + cluster.requestClusterOverview().get().getNumJobsRunningOrPending.toString)
 
