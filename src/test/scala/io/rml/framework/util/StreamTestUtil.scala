@@ -37,7 +37,6 @@ object StreamTestUtil {
     // read the mapping
     val formattedMapping = MappingTestUtil.processFilesInTestFolder(testCaseFolder.getAbsolutePath)
     val stream = Main.createStreamFromFormattedMapping(formattedMapping.head)
-
     stream
   }
 
@@ -79,9 +78,13 @@ object StreamTestUtil {
         Thread.sleep(500)
       }
 
+      dataStream.executionConfig.setParallelism(4).setMaxParallelism(4)
+      dataStream.executionEnvironment.setParallelism(4)
+      dataStream.executionEnvironment.setMaxParallelism(4)
       val graph = dataStream.executionEnvironment.getStreamGraph
       graph.setJobName(name)
       val jobGraph: JobGraph = graph.getJobGraph
+      
       cluster.runDetached(jobGraph)
       Logger.logInfo("Submitted. Jobs running: " + cluster.requestClusterOverview().get().getNumJobsRunningOrPending.toString)
 
