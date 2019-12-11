@@ -80,14 +80,19 @@ object StreamTestUtil {
       }
 
       // limit the parallelism in a dozen of places in order to not consume all slots on the integration test server.
+      // the maxParallelism has to be more than the sum of the parallelisms of the (sub)tasks
       val parallelism = 2
-      dataStream.executionConfig.setParallelism(parallelism).setMaxParallelism(parallelism)
+      val maxParallelism = parallelism * 10
+      dataStream.executionConfig.setParallelism(parallelism).setMaxParallelism(maxParallelism)
       dataStream.executionEnvironment.setParallelism(parallelism)
-      dataStream.executionEnvironment.setMaxParallelism(parallelism)
+      dataStream.executionEnvironment.setMaxParallelism(maxParallelism)
 
       val graph = dataStream.executionEnvironment.getStreamGraph
       graph.setJobName(name)
-      graph.getStreamNodes.asScala.foreach(node => {node.setParallelism(parallelism)})
+      graph.getStreamNodes.asScala.foreach(node => {
+        node.setParallelism(parallelism)
+        node
+      })
       val jobGraph: JobGraph = graph.getJobGraph
       cluster.runDetached(jobGraph)
       Logger.logInfo("Submitted. Jobs running: " + cluster.requestClusterOverview().get().getNumJobsRunningOrPending.toString)
