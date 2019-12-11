@@ -1,13 +1,14 @@
 package io.rml.framework.util.server
 
 import java.net.InetSocketAddress
+import java.nio.charset.StandardCharsets
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel._
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
-import io.netty.util.CharsetUtil
+import io.netty.util.{CharsetUtil, ReferenceCountUtil}
 import io.rml.framework.util.logging.Logger
 
 import scala.concurrent.{ExecutionContextExecutor, Future, Promise}
@@ -17,17 +18,18 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
   val lock: AnyRef with Specializable = AnyRef
   var promiseChContext: Promise[ChannelHandlerContext] = Promise[ChannelHandlerContext]()
   var serverChannel: Option[ChannelFuture] = None
+  var group: Option[NioEventLoopGroup] = None
 
   override def setup(): Unit = {
     setup(port)
   }
 
   def setup(port: Int, messages: Iterator[String] = Iterator.empty): Unit = {
-    val group = new NioEventLoopGroup
+    group = Some(new NioEventLoopGroup)
 
     try {
       val serverBootstrap = new ServerBootstrap()
-      serverBootstrap.group(group)
+      serverBootstrap.group(group.get)
 
       serverBootstrap.channel(classOf[NioServerSocketChannel])
       serverBootstrap.localAddress(new InetSocketAddress("localhost", port))
@@ -48,16 +50,15 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
   }
 
   override def writeData(messages:  List[TestData])(implicit executur: ExecutionContextExecutor): Unit = {
-    //TODO: Start new connection for every batch if required!!
     getChCtxFuture map { ctx =>
       Logger.logInfo(ctx.channel().toString)
       for (batch <- messages) {
         for (el <- batch.data) {
           el.split("\n").foreach(Logger.logInfo)
-          val byteBuff = ctx.alloc.buffer(el.length)
-          byteBuff.writeBytes(el.getBytes())
-          ctx.channel.writeAndFlush(byteBuff)
-          //Thread.sleep(2000)
+          val bytesToSend = el.getBytes(StandardCharsets.UTF_8)
+          val byteBuff = ctx.alloc.buffer(bytesToSend.length)
+          byteBuff.writeBytes(bytesToSend)
+          ctx.channel.writeAndFlush(byteBuff).await()
         }
       }
     }
@@ -67,7 +68,10 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
     if (serverChannel.isDefined) {
       val ch = serverChannel.get
 
-      ch.channel().close().sync().await()
+      ch.channel().close().await()
+    }
+    if (group.isDefined) {
+      group.get.shutdownGracefully().await()
     }
   }
 
@@ -84,8 +88,9 @@ case class TCPTestServer(port: Int = 9999) extends TestServer {
     override def channelRead(ctx: ChannelHandlerContext, msge: Any): Unit = {
       val inBuffer = msge.asInstanceOf[ByteBuf]
       val received = inBuffer.toString(CharsetUtil.UTF_8)
+      ReferenceCountUtil.release(msge)
 
-      System.out.println("Server received: " + received)
+      Logger.logInfo("TCPServer received: " + received)
 
     }
 

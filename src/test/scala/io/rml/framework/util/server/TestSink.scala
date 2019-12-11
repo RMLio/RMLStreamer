@@ -4,8 +4,8 @@ import akka.actor.{ActorSystem, Cancellable}
 import io.rml.framework.util.logging.Logger
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
 
-import scala.concurrent.{ExecutionContextExecutor, Future, Promise}
 import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContextExecutor, Future, Promise}
 
 /**
   * This object will collect the output of rml generation from a data stream into
@@ -87,8 +87,8 @@ class TestSink extends SinkFunction[String] {
 
 
   override def invoke(value: String): Unit = {
-
     TestSink.synchronized {
+      Logger.logInfo(s"Sink received [${value}]")
       try {
         if (scheduledTask.isDefined) {
           scheduledTask.get.cancel()
@@ -106,6 +106,7 @@ class TestSink extends SinkFunction[String] {
       if (setTriples == expectedTriples) {
         sinkPromise success true
       } else {
+        Logger.logInfo("Waiting 3 more seconds for input...")
         startCountDown(3 second)
       }
     }

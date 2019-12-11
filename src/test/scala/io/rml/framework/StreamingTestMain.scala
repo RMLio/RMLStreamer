@@ -1,6 +1,6 @@
 package io.rml.framework
 
-import java.io.File
+import java.io.{File, StringReader}
 import java.util.concurrent.Executors
 
 import io.rml.framework.engine.PostProcessor
@@ -14,6 +14,8 @@ import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.runtime.minicluster.MiniCluster
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+import org.apache.jena.rdf.model.ModelFactory
+import org.apache.jena.riot.Lang
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
@@ -96,9 +98,7 @@ object StreamingTestMain {
 
 
       Logger.logInfo("Datastream created")
-      val sink = TestSink()
-      val expectedOutput = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
-      TestSink.setExpectedTriples(Sanitizer.sanitize(expectedOutput))
+      val sink = TestSink2()
       Logger.logInfo("sink created")
       dataStream.addSink(sink)
 
@@ -112,32 +112,36 @@ object StreamingTestMain {
       val inputData = StreamDataSourceTestUtil.processFilesInTestFolder(folder.toString)
 
       Logger.logInfo(s"Start reading input data")
-      TestSink.startCountDown(10 second)
 
       Logger.logInfo(inputData.toString())
       server.writeData(inputData)
 
       Logger.logInfo("Input Data sent to server")
 
+      // if we don't expect output, don't wait too long
+      val expectedOutput = getExpectedOutputs(folder)
+      var counter = if (expectedOutput.isEmpty) 10 else 100
 
-      TestSink.sinkFuture flatMap {
-        _ =>
-          Logger.logInfo(s"Sink's promise completion status: ${TestSink.sinkPromise.isCompleted}")
-          val either = StreamingTestMain.compareResults(folder, TestSink.getTriples.filter(!_.isEmpty))
-          TestSink.reset()
-          either match {
-            case Left(e) => Future.failed(new RMLException(e))
-            case Right(e) => Future.successful()
-          }
-      } flatMap {
-        _ =>
-        //Await.result(resetTestStates(jobID, cluster), Duration.Inf)
-        Logger.logInfo(s"Cluster job $jobID done")
-        Await.ready(resetTestStates(jobID, cluster), Duration.Inf)
+      while (TestSink2.getTriples().isEmpty && counter > 0) {
+        Thread.sleep(300)
+        counter -= 1
+        if (counter % 10 == 0) {
+          Logger.logInfo("Waiting for output from the streamer...")
+        }
+      }
+      Thread.sleep(300)
+
+
+      val resultTriples = TestSink2.getTriples()
+      Logger.logInfo(s"Test got a result of ${resultTriples.length} triple(s)")
+
+      val either = StreamingTestMain.compareResults(folder, expectedOutput, resultTriples)
+      either match {
+        case Left(e) => Future.failed(new RMLException(e))
+        case Right(e) => Future.successful()
       }
     }
   }
-
   def resetTestStates(jobID: JobID, cluster: MiniCluster)(implicit executionContextExecutor: ExecutionContextExecutor): Future[Unit] = {
 
     // Cancel the job
@@ -151,41 +155,34 @@ object StreamingTestMain {
     }
   }
 
-  def compareResults(folder: File, unsanitizedOutput: List[String]): Either[String,String] = {
-
-    var expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
-    expectedOutputs = Sanitizer.sanitize(expectedOutputs)
+  def compareResults(folder: File, expectedOutputs: Set[String], unsanitizedOutput: List[String]): Either[String,String] = {
     val generatedOutputs = Sanitizer.sanitize(unsanitizedOutput)
 
+    if (expectedOutputs nonEmpty) {
+      val expectedStr = expectedOutputs.mkString("\n")
+      val generatedStr = generatedOutputs.mkString("\n")
 
-    Logger.logInfo(List("Generated output: ", generatedOutputs.mkString("\n")).mkString("\n"))
-    Logger.logInfo(List("Expected Output: ", expectedOutputs.mkString("\n")).mkString("\n"))
+      Logger.logInfo(List("Generated output: ", generatedStr).mkString("\n"))
+      Logger.logInfo(List("Expected Output: ", expectedStr).mkString("\n"))
 
+      val expectedModel = ModelFactory.createDefaultModel()
+      expectedModel.read(new StringReader(expectedStr), "base", Lang.NQUADS.getName)
 
-    /**
-      * Check if the generated triple is in the expected output.
-      */
+      val generatedModel = ModelFactory.createDefaultModel()
+      generatedModel.read(new StringReader(generatedStr), "base", Lang.NQUADS.getName)
 
-    Logger.logInfo("Generated size: " + generatedOutputs.size)
-
-    val errorMsgMismatch = Array("Generated output does not match expected output",
-      "Expected: ", expectedOutputs.mkString("\n"),
-      "Generated: ", generatedOutputs.mkString("\n"),
-      s"Test case: ${folder.getName}").mkString("\n")
-
-
-    if (expectedOutputs.nonEmpty && expectedOutputs.size > generatedOutputs.size) {
-      errorMsgMismatch.split("\n").foreach(Logger.logError)
-      return Left(errorMsgMismatch)
-    }
-
-    for (generatedTriple <- generatedOutputs) {
-      if (!expectedOutputs.contains(generatedTriple)) {
-        errorMsgMismatch.split("\n").foreach(Logger.logError)
-        return Left(errorMsgMismatch)
+      if (generatedModel.isIsomorphicWith(expectedModel)) {
+        Right(s"Testcase ${folder.getName} passed streaming test!")
+      } else {
+        Left(s"Generated output does not match expected output:\nExpected:\n${expectedStr}\nGenerated:\n${generatedStr}\n")
       }
+    } else {
+      Right(s"Testcase ${folder.getName} passed streaming test!")
     }
+  }
 
-    Right(s"Testcase ${folder.getName} passed streaming test!")
+  def getExpectedOutputs(folder: File): Set[String] = {
+    var expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
+    Sanitizer.sanitize(expectedOutputs)
   }
 }
