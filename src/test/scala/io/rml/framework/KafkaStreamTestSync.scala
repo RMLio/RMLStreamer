@@ -9,6 +9,8 @@ import org.apache.curator.test.TestingServer
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
+import scala.concurrent.ExecutionContextExecutor
+
 
 /**
   * <p>Copyright 2019 IDLab (Ghent University - imec)</p>
@@ -100,7 +102,7 @@ class KafkaStreamTestSync extends StreamTestSync {
   }
 
 
-  override def writeData(input: List[TestData]): Unit = {
+  override def writeData(input: List[TestData])(implicit executur: ExecutionContextExecutor): Unit = {
     for (batch <- input) {
 
       val topic = if (input.size > 1)

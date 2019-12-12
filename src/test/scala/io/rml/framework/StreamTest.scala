@@ -1,21 +1,5 @@
 package io.rml.framework
 
-import java.nio.file.Path
-import java.util.concurrent.Executors
-
-import io.rml.framework.engine.PostProcessor
-import io.rml.framework.util.fileprocessing.{MappingTestUtil, StreamDataSourceTestUtil}
-import io.rml.framework.util.logging.Logger
-import io.rml.framework.util.server.{KafkaTestServerFactory, TCPTestServerFactory, TestServer}
-import io.rml.framework.util.{StreamTestUtil, TestUtil}
-import org.apache.flink.api.scala.ExecutionEnvironment
-import org.apache.flink.runtime.minicluster.MiniCluster
-import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
-
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
-import scala.util.{Failure, Success}
-
 
 /**
   * <p>Copyright 2019 IDLab (Ghent University - imec)</p>
@@ -24,7 +8,7 @@ import scala.util.{Failure, Success}
   */
 abstract class StreamTest(val streamType: String, val passing: Array[(String, String)]) extends StaticTestSpec with ReadMappingBehaviour {
 
-  val testCases: Array[(Path, String)] = for {
+  /*val testCases: Array[(Path, String)] = for {
     (folder, postProcessor) <- passing
     testCase <- StreamDataSourceTestUtil.getTestCaseFolders(folder).sorted
   } yield (testCase, postProcessor)
@@ -79,6 +63,6 @@ abstract class StreamTest(val streamType: String, val passing: Array[(String, St
 
         Await.result(result, Duration.Inf)
       }
-  }
+  }*/
 
 }

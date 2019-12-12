@@ -2,6 +2,7 @@ package io.rml.framework
 
 import java.io.File
 import java.nio.file.{Path, Paths}
+import java.util.concurrent.Executors
 
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.engine.PostProcessor
@@ -16,6 +17,7 @@ import org.apache.flink.runtime.jobgraph.{JobGraph, JobStatus}
 import org.apache.flink.runtime.minicluster.{MiniCluster, MiniClusterConfiguration}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.reflect.io.Directory
 
 /**
@@ -52,7 +54,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   def teardown: Unit
 
   // write data to flink via subclass (Kafka, TCP, ...)
-  def writeData(input: List[TestData])
+  def writeData(input: List[TestData])(implicit executor: ExecutionContextExecutor)
 
   // turn the folder + post processor data into test cases
   logInfo(s"==== Starting ${this.getClass.getSimpleName} ====")
@@ -86,6 +88,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
       // set up the execution environments
       implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
       implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+      implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
       // create data stream and sink
       val dataStream = StreamTestUtil.createDataStream(folder)
