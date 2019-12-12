@@ -36,8 +36,8 @@ class KafkaStreamTestSync extends StreamTestSync {
     super.setup()
     logInfo("Starting Zookeeper...")
     zookeeper = new TestingServer(
-      getZkPort(),
-      new File(getTempDir(), "kafkazookeeper")
+      getZkPort,
+      new File(getTempDir, "kafkazookeeper")
     )
     logInfo("Zookeeper started.")
 
@@ -127,7 +127,7 @@ class KafkaStreamTestSync extends StreamTestSync {
     props.put("bootstrap.servers", "localhost:9092")
     props.put("broker.id", "1")
     props.put("port", "9092")
-    props.put("log.dir", new File(getTempDir(), "kafka").getAbsolutePath)
+    props.put("log.dir", new File(getTempDir, "kafka").getAbsolutePath)
     props.put("host.name", "localhost")
     props.put("delete.topic.enable", "true")
     props.put("offsets.topic.replication.factor", "1")  // by default it will expect 3
