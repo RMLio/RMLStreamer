@@ -33,8 +33,8 @@ class TCPStreamTestSync extends StreamTestSync {
   )
 
 
-  override def setup: Unit = {
-    super.setup
+  override def setup(): Unit = {
+    super.setup()
     lock = AnyRef
     promiseChContext = Promise[ChannelHandlerContext]()
     logInfo("Setting up event loop group...")
@@ -56,11 +56,11 @@ class TCPStreamTestSync extends StreamTestSync {
 
   }
 
-  override def beforeTestCase: Unit = {}
+  override def beforeTestCase(): Unit = {}
 
-  override def afterTestCase: Unit = {}
+  override def afterTestCase(): Unit = {}
 
-  override def teardown: Unit = {
+  override def teardown(): Unit = {
     Logger.logInfo("Stopping TCP server")
     if (serverChannel != null) {
       serverChannel.channel().closeFuture().await(10, TimeUnit.SECONDS)

@@ -27,13 +27,13 @@ class KafkaStreamTestSync extends StreamTestSync {
 
   override def testFolder: String = "stream/kafka"
 
-  override def passingTests = Array(
+  override def passingTests: Array[(String, String)] = Array(
     (testFolder, "noopt"),                // standard streaming tests
     ("stream/kafka_json_ld", "json-ld")   // test with json-ld as output
   )
 
-  override def setup: Unit = {
-    super.setup
+  override def setup(): Unit = {
+    super.setup()
     logInfo("Starting Zookeeper...")
     zookeeper = new TestingServer(
       getZkPort(),
@@ -42,22 +42,22 @@ class KafkaStreamTestSync extends StreamTestSync {
     logInfo("Zookeeper started.")
 
     logInfo("Starting Kafka...")
-    val config = new KafkaConfig(serverProperties())
+    val config = new KafkaConfig(serverProperties)
     kafka = new KafkaServerStartable(config)
     kafka.startup()
     logInfo("Kafka started.")
 
     logInfo("Creating Kafka admin client...")
-    admin = AdminClient.create(serverProperties())
+    admin = AdminClient.create(serverProperties)
     logInfo("Kafka admin client created.")
 
     logInfo("Creating Kafka client...")
-    client = new KafkaProducer[String, String](producerProps())
+    client = new KafkaProducer[String, String](producerProps)
     logInfo("Creating Kafka client created.")
   }
 
 
-  override def beforeTestCase: Unit = {
+  override def beforeTestCase(): Unit = {
     // topics seem to be created automatically...
 
     /*logInfo("Creating Kafka input topic...")
@@ -71,7 +71,7 @@ class KafkaStreamTestSync extends StreamTestSync {
     logInfo("Creating Kafka input topic done.") */
   }
 
-  override def afterTestCase: Unit = {
+  override def afterTestCase(): Unit = {
     logInfo("Deleting Kafka input topic(s)...")
     val topics = admin.listTopics().names().get()
     val deleteResults = admin.deleteTopics(topics)
@@ -80,7 +80,7 @@ class KafkaStreamTestSync extends StreamTestSync {
     logInfo("Kafka input topic(s) deleted.")
   }
 
-  override def teardown: Unit = {
+  override def teardown(): Unit = {
     logInfo("Stopping Kafka admin client...")
     if (admin != null) {
       admin.close()
@@ -121,7 +121,7 @@ class KafkaStreamTestSync extends StreamTestSync {
   /////////////////////////
   // some helper methods //
   /////////////////////////
-  private def serverProperties(): Properties = {
+  private def serverProperties: Properties = {
     val props = new Properties()
     props.put("zookeeper.connect", "localhost:2181")
     props.put("bootstrap.servers", "localhost:9092")
@@ -135,7 +135,7 @@ class KafkaStreamTestSync extends StreamTestSync {
     props
   }
 
-  def producerProps(): Properties = {
+  private def producerProps: Properties = {
     val props = new Properties()
     props.put("bootstrap.servers", "localhost:9092")
     props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
@@ -144,8 +144,8 @@ class KafkaStreamTestSync extends StreamTestSync {
     props
   }
 
-  private def getZkPort(): Int = {
-    val inetAddress = serverProperties().getProperty("zookeeper.connect")
+  private def getZkPort: Int = {
+    val inetAddress = serverProperties.getProperty("zookeeper.connect")
     if (inetAddress == null || inetAddress.isEmpty || !inetAddress.contains(":")) {
       throw new IllegalArgumentException("The given connection address in string is invalid.")
     }

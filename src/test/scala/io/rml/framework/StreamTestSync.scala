@@ -27,34 +27,34 @@ import scala.reflect.io.Directory
   */
 abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour with Logging {
 
-  def testFolder: String
+  protected def testFolder: String
 
   // tuples (folder of test data, post processor to use)
-  def passingTests: Array[(String, String)]
+  protected def passingTests: Array[(String, String)]
 
   // set up things necessary before running actuaol tests
-  def setup: Unit = {
-    val tmpDir = getTempDir()
-    if (tmpDir.exists()) {
+  def setup(): Unit = {
+    val tmpDir = getTempDir
+    if (tmpDir.exists) {
       logInfo(s"Found tmp dir ${tmpDir}. Deleting it.")
       val dir = new Directory(tmpDir)
-      if (!dir.deleteRecursively()) {
+      if (!dir.deleteRecursively) {
         logWarning(s"Could not delete tmp dir ${tmpDir}")
       }
     }
   }
 
   // Things to do before running one test case
-  def beforeTestCase: Unit
+  protected def beforeTestCase(): Unit
 
   // Things to do after running one test case
-  def afterTestCase: Unit
+  protected def afterTestCase(): Unit
 
   // tear down
-  def teardown: Unit
+  protected def teardown(): Unit
 
   // write data to flink via subclass (Kafka, TCP, ...)
-  def writeData(input: List[TestData])(implicit executor: ExecutionContextExecutor)
+  protected def writeData(input: List[TestData])(implicit executor: ExecutionContextExecutor)
 
   // turn the folder + post processor data into test cases
   logInfo(s"==== Starting ${this.getClass.getSimpleName} ====")
@@ -63,10 +63,10 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   "A streamer mapping reader" should behave like validMappingFile(testFolder)
 
   // run setup of subclass
-  setup
+  setup()
 
   // set up Flink
-  val flink: MiniCluster = startFlink()
+  val flink: MiniCluster = startFlink
 
     logInfo("Reading test cases")
   val testCases: Array[(Path, String)] = for {
@@ -80,7 +80,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     //it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
       Logger.lineBreak(50)
       logInfo(s"Running test ${folderPath}")
-      beforeTestCase
+      beforeTestCase()
 
       implicit val postProcessor: PostProcessor = TestUtil.pickPostProcessor(postProcessorName)
       val folder = MappingTestUtil.getFile(folderPath.toString)
@@ -130,15 +130,14 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
 
       // check the results
       val either = StreamingTestMain.compareResults(folder, expectedOutput, resultTriples)
-      /*either match {
-        case Left(e) => fail(s"Test ${folderPath} failed!")
-        case Right(e) => succeed
-      }*/
 
     it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
       either match {
-        case Left(e) => fail(s"Test ${folderPath} failed!")
-        case Right(e) => succeed
+        case Left(e) => fail(e)
+        case Right(e) => {
+          logInfo(e)
+          succeed
+        }
       }
     }
     //}
@@ -150,7 +149,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   /////////////////////////
   // some helper methods //
   /////////////////////////
-  protected def getTempDir(): File = {
+  protected def getTempDir: File = {
     val file = Paths.get(System.getProperty("java.io.tmpdir"), "rml-streamer", this.getClass.getSimpleName).toFile
     if (!file.exists()) {
       file.mkdir()
@@ -163,10 +162,10 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     Logger.logInfo(s"${getClass.getSimpleName}: ${log}")
   }
 
-  def startFlink(): MiniCluster = {
+  private def startFlink: MiniCluster = {
     logInfo("Starting Flink...")
     val customConfig = new Configuration()
-    customConfig.setString("io.tmp.dirs", getTempDir().getAbsolutePath)
+    customConfig.setString("io.tmp.dirs", getTempDir.getAbsolutePath)
     customConfig.setString("rest.bind-port", "50000-51000") // see https://github.com/apache/flink/commit/730eed71ef3f718d61f85d5e94b1060844ca56db
     val configuration = new MiniClusterConfiguration.Builder()
       .setConfiguration(customConfig)
@@ -180,7 +179,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     flink
   }
 
-  def submitJob[T](flink: MiniCluster, dataStream: DataStream[T], name: String): JobID = {
+  private def submitJob[T](flink: MiniCluster, dataStream: DataStream[T], name: String): JobID = {
     logInfo(s"Submitting job ${name} to Flink...")
     val graph = dataStream.executionEnvironment.getStreamGraph
     graph.setJobName(name)
@@ -198,15 +197,15 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     jobId
   }
 
-  def deleteJob(fink: MiniCluster, jobId: JobID): Unit = {
+  private def deleteJob(fink: MiniCluster, jobId: JobID): Unit = {
     logInfo(s"Canceling job ${jobId}...")
     flink.cancelJob(jobId).get()
     Thread.sleep(1000)  // also here: even waiting for the future to complete doesn't guarantee that it's completed!
     logInfo(s"Job ${jobId} canceled.")
   }
 
-  def getExpectedOutputs(folder: File): Set[String] = {
-    var expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
+  private def getExpectedOutputs(folder: File): Set[String] = {
+    val expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
     Sanitizer.sanitize(expectedOutputs)
   }
 }
