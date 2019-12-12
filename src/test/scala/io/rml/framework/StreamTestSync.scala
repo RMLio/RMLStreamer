@@ -1,6 +1,6 @@
 package io.rml.framework
 
-import java.io.File
+import java.io.{File, StringReader}
 import java.nio.file.{Path, Paths}
 import java.util.concurrent.Executors
 
@@ -16,6 +16,8 @@ import org.apache.flink.configuration.Configuration
 import org.apache.flink.runtime.jobgraph.{JobGraph, JobStatus}
 import org.apache.flink.runtime.minicluster.{MiniCluster, MiniClusterConfiguration}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
+import org.apache.jena.rdf.model.ModelFactory
+import org.apache.jena.riot.Lang
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.reflect.io.Directory
@@ -126,10 +128,10 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
       // delete Flink Job
       deleteJob(flink, jobId)
 
-      afterTestCase
+      afterTestCase()
 
       // check the results
-      val either = StreamingTestMain.compareResults(folder, expectedOutput, resultTriples)
+      val either = compareResults(folder, expectedOutput, resultTriples)
 
     it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
       either match {
@@ -144,7 +146,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   }
 
   // run teardown of subclass
-  teardown
+  teardown()
 
   /////////////////////////
   // some helper methods //
@@ -207,5 +209,39 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   private def getExpectedOutputs(folder: File): Set[String] = {
     val expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
     Sanitizer.sanitize(expectedOutputs)
+  }
+
+  private def compareResults(folder: File, expectedOutputs: Set[String], unsanitizedOutput: List[String]): Either[String,String] = {
+    val generatedOutputs = Sanitizer.sanitize(unsanitizedOutput)
+
+    if (expectedOutputs nonEmpty) {
+      val expectedStr = expectedOutputs.mkString("\n")
+      val generatedStr = generatedOutputs.mkString("\n")
+
+      Logger.logInfo(List("Generated output: ", generatedStr).mkString("\n"))
+      Logger.logInfo(List("Expected Output: ", expectedStr).mkString("\n"))
+
+      val expectedModel = ModelFactory.createDefaultModel()
+      try {
+        expectedModel.read(new StringReader(expectedStr), "base", Lang.NQUADS.getName)
+      } catch {
+        case _: Throwable => expectedModel.read(new StringReader(expectedStr), "base", Lang.JSONLD.getName)
+      }
+
+      val generatedModel = ModelFactory.createDefaultModel()
+      try {
+        generatedModel.read(new StringReader(generatedStr), "base", Lang.NQUADS.getName)
+      } catch {
+        case _: Throwable => generatedModel.read(new StringReader(expectedStr), "base", Lang.JSONLD.getName)
+      }
+
+      if (generatedModel.isIsomorphicWith(expectedModel)) {
+        Right(s"Testcase ${folder.getName} passed streaming test!")
+      } else {
+        Left(s"Generated output does not match expected output:\nExpected:\n${expectedStr}\nGenerated:\n${generatedStr}\n")
+      }
+    } else {
+      Right(s"Testcase ${folder.getName} passed streaming test!")
+    }
   }
 }
