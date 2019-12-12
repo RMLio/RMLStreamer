@@ -166,10 +166,18 @@ object StreamingTestMain {
       Logger.logInfo(List("Expected Output: ", expectedStr).mkString("\n"))
 
       val expectedModel = ModelFactory.createDefaultModel()
-      expectedModel.read(new StringReader(expectedStr), "base", Lang.NQUADS.getName)
+      try {
+        expectedModel.read(new StringReader(expectedStr), "base", Lang.NQUADS.getName)
+      } catch {
+        case _ => expectedModel.read(new StringReader(expectedStr), "base", Lang.JSONLD.getName)
+      }
 
       val generatedModel = ModelFactory.createDefaultModel()
-      generatedModel.read(new StringReader(generatedStr), "base", Lang.NQUADS.getName)
+      try {
+        generatedModel.read(new StringReader(generatedStr), "base", Lang.NQUADS.getName)
+      } catch {
+        case _ => generatedModel.read(new StringReader(expectedStr), "base", Lang.JSONLD.getName)
+      }
 
       if (generatedModel.isIsomorphicWith(expectedModel)) {
         Right(s"Testcase ${folder.getName} passed streaming test!")
