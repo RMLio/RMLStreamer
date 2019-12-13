@@ -11,6 +11,7 @@ This document lists the changes for every version.
 * Remove rmls:zookeeper statements from mappings since Kafka 0.10 and higher don't need it
 
 ## 1.2.1
-* Bump Flink to version 1.9.1
-* Bump Kafka to version 2.2.0, use universal Kafka connector
-* Bugfix: when having more than one triples map using the same XML source, things might go wrong  
+* Bump Flink to version 1.9.1.
+* Bump Kafka to version 2.2.0, only use universal Kafka connector.
+* Bugfix: when having more than one triples map using the same XML source, things might go wrong.
+* Revised and refactored tests. Now only one Flink / TCP server / Kafka will run during test suite.

@@ -27,7 +27,7 @@ import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
 import io.rml.framework.engine._
 import io.rml.framework.engine.statement.StatementEngine
-import io.rml.framework.flink.connector.kafka.{KafkaConnectorVersionFactory, PartitionerFormat, RMLPartitioner}
+import io.rml.framework.flink.connector.kafka.{PartitionerFormat, RMLPartitioner, UniversalKafkaConnectorFactory}
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
 import org.apache.flink.api.common.serialization.SimpleStringSchema
@@ -39,10 +39,7 @@ import org.apache.flink.streaming.api.functions.ProcessFunction
 import org.apache.flink.streaming.api.scala.{DataStream, OutputTag, StreamExecutionEnvironment}
 import org.apache.flink.util.Collector
 
-import scala.collection.mutable
-//import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaProducer09}
-
-import scala.collection.immutable
+import scala.collection.{immutable, mutable}
 
 /**
   *
@@ -146,13 +143,11 @@ object Main extends Logging {
       if (outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
 
       else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE){
-        val optConnectFact = KafkaConnectorVersionFactory()
         val kafkaPartitionerProperties =  new Properties()
 
         kafkaPartitionerProperties.setProperty(RMLPartitioner.PARTITION_ID_PROPERTY,  partitionID)
         kafkaPartitionerProperties.setProperty(RMLPartitioner.PARTITION_FORMAT_PROPERTY, partitionFormat.string())
-        val fact = optConnectFact.get
-        fact.applySink[String](kafkaBrokers,kafkaTopic, kafkaPartitionerProperties, new SimpleStringSchema(), stream)
+        UniversalKafkaConnectorFactory.applySink[String](kafkaBrokers,kafkaTopic, kafkaPartitionerProperties, new SimpleStringSchema(), stream)
       }
       // write to a file if the parameter is given
       else if (!outputPath.contains(EMPTY_VALUE)) {
