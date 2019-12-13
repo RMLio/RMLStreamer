@@ -1,25 +1,17 @@
 package io.rml.framework.flink.connector.kafka
 
+import java.lang
 import java.nio.charset.StandardCharsets
-import java.util.{Optional, Properties}
-import java.{lang, util}
+import java.util.Properties
 
 import io.rml.framework.core.internal.Logging
 import org.apache.flink.api.common.serialization.DeserializationSchema
 import org.apache.flink.streaming.api.scala.DataStream
-import org.apache.flink.streaming.connectors.kafka.partitioner.{FlinkFixedPartitioner, FlinkKafkaPartitioner}
 import org.apache.flink.streaming.connectors.kafka._
-import org.apache.flink.streaming.util.serialization.KeyedDeserializationSchema
 import org.apache.kafka.clients.producer.{ProducerConfig, ProducerRecord}
 
 abstract class KafkaConnectorFactory {
   def getSource[T](topic: String, valueDeserializer: DeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T]
-
-  def getSource[T](topic: String, deserializer: KeyedDeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T]
-
-  def getSource[T](topics: util.List[String], deserializationSchema: DeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T]
-
-  def getSource[T](topics: util.List[String], deserializationSchema: KeyedDeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T]
 
   def applySink[T](bootstrapServers: String, rmlPartitionProperties: Properties, topic: String, dataStream: DataStream[T]): Unit
 
@@ -51,35 +43,12 @@ abstract class KafkaConnectorFactory {
       }
     }
   }
-
-  def generatePartitioner[T](properties: Properties): Optional[FlinkKafkaPartitioner[T]] = {
-    val formatString =  properties.getProperty(RMLPartitioner.PARTITION_FORMAT_PROPERTY)
-    val format = PartitionerFormat.fromString(formatString)
-    format match {
-      case FixedPartitioner => Optional.of(new RMLFixedPartitioner(properties))
-      case KafkaPartitioner => Optional.ofNullable(null)
-      case _ => Optional.of(new FlinkFixedPartitioner[T]())
-    }
-  }
-
 }
 
 case object UniversalKafkaConnectorFactory extends KafkaConnectorFactory with Logging {
 
   override def getSource[T](topic: String, valueDeserializer: DeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T] = {
     new FlinkKafkaConsumer[T](topic, valueDeserializer, props)
-  }
-
-  override def getSource[T](topic: String, deserializer: KeyedDeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T] = {
-    new FlinkKafkaConsumer[T](topic, deserializer, props)
-  }
-
-  override def getSource[T](topics: util.List[String], deserializationSchema: DeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T] = {
-    new FlinkKafkaConsumer[T](topics, deserializationSchema, props)
-  }
-
-  override def getSource[T](topics: util.List[String], deserializationSchema: KeyedDeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T] = {
-    new FlinkKafkaConsumer[T](topics, deserializationSchema, props)
   }
 
   override def applySink[T](bootstrapServers: String, rmlPartitionProperties: Properties, topic: String, dataStream: DataStream[T]): Unit = {
