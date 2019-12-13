@@ -143,11 +143,10 @@ object Main extends Logging {
       if (outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
 
       else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE){
-        val kafkaPartitionerProperties =  new Properties()
-
-        kafkaPartitionerProperties.setProperty(RMLPartitioner.PARTITION_ID_PROPERTY,  partitionID)
-        kafkaPartitionerProperties.setProperty(RMLPartitioner.PARTITION_FORMAT_PROPERTY, partitionFormat.string())
-        UniversalKafkaConnectorFactory.applySink[String](kafkaBrokers,kafkaTopic, kafkaPartitionerProperties, new SimpleStringSchema(), stream)
+        val rmlPartitionProperties =  new Properties()
+        rmlPartitionProperties.setProperty(RMLPartitioner.PARTITION_ID_PROPERTY,  partitionID)
+        rmlPartitionProperties.setProperty(RMLPartitioner.PARTITION_FORMAT_PROPERTY, partitionFormat.string())
+        UniversalKafkaConnectorFactory.applySink[String](kafkaBrokers, rmlPartitionProperties, kafkaTopic, stream)
       }
       // write to a file if the parameter is given
       else if (!outputPath.contains(EMPTY_VALUE)) {
