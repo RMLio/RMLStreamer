@@ -82,7 +82,7 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
       */
 
     Logger.logInfo("Generated size: " + generatedOutputs.size)
-    val errorMsgMismatch = Array("Generated output does not match expected output",
+    val errorMsgMismatch = Array(s"Test ${testFolderPath} FAILED: Generated output does not match expected output",
       "Expected: \n" + expectedOutputs.mkString("\n"),
       "Generated: \n" + generatedOutputs.mkString("\n")).mkString("\n")
     if(generatedOutputs.isEmpty){
