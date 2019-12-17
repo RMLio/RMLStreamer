@@ -238,7 +238,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
       if (generatedModel.isIsomorphicWith(expectedModel)) {
         Right(s"Testcase ${folder.getName} passed streaming test!")
       } else {
-        Left(s"Generated output does not match expected output:\nExpected:\n${expectedStr}\nGenerated:\n${generatedStr}\n")
+        Left(s"Testcase ${folder.getName} FAILED: Generated output does not match expected output:\nExpected:\n${expectedStr}\nGenerated:\n${generatedStr}\n")
       }
     } else {
       Right(s"Testcase ${folder.getName} passed streaming test!")
