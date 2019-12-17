@@ -11,7 +11,9 @@ import scala.util.control.Exception
 class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
 
   val failing = Array( "negative_test_cases")
-  val passing = Array(("bugs","noopt")/*, ("rml-testcases","noopt")*/)
+  val passing = Array(
+    ("bugs","noopt"),
+    ("rml-testcases","noopt"))
   val temp = Array(("rml-testcases/temp","noopt") )
 
 
