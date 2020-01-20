@@ -140,6 +140,18 @@ An example of how to define the generation of an RDF stream from a stream in an 
     ];
 ```
 
+**Note on using Kafka with Flink**: As a consumer, the Flink Kafka client never *subscribes* to a topic, but it is
+*assigned* to a topic/partition (even if you declare it to be in a *consumer group* with the `rmls:groupId` predicate). This means that it doesn't do
+anything with the concept *"consumer group"*, except for committing offsets. This means that load is not spread across
+RMLStreamer jobs running in the same consumer group. Instead, each RMLStreamer job is assigned a partition. 
+This has some consequences:
+* When you add multiple RMLStreamer jobs in a consumer group, and the topic it listens to has one partition,
+only one instance will get the input.
+* If there are multiple partitions in the topic and multiple RMLStreamer jobs, it could be that two (or more) jobs
+are assigned a certain partition, resulting in duplicate output.
+
+The only option for spreading load is to use multiple topics, and assign one RMLStreamer job to one topic.
+
 ##### Generating a stream from a file
 ```
 <#TripleMap>
