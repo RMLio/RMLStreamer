@@ -2,9 +2,9 @@
 
 ### Installing Flink
 RMLStreamer runs its jobs on Flink clusters.
-More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.7/tutorials/local_setup.html).
+More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.9/getting-started/tutorials/local_setup.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
-Please note that this version works with Flink 1.9.0 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.0/flink-1.9.0-bin-scala_2.11.tgz).
+Please note that this version works with Flink 1.9.1 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.1/flink-1.9.1-bin-scala_2.11.tgz).
 Note that the latest release version might require another version of Flink, check the README for that version.
 
 ## Installing RMLStreamer
@@ -133,7 +133,7 @@ An example of how to define the generation of an RDF stream from a stream in an 
         rml:source [
             rdf:type rmls:KafkaStream ;
             rmls:broker "broker" ;
-            rmls:groupid "groupid";
+            rmls:groupId "groupId";
             rmls:topic "topic";
         ];
         rml:referenceFormulation ql:JSONPath;
