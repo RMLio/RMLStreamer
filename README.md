@@ -2,9 +2,9 @@
 
 ### Installing Flink
 RMLStreamer runs its jobs on Flink clusters.
-More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.7/tutorials/local_setup.html).
+More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.9/getting-started/tutorials/local_setup.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
-Please note that this version works with Flink 1.9.0 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.0/flink-1.9.0-bin-scala_2.11.tgz).
+Please note that this version works with Flink 1.9.1 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.1/flink-1.9.1-bin-scala_2.11.tgz).
 Note that the latest release version might require another version of Flink, check the README for that version.
 
 ## Installing RMLStreamer
@@ -133,12 +133,24 @@ An example of how to define the generation of an RDF stream from a stream in an 
         rml:source [
             rdf:type rmls:KafkaStream ;
             rmls:broker "broker" ;
-            rmls:groupid "groupid";
+            rmls:groupId "groupId";
             rmls:topic "topic";
         ];
         rml:referenceFormulation ql:JSONPath;
     ];
 ```
+
+**Note on using Kafka with Flink**: As a consumer, the Flink Kafka client never *subscribes* to a topic, but it is
+*assigned* to a topic/partition (even if you declare it to be in a *consumer group* with the `rmls:groupId` predicate). This means that it doesn't do
+anything with the concept *"consumer group"*, except for committing offsets. This means that load is not spread across
+RMLStreamer jobs running in the same consumer group. Instead, each RMLStreamer job is assigned a partition. 
+This has some consequences:
+* When you add multiple RMLStreamer jobs in a consumer group, and the topic it listens to has one partition,
+only one instance will get the input.
+* If there are multiple partitions in the topic and multiple RMLStreamer jobs, it could be that two (or more) jobs
+are assigned a certain partition, resulting in duplicate output.
+
+The only option for spreading load is to use multiple topics, and assign one RMLStreamer job to one topic.
 
 ##### Generating a stream from a file
 ```
