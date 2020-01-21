@@ -215,10 +215,6 @@ The only option for spreading load is to use multiple topics, and assign one RML
         
  ```
  
-##### UML Diagram (Simplified)
- 
- ![alt txt] (images/rml-stream-uml-simplified.png "Uml diagram")
-
 #### RML Stream Vocabulary (non-normative)
 
 Namespace: <http://semweb.mmlab.be/ns/rmls#> 
