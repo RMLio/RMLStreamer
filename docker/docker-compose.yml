@@ -1,0 +1,33 @@
+version: '3'
+services:
+
+  jobmanager:
+    image: flink:1.9.1-scala_2.11
+    expose:
+      - "6123"
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    volumes:
+      - data:/mnt/data
+
+  taskmanager:
+    image: flink:1.9.1-scala_2.11
+    expose:
+      - "6121"
+      - "6122"
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    links:
+      - "jobmanager:jobmanager"
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    volumes:
+      - data:/mnt/data
+
+volumes:
+  # This volume will show with 'docker volume ls' as 'docker_data'
+  data:
