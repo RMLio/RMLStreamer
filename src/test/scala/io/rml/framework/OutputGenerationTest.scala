@@ -11,7 +11,9 @@ import scala.util.control.Exception
 class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
 
   val failing = Array( "negative_test_cases")
-  val passing = Array(("bugs","noopt")/*, ("rml-testcases","noopt")*/)
+  val passing = Array(
+    ("bugs","noopt"),
+    ("rml-testcases","noopt"))
   val temp = Array(("rml-testcases/temp","noopt") )
 
 
@@ -80,7 +82,7 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
       */
 
     Logger.logInfo("Generated size: " + generatedOutputs.size)
-    val errorMsgMismatch = Array("Generated output does not match expected output",
+    val errorMsgMismatch = Array(s"Test ${testFolderPath} FAILED: Generated output does not match expected output",
       "Expected: \n" + expectedOutputs.mkString("\n"),
       "Generated: \n" + generatedOutputs.mkString("\n")).mkString("\n")
     if(generatedOutputs.isEmpty){

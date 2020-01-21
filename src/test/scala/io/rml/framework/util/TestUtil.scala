@@ -35,7 +35,10 @@ object TestUtil {
 
   def tmpCleanup(test: String): Unit = {
     val temp = TestProperties.getTempDir(test)
-    FileUtils.deleteQuietly(temp)
+    if (!FileUtils.deleteQuietly(temp)) {
+      Logger.logWarning("Could not delete temp dir " + temp.getAbsolutePath)
+    }
+
   }
 
 }

@@ -1,0 +1,14 @@
+{
+  "persons": [
+    {
+      "fname": "Sue",
+      "lname": "Jones",
+      "amount": "20.0E0"
+    },
+    {
+      "fname": "Bob",
+      "lname": "Smith",
+      "amount": "30.0E0"
+    }
+  ]
+}

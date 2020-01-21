@@ -15,6 +15,7 @@ import org.apache.flink.runtime.messages.Acknowledge
 import org.apache.flink.runtime.minicluster.{MiniCluster, MiniClusterConfiguration}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 
+import scala.collection.JavaConverters._
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -37,7 +38,6 @@ object StreamTestUtil {
     // read the mapping
     val formattedMapping = MappingTestUtil.processFilesInTestFolder(testCaseFolder.getAbsolutePath)
     val stream = Main.createStreamFromFormattedMapping(formattedMapping.head)
-
     stream
   }
 
@@ -73,17 +73,29 @@ object StreamTestUtil {
     * @return JobID of the submitted job which can be used later on to cancel/stop
     */
   def submitJobToCluster[T](cluster: MiniCluster, dataStream: DataStream[T], name: String)(implicit executur: ExecutionContextExecutor): Future[JobID] =
-
     Future {
-      while (cluster.requestClusterOverview().get().getNumJobsRunningOrPending > 1) {
-        Thread.sleep(100)
+      Logger.logInfo(s"Submitting job ${name} to cluster")
+      while (cluster.requestClusterOverview().get().getNumJobsRunningOrPending > 0) {
+        Thread.sleep(500)
       }
+
+      // limit the parallelism in a dozen of places in order to not consume all slots on the integration test server.
+      // the maxParallelism has to be more than the sum of the parallelisms of the (sub)tasks
+      val parallelism = 2
+      val maxParallelism = parallelism * 10
+      dataStream.executionConfig.setParallelism(parallelism).setMaxParallelism(maxParallelism)
+      dataStream.executionEnvironment.setParallelism(parallelism)
+      dataStream.executionEnvironment.setMaxParallelism(maxParallelism)
 
       val graph = dataStream.executionEnvironment.getStreamGraph
       graph.setJobName(name)
+      graph.getStreamNodes.asScala.foreach(node => {
+        node.setParallelism(parallelism)
+        node
+      })
       val jobGraph: JobGraph = graph.getJobGraph
       cluster.runDetached(jobGraph)
-      Logger.logInfo(cluster.requestClusterOverview().get().getNumJobsRunningOrPending().toString)
+      Logger.logInfo("Submitted. Jobs running: " + cluster.requestClusterOverview().get().getNumJobsRunningOrPending.toString)
 
       jobGraph.getJobID
 
@@ -105,7 +117,7 @@ object StreamTestUtil {
     */
 
   def getClusterFuture(test: String)(implicit executor: ExecutionContextExecutor): Future[MiniCluster] = {
-    Logger.logInfo("Starting up cluster....")
+    Logger.logInfo("Starting up Flink cluster....")
 
     val customConfig = new Configuration()
     customConfig.setString("io.tmp.dirs", TestProperties.getTempDir(test).toString)
@@ -113,13 +125,13 @@ object StreamTestUtil {
     val configuration = new MiniClusterConfiguration.Builder()
       .setConfiguration(customConfig)
       .setNumTaskManagers(1)
-      .setNumSlotsPerTaskManager(100)
+      .setNumSlotsPerTaskManager(50)
       .build()
     // start cluster
     val cluster = new MiniCluster(configuration)
 
     cluster.start()
-    Logger.logInfo("Cluster started")
+    Logger.logInfo("Flink cluster started")
     Future.successful(cluster)
   }
 

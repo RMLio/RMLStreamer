@@ -5,7 +5,7 @@ import java.io.File
 import io.rml.framework.Main
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model.FormattedRMLMapping
-import io.rml.framework.engine.{JsonLDProcessor, NopPostProcessor, PostProcessor}
+import io.rml.framework.engine.{NopPostProcessor, PostProcessor}
 import io.rml.framework.util.logging.Logger
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
@@ -55,7 +55,10 @@ object TripleGeneratorTestUtil extends TestFilesUtil[List[String]] {
          List()
        }
      }catch{
-       case e: Throwable => throw e
+       case e: Throwable => {
+         Logger.logError(s"Processing ${file.getName} FAILED!", e)
+         throw e
+       }
      }
   }
 
