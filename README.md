@@ -1,4 +1,14 @@
-## RML Streamer
+## RMLStreamer
+
+The RMLStreamer generates [RDF](https://www.w3.org/2001/sw/wiki/RDF) from files or data streams
+using [RML](http://rml.io/). The difference with other RML implementations is that it can handle
+*big* input files and *continuous data streams*, like sensor data.
+
+### Quick start
+
+If you want to get the RMLStreamer up and running within 5 minutes using Docker, check out [docker/README.md](docker/README.md)
+
+If you want to deploy it yourself, read on. 
 
 ### Installing Flink
 RMLStreamer runs its jobs on Flink clusters.
@@ -7,14 +17,18 @@ At least a local cluster must be running in order to start executing RML Mapping
 Please note that this version works with Flink 1.9.1 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.1/flink-1.9.1-bin-scala_2.11.tgz).
 Note that the latest release version might require another version of Flink, check the README for that version.
 
-## Installing RMLStreamer
+### Building RMLStreamer
+
+In order to build a jar file that can be deployed on a Flink cluster, you need:
+- a Java JDK 8 or higher
+- Apache Maven 3 or higher 
 
 Clone or download and then build the code in this repository:
 
 ```
-git clone https://github.com/RMLio/RMLStreamer.git 
-cd RMLStreamer
-mvn clean package
+$ git clone https://github.com/RMLio/RMLStreamer.git 
+$ cd RMLStreamer
+$ mvn -DskipTests clean package
 ```
 
 The resulting `RMLStreamer-<version>.jar` can be deployed on a Flink cluster.
@@ -106,8 +120,8 @@ The RML Mapping above can be executed as follows:
 
 The input and output in the RML Framework are both TCP clients when streaming. Before running stream mappings the input and output ports must be listened to by an application. For testing purposes the following commands can be used:
  ```
- nc -lk 5005 # This will start listening for input connections at port 5005
- nc -lk 9000 # This will start listening for output connections at port 9000
+$ nc -lk 5005 # This will start listening for input connections at port 5005
+$ nc -lk 9000 # This will start listening for output connections at port 9000
  # This is for testing purposes, your own application needs to start listening to the input and output ports. 
  ```
 Once the input and output ports are listened to by applications or by the above commands, the RML Mapping can be executed. The RML Framework will open the input and output sockets so it can act upon data that will be written to the input socket.
