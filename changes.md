@@ -1,5 +1,7 @@
 This document lists the changes for every version.
 
+## 1.2.2
+
 ## 1.2.1
 * Bump Flink to version 1.9.1.
 * Bump Kafka to version 2.2.0, only use universal Kafka connector.
