@@ -223,14 +223,14 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
 
       val expectedModel = ModelFactory.createDefaultModel()
       try {
-        expectedModel.read(new StringReader(expectedStr), "base", Lang.NQUADS.getName)
+        expectedModel.read(new StringReader(expectedStr), "base", Lang.TURTLE.getName)
       } catch {
         case _: Throwable => expectedModel.read(new StringReader(expectedStr), "base", Lang.JSONLD.getName)
       }
 
       val generatedModel = ModelFactory.createDefaultModel()
       try {
-        generatedModel.read(new StringReader(generatedStr), "base", Lang.NQUADS.getName)
+        generatedModel.read(new StringReader(generatedStr), "base", Lang.TURTLE.getName)
       } catch {
         case _: Throwable => generatedModel.read(new StringReader(expectedStr), "base", Lang.JSONLD.getName)
       }
@@ -238,7 +238,9 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
       if (generatedModel.isIsomorphicWith(expectedModel)) {
         Right(s"Testcase ${folder.getName} passed streaming test!")
       } else {
-        Left(s"Testcase ${folder.getName} FAILED: Generated output does not match expected output:\nExpected:\n${expectedStr}\nGenerated:\n${generatedStr}\n")
+        val message = s"Testcase ${folder.getName} FAILED: Generated output does not match expected output:\nExpected:\n${expectedStr}\nGenerated:\n${generatedStr}\n"
+        System.exit(1)
+        fail(message)
       }
     } else {
       Right(s"Testcase ${folder.getName} passed streaming test!")
