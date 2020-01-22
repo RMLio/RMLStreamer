@@ -57,3 +57,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 * Everything! (initial release)
+
+[1.0.0]: https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/tags/v1.0.0
+[1.1.0]: https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/compare/v1.0.0...v1.1.0
+[1.2.0]: https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/compare/v1.1.0...v1.2.0  
+[1.2.1]: https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/compare/v1.2.0...v1.2.1  
