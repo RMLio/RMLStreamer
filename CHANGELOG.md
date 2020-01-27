@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Joins of data streams
 * Optimal usage of the task slots assigned to a task manager/job.
 
+### Fixed
+* Because generated output is parsed as Turtle during tests, tests generating N-Quads always fail.
+
 ## [1.2.1] - 2020-01-21
 
 ### Added

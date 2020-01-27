@@ -223,14 +223,14 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
 
       val expectedModel = ModelFactory.createDefaultModel()
       try {
-        expectedModel.read(new StringReader(expectedStr), "base", Lang.TURTLE.getName)
+        expectedModel.read(new StringReader(expectedStr), "base", Lang.NQUADS.getName)
       } catch {
         case _: Throwable => expectedModel.read(new StringReader(expectedStr), "base", Lang.JSONLD.getName)
       }
 
       val generatedModel = ModelFactory.createDefaultModel()
       try {
-        generatedModel.read(new StringReader(generatedStr), "base", Lang.TURTLE.getName)
+        generatedModel.read(new StringReader(generatedStr), "base", Lang.NQUADS.getName)
       } catch {
         case _: Throwable => generatedModel.read(new StringReader(expectedStr), "base", Lang.JSONLD.getName)
       }
