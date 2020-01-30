@@ -2,9 +2,10 @@ package io.rml.framework.engine
 
 import java.io.{IOException, ObjectInputStream}
 
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.model.rdf.RDFGraph
 import io.rml.framework.core.model.rdf.jena.JenaGraph
-import io.rml.framework.core.util.{JSON_LD, JenaUtil, NTriples}
+import io.rml.framework.core.util.{JSON_LD, NTriples}
 import io.rml.framework.flink.sink.FlinkRDFQuad
 
 
@@ -52,7 +53,7 @@ class JsonLDProcessor(prefix:String = "", @transient var graph:RDFGraph = JenaGr
       return List()
     }
     val quads =  quadStrings.mkString("\n")
-    graph.read(quads, JenaUtil.format(NTriples))
+    graph.read(quads, RMLEnvironment.getGeneratorBaseIRI(), NTriples)
     val result = List(graph.write(JSON_LD))
     graph.clear()
     result

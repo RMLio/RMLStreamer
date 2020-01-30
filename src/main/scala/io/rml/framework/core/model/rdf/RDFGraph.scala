@@ -98,7 +98,7 @@ trait RDFGraph extends RDFNode {
     * @throws io.rml.framework.shared.ReadException
     */
   @throws(classOf[ReadException])
-  def read(file: File): Unit
+  def read(file: File, baseIRI: Option[String], format: Format): Unit
 
   /**
     *
@@ -106,7 +106,7 @@ trait RDFGraph extends RDFNode {
     * @throws io.rml.framework.shared.ReadException
     */
   @throws(classOf[ReadException])
-  def read(dump: String, format: String = "TURTLE"): Unit
+  def read(dump: String, baseIRI: Option[String], format: Format): Unit
 
   /**
     * Creates an RDFResource instance from a uri.
@@ -142,12 +142,12 @@ object RDFGraph {
 
   /**
     *
-    * @param uri
+    * @param name: The name of the graph
     * @param factory
     * @return
     */
-  def apply(uri: Option[Uri], factory: RDFFactory = new JenaFactory): RDFGraph = {
-    factory.createGraph(uri)
+  def apply(name: Option[Uri], factory: RDFFactory = new JenaFactory): RDFGraph = {
+    factory.createGraph(name)
   }
 
   /**
@@ -158,8 +158,8 @@ object RDFGraph {
     * @return
     */
   @throws(classOf[ReadException])
-  def fromFile(file: File, factory: RDFFactory = new JenaFactory): RDFGraph = {
-    factory.createGraph(file)
+  def fromFile(file: File, baseIRI: Option[String], format: Format, factory: RDFFactory = new JenaFactory): RDFGraph = {
+    factory.createGraph(file, baseIRI, format)
   }
 
 }

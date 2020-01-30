@@ -1,5 +1,6 @@
 package io.rml.framework
 
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
 import io.rml.framework.util.logging.Logger
@@ -9,6 +10,9 @@ import scala.util.control.Exception
 
 
 class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
+
+  // first we set the environment right
+  RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
 
   val failing = Array( "negative_test_cases")
   val passing = Array(

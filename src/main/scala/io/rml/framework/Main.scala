@@ -22,6 +22,7 @@ package io.rml.framework
 import java.io.File
 import java.util.Properties
 
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
@@ -82,6 +83,9 @@ object Main extends Logging {
     var jobName = if (parameters.has("job-name")) parameters.get("job-name")
     else EMPTY_VALUE
 
+    var baseIRI = if (parameters.has("baseIRI")) parameters.get("baseIRI")
+    else EMPTY_VALUE
+
     implicit val postProcessor:PostProcessor =
       parameters.get("post-process") match {
         case "bulk" => new BulkPostProcessor
@@ -99,7 +103,18 @@ object Main extends Logging {
     logInfo("Post-process: "  + postProcessor.toString)
     logInfo("Kafka Partition: " +  partitionID)
     logInfo("Kafka partition format: " + partitionFormatString)
+    logInfo("Base IRI: " + baseIRI)
 
+
+    // determine the base IRI of the RDF to generate
+    val baseIRIOption: Option[String] = baseIRI match {
+      case EMPTY_VALUE => None
+      case iri => Some(iri)
+    }
+    RMLEnvironment.setGeneratorBaseIRI(baseIRIOption)
+
+    // determine the base IRI of the mapping file
+    RMLEnvironment.setMappingFileBaseIRI(Some(new File(mappingPath).getAbsolutePath))
 
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.
     // Triple maps are also organized in categories (does it contain streams, does it contain joins, ... )

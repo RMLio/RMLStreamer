@@ -3,11 +3,12 @@ package io.rml.framework.engine
 import java.io.File
 
 import io.rml.framework.Main
-import io.rml.framework.Main.getClass
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.MappingReader
-import io.rml.framework.core.model.{FormattedRMLMapping, Uri}
 import io.rml.framework.core.model.rdf.RDFGraph
 import io.rml.framework.core.model.rdf.jena.JenaGraph
+import io.rml.framework.core.model.{FormattedRMLMapping, Uri}
+import io.rml.framework.core.util.{NTriples, Turtle}
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
 import org.apache.jena.rdf.model.ModelFactory
@@ -264,12 +265,12 @@ class StatementEngineTest extends FunSuite with Matchers {
 
   private def readTriplesFromString(dump: String) : Seq[String] = {
     val model_1 = JenaGraph(ModelFactory.createDefaultModel()).withUri(Uri(""))
-    model_1.read(dump, "N-TRIPLES")
+    model_1.read(dump, RMLEnvironment.getGeneratorBaseIRI(), NTriples)
     model_1.listTriples.map(item => item.toString).sorted
   }
 
   private def readTriplesFromFile(path: String) : Seq[String] = {
-    val model_2 = RDFGraph.fromFile(new File(getAbsolutePath(path)))
+    val model_2 = RDFGraph.fromFile(new File(getAbsolutePath(path)), RMLEnvironment.getGeneratorBaseIRI(), Turtle)
     model_2.listTriples.map(item => item.toString).sorted
   }
 
