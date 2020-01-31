@@ -1,12 +1,12 @@
 package io.rml.framework.engine
 
-import java.io.{IOException, ObjectInputStream}
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
 
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.model.rdf.RDFGraph
-import io.rml.framework.core.model.rdf.jena.JenaGraph
-import io.rml.framework.core.util.{JSON_LD, NTriples}
+import io.rml.framework.core.util._
 import io.rml.framework.flink.sink.FlinkRDFQuad
+import org.apache.jena.riot.{Lang, RDFDataMgr}
 
 
 
@@ -17,6 +17,8 @@ import io.rml.framework.flink.sink.FlinkRDFQuad
 trait PostProcessor extends Serializable{
 
   def process(quadStrings: Iterable[FlinkRDFQuad]): List[String]
+
+  def outputFormat: Format
 }
 
 trait AtMostOneProcessor extends PostProcessor  // TODO: define exact semantics of AtMostOneProcessor
@@ -30,6 +32,7 @@ class NopPostProcessor extends PostProcessor {
     quadStrings.map(_.toString).toList
   }
 
+  override def outputFormat: Format = NQuads
 }
 
 /**
@@ -41,27 +44,32 @@ class BulkPostProcessor extends AtMostOneProcessor {
   override def process(quadStrings: Iterable[FlinkRDFQuad]): List[String] = {
     List(quadStrings.mkString("\n"))
   }
+
+  override def outputFormat: Format = NQuads
 }
 
 /**
   *
   * Format the generated triples into json-ld format
   */
-class JsonLDProcessor(prefix:String = "", @transient var graph:RDFGraph = JenaGraph()) extends AtMostOneProcessor {
+class JsonLDProcessor() extends AtMostOneProcessor {
+
+
+  override def outputFormat: Format = JSON_LD
+
   override def process(quadStrings: Iterable[FlinkRDFQuad]): List[String] = {
     if (quadStrings.isEmpty || quadStrings.mkString.isEmpty) {
       return List()
     }
+    
     val quads =  quadStrings.mkString("\n")
-    graph.read(quads, RMLEnvironment.getGeneratorBaseIRI(), NTriples)
-    val result = List(graph.write(JSON_LD))
-    graph.clear()
-    result
-  }
-
-  @throws(classOf[IOException])
-  private def readObject(in: ObjectInputStream): Unit =  {
-    in.defaultReadObject()
-    graph = JenaGraph()
+    val dataset = JenaUtil.readDataset(quads, RMLEnvironment.getGeneratorBaseIRI().getOrElse(""), NQuads)
+    val bos = new ByteArrayOutputStream
+    Util.tryWith(bos: ByteArrayOutputStream) {
+      bos => {
+        RDFDataMgr.write(bos, dataset, Lang.JSONLD)
+        List(bos.toString(StandardCharsets.UTF_8))
+      }
+    }
   }
 }

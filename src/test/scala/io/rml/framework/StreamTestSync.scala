@@ -1,11 +1,12 @@
 package io.rml.framework
 
-import java.io.{File, StringReader}
+import java.io.File
 import java.nio.file.{Path, Paths}
 import java.util.concurrent.Executors
 
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.util.{Format, JenaUtil}
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, MappingTestUtil, StreamDataSourceTestUtil}
 import io.rml.framework.util.logging.Logger
@@ -17,8 +18,7 @@ import org.apache.flink.configuration.Configuration
 import org.apache.flink.runtime.jobgraph.{JobGraph, JobStatus}
 import org.apache.flink.runtime.minicluster.{MiniCluster, MiniClusterConfiguration}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
-import org.apache.jena.rdf.model.ModelFactory
-import org.apache.jena.riot.Lang
+import org.apache.jena.rdf.model.Model
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.reflect.io.Directory
@@ -135,7 +135,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
       afterTestCase()
 
       // check the results
-      val either = compareResults(folder, expectedOutput, resultTriples)
+      val either = compareResults(folder, expectedOutput, resultTriples, postProcessor.outputFormat)
 
     it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
       either match {
@@ -215,39 +215,41 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     Sanitizer.sanitize(expectedOutputs)
   }
 
-  private def compareResults(folder: File, expectedOutputs: Set[String], unsanitizedOutput: List[String]): Either[String,String] = {
+  private def compareResults(folder: File, expectedOutputs: Set[String], unsanitizedOutput: List[String], format: Format): Either[String,String] = {
     val generatedOutputs = Sanitizer.sanitize(unsanitizedOutput)
 
-    if (expectedOutputs nonEmpty) {
-      val expectedStr = expectedOutputs.mkString("\n")
-      val generatedStr = generatedOutputs.mkString("\n")
+    try {
+      if (expectedOutputs nonEmpty) {
+        val expectedStr = expectedOutputs.mkString("\n")
+        val generatedStr = generatedOutputs.mkString("\n")
 
-      Logger.logInfo(List("Generated output: ", generatedStr).mkString("\n"))
-      Logger.logInfo(List("Expected Output: ", expectedStr).mkString("\n"))
+        Logger.logInfo(List("Generated output: ", generatedStr).mkString("\n"))
+        Logger.logInfo(List("Expected Output: ", expectedStr).mkString("\n"))
 
-      val expectedModel = ModelFactory.createDefaultModel()
-      try {
-        expectedModel.read(new StringReader(expectedStr), "base", Lang.NQUADS.getName)
-      } catch {
-        case _: Throwable => expectedModel.read(new StringReader(expectedStr), "base", Lang.JSONLD.getName)
+        compareSets(generatedStr, expectedStr, format)
       }
-
-      val generatedModel = ModelFactory.createDefaultModel()
-      try {
-        generatedModel.read(new StringReader(generatedStr), "base", Lang.NQUADS.getName)
-      } catch {
-        case _: Throwable => generatedModel.read(new StringReader(expectedStr), "base", Lang.JSONLD.getName)
-      }
-
-      if (generatedModel.isIsomorphicWith(expectedModel)) {
-        Right(s"Testcase ${folder.getName} passed streaming test!")
-      } else {
-        val message = s"Testcase ${folder.getName} FAILED: Generated output does not match expected output:\nExpected:\n${expectedStr}\nGenerated:\n${generatedStr}\n"
-        System.exit(1)
+      Right(s"Testcase ${folder.getName} passed streaming test!")
+    } catch {
+      case anyException => {
+        val message = s"Testcase ${folder.getName} FAILED: ${anyException.getMessage}"
+        logError(message)
         fail(message)
       }
-    } else {
-      Right(s"Testcase ${folder.getName} passed streaming test!")
     }
+  }
+
+  private def compareSets(quads1: String, quads2: String, format: Format): Unit = {
+    val models1 = quadsToModels(quads1, format)
+    val models2 = quadsToModels(quads2, format)
+    assert(models1.length == models2.length)
+
+    for (index <- models1.indices) {
+      assert(models1(index).isIsomorphicWith(models2(index)))
+    }
+  }
+
+  private def quadsToModels(quads: String, format: Format): List[Model] = {
+    val dataset = JenaUtil.readDataset(quads, "base", format)
+    JenaUtil.toModels(dataset)
   }
 }
