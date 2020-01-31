@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 * Because generated output is parsed as Turtle during tests, tests generating N-Quads always fail.
+* A `@base` directive in the *mapping file* was used as `base IRI` when generating RDF. This is wrong; now the `base IRI`
+can be set with the program argument `--baseIRI`.
 
 ## [1.2.1] - 2020-01-21
 
