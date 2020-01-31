@@ -13,6 +13,24 @@ object RMLEnvironment {
 
   private val transformations: MutableMap[Uri, Transformation] = MutableMap()
   private val sources: MutableMap[Uri, Iterable[Item]] = MutableMap()
+  private var generatorBaseIRI: Option[String] = None
+  private var mappingFileBaseIRI: Option[String] = None
+
+  def setGeneratorBaseIRI(baseIRI: Option[String]) = {
+    generatorBaseIRI = baseIRI
+  }
+
+  def getGeneratorBaseIRI(): Option[String] = {
+    generatorBaseIRI
+  }
+
+  def setMappingFileBaseIRI(baseIRI: Option[String]) = {
+    mappingFileBaseIRI = baseIRI
+  }
+
+  def getMappingFileBaseIRI(): Option[String] = {
+    mappingFileBaseIRI
+  }
 
   def loadMappingFromFile(path: String): RMLMapping = {
     val file = new File(path)

@@ -4,6 +4,7 @@ import java.io.{File, StringReader}
 import java.nio.file.{Path, Paths}
 import java.util.concurrent.Executors
 
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, MappingTestUtil, StreamDataSourceTestUtil}
@@ -28,6 +29,9 @@ import scala.reflect.io.Directory
   * @author Gerald Haesendonck
   */
 abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour with Logging {
+
+  // first we set the environment right
+  RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
 
   protected def testFolder: String
 

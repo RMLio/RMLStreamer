@@ -26,6 +26,7 @@ import java.io.File
 
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf._
+import io.rml.framework.core.util.Format
 import io.rml.framework.shared.ReadException
 import org.apache.jena.rdf.model.{Model, ModelFactory}
 
@@ -51,10 +52,10 @@ class JenaFactory extends RDFFactory {
   }
 
   @throws(classOf[ReadException])
-  override def createGraph(file: File): RDFGraph = {
+  override def createGraph(file: File, baseIRI: Option[String], format: Format): RDFGraph = {
     val model = JenaGraph(ModelFactory.createDefaultModel())
       .withUri(Uri(file.getName))
-    model.read(file)
+    model.read(file, baseIRI, format)
     model
   }
 

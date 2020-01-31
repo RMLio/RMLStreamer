@@ -25,6 +25,7 @@ package io.rml.framework.core.model.rdf
 import java.io.File
 
 import io.rml.framework.core.model.{Entity, TermNode, Uri}
+import io.rml.framework.core.util.Format
 import io.rml.framework.shared.ReadException
 
 /**
@@ -48,7 +49,7 @@ trait RDFFactory {
     * @return RDFGraph instance.
     */
   @throws(classOf[ReadException])
-  def createGraph(file: File): RDFGraph
+  def createGraph(file: File, baseIRI: Option[String], format: Format): RDFGraph
 
   /**
     * Creates a RDFTriple instance from a given subject, predicate and object.
