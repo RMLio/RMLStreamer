@@ -68,7 +68,7 @@ class JsonLDProcessor() extends AtMostOneProcessor {
     Util.tryWith(bos: ByteArrayOutputStream) {
       bos => {
         RDFDataMgr.write(bos, dataset, Lang.JSONLD)
-        List(bos.toString(StandardCharsets.UTF_8))
+        List(bos.toString(StandardCharsets.UTF_8.name()))
       }
     }
   }
