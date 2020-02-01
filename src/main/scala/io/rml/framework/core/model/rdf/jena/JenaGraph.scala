@@ -115,30 +115,10 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
       case None => null
     }
     model.removeAll()
-    tryWith(in) {
+    Util.tryWith(in) {
       in => model.read(in, bIri, JenaUtil.format(format))
     }
     logModelWhenDebugEnabled()
-  }
-
-  // auto-close resources, seems to be missing in Scala
-  def tryWith[R, T <: AutoCloseable](resource: T)(doWork: T => R): R = {
-    try {
-      doWork(resource)
-    }
-    finally {
-      try {
-        if (resource != null) {
-          resource.close()
-        }
-      }
-      catch {
-        case e: Exception => {
-          logError("Something went wrong parsing RDF.", e)
-          throw new ReadException(e.getMessage)
-        }
-      }
-    }
   }
 
 
