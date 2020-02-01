@@ -52,12 +52,12 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
     // evaluate until the first match
     val node = ap.evalXPath()
 
-    LOG.info("Node = " + node)
+    if (isDebugEnabled) logDebug("Node = " + node)
 
     // if node != -1: there is a match
     if (node != -1) {
 
-      LOG.info("RAW STRING?: " + vn.toString(node))
+      if (isDebugEnabled) logDebug("RAW STRING?: " + vn.toString(node))
 
       // get the element string
       val element = vn.toString(node)
@@ -178,7 +178,7 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
       val result = Some(XMLItem.fromString(xmlString, namespaces, xPath))
       result
     } else {
-      LOG.info("It's done.. without errors though.")
+      if (isDebugEnabled) logDebug("No match found => done.")
       // no elements left, set finished flag to true and return None
       finished = true
       None

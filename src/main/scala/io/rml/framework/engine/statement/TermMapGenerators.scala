@@ -137,37 +137,4 @@ object TermMapGenerators {
 
   }
 
-//  private def processIRI(origIRI: String): Iterable[String] = {
-//    /**
-//      * Extra check to prevent calling validator which costs more time if
-//      * done repeatedly per item since it uses regex
-//      */
-//    val default = origIRI
-//    if (BASE_URL.length > 0) {
-//
-//      val appended = BASE_URL + origIRI
-//
-//      if (Util.isValidUri(appended)) {
-//
-//        List(appended)
-//
-//      } else if (Util.isValidUri(default)) {
-//
-//        List(default)
-//
-//      } else {
-//
-//        List()
-//
-//      }
-//
-//
-//    } else {
-//      List(default)
-//    }
-//
-//
-//  }
-
-
 }

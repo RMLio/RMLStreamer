@@ -6,6 +6,7 @@ import java.nio.file.{Files, Paths}
 import java.util.regex.Pattern
 
 import io.rml.framework.core.model.Literal
+import io.rml.framework.shared.ReadException
 import org.apache.commons.validator.routines.UrlValidator
 
 import scala.collection.mutable.ListBuffer
@@ -113,6 +114,25 @@ object Util {
     tag match {
       case None => true
       case Some(x) =>  io.rml.framework.flink.source.Source.DEFAULT_ITERATOR_SET.contains(x.toString)
+    }
+  }
+
+  // auto-close resources, seems to be missing in Scala
+  def tryWith[R, T <: AutoCloseable](resource: T)(doWork: T => R): R = {
+    try {
+      doWork(resource)
+    }
+    finally {
+      try {
+        if (resource != null) {
+          resource.close()
+        }
+      }
+      catch {
+        case e: Exception => {
+          throw new ReadException(e.getMessage)
+        }
+      }
     }
   }
 
