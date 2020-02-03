@@ -8,7 +8,8 @@ import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model.rdf.RDFGraph
 import io.rml.framework.core.model.rdf.jena.JenaGraph
 import io.rml.framework.core.model.{FormattedRMLMapping, Uri}
-import io.rml.framework.core.util.{NTriples, Turtle}
+import io.rml.framework.core.util.{NQuads, NTriples, Turtle}
+import io.rml.framework.util.TestUtil
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
 import org.apache.jena.rdf.model.ModelFactory
@@ -16,45 +17,40 @@ import org.scalatest.{FunSuite, Matchers}
 
 class StatementEngineTest extends FunSuite with Matchers {
 
-
-  test("example10") {
-
+  private def executeTest(mappingFile: String): Unit = {
+    RMLEnvironment.setGeneratorBaseIRI(Some("http://example.org/base/"))
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
     implicit val postProcessor = new NopPostProcessor()
 
     // read the mapping
-    val formattedMapping = readMapping("example10/mapping.rml.ttl")
+    val formattedMapping = readMapping(mappingFile)
 
     // execute
-    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
+    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect()
 
-    // compare the results
-    val total = readTriplesFromString(result).size
+    // get expected output
+    val testDir = new File(mappingFile).getParentFile.getAbsoluteFile
+    val expectedOutput = TestUtil.getExpectedOutputs(testDir)
 
-    total should be (700)
+    val testOutcome = TestUtil.compareResults(s"StatementEngineTest: ${testDir}", expectedOutput, result, NQuads)
+    testOutcome match {
+      case Left(e) => {
+        System.exit(1)
+        fail(e)
+      }
+      case Right(e) => succeed
+    }
+  }
 
+
+  test("example10") {
+    executeTest("example10/mapping.rml.ttl")
   }
 
 
   test("example1") {
-
-    implicit val env = ExecutionEnvironment.getExecutionEnvironment
-    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
-    implicit val postProcessor = new NopPostProcessor()
-
-    // read the mapping
-    //val formattedMapping = readMapping("example1/example.rml.ttl")
-    val formattedMapping = readMapping("example1/example.rml.ttl")
-
-    // execute
-    val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect().reduce((a, b) => a + "\n" + b)
-
-    // compare the results
-    val triples_1 = readTriplesFromString(result)
-    val triples_2 = readTriplesFromFile("example1/example.output.ttl")
-    triples_1 should be (triples_2)
-
+    executeTest("example1/example.rml.ttl")
   }
 
   test("example2") {

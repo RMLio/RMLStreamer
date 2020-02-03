@@ -6,6 +6,7 @@ import java.nio.file.Paths
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.util.{Format, JenaUtil}
 import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
+import io.rml.framework.util.fileprocessing.ExpectedOutputTestUtil
 import io.rml.framework.util.logging.Logger
 import org.apache.commons.io.FileUtils
 import org.apache.jena.rdf.model.Model
@@ -42,6 +43,16 @@ object TestUtil extends Logging {
       Logger.logWarning("Could not delete temp dir " + temp.getAbsolutePath)
     }
 
+  }
+
+  def getExpectedOutputs(folder: File): Set[String] = {
+    val expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
+    Sanitizer.sanitize(expectedOutputs)
+  }
+
+  def compareResults(testCase: String, expectedOutputs: Set[String], unsanitizedOutput: Seq[String], format: Format): Either[String,String] = {
+    val result = List() ++ unsanitizedOutput
+    compareResults(testCase, expectedOutputs, result, format)
   }
 
   def compareResults(testCase: String, expectedOutputs: Set[String], unsanitizedOutput: List[String], format: Format): Either[String,String] = {

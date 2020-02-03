@@ -1,0 +1,20 @@
+<http://www.example.com/note/M17> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/mail#note>.
+<http://www.example.com/note/M17> <http://example.com/mail#body> "Don't forget me this weekend!".
+<http://www.example.com/note/M17> <http://example.com/mail#when> "2008-01-10"^^<http://www.w3.org/2001/XMLSchema#date>.
+<http://www.example.com/note/M17> <http://example.com/mail#from> "Jani".
+<http://www.example.com/note/M17> <http://example.com/mail#to> "Tove".
+<http://www.example.com/note/M17> <http://example.com/mail#heading> "Reminder".
+<http://www.example.com/note/M18> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/mail#note>.
+<http://www.example.com/note/M18> <http://example.com/mail#body> "We now leave at six".
+<http://www.example.com/note/M18> <http://example.com/mail#when> "2008-02-10"^^<http://www.w3.org/2001/XMLSchema#date>.
+<http://www.example.com/note/M18> <http://example.com/mail#from> "Rick".
+<http://www.example.com/note/M18> <http://example.com/mail#to> "Chris".
+<http://www.example.com/note/M18> <http://example.com/mail#heading> "Update".
+<http://www.example.com/DateTime/20080110> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.example.com/DateTime>.
+<http://www.example.com/DateTime/20080110> <http://www.example.com/day> "---10"^^<http://www.w3.org/2001/XMLSchema#gDay>.
+<http://www.example.com/DateTime/20080110> <http://www.example.com/month> "--01"^^<http://www.w3.org/2001/XMLSchema#gMonth>.
+<http://www.example.com/DateTime/20080110> <http://www.example.com/year> "2008"^^<http://www.w3.org/2001/XMLSchema#gYear>.
+<http://www.example.com/DateTime/20080210> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.example.com/DateTime>.
+<http://www.example.com/DateTime/20080210> <http://www.example.com/day> "---10"^^<http://www.w3.org/2001/XMLSchema#gDay>.
+<http://www.example.com/DateTime/20080210> <http://www.example.com/month> "--02"^^<http://www.w3.org/2001/XMLSchema#gMonth>.
+<http://www.example.com/DateTime/20080210> <http://www.example.com/year> "2008"^^<http://www.w3.org/2001/XMLSchema#gYear>.

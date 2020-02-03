@@ -7,10 +7,10 @@ import java.util.concurrent.Executors
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.engine.PostProcessor
-import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, MappingTestUtil, StreamDataSourceTestUtil}
+import io.rml.framework.util.fileprocessing.{MappingTestUtil, StreamDataSourceTestUtil}
 import io.rml.framework.util.logging.Logger
 import io.rml.framework.util.server.{TestData, TestSink2}
-import io.rml.framework.util.{Sanitizer, StreamTestUtil, TestUtil}
+import io.rml.framework.util.{StreamTestUtil, TestUtil}
 import org.apache.flink.api.common.JobID
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.configuration.Configuration
@@ -113,7 +113,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
 
     // see what output we expect and wait for Flink to get that output
     // if we don't expect output, don't wait too long
-    val expectedOutput = getExpectedOutputs(folder)
+    val expectedOutput = TestUtil.getExpectedOutputs(folder)
     var counter = if (expectedOutput.isEmpty) 10 else 100
 
     while (TestSink2.getTriples().isEmpty && counter > 0) {
@@ -133,7 +133,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     afterTestCase()
 
     // check the results
-    val either = TestUtil.compareResults(folder.getAbsolutePath.toString, expectedOutput, resultTriples, postProcessor.outputFormat)
+    val either = TestUtil.compareResults(folderPath.toString, expectedOutput, resultTriples, postProcessor.outputFormat)
     either match {
       case Left(e) => fail(e)
       case Right(e) => {
@@ -141,7 +141,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
       }
     }
 
-    it should s"produce triples equal to the expected triples for ${folder.getAbsolutePath.toString}" in {
+    it should s"produce triples equal to the expected triples for ${folderPath.toString}" in {
       either match {
         case Left(e) => fail(e)
         case Right(e) => {
@@ -212,10 +212,5 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     flink.cancelJob(jobId).get()
     Thread.sleep(1000)  // also here: even waiting for the future to complete doesn't guarantee that it's completed!
     logInfo(s"Job ${jobId} canceled.")
-  }
-
-  private def getExpectedOutputs(folder: File): Set[String] = {
-    val expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
-    Sanitizer.sanitize(expectedOutputs)
   }
 }
