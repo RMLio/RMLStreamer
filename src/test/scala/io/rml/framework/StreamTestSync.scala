@@ -6,7 +6,6 @@ import java.util.concurrent.Executors
 
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.util.{Format, JenaUtil}
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, MappingTestUtil, StreamDataSourceTestUtil}
 import io.rml.framework.util.logging.Logger
@@ -18,7 +17,6 @@ import org.apache.flink.configuration.Configuration
 import org.apache.flink.runtime.jobgraph.{JobGraph, JobStatus}
 import org.apache.flink.runtime.minicluster.{MiniCluster, MiniClusterConfiguration}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
-import org.apache.jena.rdf.model.Model
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.reflect.io.Directory
@@ -74,7 +72,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   // set up Flink
   val flink: MiniCluster = startFlink
 
-    logInfo("Reading test cases")
+  logInfo("Reading test cases")
   val testCases: Array[(Path, String)] = for {
     (folder, postProcessor) <- passingTests
     testCase <- StreamDataSourceTestUtil.getTestCaseFolders(folder).sorted
@@ -84,60 +82,66 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   for ((folderPath, postProcessorName) <- testCases) {
 
     //it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
-      Logger.lineBreak(50)
-      logInfo(s"Running test ${folderPath}")
-      beforeTestCase()
+    Logger.lineBreak(50)
+    logInfo(s"Running test ${folderPath}")
+    beforeTestCase()
 
-      implicit val postProcessor: PostProcessor = TestUtil.pickPostProcessor(postProcessorName)
-      val folder = MappingTestUtil.getFile(folderPath.toString)
+    implicit val postProcessor: PostProcessor = TestUtil.pickPostProcessor(postProcessorName)
+    val folder = MappingTestUtil.getFile(folderPath.toString)
 
-      // set up the execution environments
-      implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
-      implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
-      implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
+    // set up the execution environments
+    implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
-      // create data stream and sink
-      val dataStream = StreamTestUtil.createDataStream(folder)
-      Logger.logInfo("Datastream created")
-      val sink = TestSink2()
-      Logger.logInfo("sink created")
-      dataStream.addSink(sink)
-      Logger.logInfo("Sink added")
+    // create data stream and sink
+    val dataStream = StreamTestUtil.createDataStream(folder)
+    Logger.logInfo("Datastream created")
+    val sink = TestSink2()
+    Logger.logInfo("sink created")
+    dataStream.addSink(sink)
+    Logger.logInfo("Sink added")
 
-      // submit job to Flink
-      val jobId = submitJob(flink, dataStream, folder.getName)
+    // submit job to Flink
+    val jobId = submitJob(flink, dataStream, folder.getName)
 
-      // read input data and send via server (Kafka, TCP, ...) to Flink
-      val inputData = StreamDataSourceTestUtil.processFilesInTestFolder(folder.toString)
-      logInfo("Sending input data...")
-      writeData(inputData)
-      logInfo("Input data sent.")
+    // read input data and send via server (Kafka, TCP, ...) to Flink
+    val inputData = StreamDataSourceTestUtil.processFilesInTestFolder(folder.toString)
+    logInfo("Sending input data...")
+    writeData(inputData)
+    logInfo("Input data sent.")
 
-      // see what output we expect and wait for Flink to get that output
-      // if we don't expect output, don't wait too long
-      val expectedOutput = getExpectedOutputs(folder)
-      var counter = if (expectedOutput.isEmpty) 10 else 100
+    // see what output we expect and wait for Flink to get that output
+    // if we don't expect output, don't wait too long
+    val expectedOutput = getExpectedOutputs(folder)
+    var counter = if (expectedOutput.isEmpty) 10 else 100
 
-      while (TestSink2.getTriples().isEmpty && counter > 0) {
-        Thread.sleep(300)
-        counter -= 1
-        if (counter % 10 == 0) {
-          Logger.logInfo("Waiting for output from the streamer...")
-        }
-      }
+    while (TestSink2.getTriples().isEmpty && counter > 0) {
       Thread.sleep(300)
-      val resultTriples = TestSink2.getTriples()
-      Logger.logInfo(s"Test got a result of ${resultTriples.length} triple(s)")
+      counter -= 1
+      if (counter % 10 == 0) {
+        Logger.logInfo("Waiting for output from the streamer...")
+      }
+    }
+    Thread.sleep(300)
+    val resultTriples = TestSink2.getTriples()
+    Logger.logInfo(s"Test got a result of ${resultTriples.length} triple(s)")
 
-      // delete Flink Job
-      deleteJob(flink, jobId)
+    // delete Flink Job
+    deleteJob(flink, jobId)
 
-      afterTestCase()
+    afterTestCase()
 
-      // check the results
-      val either = compareResults(folder, expectedOutput, resultTriples, postProcessor.outputFormat)
+    // check the results
+    val either = TestUtil.compareResults(folder.getAbsolutePath.toString, expectedOutput, resultTriples, postProcessor.outputFormat)
+    either match {
+      case Left(e) => fail(e)
+      case Right(e) => {
+        logInfo(e)
+      }
+    }
 
-    it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
+    it should s"produce triples equal to the expected triples for ${folder.getAbsolutePath.toString}" in {
       either match {
         case Left(e) => fail(e)
         case Right(e) => {
@@ -213,43 +217,5 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   private def getExpectedOutputs(folder: File): Set[String] = {
     val expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
     Sanitizer.sanitize(expectedOutputs)
-  }
-
-  private def compareResults(folder: File, expectedOutputs: Set[String], unsanitizedOutput: List[String], format: Format): Either[String,String] = {
-    val generatedOutputs = Sanitizer.sanitize(unsanitizedOutput)
-
-    try {
-      if (expectedOutputs nonEmpty) {
-        val expectedStr = expectedOutputs.mkString("\n")
-        val generatedStr = generatedOutputs.mkString("\n")
-
-        Logger.logInfo(List("Generated output: ", generatedStr).mkString("\n"))
-        Logger.logInfo(List("Expected Output: ", expectedStr).mkString("\n"))
-
-        compareSets(generatedStr, expectedStr, format)
-      }
-      Right(s"Testcase ${folder.getName} passed streaming test!")
-    } catch {
-      case anyException => {
-        val message = s"Testcase ${folder.getName} FAILED: ${anyException.getMessage}"
-        logError(message)
-        fail(message)
-      }
-    }
-  }
-
-  private def compareSets(quads1: String, quads2: String, format: Format): Unit = {
-    val models1 = quadsToModels(quads1, format)
-    val models2 = quadsToModels(quads2, format)
-    assert(models1.length == models2.length)
-
-    for (index <- models1.indices) {
-      assert(models1(index).isIsomorphicWith(models2(index)))
-    }
-  }
-
-  private def quadsToModels(quads: String, format: Format): List[Model] = {
-    val dataset = JenaUtil.readDataset(quads, "base", format)
-    JenaUtil.toModels(dataset)
   }
 }
