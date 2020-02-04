@@ -87,19 +87,4 @@ trait TestFilesUtil[R] {
       .toList
   }
 
-  /*def readTriplesFromString(dump: String): Seq[String] = {
-    val model_1 = JenaGraph(ModelFactory.createDefaultModel()).withUri(Uri(""))
-    model_1.read(dump, "N-TRIPLES")
-    model_1.listTriples.map(item => item.toString).sorted
-  }
-
-  def readTriplesFromFile(absPath: String): Seq[String] = {
-    val model_2 = RDFGraph.fromFile(new File(absPath))
-    model_2.listTriples.map(item => item.toString).sorted
-  }*/
-
-
-
-
-
 }
