@@ -84,6 +84,6 @@ object JenaUtil {
   def toString(model: Model): String = {
     val bos = new ByteArrayOutputStream
     model.write(bos, Lang.NQUADS.getName)
-    bos.toString(StandardCharsets.UTF_8)
+    bos.toString(StandardCharsets.UTF_8.name)
   }
 }
