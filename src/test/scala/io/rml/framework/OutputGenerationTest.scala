@@ -2,9 +2,9 @@ package io.rml.framework
 
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.engine.PostProcessor
+import io.rml.framework.util.TestUtil
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
 import io.rml.framework.util.logging.Logger
-import io.rml.framework.util.{Sanitizer, TestUtil}
 
 import scala.util.control.Exception
 
@@ -46,14 +46,17 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
     * @param testFolderPath
     */
   def checkForTermTypeException(testFolderPath: String): Unit = {
+
     val catcher = Exception.catching(classOf[Throwable])
-    val eitherGenerated = catcher.either(TripleGeneratorTestUtil.processFilesInTestFolder(testFolderPath).flatten)
+    val eitherGenerated = catcher.either(TripleGeneratorTestUtil.processFilesInTestFolder(testFolderPath))
 
 
     if (eitherGenerated.isRight & testFolderPath.contains("RMLTC")) {
-      val generatedOutput = Sanitizer.sanitize(eitherGenerated.right.get)
+      val (generatedOutput, format) = eitherGenerated.right.get.head
       Logger.logInfo(testFolderPath)
       Logger.logInfo("Generated output: \n" + generatedOutput.mkString("\n"))
+      Logger.logError("Expected an exception, but got none.")
+      System.exit(1)
       fail
     }
   }
@@ -65,37 +68,16 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
     * @param testFolderPath
     */
   def checkGeneratedOutput(testFolderPath: String)(implicit postProcessor: PostProcessor): Unit = {
-    var expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(testFolderPath).toSet.flatten
+    val (expectedOutput, expectedOutputFormat) = ExpectedOutputTestUtil.processFilesInTestFolder(testFolderPath).head
     val tester = TripleGeneratorTestUtil(postProcessor)
-    var generatedOutputs: List[String] = tester.processFilesInTestFolder(testFolderPath).flatten
-
-    /**
-      * The amount of spaces added in the generated triples might be different from the expected triple.
-      * Sanitization of the sequences will be done here.
-      */
-
-    expectedOutputs = Sanitizer.sanitize(expectedOutputs)
-    generatedOutputs = Sanitizer.sanitize(generatedOutputs)
-
-    Logger.logInfo("Generated output: \n " + generatedOutputs.mkString("\n"))
-    Logger.logInfo("Expected Output: \n " + expectedOutputs.mkString("\n"))
-
-
-    /**
-      * Check if the generated triple is in the expected output.
-      */
-
-    Logger.logInfo("Generated size: " + generatedOutputs.size)
-    val errorMsgMismatch = Array(s"Test ${testFolderPath} FAILED: Generated output does not match expected output",
-      "Expected: \n" + expectedOutputs.mkString("\n"),
-      "Generated: \n" + generatedOutputs.mkString("\n")).mkString("\n")
-    if(generatedOutputs.isEmpty){
-      assert(expectedOutputs.isEmpty, errorMsgMismatch)
-    }
-
-     assert(expectedOutputs.size <= generatedOutputs.length, errorMsgMismatch)
-    for (generatedTriple <- generatedOutputs) {
-      assert(expectedOutputs.contains(generatedTriple), errorMsgMismatch)
+    var (generatedOutput, generatedOutputFormat) = tester.processFilesInTestFolder(testFolderPath).head
+    val outcome = TestUtil.compareResults(testFolderPath, generatedOutput, expectedOutput, generatedOutputFormat, expectedOutputFormat)
+    outcome match {
+      case Left(e) => {
+        fail(e)
+        System.exit(1)
+      }
+      case Right(e) => // just go on :)
     }
   }
 

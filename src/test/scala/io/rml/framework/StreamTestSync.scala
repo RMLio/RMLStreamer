@@ -113,7 +113,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
 
     // see what output we expect and wait for Flink to get that output
     // if we don't expect output, don't wait too long
-    val expectedOutput = TestUtil.getExpectedOutputs(folder)
+    val (expectedOutput, expectedOutputFormat) = TestUtil.getExpectedOutputs(folder)
     var counter = if (expectedOutput.isEmpty) 10 else 100
 
     while (TestSink2.getTriples().isEmpty && counter > 0) {
@@ -133,7 +133,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     afterTestCase()
 
     // check the results
-    val either = TestUtil.compareResults(folderPath.toString, expectedOutput, resultTriples, postProcessor.outputFormat)
+    val either = TestUtil.compareResults(folderPath.toString, resultTriples, expectedOutput, postProcessor.outputFormat, expectedOutputFormat)
     either match {
       case Left(e) => fail(e)
       case Right(e) => {

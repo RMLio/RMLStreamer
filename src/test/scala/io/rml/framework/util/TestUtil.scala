@@ -4,7 +4,7 @@ import java.io.File
 import java.nio.file.Paths
 
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.util.{Format, JenaUtil}
+import io.rml.framework.core.util.{Format, JenaUtil, NQuads}
 import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
 import io.rml.framework.util.fileprocessing.ExpectedOutputTestUtil
 import io.rml.framework.util.logging.Logger
@@ -45,32 +45,21 @@ object TestUtil extends Logging {
 
   }
 
-  def getExpectedOutputs(folder: File): Set[String] = {
-    val expectedOutputs: Set[String] = ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).toSet.flatten
-    Sanitizer.sanitize(expectedOutputs)
+  def getExpectedOutputs(folder: File): (List[String], Option[Format]) = {
+    ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).head
   }
 
-  def compareResults(testCase: String, expectedOutputs: Set[String], unsanitizedOutput: Seq[String], format: Format): Either[String,String] = {
-    val result = List() ++ unsanitizedOutput
-    compareResults(testCase, expectedOutputs, result, format)
-  }
-
-  def compareResults(testCase: String, expectedOutputs: Set[String], unsanitizedOutput: List[String], format: Format): Either[String,String] = {
-    val generatedOutputs = Sanitizer.sanitize(unsanitizedOutput)
-
+  def compareResults(testCase: String, generatedOutput: Seq[String], expectedOutput: List[String], generatedOutputFormat: Format, expectedOutputFormat: Option[Format]): Either[String, String] = {
     try {
-      if (expectedOutputs nonEmpty) {
-        val expectedStr = expectedOutputs.mkString("\n")
-        val generatedStr = generatedOutputs.mkString("\n")
-
-        Logger.logInfo(List("Generated output: ", generatedStr).mkString("\n"))
-        Logger.logInfo(List("Expected Output: ", expectedStr).mkString("\n"))
-
-        compareSets(generatedStr, expectedStr, format)
+      val expectedStr = expectedOutput.mkString("\n")
+      val generatedStr = generatedOutput.mkString("\n")
+      if (compareSets(generatedStr, expectedStr, generatedOutputFormat, expectedOutputFormat)) {
+        Right(s"Testcase ${testCase} PASSED!")
+      } else {
+        Left(s"Testcase ${testCase} FAILED! Generated and expected output are not isomorphic")
       }
-      Right(s"Testcase ${testCase} passed streaming test!")
     } catch {
-      case anyException => {
+      case anyException: Throwable => {
         val message = s"Testcase ${testCase} FAILED: ${anyException.getMessage}"
         logError(message)
         Left(message)
@@ -78,19 +67,53 @@ object TestUtil extends Logging {
     }
   }
 
-  private def compareSets(quads1: String, quads2: String, format: Format): Unit = {
-    val models1 = quadsToModels(quads1, format)
-    val models2 = quadsToModels(quads2, format)
-    assert(models1.length == models2.length)
-
-    for (index <- models1.indices) {
-      assert(models1(index).isIsomorphicWith(models2(index)))
+  private def compareSets(generatedOutput: String, expectedOutput: String, generatedOutputFormat: Format, expectedOutputFormat: Option[Format]): Boolean = {
+    val expOutForm = expectedOutputFormat match {
+      case Some(format) => format
+      case None => {
+        logWarning("Could not detect the format of the expected output. Assuming N-QUADS")
+        NQuads
+      }
     }
+    val generatedModels: List[(Model, String)] = quadsToModels(generatedOutput, generatedOutputFormat)
+    val expectedModels: List[(Model, String)] = quadsToModels(expectedOutput, expOutForm)
+    if (generatedModels.length != expectedModels.length) {
+      logError(s"Different number of graphs. Generated: ${generatedModels.length}; Expected: ${expectedModels.length}")
+      logError(s"\n========= Generated =========\n${printModels(generatedModels)}\n========= Expected =========\n${printModels(expectedModels)}")
+    }
+    assert(generatedModels.length == expectedModels.length, s"Number of generated graphs: ${generatedModels.length}; number of expected graphs: ${expectedModels.length}")
+
+    var result = true
+
+    for (index <- generatedModels.indices) {
+      val (generatedModel, generatedModelName) = generatedModels(index)
+      val (expectedModel, expectedModelName) = expectedModels(index)
+      val generatedStr = JenaUtil.toString(generatedModel)
+      val expectedStr = JenaUtil.toString(expectedModel)
+      logInfo(s"\n---- Generated graph: Name: [${generatedModelName}]\n${generatedStr}\n---- Expected graph: Name: [${expectedModelName}]\n${expectedStr}")
+
+      if (generatedModel.isIsomorphicWith(expectedModel)) {
+        logInfo("Both graphs are isomorphic")
+      } else {
+        logError("Graphs are not isomorphic!")
+        result = false
+      }
+
+    }
+    result
   }
 
-  private def quadsToModels(quads: String, format: Format): List[Model] = {
+  private def quadsToModels(quads: String, format: Format): List[(Model, String)] = {
     val dataset = JenaUtil.readDataset(quads, "base", format)
     JenaUtil.toModels(dataset)
+  }
+
+  private def printModels(models: List[(Model, String)]): String = {
+    var result = new String
+    models.foreach(modelName => {
+      result += s"Graph name: [${modelName._2}]\n graph: \n ${JenaUtil.toString(modelName._1)}\n"
+    })
+    result
   }
 
 }

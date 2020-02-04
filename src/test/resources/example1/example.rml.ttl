@@ -6,7 +6,7 @@
 @prefix ex: <http://www.example.com/> .
 @base <http://example.com/base> .
 
-<#FromToMaps>
+<#FromToMaps> a rr:TriplesMap;
 rml:logicalSource [ 
 	rml:source "example1/example1.xml";
         rml:referenceFormulation ql:XPath;

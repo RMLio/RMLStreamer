@@ -5,7 +5,8 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
 import java.util.regex.Pattern
 
-import io.rml.framework.core.model.Literal
+import io.rml.framework.core.extractors.MappingReader
+import io.rml.framework.core.model.{FormattedRMLMapping, Literal}
 import io.rml.framework.shared.ReadException
 import org.apache.commons.validator.routines.UrlValidator
 
@@ -134,6 +135,38 @@ object Util {
         }
       }
     }
+  }
+
+  def guessFormatFromFileName(fileName: String): Option[Format] = {
+    val suffix = fileName.substring(fileName.lastIndexOf('.')).toLowerCase
+    suffix match {
+      case ".ttl" => Some(Turtle)
+      case ".nt" => Some(NTriples)
+      case ".nq" => Some(NQuads)
+      case ".json" => Some(JSON_LD)
+      case ".json-ld" => Some(JSON_LD)
+      case _ => None
+    }
+  }
+
+  /**
+    * Utility method for reading a mapping file and converting it to a formatted RML mapping.
+    *
+    * @param path
+    * @return
+    */
+  def readMappingFile(path: String): FormattedRMLMapping = {
+    val classLoader = getClass.getClassLoader
+    val file_1 = new File(path)
+    val mapping = if (file_1.isAbsolute) {
+      val file = new File(path)
+      MappingReader().read(file)
+    } else {
+      val file = new File(classLoader.getResource(path).getFile)
+      MappingReader().read(file)
+    }
+
+    FormattedRMLMapping.fromRMLMapping(mapping)
   }
 
 }
