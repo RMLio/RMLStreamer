@@ -44,7 +44,6 @@ class StatementEngineTest extends FunSuite with Matchers {
 
 
   test("example10") {
-    pending // TODO: fix issue 77 first
     executeTest("example10/mapping.rml.ttl")
   }
 
