@@ -11,9 +11,6 @@ import scala.util.control.Exception
 
 class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
 
-  // first we set the environment right
-  RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
-
   val failing = Array( "negative_test_cases")
   val passing = Array(
     ("bugs","noopt"),
@@ -26,6 +23,7 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
   "Valid mapping output generation" should "match the output from output.ttl" in {
 
     passing.foreach(test =>  {
+      RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
       implicit val postProcessor: PostProcessor= TestUtil.pickPostProcessor(test._2)
       ExpectedOutputTestUtil.test(test._1, checkGeneratedOutput)
     })
