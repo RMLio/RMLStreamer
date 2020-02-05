@@ -68,7 +68,7 @@ can be set with the program argument `--baseIRI`.
 ### Added
 * Everything! (initial release)
 
-[1.0.0]: https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/tags/v1.0.0
-[1.1.0]: https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/compare/v1.0.0...v1.1.0
-[1.2.0]: https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/compare/v1.1.0...v1.2.0  
-[1.2.1]: https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/compare/v1.2.0...v1.2.1  
+[1.0.0]: https://github.com/RMLio/RMLStreamer/releases/tag/v1.0.0
+[1.1.0]: https://github.com/RMLio/RMLStreamer/compare/v1.0.0...v1.1.0
+[1.2.0]: https://github.com/RMLio/RMLStreamer/compare/v1.1.0...v1.2.0  
+[1.2.1]: https://github.com/RMLio/RMLStreamer/compare/v1.2.0...v1.2.1  
