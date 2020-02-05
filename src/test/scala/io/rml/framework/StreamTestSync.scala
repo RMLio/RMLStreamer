@@ -151,7 +151,6 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
         }
       }
     }
-    //}
   }
 
   // run teardown of subclass
@@ -208,7 +207,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     jobId
   }
 
-  private def deleteJob(fink: MiniCluster, jobId: JobID): Unit = {
+  private def deleteJob(flink: MiniCluster, jobId: JobID): Unit = {
     logInfo(s"Canceling job ${jobId}...")
     flink.cancelJob(jobId).get()
     Thread.sleep(1000)  // also here: even waiting for the future to complete doesn't guarantee that it's completed!
