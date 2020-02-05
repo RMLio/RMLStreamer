@@ -96,7 +96,7 @@ object TestUtil extends Logging {
       if (generatedModel.isIsomorphicWith(expectedModel)) {
         logInfo("Both graphs are isomorphic")
       } else {
-        logError("Graphs are not isomorphic!")
+        logError(s"Graphs are not isomorphic!\n---- Generated graph: Name: [${generatedModelName}]\n${generatedStr}\n---- Expected graph: Name: [${expectedModelName}]\n${expectedStr}")
         result = false
       }
 
