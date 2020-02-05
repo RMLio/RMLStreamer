@@ -3,6 +3,7 @@ package io.rml.framework.util.fileprocessing
 import java.io.File
 import java.nio.file.Path
 
+import io.rml.framework.core.util.Util
 import io.rml.framework.util.logging.Logger
 
 import scala.util.Sorting
@@ -22,20 +23,6 @@ trait TestFilesUtil[R] {
 
   def processFile(file: File): R
 
-  // TODO: not sure about this...
-  def getFile(path: String): File = {
-    val classLoader = getClass.getClassLoader
-    val file_1 = new File(path)
-    val result = if (file_1.isAbsolute) {
-      new File(path)
-    } else {
-
-      println(path)
-      new File(classLoader.getResource(path).getFile)
-    }
-    result
-  }
-
 
   /**
     * Gets RMLTC* folders located inside the parentTestCaseDir  directory.
@@ -46,7 +33,7 @@ trait TestFilesUtil[R] {
   def getTestCaseFolders(parentTestCaseDir: String): Array[Path] = {
 
 
-    val parentDir = getFile(parentTestCaseDir)
+    val parentDir = Util.getFile(parentTestCaseDir)
 
     parentDir
       .listFiles

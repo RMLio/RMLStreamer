@@ -162,17 +162,27 @@ object Util {
     * @return
     */
   def readMappingFile(path: String): FormattedRMLMapping = {
-    val classLoader = getClass.getClassLoader
-    val file_1 = new File(path)
-    val mapping = if (file_1.isAbsolute) {
-      val file = new File(path)
-      MappingReader().read(file)
-    } else {
-      val file = new File(classLoader.getResource(path).getFile)
-      MappingReader().read(file)
-    }
-
+    val mappingFile = getFile(path)
+    val mapping = MappingReader().read(mappingFile)
     FormattedRMLMapping.fromRMLMapping(mapping)
+  }
+
+  /**
+    * If the given path is absolute, then a File object representing that path is returned.
+    * If the given path is relative, then a File object representing the path relative to the root class directory is returned. This can also be a path in a jar.
+    * @param path
+    * @return
+    */
+  def getFile(path: String): File = {
+    val file_1 = new File(path)
+    val result = if (file_1.isAbsolute) {
+      new File(path)
+    } else {
+      println(path)
+      val classLoader = getClass.getClassLoader
+      new File(classLoader.getResource(path).getFile)
+    }
+    result
   }
 
 }

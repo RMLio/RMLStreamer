@@ -19,14 +19,17 @@ class StatementEngineTest extends FunSuite with Matchers {
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
     implicit val postProcessor = new NopPostProcessor()
 
+    val testDir = Util.getFile(new File(mappingFile).getParent)
+    val mappingFileAbs = new File(testDir, new File(mappingFile).getName)
+
     // read the mapping
-    val formattedMapping = Util.readMappingFile(mappingFile)
+    val formattedMapping = Util.readMappingFile(mappingFileAbs.getAbsolutePath)
 
     // execute
     val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect()
 
     // get expected output
-    val testDir = new File(mappingFile).getParentFile.getAbsoluteFile
+    //val testDir = new File(mappingFile).getParentFile.getAbsoluteFile
     val (expectedOutput, expectedOutputFormat) = TestUtil.getExpectedOutputs(testDir)
 
     val testOutcome = TestUtil.compareResults(s"StatementEngineTest: ${testDir}", result, expectedOutput, postProcessor.outputFormat, expectedOutputFormat)

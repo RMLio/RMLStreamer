@@ -6,8 +6,9 @@ import java.util.concurrent.Executors
 
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.util.Util
 import io.rml.framework.engine.PostProcessor
-import io.rml.framework.util.fileprocessing.{MappingTestUtil, StreamDataSourceTestUtil}
+import io.rml.framework.util.fileprocessing.StreamDataSourceTestUtil
 import io.rml.framework.util.logging.Logger
 import io.rml.framework.util.server.{TestData, TestSink2}
 import io.rml.framework.util.{StreamTestUtil, TestUtil}
@@ -87,7 +88,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     beforeTestCase()
 
     implicit val postProcessor: PostProcessor = TestUtil.pickPostProcessor(postProcessorName)
-    val folder = MappingTestUtil.getFile(folderPath.toString)
+    val folder = Util.getFile(folderPath.toString)
 
     // set up the execution environments
     implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment

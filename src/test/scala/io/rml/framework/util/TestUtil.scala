@@ -46,6 +46,7 @@ object TestUtil extends Logging {
   }
 
   def getExpectedOutputs(folder: File): (List[String], Option[Format]) = {
+    logInfo(s"**** Getting expected output from ${folder.toString}")
     ExpectedOutputTestUtil.processFilesInTestFolder(folder.toString).head
   }
 
