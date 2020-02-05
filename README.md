@@ -164,6 +164,8 @@ only one instance will get the input.
 * If there are multiple partitions in the topic and multiple RMLStreamer jobs, it could be that two (or more) jobs
 are assigned a certain partition, resulting in duplicate output.
 
+See also https://stackoverflow.com/questions/38639019/flink-kafka-consumer-groupid-not-working .
+
 The only option for spreading load is to use multiple topics, and assign one RMLStreamer job to one topic.
 
 ##### Generating a stream from a file
