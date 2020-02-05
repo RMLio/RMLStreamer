@@ -94,7 +94,7 @@ class TestSink extends SinkFunction[String] {
           scheduledTask.get.cancel()
         }
       } catch {
-        case e => Logger.logError(e.toString)
+        case e: Throwable => Logger.logError(e.toString)
       }
       Logger.logInfo(value)
       for (el <- value.split('\n')) {

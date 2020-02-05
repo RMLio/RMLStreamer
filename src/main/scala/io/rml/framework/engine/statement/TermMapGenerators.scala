@@ -118,23 +118,21 @@ object TermMapGenerators {
   }
 
   private def processIRI(origIri: String): Iterable[String] =  {
-
-    // assume the baseIRI has been checked before.
-    val baseIRI = RMLEnvironment.getGeneratorBaseIRI()
-    var completeIRI = ""
-    if (baseIRI.isDefined) {
-      completeIRI = baseIRI.get
-    }
-    completeIRI += origIri
-
-    if (Util.isValidUri(completeIRI)) {
-      List(completeIRI)
-    } else if (Util.isValidUri(origIri)) {
+    if (Util.isValidAbsoluteUri(origIri)) {
       List(origIri)
     } else {
-      List()
+      val baseIRI = RMLEnvironment.getGeneratorBaseIRI()
+      if (baseIRI.isDefined) {
+        val completeUri = baseIRI.get + origIri
+        if (Util.isValidAbsoluteUri(completeUri)) {
+          List(completeUri)
+        } else {
+          List()
+        }
+      } else {
+        List()
+      }
     }
-
   }
 
 }

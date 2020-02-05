@@ -12,10 +12,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Joins of data streams
 * Optimal usage of the task slots assigned to a task manager/job.
 
+### Changed
+* Refactoring of tests.
+* Test results are compared with expected output by comparing on RDF level, not String comparison.
+
 ### Fixed
 * Because generated output is parsed as Turtle during tests, tests generating N-Quads always fail.
 * A `@base` directive in the *mapping file* was used as `base IRI` when generating RDF. This is wrong; now the `base IRI`
 can be set with the program argument `--baseIRI`.
+* An URI with a scheme other than `http` (e.g. `tel`) was not concidered correct.
 
 ## [1.2.1] - 2020-01-21
 

@@ -22,6 +22,9 @@
 
 package io.rml.framework.core.util
 
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
+
 import org.apache.jena.query.{Dataset, DatasetFactory}
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.riot.{Lang, RDFFormat, RDFParser}
@@ -66,15 +69,21 @@ object JenaUtil {
     dataset
   }
 
-  def toModels(dataset: Dataset): List[Model] = {
-    var models = mutable.MutableList[Model]()
-    models += dataset.getDefaultModel
+  def toModels(dataset: Dataset): List[(Model, String)] = {
+    var models = mutable.MutableList[(Model, String)]()
+    models = models ++ List((dataset.getDefaultModel, ""))
     val iter = dataset.listNames();
     while (iter.hasNext) {
       val name = iter.next()
       val model = dataset.getNamedModel(name)
-      models += model
+      models = models ++ List((model, name))
     }
     models.toList
+  }
+
+  def toString(model: Model): String = {
+    val bos = new ByteArrayOutputStream
+    model.write(bos, Lang.NQUADS.getName)
+    bos.toString(StandardCharsets.UTF_8.name)
   }
 }

@@ -23,9 +23,9 @@ import java.io.File
 import java.util.Properties
 
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
+import io.rml.framework.core.util.Util
 import io.rml.framework.engine._
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{PartitionerFormat, RMLPartitioner, UniversalKafkaConnectorFactory}
@@ -118,7 +118,7 @@ object Main extends Logging {
 
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.
     // Triple maps are also organized in categories (does it contain streams, does it contain joins, ... )
-    val formattedMapping = readMappingFile(mappingPath)
+    val formattedMapping = Util.readMappingFile(mappingPath)
 
     // set up execution environments, Flink needs these to know how to operate (local, cluster mode, ...)
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
@@ -175,25 +175,6 @@ object Main extends Logging {
 
   }
 
-  /**
-    * Utility method for reading a mapping file and converting it to a formatted RML mapping.
-    *
-    * @param path
-    * @return
-    */
-  private def readMappingFile(path: String): FormattedRMLMapping = {
-    val classLoader = getClass.getClassLoader
-    val file_1 = new File(path)
-    val mapping = if (file_1.isAbsolute) {
-      val file = new File(path)
-      MappingReader().read(file)
-    } else {
-      val file = new File(classLoader.getResource(path).getFile)
-      MappingReader().read(file)
-    }
-
-    FormattedRMLMapping.fromRMLMapping(mapping)
-  }
 
   /**
     * Utility method for creating a Flink DataStream[String] from a formatted mapping.
