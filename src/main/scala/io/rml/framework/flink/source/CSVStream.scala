@@ -42,7 +42,7 @@ object CSVStream {
       .withTrim()
       .withFirstRecordAsHeader()
 
-    val stream: DataStream[Iterable[Item]] = StreamUtil.createTcpSocketSource(tCPSocketStream, csvConfig.recordDelimiter)
+    val stream: DataStream[Iterable[Item]] = StreamUtil.paralleliseOverSlots(StreamUtil.createTcpSocketSource(tCPSocketStream, csvConfig.recordDelimiter))
       .map(batchString => {
         CSVItem.fromDataBatch(batchString, format)
       })
@@ -65,7 +65,7 @@ object CSVStream {
 
     val properties = kafkaStream.getProperties
     val consumer =  kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
-    val stream: DataStream[Iterable[Item]] = env.addSource(consumer)
+    val stream: DataStream[Iterable[Item]] = StreamUtil.paralleliseOverSlots(env.addSource(consumer))
       .map(batchString => {
         CSVItem.fromDataBatch(batchString, format)
       })

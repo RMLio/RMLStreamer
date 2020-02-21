@@ -117,11 +117,8 @@ object Util {
 
 
 
-  def isRootIteratorTag(tag:Option[Literal]): Boolean = {
-    tag match {
-      case None => true
-      case Some(x) =>  io.rml.framework.flink.source.Source.DEFAULT_ITERATOR_SET.contains(x.toString)
-    }
+  def isRootIteratorTag(tag: String): Boolean = {
+    io.rml.framework.flink.source.Source.DEFAULT_ITERATOR_SET.contains(tag)
   }
 
   // auto-close resources, seems to be missing in Scala

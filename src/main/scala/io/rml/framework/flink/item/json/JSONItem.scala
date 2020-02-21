@@ -35,7 +35,7 @@ import org.jsfr.json.{JacksonParser, JsonSurfer}
 import scala.collection.JavaConversions._
 import scala.util.control.NonFatal
 
-class JSONItem(map: java.util.Map[String, Object], val tag: Option[String] = None) extends Item  {
+class JSONItem(map: java.util.Map[String, Object], val tag: String) extends Item  {
 
 
 
@@ -78,8 +78,8 @@ object JSONItem extends Logging {
         jsonPath => {
           try {
             val tag = jsonPath match {
-              case JSONStream.DEFAULT_PATH_OPTION => None
-              case _ => Some(jsonPath)
+              case JSONStream.DEFAULT_PATH_OPTION => ""
+              case _ => jsonPath
             }
             val collection = surfer.collectAll(json, jsonPath)
             val listOfJson = collection.toArray()
@@ -91,7 +91,8 @@ object JSONItem extends Logging {
 
             Some(result)
           } catch {
-            case NonFatal(e) => logError("Error while parsing JSON: " + e.getMessage + " | " + json); None
+            case NonFatal(e) =>
+              logError(s"Error while parsing JSON:\n${json}", e); None
           }
         }
       )

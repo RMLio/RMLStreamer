@@ -136,7 +136,7 @@ SOFTWARE.
         <dependency>
             <groupId>com.github.jsurfer</groupId>
             <artifactId>jsurfer-jackson</artifactId>
-            <version>1.4.3</version>
+            <version>1.5.1</version>
         </dependency>
 
         <dependency>

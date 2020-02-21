@@ -34,7 +34,7 @@ class EngineTest extends FunSuite with Matchers {
       else None
     }
 
-    override def tag(): Option[String] = None
+    override def tag: String = ""
   }
 
   test("testProcessTemplate") {

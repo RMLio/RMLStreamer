@@ -12,13 +12,13 @@ trait Source
   */
 object Source {
 
-  val DEFAULT_ITERATOR_MAP: Map[String, Option[String]] =  Map(
-    RMLVoc.Class.JSONPATH -> Some("$"),
-    RMLVoc.Class.CSV -> None,
-    RMLVoc.Class.XPATH -> Some("/*")
+  val DEFAULT_ITERATOR_MAP: Map[String, String] =  Map(
+    RMLVoc.Class.JSONPATH -> "$",
+    RMLVoc.Class.CSV -> "",
+    RMLVoc.Class.XPATH -> "/*"
   )
 
-  val DEFAULT_ITERATOR_SET: Set[String] = DEFAULT_ITERATOR_MAP.values.flatten.toSet
+  val DEFAULT_ITERATOR_SET: Set[String] = DEFAULT_ITERATOR_MAP.values.toSet
 
   def apply(logicalSource: LogicalSource)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment): Source = {
     logicalSource.source match {

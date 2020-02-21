@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets
 import com.ximpleware.extended.{AutoPilotHuge, VTDGenHuge, XMLBuffer}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.source.XMLIterator
+import io.rml.framework.flink.source.{XMLIterator, XMLStream}
 import io.rml.framework.flink.util.XMLNamespace
 import javax.xml.namespace.NamespaceContext
 import javax.xml.parsers.DocumentBuilderFactory
@@ -17,7 +17,7 @@ import org.w3c.dom.{Document, NodeList}
 import scala.util.control.NonFatal
 //import scala.xml.{PrettyPrinter, XML}
 
-class XMLItem(xml: Document, namespaces: Map[String, String], var tag: Option[String] = None) extends Item {
+class XMLItem(xml: Document, namespaces: Map[String, String], val tag: String) extends Item {
 
   @transient private lazy val xPath = XPathFactory.newInstance().newXPath()
 
@@ -93,7 +93,12 @@ object XMLItem extends Logging {
 
     val document: Document = documentBuilder.parse(IOUtils.toInputStream(xml))
 
-    new XMLItem(document, namespaces, Some(xpath))
+    val tag = xpath match {
+      case XMLStream.DEFAULT_PATH_OPTION => ""
+      case _ => xpath
+    }
+
+    new XMLItem(document, namespaces, tag)
 
   }
 
@@ -126,7 +131,7 @@ object XMLItem extends Logging {
           Some(result)
 
         } catch {
-          case NonFatal(e) => logError("Error while parsing XML: " + e.getMessage + " | " + xml); None
+          case NonFatal(e) => logError(s"Error while parsing XML:\n${xml}", e); None
         }
       }
         .flatten

@@ -5,5 +5,5 @@ case class JoinedItem(child: Item, parent: Item) extends  Item {
     throw new IllegalAccessError("Joined item cannot call refer!")
   }
 
-  override def tag: Option[String] = None
+  override def tag: String = ""
 }

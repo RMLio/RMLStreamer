@@ -35,7 +35,7 @@ import scala.collection.JavaConverters._
   *
   * @param record
   */
-class CSVItem(record: CSVRecord, val tag:Option[String]= None) extends Item {
+class CSVItem(record: CSVRecord, val tag: String) extends Item {
 
   /**
     *
@@ -59,7 +59,7 @@ class CSVItem(record: CSVRecord, val tag:Option[String]= None) extends Item {
 object CSVItem  extends  Logging{
 
 
-  def apply(record: CSVRecord): CSVItem = new CSVItem(record)
+  def apply(record: CSVRecord): CSVItem = new CSVItem(record, "")
 
 
   //TODO remove this method and use the one with CSVFormat
@@ -75,7 +75,7 @@ object CSVItem  extends  Logging{
     //jdata batch string must not contain any leading whitespaces
     val sanitizedData = dataBatch.replaceAll("^\\s+", "").replace("\n\n", "")
     val parser = csvFormat.parse(new StringReader(sanitizedData))
-    val result:List[Item] = parser.getRecords.asScala.toList.map(new CSVItem(_))
+    val result:List[Item] = parser.getRecords.asScala.toList.map(new CSVItem(_, ""))
     result
   }
 
@@ -88,7 +88,7 @@ object CSVItem  extends  Logging{
 
       CSVItem(record)
     } catch {
-      case e: IOException => logError("Error while parsing CSV: " + e.getMessage + " | " + csvLine); new EmptyItem
+      case e: IOException => logError(s"Error while parsing CSV:\n${csvLine}", e); new EmptyItem
       case e: IndexOutOfBoundsException => new EmptyItem
     }
 
