@@ -6,8 +6,18 @@
 
 function getPropertyFromConfig {
    PROP_KEY=$1
-   PROP_VALUE=`cat $PROPERTY_FILE | grep "$PROP_KEY" | cut -d'=' -f2`
+   PROP_VALUE=$(cat $PROPERTY_FILE | grep "$PROP_KEY" | cut -d'=' -f2)
    echo $PROP_VALUE
+}
+
+function proertyInConfig() {
+   PROP_KEY=$1
+   IN_CONFIG=$(grep '$PROP_KEY' $PROPERTY_FILE)
+   if [ -n "$IN_CONFIG" ]; then
+     return true
+    else
+      return false
+    fi
 }
 
 function setProperties {
@@ -85,6 +95,10 @@ function setProperties {
             shift # past argument
             shift # past value
             ;;
+         -l|--enable-local-parallel
+            LOCAL_PARALLEL=true
+            shift # option only
+            ;;
         *)
             POSITIONAL+=("$1")
             shift
@@ -128,6 +142,10 @@ function setProperties {
         if [ -z "$PARALLELISM"  ]; then
           PARALLELISM=$(getPropertyFromConfig "parallelism")
         fi
+
+        if [ -z "$LOCAL_PARALLEL"  ]; then
+          LOCAL_PARALLEL=$(propertyInConfig "enableLocalParallel")
+        fi
     fi
 }
 
@@ -145,16 +163,22 @@ echo "socket: $SOCKET"
 echo "kafkaBrokerList: $KAFKA_BROKERLIST"
 echo "kafkaTopic: $KAFKA_TOPIC"
 echo "parallelism: $PARALLELISM"
+echo "local parallelism enabled: $LOCAL_PARALLEL"
 
 echo ""
 echo "// RML Run Script"
 echo "------------------------------------------"
 echo ""
 
+COMMANDLINE="$FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main $STREAMER_JAR --job-name \"$JOBNAME\" --partition-id $PARTITIONID --partition-type $PARTITIONTYPE --post-process $POSTPROCESS --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC"
+if [ -n $LOCAL_PARALLEL]; then
+  COMMANDLINE+=" --enable-local-parallel"
+fi
+
 # Check if $MAPPINGPATH is set
 if [ ! -z "$MAPPINGPATH"  ]; then
 	# Execute
-	bash $FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main $STREAMER_JAR --job-name "$JOBNAME" --partition-id $PARTITIONID --partition-type $PARTITIONTYPE --post-process $POSTPROCESS --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC
+	bash $COMMANDLINE
 else
 	echo "Execution aborted: -p|--path must be given."
 	echo ""

@@ -1,6 +1,6 @@
 package io.rml.framework.flink.source
 
-import io.rml.framework.core.model.{FileStream, KafkaStream, Literal, StreamDataSource, TCPSocketStream}
+import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.xml.XMLItem
@@ -13,25 +13,19 @@ import org.slf4j.LoggerFactory
 case class XMLStream(stream: DataStream[Iterable[Item]]) extends Stream
 
 object XMLStream {
-  val DEFAULT_PATH_OPTION: String = Source.DEFAULT_ITERATOR_MAP(RMLVoc.Class.XPATH).getOrElse("/*")
+  val DEFAULT_PATH_OPTION: String = Source.DEFAULT_ITERATOR_MAP(RMLVoc.Class.XPATH)
 
-  def apply(source: StreamDataSource, xpaths: List[Option[Literal]])(implicit env: StreamExecutionEnvironment): Stream = {
-    val xpathStrings = xpaths.map({
-      case Some(x) => x.toString
-      case _ => DEFAULT_PATH_OPTION
-    })
-      .distinct
-
+  def apply(source: StreamDataSource, xpaths: List[String])(implicit env: StreamExecutionEnvironment): Stream = {
 
     source match {
-      case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, xpathStrings)
-      case fileStream: FileStream => fromFileStream(fileStream.path, xpathStrings)
-      case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, xpathStrings)
+      case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, xpaths)
+      case fileStream: FileStream => fromFileStream(fileStream.path, xpaths)
+      case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, xpaths)
     }
   }
 
   def fromTCPSocketStream(tCPSocketStream: TCPSocketStream, xpaths: List[String])(implicit env: StreamExecutionEnvironment): XMLStream = {
-    val stream: DataStream[Iterable[Item]] = StreamUtil.createTcpSocketSource(tCPSocketStream)
+    val stream: DataStream[Iterable[Item]] = StreamUtil.paralleliseOverSlots(StreamUtil.createTcpSocketSource(tCPSocketStream))
       .map(item => {
         XMLItem.fromStringOptionable(item, xpaths)
       })
@@ -48,7 +42,7 @@ object XMLStream {
   def fromKafkaStream(kafkaStream: KafkaStream, xpaths: List[String])(implicit env: StreamExecutionEnvironment): XMLStream = {
     val properties = kafkaStream.getProperties
     val consumer = kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
-    val stream: DataStream[Iterable[Item]] = env.addSource(consumer)
+    val stream: DataStream[Iterable[Item]] = StreamUtil.paralleliseOverSlots(env.addSource(consumer))
       .map(item => {
         XMLItem.fromStringOptionable(item, xpaths)
       })

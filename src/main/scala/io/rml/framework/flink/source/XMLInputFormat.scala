@@ -49,6 +49,7 @@ class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Ite
 
 }
 
-class EmptyItem(val tag:Option[String] = None ) extends Item {
+class EmptyItem() extends Item {
   override def refer(reference: String): Option[List[String]] = None
+  override def tag = ""
 }

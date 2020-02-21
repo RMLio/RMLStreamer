@@ -48,6 +48,7 @@ object JenaUtil {
       case Turtle => RDFFormat.TURTLE
       case NTriples => RDFFormat.NTRIPLES
       case JSON_LD => RDFFormat.JSONLD
+      case NQuads => RDFFormat.NQUADS
     }
   }
 

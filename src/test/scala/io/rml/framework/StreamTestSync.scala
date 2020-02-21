@@ -6,7 +6,7 @@ import java.util.concurrent.Executors
 
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.util.Util
+import io.rml.framework.core.util.{Util, StreamerConfig}
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.fileprocessing.StreamDataSourceTestUtil
 import io.rml.framework.util.logging.Logger
@@ -47,6 +47,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
         logWarning(s"Could not delete tmp dir ${tmpDir}")
       }
     }
+    StreamerConfig.setExecuteLocalParallel(true)
   }
 
   // Things to do before running one test case

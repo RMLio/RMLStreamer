@@ -22,9 +22,9 @@
 
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{DataSource, Literal, LogicalSource, Uri}
+import io.rml.framework.core.model.{DataSource, LogicalSource, Uri}
 
 case class StdLogicalSource(
                              referenceFormulation: Uri,
-                             iterators: List[Option[Literal]],
+                             iterators: List[String],
                              source: DataSource) extends LogicalSource

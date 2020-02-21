@@ -38,8 +38,8 @@ object StreamDataSource {
       case source: StreamDataSource =>
         logicalSource.referenceFormulation match {
           case Uri(RMLVoc.Class.CSV) => CSVStream(source)
-          case Uri(RMLVoc.Class.XPATH) => XMLStream(source, logicalSource.iterators)
-          case Uri(RMLVoc.Class.JSONPATH) => JSONStream(source, logicalSource.iterators)
+          case Uri(RMLVoc.Class.XPATH) => XMLStream(source, logicalSource.iterators.distinct)
+          case Uri(RMLVoc.Class.JSONPATH) => JSONStream(source, logicalSource.iterators.distinct)
         }
     }
   }

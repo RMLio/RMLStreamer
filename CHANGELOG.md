@@ -10,7 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Function mapping.
 * Joins of data streams
-* Optimal usage of the task slots assigned to a task manager/job.
+
+### Added
+
+* Option to switch on optimal usage of the task slots assigned to a task manager/job,
+at the cost of losing strict output order.
 
 ### Changed
 * Refactoring of tests.

@@ -27,6 +27,7 @@ import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.model.{DataSource, Literal, LogicalSource, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.flink.source.Source.DEFAULT_ITERATOR_MAP
 import io.rml.framework.shared.RMLException
 
 /**
@@ -69,9 +70,9 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
   @throws(classOf[RMLException])
   private def extractLogicalSourceProperties(resource: RDFResource): LogicalSource = {
 
-    val iterator: Option[Literal] = extractIterator(resource)
     val source: DataSource = extractDataSource(resource)
     val referenceFormulation: Uri = extractReferenceFormulation(resource)
+    val iterator: String = extractIterator(resource, referenceFormulation)
 
     // debug log, check for performance
     if (isDebugEnabled) {
@@ -92,17 +93,19 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
     * @return Optionally a literal that represents the iterator.
     */
   @throws(classOf[RMLException])
-  private def extractIterator(resource: RDFResource): Option[Literal] = {
+  private def extractIterator(resource: RDFResource, referenceFormulation: Uri): String = {
 
     val property = RMLVoc.Property.ITERATOR
     val properties = resource.listProperties(property)
 
     if (properties.size > 1) throw new RMLException(resource.uri + ": invalid amount of iterators.")
-    if (properties.isEmpty) return None
+    if (properties.isEmpty) {
+      return DEFAULT_ITERATOR_MAP(referenceFormulation.uri)
+    }
 
     properties.head match {
       case uri: Uri => throw new RMLException(uri + ": iterator must be a literal.")
-      case literal: Literal => Some(Literal(literal.toString)) // convert this to a normal Literal
+      case literal: Literal => literal.value
     }
 
   }
