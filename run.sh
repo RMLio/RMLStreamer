@@ -99,6 +99,11 @@ function setProperties {
             LOCAL_PARALLEL=true
             shift # option only
             ;;
+         -bi|--base-iri)
+            BASE_IRI="$2"
+            shift # past argument
+            shift # past value
+            ;;
         *)
             POSITIONAL+=("$1")
             shift
@@ -146,6 +151,10 @@ function setProperties {
         if [ -z "$LOCAL_PARALLEL"  ]; then
           LOCAL_PARALLEL=$(propertyInConfig "enableLocalParallel")
         fi
+
+        if [ -z "$BASE_IRI"  ]; then
+          BASE_IRI=$(propertyInConfig "baseIRI")
+        fi
     fi
 }
 
@@ -164,13 +173,14 @@ echo "kafkaBrokerList: $KAFKA_BROKERLIST"
 echo "kafkaTopic: $KAFKA_TOPIC"
 echo "parallelism: $PARALLELISM"
 echo "local parallelism enabled: $LOCAL_PARALLEL"
+echo "base IRI: $BASE_IRI"
 
 echo ""
 echo "// RML Run Script"
 echo "------------------------------------------"
 echo ""
 
-COMMANDLINE="$FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main $STREAMER_JAR --job-name \"$JOBNAME\" --partition-id $PARTITIONID --partition-type $PARTITIONTYPE --post-process $POSTPROCESS --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC"
+COMMANDLINE="$FLINKBIN run -p $PARALLELISM -c io.rml.framework.Main $STREAMER_JAR --job-name \"$JOBNAME\" --partition-id $PARTITIONID --partition-type $PARTITIONTYPE --post-process $POSTPROCESS --path $MAPPINGPATH --outputPath $OUTPUTPATH --socket $SOCKET --broker-list $KAFKA_BROKERLIST --topic $KAFKA_TOPIC --base-IRI $BASE_IRI"
 if [ -n $LOCAL_PARALLEL]; then
   COMMANDLINE+=" --enable-local-parallel"
 fi
