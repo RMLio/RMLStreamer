@@ -22,19 +22,17 @@
 
 package io.rml.framework.core.model.rdf.jena
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, InputStream}
 import java.nio.charset.StandardCharsets
 
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFLiteral, RDFResource, RDFTriple}
 import io.rml.framework.core.model.{Literal, Uri}
-import io.rml.framework.core.util.{Format, JenaUtil, Turtle, Util}
+import io.rml.framework.core.util.{Format, JenaUtil, Util}
 import io.rml.framework.core.vocabulary.RDFVoc
-import io.rml.framework.engine.statement.TermMapGenerators
 import io.rml.framework.shared.{RMLException, ReadException}
 import org.apache.jena.rdf.model.{Model, ModelFactory, Statement}
 import org.apache.jena.riot.RDFDataMgr
-import org.apache.jena.shared.JenaException
 
 import scala.collection.JavaConverters._
 
@@ -99,60 +97,28 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   }
 
   @throws(classOf[ReadException])
-  override def read(dump: String, format: String = "TURTLE"): Unit = {
+  override def read(dump: String, baseIRI: Option[String], format: Format): Unit = {
     val stream = new ByteArrayInputStream(dump.getBytes(StandardCharsets.UTF_8))
-    try {
-      val baseUrl = Util.getBaseDirective(dump)
-      TermMapGenerators.setBaseUrl(baseUrl)
-      model.read(stream, null, format)
-      logModelWhenDebugEnabled()
-    } catch {
-      case jenaException: JenaException =>
-        logDebug(jenaException.toString)
-        throw new ReadException(jenaException.getMessage)
-    }
+    read(stream, baseIRI, format)
   }
 
   @throws(classOf[ReadException])
-  override def read(file: File): Unit = {
-    try {
-      val protocol = "file://" // needed for loading from a file
-
-      val inputStream = Util.getFileInputStream(file)
-      val baseStream = Util.getFileInputStream(file)
-
-      val baseUrl = tryWith(baseStream) { bs =>
-        Util.getBaseDirective(bs)
-      }
-      TermMapGenerators.setBaseUrl(baseUrl)
-      tryWith(inputStream) { in =>
-        RDFDataMgr.read(model, in, JenaUtil.toRDFFormat(Turtle).getLang)
-      }
-
-      withUri(Uri(file.getName)) // overwrite the graph uri with the file path
-      logModelWhenDebugEnabled()
-    } catch {
-      case jenaException: JenaException =>
-        logDebug(jenaException.toString)
-        throw new ReadException(jenaException.getMessage)
-    }
+  override def read(file: File, baseIRI: Option[String], format: Format): Unit = {
+    val inputStream = Util.getFileInputStream(file)
+    read(inputStream, baseIRI, format)
+    withUri(Uri(file.getName)) // overwrite the graph uri with the file path
   }
 
-  // auto-close resources, seems to be missing in Scala
-  def tryWith[R, T <: AutoCloseable](resource: T)(doWork: T => R): R = {
-    try {
-      doWork(resource)
+  private def read(in: InputStream, baseIRI: Option[String], format: Format) {
+    val bIri = baseIRI match {
+      case Some(iri) => iri
+      case None => null
     }
-    finally {
-      try {
-        if (resource != null) {
-          resource.close()
-        }
-      }
-      catch {
-        case e: Exception => e.printStackTrace()
-      }
+    model.removeAll()
+    Util.tryWith(in) {
+      in => model.read(in, bIri, JenaUtil.format(format))
     }
+    logModelWhenDebugEnabled()
   }
 
 

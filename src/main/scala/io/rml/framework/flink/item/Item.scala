@@ -35,6 +35,6 @@ trait Item extends Serializable {
   @transient lazy val blankNodeId: BlankNodeId = BlankNodeId.create()
 
 
-  def tag:Option[String]
+  def tag: String
 
 }

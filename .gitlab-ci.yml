@@ -30,37 +30,34 @@ cache:
   paths:
     - .m2/repository
 
-# This will only validate and compile stuff and run e.g. maven-enforcer-plugin.
-# Because some enforcer rules might check dependency convergence and class duplications
-# we use `test-compile` here instead of `validate`, so the correct classpath is picked up.
-.validate: &validate
+# This will only the project.
+.build: &build
   stage: build
   script:
     - 'mvn $MAVEN_CLI_OPTS test-compile'
 
-# For merge requests do not `deploy` but only run `verify`.
-# See https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
-.verify: &verify
+# This will also run tests.
+.test: &test
   stage: test
   script:
     - 'mvn $MAVEN_CLI_OPTS test'
 
-# Validate merge requests using JDK8
-validate:jdk8:
-  <<: *validate
+# Build merge requests using JDK8
+build:jdk8:
+  <<: *build
   image: maven:3-jdk-8
 
-# Verify merge requests using JDK8
-verify:jdk8:
-  <<: *verify
+# Test merge requests using JDK8
+test:jdk8:
+  <<: *test
   image: maven:3-jdk-8
 
-# Validate merge requests using JDK12
-validate:jdk12:
-  <<: *validate
+# Build merge requests using JDK12
+build:jdk12:
+  <<: *build
   image: maven:3-jdk-12
 
-# Verify merge requests using JDK12
-verify:jdk12:
-  <<: *verify
+# Test merge requests using JDK12
+test:jdk12:
+  <<: *test
   image: maven:3-jdk-12

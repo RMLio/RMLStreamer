@@ -22,9 +22,11 @@ package io.rml.framework
 import java.io.File
 import java.util.Properties
 
-import io.rml.framework.core.extractors.MappingReader
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
+import io.rml.framework.core.util.Util
+import io.rml.framework.core.util.StreamerConfig
 import io.rml.framework.engine._
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{PartitionerFormat, RMLPartitioner, UniversalKafkaConnectorFactory}
@@ -82,6 +84,12 @@ object Main extends Logging {
     var jobName = if (parameters.has("job-name")) parameters.get("job-name")
     else EMPTY_VALUE
 
+    var baseIRI = if (parameters.has("baseIRI")) parameters.get("baseIRI")
+    else EMPTY_VALUE
+
+    var localParallelExecution = parameters.has("enable-local-parallel")
+    StreamerConfig.setExecuteLocalParallel(localParallelExecution)
+
     implicit val postProcessor:PostProcessor =
       parameters.get("post-process") match {
         case "bulk" => new BulkPostProcessor
@@ -99,11 +107,22 @@ object Main extends Logging {
     logInfo("Post-process: "  + postProcessor.toString)
     logInfo("Kafka Partition: " +  partitionID)
     logInfo("Kafka partition format: " + partitionFormatString)
+    logInfo("Base IRI: " + baseIRI)
+    logInfo(s"Parallelise over local task slots: ${StreamerConfig.isExecuteLocalParallel()}")
 
+    // determine the base IRI of the RDF to generate
+    val baseIRIOption: Option[String] = baseIRI match {
+      case EMPTY_VALUE => None
+      case iri => Some(iri)
+    }
+    RMLEnvironment.setGeneratorBaseIRI(baseIRIOption)
+
+    // determine the base IRI of the mapping file
+    RMLEnvironment.setMappingFileBaseIRI(Some(new File(mappingPath).getAbsolutePath))
 
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.
     // Triple maps are also organized in categories (does it contain streams, does it contain joins, ... )
-    val formattedMapping = readMappingFile(mappingPath)
+    val formattedMapping = Util.readMappingFile(mappingPath)
 
     // set up execution environments, Flink needs these to know how to operate (local, cluster mode, ...)
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
@@ -127,7 +146,6 @@ object Main extends Logging {
 
       // check if the mapping contains streamed mappings
     } else if (formattedMapping.containsStreamTriplesMaps()) {
-
       val stream = if (formattedMapping.containsDatasetTriplesMaps()) {
         logInfo("Mixed dataset and datastream job found.")
         // At this moment, we only support the case that there is a "streaming" triples map that has a "static" parent triples map.
@@ -160,25 +178,6 @@ object Main extends Logging {
 
   }
 
-  /**
-    * Utility method for reading a mapping file and converting it to a formatted RML mapping.
-    *
-    * @param path
-    * @return
-    */
-  private def readMappingFile(path: String): FormattedRMLMapping = {
-    val classLoader = getClass.getClassLoader
-    val file_1 = new File(path)
-    val mapping = if (file_1.isAbsolute) {
-      val file = new File(path)
-      MappingReader().read(file)
-    } else {
-      val file = new File(classLoader.getResource(path).getFile)
-      MappingReader().read(file)
-    }
-
-    FormattedRMLMapping.fromRMLMapping(mapping)
-  }
 
   /**
     * Utility method for creating a Flink DataStream[String] from a formatted mapping.
@@ -198,15 +197,8 @@ object Main extends Logging {
     require(formattedMapping.containsStreamTriplesMaps())
     val triplesMaps = formattedMapping.standardStreamTriplesMaps ++ formattedMapping.joinedSteamTriplesMaps
 
-    // group triple maps by logical sources based on if the postprocessor is supposed to emit at most one response
-    val grouped =
-      postProcessor match {
-        // group by logicalSource (source + reference formulation)
-        case _:AtMostOneProcessor => triplesMaps.groupBy(triplesMap => triplesMap.logicalSource.semanticIdentifier)
-
-        // group on object instance of logicalSource, i.e., don't group
-        case _:PostProcessor => triplesMaps.groupBy(triplesMap => triplesMap.logicalSource)
-      }
+    // group triple maps by logical source
+    val grouped = triplesMaps.groupBy(triplesMap => triplesMap.logicalSource.semanticIdentifier)
 
     // create a map with as key a Source and as value an Engine with loaded statements
     // the loaded statements are the mappings to execute
@@ -218,7 +210,7 @@ object Main extends Logging {
       // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
       Source(logicalSource) -> {
         logInfo(entry._2.size + " Triple Maps are found.")
-        StatementEngine.fromTriplesMaps(triplesMaps, iterators.size > 1 )
+        StatementEngine.fromTriplesMaps(triplesMaps)
       }
     })
 
@@ -303,11 +295,16 @@ object Main extends Logging {
           .map(childItem => {
             val childRef = childItem.refer(joinedStreamTm.joinCondition.get.child.identifier).get.head
             // for every child ref from the streaming data, we look up the subject item from the static data (saved before in a map)
-            val parentItem = parentTriplesMapId2JoinParentSource2JoinParentValue2ParentItem((parentTmId, joinParentSource, childRef))
-            // the actual join
-            val joinedItem = JoinedItem(childItem, parentItem)
-            joinedItem
-          }).name("Joining items from static data and streaming data")
+            val parentItem = parentTriplesMapId2JoinParentSource2JoinParentValue2ParentItem.getOrElse((parentTmId, joinParentSource, childRef), null)
+            if (parentItem != null) {
+              Some(JoinedItem(childItem, parentItem))
+            } else {
+              None
+            }
+
+          }).filter(_.isDefined) // filter out the None's
+          .name("Joining items from static data and streaming data")
+          .map(someItem => someItem.get)
           .map(new JoinedStaticProcessor(engine))
           .name("Executing mapping statements on joined items")
           .flatMap(triples =>

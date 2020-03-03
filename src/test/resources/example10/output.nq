@@ -1,0 +1,700 @@
+<http://example.org/person/0Houston%20Satterfield> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/0Houston%20Satterfield> <http://schema.org/height> "29837"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/0Houston%20Satterfield> <http://schema.org/weight> "88352"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/0Houston%20Satterfield> <http://xmlns.com/foaf/0.1/name> "Houston Satterfield".
+<http://example.org/person/0Houston%20Satterfield> <http://xmlns.com/foaf/0.1/mbox> <mailto:Beau_Rowe%40gmail.com>.
+<http://example.org/person/0Houston%20Satterfield> <http://xmlns.com/foaf/0.1/phone> <tel:%28308%29%20305-0050%20x4217>.
+<http://example.org/person/0Houston%20Satterfield> <http://schema.org/birthDate> "1917-03-26"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/1Annamarie%20Wehner> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/1Annamarie%20Wehner> <http://schema.org/height> "39123"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/1Annamarie%20Wehner> <http://schema.org/weight> "90123"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/1Annamarie%20Wehner> <http://xmlns.com/foaf/0.1/name> "Annamarie Wehner".
+<http://example.org/person/1Annamarie%20Wehner> <http://xmlns.com/foaf/0.1/mbox> <mailto:Misty.Rowe%40yahoo.com>.
+<http://example.org/person/1Annamarie%20Wehner> <http://xmlns.com/foaf/0.1/phone> <tel:1-783-292-4025%20x0618>.
+<http://example.org/person/1Annamarie%20Wehner> <http://schema.org/birthDate> "1981-08-30"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/2Mr.%20Griffin%20Beahan> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/2Mr.%20Griffin%20Beahan> <http://schema.org/height> "74052"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/2Mr.%20Griffin%20Beahan> <http://schema.org/weight> "49810"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/2Mr.%20Griffin%20Beahan> <http://xmlns.com/foaf/0.1/name> "Mr. Griffin Beahan".
+<http://example.org/person/2Mr.%20Griffin%20Beahan> <http://xmlns.com/foaf/0.1/mbox> <mailto:Emelie29%40yahoo.com>.
+<http://example.org/person/2Mr.%20Griffin%20Beahan> <http://xmlns.com/foaf/0.1/phone> <tel:%28683%29%20249-5499%20x22691>.
+<http://example.org/person/2Mr.%20Griffin%20Beahan> <http://schema.org/birthDate> "1967-04-22"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/3Ayden%20Paucek%20V> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/3Ayden%20Paucek%20V> <http://schema.org/height> "12482"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/3Ayden%20Paucek%20V> <http://schema.org/weight> "20470"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/3Ayden%20Paucek%20V> <http://xmlns.com/foaf/0.1/name> "Ayden Paucek V".
+<http://example.org/person/3Ayden%20Paucek%20V> <http://xmlns.com/foaf/0.1/mbox> <mailto:Francesco.Hudson93%40gmail.com>.
+<http://example.org/person/3Ayden%20Paucek%20V> <http://xmlns.com/foaf/0.1/phone> <tel:1-989-099-2974>.
+<http://example.org/person/3Ayden%20Paucek%20V> <http://schema.org/birthDate> "2001-09-10"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/4Lavada%20Haley> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/4Lavada%20Haley> <http://schema.org/height> "85277"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/4Lavada%20Haley> <http://schema.org/weight> "99080"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/4Lavada%20Haley> <http://xmlns.com/foaf/0.1/name> "Lavada Haley".
+<http://example.org/person/4Lavada%20Haley> <http://xmlns.com/foaf/0.1/mbox> <mailto:Gregg.Parisian64%40hotmail.com>.
+<http://example.org/person/4Lavada%20Haley> <http://xmlns.com/foaf/0.1/phone> <tel:%28611%29%20743-6487%20x592>.
+<http://example.org/person/4Lavada%20Haley> <http://schema.org/birthDate> "2011-05-14"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/5Rahsaan%20Koelpin> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/5Rahsaan%20Koelpin> <http://schema.org/height> "60975"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/5Rahsaan%20Koelpin> <http://schema.org/weight> "52235"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/5Rahsaan%20Koelpin> <http://xmlns.com/foaf/0.1/name> "Rahsaan Koelpin".
+<http://example.org/person/5Rahsaan%20Koelpin> <http://xmlns.com/foaf/0.1/mbox> <mailto:Gladyce41%40yahoo.com>.
+<http://example.org/person/5Rahsaan%20Koelpin> <http://xmlns.com/foaf/0.1/phone> <tel:087-524-8077%20x603>.
+<http://example.org/person/5Rahsaan%20Koelpin> <http://schema.org/birthDate> "1921-09-08"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/6Bianka%20Walsh> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/6Bianka%20Walsh> <http://schema.org/height> "99043"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/6Bianka%20Walsh> <http://schema.org/weight> "8200"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/6Bianka%20Walsh> <http://xmlns.com/foaf/0.1/name> "Bianka Walsh".
+<http://example.org/person/6Bianka%20Walsh> <http://xmlns.com/foaf/0.1/mbox> <mailto:Therese_Lehner69%40hotmail.com>.
+<http://example.org/person/6Bianka%20Walsh> <http://xmlns.com/foaf/0.1/phone> <tel:%28671%29%20976-0344>.
+<http://example.org/person/6Bianka%20Walsh> <http://schema.org/birthDate> "1912-01-08"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/7Alexanne%20Nolan> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/7Alexanne%20Nolan> <http://schema.org/height> "69114"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/7Alexanne%20Nolan> <http://schema.org/weight> "32289"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/7Alexanne%20Nolan> <http://xmlns.com/foaf/0.1/name> "Alexanne Nolan".
+<http://example.org/person/7Alexanne%20Nolan> <http://xmlns.com/foaf/0.1/mbox> <mailto:Adelle_Skiles78%40yahoo.com>.
+<http://example.org/person/7Alexanne%20Nolan> <http://xmlns.com/foaf/0.1/phone> <tel:1-730-420-9969>.
+<http://example.org/person/7Alexanne%20Nolan> <http://schema.org/birthDate> "1963-04-05"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/8Gaston%20Rosenbaum> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/8Gaston%20Rosenbaum> <http://schema.org/height> "65397"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/8Gaston%20Rosenbaum> <http://schema.org/weight> "81244"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/8Gaston%20Rosenbaum> <http://xmlns.com/foaf/0.1/name> "Gaston Rosenbaum".
+<http://example.org/person/8Gaston%20Rosenbaum> <http://xmlns.com/foaf/0.1/mbox> <mailto:Rozella.Schowalter22%40hotmail.com>.
+<http://example.org/person/8Gaston%20Rosenbaum> <http://xmlns.com/foaf/0.1/phone> <tel:966.713.1671%20x34999>.
+<http://example.org/person/8Gaston%20Rosenbaum> <http://schema.org/birthDate> "2012-03-21"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/9Catharine%20Kiehn%20Jr.> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/9Catharine%20Kiehn%20Jr.> <http://schema.org/height> "87551"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/9Catharine%20Kiehn%20Jr.> <http://schema.org/weight> "64447"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/9Catharine%20Kiehn%20Jr.> <http://xmlns.com/foaf/0.1/name> "Catharine Kiehn Jr.".
+<http://example.org/person/9Catharine%20Kiehn%20Jr.> <http://xmlns.com/foaf/0.1/mbox> <mailto:Alec91%40gmail.com>.
+<http://example.org/person/9Catharine%20Kiehn%20Jr.> <http://xmlns.com/foaf/0.1/phone> <tel:%28514%29%20135-2350%20x63509>.
+<http://example.org/person/9Catharine%20Kiehn%20Jr.> <http://schema.org/birthDate> "1943-07-25"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/10Andrew%20Bogan> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/10Andrew%20Bogan> <http://schema.org/height> "88590"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/10Andrew%20Bogan> <http://schema.org/weight> "22150"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/10Andrew%20Bogan> <http://xmlns.com/foaf/0.1/name> "Andrew Bogan".
+<http://example.org/person/10Andrew%20Bogan> <http://xmlns.com/foaf/0.1/mbox> <mailto:Ova77%40gmail.com>.
+<http://example.org/person/10Andrew%20Bogan> <http://xmlns.com/foaf/0.1/phone> <tel:1-578-962-2649%20x7547>.
+<http://example.org/person/10Andrew%20Bogan> <http://schema.org/birthDate> "1924-01-29"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/11Gennaro%20Wisoky> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/11Gennaro%20Wisoky> <http://schema.org/height> "81323"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/11Gennaro%20Wisoky> <http://schema.org/weight> "6798"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/11Gennaro%20Wisoky> <http://xmlns.com/foaf/0.1/name> "Gennaro Wisoky".
+<http://example.org/person/11Gennaro%20Wisoky> <http://xmlns.com/foaf/0.1/mbox> <mailto:Rosemarie.Hamill%40yahoo.com>.
+<http://example.org/person/11Gennaro%20Wisoky> <http://xmlns.com/foaf/0.1/phone> <tel:798.489.7069%20x68332>.
+<http://example.org/person/11Gennaro%20Wisoky> <http://schema.org/birthDate> "1923-07-17"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/12Makenzie%20Goldner> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/12Makenzie%20Goldner> <http://schema.org/height> "57282"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/12Makenzie%20Goldner> <http://schema.org/weight> "94218"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/12Makenzie%20Goldner> <http://xmlns.com/foaf/0.1/name> "Makenzie Goldner".
+<http://example.org/person/12Makenzie%20Goldner> <http://xmlns.com/foaf/0.1/mbox> <mailto:Kim_Kuhlman58%40gmail.com>.
+<http://example.org/person/12Makenzie%20Goldner> <http://xmlns.com/foaf/0.1/phone> <tel:1-418-944-2299%20x40951>.
+<http://example.org/person/12Makenzie%20Goldner> <http://schema.org/birthDate> "1934-01-02"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/13Mr.%20Cesar%20Walker> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/13Mr.%20Cesar%20Walker> <http://schema.org/height> "33365"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/13Mr.%20Cesar%20Walker> <http://schema.org/weight> "34857"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/13Mr.%20Cesar%20Walker> <http://xmlns.com/foaf/0.1/name> "Mr. Cesar Walker".
+<http://example.org/person/13Mr.%20Cesar%20Walker> <http://xmlns.com/foaf/0.1/mbox> <mailto:Luisa.Wolf2%40gmail.com>.
+<http://example.org/person/13Mr.%20Cesar%20Walker> <http://xmlns.com/foaf/0.1/phone> <tel:341-770-8407>.
+<http://example.org/person/13Mr.%20Cesar%20Walker> <http://schema.org/birthDate> "2010-05-01"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/14Juston%20Bins> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/14Juston%20Bins> <http://schema.org/height> "75215"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/14Juston%20Bins> <http://schema.org/weight> "85700"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/14Juston%20Bins> <http://xmlns.com/foaf/0.1/name> "Juston Bins".
+<http://example.org/person/14Juston%20Bins> <http://xmlns.com/foaf/0.1/mbox> <mailto:Elwyn85%40gmail.com>.
+<http://example.org/person/14Juston%20Bins> <http://xmlns.com/foaf/0.1/phone> <tel:267.890.4665>.
+<http://example.org/person/14Juston%20Bins> <http://schema.org/birthDate> "1932-10-10"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/15Liza%20Lang> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/15Liza%20Lang> <http://schema.org/height> "70321"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/15Liza%20Lang> <http://schema.org/weight> "67256"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/15Liza%20Lang> <http://xmlns.com/foaf/0.1/name> "Liza Lang".
+<http://example.org/person/15Liza%20Lang> <http://xmlns.com/foaf/0.1/mbox> <mailto:Pearlie3%40gmail.com>.
+<http://example.org/person/15Liza%20Lang> <http://xmlns.com/foaf/0.1/phone> <tel:556.490.8216%20x104>.
+<http://example.org/person/15Liza%20Lang> <http://schema.org/birthDate> "1956-02-02"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/16Liza%20Price> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/16Liza%20Price> <http://schema.org/height> "25538"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/16Liza%20Price> <http://schema.org/weight> "2362"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/16Liza%20Price> <http://xmlns.com/foaf/0.1/name> "Liza Price".
+<http://example.org/person/16Liza%20Price> <http://xmlns.com/foaf/0.1/mbox> <mailto:Trey68%40yahoo.com>.
+<http://example.org/person/16Liza%20Price> <http://xmlns.com/foaf/0.1/phone> <tel:911-455-2302%20x226>.
+<http://example.org/person/16Liza%20Price> <http://schema.org/birthDate> "1927-02-28"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/17Selina%20Collins> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/17Selina%20Collins> <http://schema.org/height> "90511"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/17Selina%20Collins> <http://schema.org/weight> "52528"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/17Selina%20Collins> <http://xmlns.com/foaf/0.1/name> "Selina Collins".
+<http://example.org/person/17Selina%20Collins> <http://xmlns.com/foaf/0.1/mbox> <mailto:Alf.Beer%40hotmail.com>.
+<http://example.org/person/17Selina%20Collins> <http://xmlns.com/foaf/0.1/phone> <tel:%28195%29%20976-0796>.
+<http://example.org/person/17Selina%20Collins> <http://schema.org/birthDate> "1971-12-19"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/18Makenna%20Trantow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/18Makenna%20Trantow> <http://schema.org/height> "49502"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/18Makenna%20Trantow> <http://schema.org/weight> "44343"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/18Makenna%20Trantow> <http://xmlns.com/foaf/0.1/name> "Makenna Trantow".
+<http://example.org/person/18Makenna%20Trantow> <http://xmlns.com/foaf/0.1/mbox> <mailto:Daniella49%40yahoo.com>.
+<http://example.org/person/18Makenna%20Trantow> <http://xmlns.com/foaf/0.1/phone> <tel:610-952-6109>.
+<http://example.org/person/18Makenna%20Trantow> <http://schema.org/birthDate> "1970-02-20"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/19Jane%20Corkery> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/19Jane%20Corkery> <http://schema.org/height> "85630"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/19Jane%20Corkery> <http://schema.org/weight> "14780"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/19Jane%20Corkery> <http://xmlns.com/foaf/0.1/name> "Jane Corkery".
+<http://example.org/person/19Jane%20Corkery> <http://xmlns.com/foaf/0.1/mbox> <mailto:Lila.Quigley%40yahoo.com>.
+<http://example.org/person/19Jane%20Corkery> <http://xmlns.com/foaf/0.1/phone> <tel:309-641-2847%20x9083>.
+<http://example.org/person/19Jane%20Corkery> <http://schema.org/birthDate> "1984-06-01"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/20Pierre%20Keeling> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/20Pierre%20Keeling> <http://schema.org/height> "29987"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/20Pierre%20Keeling> <http://schema.org/weight> "6019"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/20Pierre%20Keeling> <http://xmlns.com/foaf/0.1/name> "Pierre Keeling".
+<http://example.org/person/20Pierre%20Keeling> <http://xmlns.com/foaf/0.1/mbox> <mailto:Gardner7%40hotmail.com>.
+<http://example.org/person/20Pierre%20Keeling> <http://xmlns.com/foaf/0.1/phone> <tel:1-980-320-7977%20x01629>.
+<http://example.org/person/20Pierre%20Keeling> <http://schema.org/birthDate> "2011-07-04"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/21Margot%20Thiel> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/21Margot%20Thiel> <http://schema.org/height> "22724"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/21Margot%20Thiel> <http://schema.org/weight> "93772"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/21Margot%20Thiel> <http://xmlns.com/foaf/0.1/name> "Margot Thiel".
+<http://example.org/person/21Margot%20Thiel> <http://xmlns.com/foaf/0.1/mbox> <mailto:Marques_Ward%40hotmail.com>.
+<http://example.org/person/21Margot%20Thiel> <http://xmlns.com/foaf/0.1/phone> <tel:%28781%29%20322-7207%20x45804>.
+<http://example.org/person/21Margot%20Thiel> <http://schema.org/birthDate> "1952-02-24"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/22Jamar%20Ferry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/22Jamar%20Ferry> <http://schema.org/height> "26867"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/22Jamar%20Ferry> <http://schema.org/weight> "15016"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/22Jamar%20Ferry> <http://xmlns.com/foaf/0.1/name> "Jamar Ferry".
+<http://example.org/person/22Jamar%20Ferry> <http://xmlns.com/foaf/0.1/mbox> <mailto:Raleigh_Crona63%40yahoo.com>.
+<http://example.org/person/22Jamar%20Ferry> <http://xmlns.com/foaf/0.1/phone> <tel:1-345-684-6051>.
+<http://example.org/person/22Jamar%20Ferry> <http://schema.org/birthDate> "1969-02-19"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/23Monserrat%20Cremin%20Sr.> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/23Monserrat%20Cremin%20Sr.> <http://schema.org/height> "52036"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/23Monserrat%20Cremin%20Sr.> <http://schema.org/weight> "18238"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/23Monserrat%20Cremin%20Sr.> <http://xmlns.com/foaf/0.1/name> "Monserrat Cremin Sr.".
+<http://example.org/person/23Monserrat%20Cremin%20Sr.> <http://xmlns.com/foaf/0.1/mbox> <mailto:Rebecca50%40yahoo.com>.
+<http://example.org/person/23Monserrat%20Cremin%20Sr.> <http://xmlns.com/foaf/0.1/phone> <tel:1-887-830-2415%20x2174>.
+<http://example.org/person/23Monserrat%20Cremin%20Sr.> <http://schema.org/birthDate> "1959-09-12"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/24Jean%20Wisoky> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/24Jean%20Wisoky> <http://schema.org/height> "54772"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/24Jean%20Wisoky> <http://schema.org/weight> "62386"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/24Jean%20Wisoky> <http://xmlns.com/foaf/0.1/name> "Jean Wisoky".
+<http://example.org/person/24Jean%20Wisoky> <http://xmlns.com/foaf/0.1/mbox> <mailto:Jovan11%40hotmail.com>.
+<http://example.org/person/24Jean%20Wisoky> <http://xmlns.com/foaf/0.1/phone> <tel:627-616-0255%20x56748>.
+<http://example.org/person/24Jean%20Wisoky> <http://schema.org/birthDate> "1907-10-08"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/25Amya%20Mayert> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/25Amya%20Mayert> <http://schema.org/height> "19598"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/25Amya%20Mayert> <http://schema.org/weight> "58180"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/25Amya%20Mayert> <http://xmlns.com/foaf/0.1/name> "Amya Mayert".
+<http://example.org/person/25Amya%20Mayert> <http://xmlns.com/foaf/0.1/mbox> <mailto:Charlotte_Williamson%40hotmail.com>.
+<http://example.org/person/25Amya%20Mayert> <http://xmlns.com/foaf/0.1/phone> <tel:424.979.3028>.
+<http://example.org/person/25Amya%20Mayert> <http://schema.org/birthDate> "1989-12-31"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/26Iva%20Herman> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/26Iva%20Herman> <http://schema.org/height> "22939"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/26Iva%20Herman> <http://schema.org/weight> "81658"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/26Iva%20Herman> <http://xmlns.com/foaf/0.1/name> "Iva Herman".
+<http://example.org/person/26Iva%20Herman> <http://xmlns.com/foaf/0.1/mbox> <mailto:Barry90%40gmail.com>.
+<http://example.org/person/26Iva%20Herman> <http://xmlns.com/foaf/0.1/phone> <tel:%28827%29%20944-1111%20x74535>.
+<http://example.org/person/26Iva%20Herman> <http://schema.org/birthDate> "1995-06-20"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/27Lauretta%20Reilly> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/27Lauretta%20Reilly> <http://schema.org/height> "20330"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/27Lauretta%20Reilly> <http://schema.org/weight> "97586"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/27Lauretta%20Reilly> <http://xmlns.com/foaf/0.1/name> "Lauretta Reilly".
+<http://example.org/person/27Lauretta%20Reilly> <http://xmlns.com/foaf/0.1/mbox> <mailto:Bradly.Corkery%40hotmail.com>.
+<http://example.org/person/27Lauretta%20Reilly> <http://xmlns.com/foaf/0.1/phone> <tel:166-229-3356%20x2855>.
+<http://example.org/person/27Lauretta%20Reilly> <http://schema.org/birthDate> "2015-04-17"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/28Chelsey%20Mills> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/28Chelsey%20Mills> <http://schema.org/height> "92397"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/28Chelsey%20Mills> <http://schema.org/weight> "62549"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/28Chelsey%20Mills> <http://xmlns.com/foaf/0.1/name> "Chelsey Mills".
+<http://example.org/person/28Chelsey%20Mills> <http://xmlns.com/foaf/0.1/mbox> <mailto:Bradly.MacGyver%40yahoo.com>.
+<http://example.org/person/28Chelsey%20Mills> <http://xmlns.com/foaf/0.1/phone> <tel:713-445-1663%20x179>.
+<http://example.org/person/28Chelsey%20Mills> <http://schema.org/birthDate> "1934-07-29"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/29Manley%20Ruecker> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/29Manley%20Ruecker> <http://schema.org/height> "48711"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/29Manley%20Ruecker> <http://schema.org/weight> "19406"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/29Manley%20Ruecker> <http://xmlns.com/foaf/0.1/name> "Manley Ruecker".
+<http://example.org/person/29Manley%20Ruecker> <http://xmlns.com/foaf/0.1/mbox> <mailto:Wilbert_Grady76%40gmail.com>.
+<http://example.org/person/29Manley%20Ruecker> <http://xmlns.com/foaf/0.1/phone> <tel:313-844-4186%20x9789>.
+<http://example.org/person/29Manley%20Ruecker> <http://schema.org/birthDate> "1979-06-01"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/30Liam%20Kilback> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/30Liam%20Kilback> <http://schema.org/height> "7913"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/30Liam%20Kilback> <http://schema.org/weight> "41696"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/30Liam%20Kilback> <http://xmlns.com/foaf/0.1/name> "Liam Kilback".
+<http://example.org/person/30Liam%20Kilback> <http://xmlns.com/foaf/0.1/mbox> <mailto:Emmanuelle.Pollich%40yahoo.com>.
+<http://example.org/person/30Liam%20Kilback> <http://xmlns.com/foaf/0.1/phone> <tel:826.756.8083%20x80388>.
+<http://example.org/person/30Liam%20Kilback> <http://schema.org/birthDate> "1958-04-30"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/31Curt%20Fay> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/31Curt%20Fay> <http://schema.org/height> "91400"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/31Curt%20Fay> <http://schema.org/weight> "59382"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/31Curt%20Fay> <http://xmlns.com/foaf/0.1/name> "Curt Fay".
+<http://example.org/person/31Curt%20Fay> <http://xmlns.com/foaf/0.1/mbox> <mailto:Elta26%40gmail.com>.
+<http://example.org/person/31Curt%20Fay> <http://xmlns.com/foaf/0.1/phone> <tel:572-233-5703%20x99248>.
+<http://example.org/person/31Curt%20Fay> <http://schema.org/birthDate> "1973-02-19"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/32Mrs.%20Tavares%20Quitzon> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/32Mrs.%20Tavares%20Quitzon> <http://schema.org/height> "12621"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/32Mrs.%20Tavares%20Quitzon> <http://schema.org/weight> "1382"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/32Mrs.%20Tavares%20Quitzon> <http://xmlns.com/foaf/0.1/name> "Mrs. Tavares Quitzon".
+<http://example.org/person/32Mrs.%20Tavares%20Quitzon> <http://xmlns.com/foaf/0.1/mbox> <mailto:Audreanne41%40gmail.com>.
+<http://example.org/person/32Mrs.%20Tavares%20Quitzon> <http://xmlns.com/foaf/0.1/phone> <tel:321-482-7472>.
+<http://example.org/person/32Mrs.%20Tavares%20Quitzon> <http://schema.org/birthDate> "1959-10-08"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/33Rahul%20Oberbrunner%20II> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/33Rahul%20Oberbrunner%20II> <http://schema.org/height> "800"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/33Rahul%20Oberbrunner%20II> <http://schema.org/weight> "19113"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/33Rahul%20Oberbrunner%20II> <http://xmlns.com/foaf/0.1/name> "Rahul Oberbrunner II".
+<http://example.org/person/33Rahul%20Oberbrunner%20II> <http://xmlns.com/foaf/0.1/mbox> <mailto:Jeramie.MacGyver26%40yahoo.com>.
+<http://example.org/person/33Rahul%20Oberbrunner%20II> <http://xmlns.com/foaf/0.1/phone> <tel:%28427%29%20709-4463%20x97643>.
+<http://example.org/person/33Rahul%20Oberbrunner%20II> <http://schema.org/birthDate> "1940-07-25"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/34Miss%20Clovis%20Glover> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/34Miss%20Clovis%20Glover> <http://schema.org/height> "78205"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/34Miss%20Clovis%20Glover> <http://schema.org/weight> "14634"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/34Miss%20Clovis%20Glover> <http://xmlns.com/foaf/0.1/name> "Miss Clovis Glover".
+<http://example.org/person/34Miss%20Clovis%20Glover> <http://xmlns.com/foaf/0.1/mbox> <mailto:Kimberly_Davis%40yahoo.com>.
+<http://example.org/person/34Miss%20Clovis%20Glover> <http://xmlns.com/foaf/0.1/phone> <tel:662-250-5297%20x03556>.
+<http://example.org/person/34Miss%20Clovis%20Glover> <http://schema.org/birthDate> "1912-05-16"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/35Shad%20Grimes> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/35Shad%20Grimes> <http://schema.org/height> "14188"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/35Shad%20Grimes> <http://schema.org/weight> "46333"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/35Shad%20Grimes> <http://xmlns.com/foaf/0.1/name> "Shad Grimes".
+<http://example.org/person/35Shad%20Grimes> <http://xmlns.com/foaf/0.1/mbox> <mailto:Edyth.Olson91%40gmail.com>.
+<http://example.org/person/35Shad%20Grimes> <http://xmlns.com/foaf/0.1/phone> <tel:%28477%29%20013-8726>.
+<http://example.org/person/35Shad%20Grimes> <http://schema.org/birthDate> "2007-05-02"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/36Nelda%20Little> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/36Nelda%20Little> <http://schema.org/height> "90991"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/36Nelda%20Little> <http://schema.org/weight> "73929"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/36Nelda%20Little> <http://xmlns.com/foaf/0.1/name> "Nelda Little".
+<http://example.org/person/36Nelda%20Little> <http://xmlns.com/foaf/0.1/mbox> <mailto:Benjamin86%40yahoo.com>.
+<http://example.org/person/36Nelda%20Little> <http://xmlns.com/foaf/0.1/phone> <tel:1-360-251-7694>.
+<http://example.org/person/36Nelda%20Little> <http://schema.org/birthDate> "1985-09-06"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/37Virginia%20Ebert%20V> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/37Virginia%20Ebert%20V> <http://schema.org/height> "52787"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/37Virginia%20Ebert%20V> <http://schema.org/weight> "8101"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/37Virginia%20Ebert%20V> <http://xmlns.com/foaf/0.1/name> "Virginia Ebert V".
+<http://example.org/person/37Virginia%20Ebert%20V> <http://xmlns.com/foaf/0.1/mbox> <mailto:Rowan_Wilkinson87%40gmail.com>.
+<http://example.org/person/37Virginia%20Ebert%20V> <http://xmlns.com/foaf/0.1/phone> <tel:%28585%29%20378-2790%20x701>.
+<http://example.org/person/37Virginia%20Ebert%20V> <http://schema.org/birthDate> "1923-05-28"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/38Barney%20Jakubowski> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/38Barney%20Jakubowski> <http://schema.org/height> "84486"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/38Barney%20Jakubowski> <http://schema.org/weight> "60646"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/38Barney%20Jakubowski> <http://xmlns.com/foaf/0.1/name> "Barney Jakubowski".
+<http://example.org/person/38Barney%20Jakubowski> <http://xmlns.com/foaf/0.1/mbox> <mailto:Laura.King75%40yahoo.com>.
+<http://example.org/person/38Barney%20Jakubowski> <http://xmlns.com/foaf/0.1/phone> <tel:431-872-8411>.
+<http://example.org/person/38Barney%20Jakubowski> <http://schema.org/birthDate> "1920-03-17"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/39Ephraim%20Becker%20IV> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/39Ephraim%20Becker%20IV> <http://schema.org/height> "82373"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/39Ephraim%20Becker%20IV> <http://schema.org/weight> "7491"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/39Ephraim%20Becker%20IV> <http://xmlns.com/foaf/0.1/name> "Ephraim Becker IV".
+<http://example.org/person/39Ephraim%20Becker%20IV> <http://xmlns.com/foaf/0.1/mbox> <mailto:Paul17%40hotmail.com>.
+<http://example.org/person/39Ephraim%20Becker%20IV> <http://xmlns.com/foaf/0.1/phone> <tel:875-550-9917%20x524>.
+<http://example.org/person/39Ephraim%20Becker%20IV> <http://schema.org/birthDate> "1943-06-18"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/40Willow%20Larson> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/40Willow%20Larson> <http://schema.org/height> "59769"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/40Willow%20Larson> <http://schema.org/weight> "29876"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/40Willow%20Larson> <http://xmlns.com/foaf/0.1/name> "Willow Larson".
+<http://example.org/person/40Willow%20Larson> <http://xmlns.com/foaf/0.1/mbox> <mailto:Laurianne12%40hotmail.com>.
+<http://example.org/person/40Willow%20Larson> <http://xmlns.com/foaf/0.1/phone> <tel:847.920.6867%20x386>.
+<http://example.org/person/40Willow%20Larson> <http://schema.org/birthDate> "1902-09-03"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/41Diego%20Walter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/41Diego%20Walter> <http://schema.org/height> "34449"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/41Diego%20Walter> <http://schema.org/weight> "64137"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/41Diego%20Walter> <http://xmlns.com/foaf/0.1/name> "Diego Walter".
+<http://example.org/person/41Diego%20Walter> <http://xmlns.com/foaf/0.1/mbox> <mailto:Allan_Raynor%40yahoo.com>.
+<http://example.org/person/41Diego%20Walter> <http://xmlns.com/foaf/0.1/phone> <tel:%28141%29%20799-9192%20x395>.
+<http://example.org/person/41Diego%20Walter> <http://schema.org/birthDate> "2000-09-09"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/42Dawson%20Cummings> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/42Dawson%20Cummings> <http://schema.org/height> "30335"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/42Dawson%20Cummings> <http://schema.org/weight> "87426"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/42Dawson%20Cummings> <http://xmlns.com/foaf/0.1/name> "Dawson Cummings".
+<http://example.org/person/42Dawson%20Cummings> <http://xmlns.com/foaf/0.1/mbox> <mailto:Natalie_Tromp%40gmail.com>.
+<http://example.org/person/42Dawson%20Cummings> <http://xmlns.com/foaf/0.1/phone> <tel:1-641-532-4568%20x689>.
+<http://example.org/person/42Dawson%20Cummings> <http://schema.org/birthDate> "1943-06-17"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/43Bailee%20Christiansen> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/43Bailee%20Christiansen> <http://schema.org/height> "36015"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/43Bailee%20Christiansen> <http://schema.org/weight> "35563"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/43Bailee%20Christiansen> <http://xmlns.com/foaf/0.1/name> "Bailee Christiansen".
+<http://example.org/person/43Bailee%20Christiansen> <http://xmlns.com/foaf/0.1/mbox> <mailto:Miller_Rolfson99%40yahoo.com>.
+<http://example.org/person/43Bailee%20Christiansen> <http://xmlns.com/foaf/0.1/phone> <tel:1-417-878-6290>.
+<http://example.org/person/43Bailee%20Christiansen> <http://schema.org/birthDate> "1986-01-13"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/44Miss%20Juvenal%20Sipes> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/44Miss%20Juvenal%20Sipes> <http://schema.org/height> "66945"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/44Miss%20Juvenal%20Sipes> <http://schema.org/weight> "38869"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/44Miss%20Juvenal%20Sipes> <http://xmlns.com/foaf/0.1/name> "Miss Juvenal Sipes".
+<http://example.org/person/44Miss%20Juvenal%20Sipes> <http://xmlns.com/foaf/0.1/mbox> <mailto:Juana.Sporer58%40gmail.com>.
+<http://example.org/person/44Miss%20Juvenal%20Sipes> <http://xmlns.com/foaf/0.1/phone> <tel:803.988.9546%20x0096>.
+<http://example.org/person/44Miss%20Juvenal%20Sipes> <http://schema.org/birthDate> "1981-11-23"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/45Raleigh%20Romaguera> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/45Raleigh%20Romaguera> <http://schema.org/height> "58381"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/45Raleigh%20Romaguera> <http://schema.org/weight> "94744"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/45Raleigh%20Romaguera> <http://xmlns.com/foaf/0.1/name> "Raleigh Romaguera".
+<http://example.org/person/45Raleigh%20Romaguera> <http://xmlns.com/foaf/0.1/mbox> <mailto:Maribel6%40hotmail.com>.
+<http://example.org/person/45Raleigh%20Romaguera> <http://xmlns.com/foaf/0.1/phone> <tel:023-100-7120%20x12887>.
+<http://example.org/person/45Raleigh%20Romaguera> <http://schema.org/birthDate> "1949-03-13"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/46Tod%20White> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/46Tod%20White> <http://schema.org/height> "93713"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/46Tod%20White> <http://schema.org/weight> "30352"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/46Tod%20White> <http://xmlns.com/foaf/0.1/name> "Tod White".
+<http://example.org/person/46Tod%20White> <http://xmlns.com/foaf/0.1/mbox> <mailto:Eda_Zboncak1%40yahoo.com>.
+<http://example.org/person/46Tod%20White> <http://xmlns.com/foaf/0.1/phone> <tel:178.365.1414%20x330>.
+<http://example.org/person/46Tod%20White> <http://schema.org/birthDate> "2003-08-25"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/47Adelle%20Harris> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/47Adelle%20Harris> <http://schema.org/height> "14471"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/47Adelle%20Harris> <http://schema.org/weight> "47325"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/47Adelle%20Harris> <http://xmlns.com/foaf/0.1/name> "Adelle Harris".
+<http://example.org/person/47Adelle%20Harris> <http://xmlns.com/foaf/0.1/mbox> <mailto:Judge23%40yahoo.com>.
+<http://example.org/person/47Adelle%20Harris> <http://xmlns.com/foaf/0.1/phone> <tel:1-426-977-0280>.
+<http://example.org/person/47Adelle%20Harris> <http://schema.org/birthDate> "1952-08-14"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/48Jaycee%20Douglas> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/48Jaycee%20Douglas> <http://schema.org/height> "69118"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/48Jaycee%20Douglas> <http://schema.org/weight> "77465"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/48Jaycee%20Douglas> <http://xmlns.com/foaf/0.1/name> "Jaycee Douglas".
+<http://example.org/person/48Jaycee%20Douglas> <http://xmlns.com/foaf/0.1/mbox> <mailto:Kailyn39%40gmail.com>.
+<http://example.org/person/48Jaycee%20Douglas> <http://xmlns.com/foaf/0.1/phone> <tel:081.150.7002%20x091>.
+<http://example.org/person/48Jaycee%20Douglas> <http://schema.org/birthDate> "2011-09-21"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/49Opal%20Quigley> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/49Opal%20Quigley> <http://schema.org/height> "1312"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/49Opal%20Quigley> <http://schema.org/weight> "31049"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/49Opal%20Quigley> <http://xmlns.com/foaf/0.1/name> "Opal Quigley".
+<http://example.org/person/49Opal%20Quigley> <http://xmlns.com/foaf/0.1/mbox> <mailto:Nettie.Hamill%40hotmail.com>.
+<http://example.org/person/49Opal%20Quigley> <http://xmlns.com/foaf/0.1/phone> <tel:%28643%29%20230-1555>.
+<http://example.org/person/49Opal%20Quigley> <http://schema.org/birthDate> "1994-03-28"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/50Mac%20Daugherty> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/50Mac%20Daugherty> <http://schema.org/height> "65362"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/50Mac%20Daugherty> <http://schema.org/weight> "83817"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/50Mac%20Daugherty> <http://xmlns.com/foaf/0.1/name> "Mac Daugherty".
+<http://example.org/person/50Mac%20Daugherty> <http://xmlns.com/foaf/0.1/mbox> <mailto:Lawrence58%40gmail.com>.
+<http://example.org/person/50Mac%20Daugherty> <http://xmlns.com/foaf/0.1/phone> <tel:698-322-6302%20x86396>.
+<http://example.org/person/50Mac%20Daugherty> <http://schema.org/birthDate> "1997-02-05"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/51Jerome%20Hettinger> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/51Jerome%20Hettinger> <http://schema.org/height> "68352"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/51Jerome%20Hettinger> <http://schema.org/weight> "94830"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/51Jerome%20Hettinger> <http://xmlns.com/foaf/0.1/name> "Jerome Hettinger".
+<http://example.org/person/51Jerome%20Hettinger> <http://xmlns.com/foaf/0.1/mbox> <mailto:Arvilla_Turcotte14%40hotmail.com>.
+<http://example.org/person/51Jerome%20Hettinger> <http://xmlns.com/foaf/0.1/phone> <tel:1-068-637-3707>.
+<http://example.org/person/51Jerome%20Hettinger> <http://schema.org/birthDate> "2015-10-31"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/52Randy%20Huel> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/52Randy%20Huel> <http://schema.org/height> "87511"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/52Randy%20Huel> <http://schema.org/weight> "95035"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/52Randy%20Huel> <http://xmlns.com/foaf/0.1/name> "Randy Huel".
+<http://example.org/person/52Randy%20Huel> <http://xmlns.com/foaf/0.1/mbox> <mailto:Antoinette.West1%40hotmail.com>.
+<http://example.org/person/52Randy%20Huel> <http://xmlns.com/foaf/0.1/phone> <tel:117-557-7674>.
+<http://example.org/person/52Randy%20Huel> <http://schema.org/birthDate> "2001-11-21"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/53Johanna%20Glover> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/53Johanna%20Glover> <http://schema.org/height> "53399"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/53Johanna%20Glover> <http://schema.org/weight> "69486"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/53Johanna%20Glover> <http://xmlns.com/foaf/0.1/name> "Johanna Glover".
+<http://example.org/person/53Johanna%20Glover> <http://xmlns.com/foaf/0.1/mbox> <mailto:Antonietta.Zieme%40yahoo.com>.
+<http://example.org/person/53Johanna%20Glover> <http://xmlns.com/foaf/0.1/phone> <tel:010-287-2187%20x854>.
+<http://example.org/person/53Johanna%20Glover> <http://schema.org/birthDate> "2017-01-31"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/54Brandt%20Schroeder%20IV> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/54Brandt%20Schroeder%20IV> <http://schema.org/height> "69028"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/54Brandt%20Schroeder%20IV> <http://schema.org/weight> "58022"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/54Brandt%20Schroeder%20IV> <http://xmlns.com/foaf/0.1/name> "Brandt Schroeder IV".
+<http://example.org/person/54Brandt%20Schroeder%20IV> <http://xmlns.com/foaf/0.1/mbox> <mailto:Alia_Bayer26%40hotmail.com>.
+<http://example.org/person/54Brandt%20Schroeder%20IV> <http://xmlns.com/foaf/0.1/phone> <tel:1-604-879-9007>.
+<http://example.org/person/54Brandt%20Schroeder%20IV> <http://schema.org/birthDate> "1906-03-15"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/55Nelda%20Graham> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/55Nelda%20Graham> <http://schema.org/height> "23194"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/55Nelda%20Graham> <http://schema.org/weight> "98901"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/55Nelda%20Graham> <http://xmlns.com/foaf/0.1/name> "Nelda Graham".
+<http://example.org/person/55Nelda%20Graham> <http://xmlns.com/foaf/0.1/mbox> <mailto:Charity12%40yahoo.com>.
+<http://example.org/person/55Nelda%20Graham> <http://xmlns.com/foaf/0.1/phone> <tel:%28390%29%20508-6729%20x11177>.
+<http://example.org/person/55Nelda%20Graham> <http://schema.org/birthDate> "1930-05-08"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/56Nayeli%20Kiehn> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/56Nayeli%20Kiehn> <http://schema.org/height> "84070"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/56Nayeli%20Kiehn> <http://schema.org/weight> "34213"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/56Nayeli%20Kiehn> <http://xmlns.com/foaf/0.1/name> "Nayeli Kiehn".
+<http://example.org/person/56Nayeli%20Kiehn> <http://xmlns.com/foaf/0.1/mbox> <mailto:Kenny_Braun74%40yahoo.com>.
+<http://example.org/person/56Nayeli%20Kiehn> <http://xmlns.com/foaf/0.1/phone> <tel:1-052-907-3927%20x19445>.
+<http://example.org/person/56Nayeli%20Kiehn> <http://schema.org/birthDate> "2017-07-31"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/57Liliana%20Kessler> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/57Liliana%20Kessler> <http://schema.org/height> "42993"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/57Liliana%20Kessler> <http://schema.org/weight> "41210"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/57Liliana%20Kessler> <http://xmlns.com/foaf/0.1/name> "Liliana Kessler".
+<http://example.org/person/57Liliana%20Kessler> <http://xmlns.com/foaf/0.1/mbox> <mailto:Hettie61%40hotmail.com>.
+<http://example.org/person/57Liliana%20Kessler> <http://xmlns.com/foaf/0.1/phone> <tel:072.886.2672%20x67122>.
+<http://example.org/person/57Liliana%20Kessler> <http://schema.org/birthDate> "1958-03-08"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/58Effie%20Lowe> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/58Effie%20Lowe> <http://schema.org/height> "64524"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/58Effie%20Lowe> <http://schema.org/weight> "46789"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/58Effie%20Lowe> <http://xmlns.com/foaf/0.1/name> "Effie Lowe".
+<http://example.org/person/58Effie%20Lowe> <http://xmlns.com/foaf/0.1/mbox> <mailto:Sarai67%40gmail.com>.
+<http://example.org/person/58Effie%20Lowe> <http://xmlns.com/foaf/0.1/phone> <tel:1-231-936-3356%20x648>.
+<http://example.org/person/58Effie%20Lowe> <http://schema.org/birthDate> "1932-05-14"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/59Miss%20Ressie%20Leannon> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/59Miss%20Ressie%20Leannon> <http://schema.org/height> "66603"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/59Miss%20Ressie%20Leannon> <http://schema.org/weight> "29390"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/59Miss%20Ressie%20Leannon> <http://xmlns.com/foaf/0.1/name> "Miss Ressie Leannon".
+<http://example.org/person/59Miss%20Ressie%20Leannon> <http://xmlns.com/foaf/0.1/mbox> <mailto:Sim52%40yahoo.com>.
+<http://example.org/person/59Miss%20Ressie%20Leannon> <http://xmlns.com/foaf/0.1/phone> <tel:1-785-600-7704%20x325>.
+<http://example.org/person/59Miss%20Ressie%20Leannon> <http://schema.org/birthDate> "1963-03-25"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/60Dr.%20Gavin%20Homenick> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/60Dr.%20Gavin%20Homenick> <http://schema.org/height> "55379"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/60Dr.%20Gavin%20Homenick> <http://schema.org/weight> "36024"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/60Dr.%20Gavin%20Homenick> <http://xmlns.com/foaf/0.1/name> "Dr. Gavin Homenick".
+<http://example.org/person/60Dr.%20Gavin%20Homenick> <http://xmlns.com/foaf/0.1/mbox> <mailto:Evangeline.Bechtelar65%40hotmail.com>.
+<http://example.org/person/60Dr.%20Gavin%20Homenick> <http://xmlns.com/foaf/0.1/phone> <tel:1-655-884-8283>.
+<http://example.org/person/60Dr.%20Gavin%20Homenick> <http://schema.org/birthDate> "2001-04-17"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/61Mona%20Fahey> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/61Mona%20Fahey> <http://schema.org/height> "55376"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/61Mona%20Fahey> <http://schema.org/weight> "49862"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/61Mona%20Fahey> <http://xmlns.com/foaf/0.1/name> "Mona Fahey".
+<http://example.org/person/61Mona%20Fahey> <http://xmlns.com/foaf/0.1/mbox> <mailto:Marcelle.Stark44%40yahoo.com>.
+<http://example.org/person/61Mona%20Fahey> <http://xmlns.com/foaf/0.1/phone> <tel:668.353.5302%20x52437>.
+<http://example.org/person/61Mona%20Fahey> <http://schema.org/birthDate> "1976-06-17"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/62Ms.%20Linnie%20Hoppe> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/62Ms.%20Linnie%20Hoppe> <http://schema.org/height> "80059"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/62Ms.%20Linnie%20Hoppe> <http://schema.org/weight> "47362"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/62Ms.%20Linnie%20Hoppe> <http://xmlns.com/foaf/0.1/name> "Ms. Linnie Hoppe".
+<http://example.org/person/62Ms.%20Linnie%20Hoppe> <http://xmlns.com/foaf/0.1/mbox> <mailto:Lew92%40yahoo.com>.
+<http://example.org/person/62Ms.%20Linnie%20Hoppe> <http://xmlns.com/foaf/0.1/phone> <tel:711-890-5571>.
+<http://example.org/person/62Ms.%20Linnie%20Hoppe> <http://schema.org/birthDate> "1949-05-08"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/63Juvenal%20Kuhlman> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/63Juvenal%20Kuhlman> <http://schema.org/height> "13549"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/63Juvenal%20Kuhlman> <http://schema.org/weight> "59580"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/63Juvenal%20Kuhlman> <http://xmlns.com/foaf/0.1/name> "Juvenal Kuhlman".
+<http://example.org/person/63Juvenal%20Kuhlman> <http://xmlns.com/foaf/0.1/mbox> <mailto:Hassie8%40hotmail.com>.
+<http://example.org/person/63Juvenal%20Kuhlman> <http://xmlns.com/foaf/0.1/phone> <tel:609-992-5896%20x6579>.
+<http://example.org/person/63Juvenal%20Kuhlman> <http://schema.org/birthDate> "1907-12-03"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/64Monte%20Moore> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/64Monte%20Moore> <http://schema.org/height> "39833"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/64Monte%20Moore> <http://schema.org/weight> "39372"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/64Monte%20Moore> <http://xmlns.com/foaf/0.1/name> "Monte Moore".
+<http://example.org/person/64Monte%20Moore> <http://xmlns.com/foaf/0.1/mbox> <mailto:Aubrey_Trantow9%40yahoo.com>.
+<http://example.org/person/64Monte%20Moore> <http://xmlns.com/foaf/0.1/phone> <tel:101-755-0710%20x9120>.
+<http://example.org/person/64Monte%20Moore> <http://schema.org/birthDate> "1946-07-24"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/65Percy%20Block> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/65Percy%20Block> <http://schema.org/height> "16852"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/65Percy%20Block> <http://schema.org/weight> "97971"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/65Percy%20Block> <http://xmlns.com/foaf/0.1/name> "Percy Block".
+<http://example.org/person/65Percy%20Block> <http://xmlns.com/foaf/0.1/mbox> <mailto:Chase.Tillman85%40hotmail.com>.
+<http://example.org/person/65Percy%20Block> <http://xmlns.com/foaf/0.1/phone> <tel:%28134%29%20424-5620%20x0385>.
+<http://example.org/person/65Percy%20Block> <http://schema.org/birthDate> "1904-09-09"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/66Fae%20Hermiston> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/66Fae%20Hermiston> <http://schema.org/height> "74799"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/66Fae%20Hermiston> <http://schema.org/weight> "79162"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/66Fae%20Hermiston> <http://xmlns.com/foaf/0.1/name> "Fae Hermiston".
+<http://example.org/person/66Fae%20Hermiston> <http://xmlns.com/foaf/0.1/mbox> <mailto:Kaylin.Connelly%40yahoo.com>.
+<http://example.org/person/66Fae%20Hermiston> <http://xmlns.com/foaf/0.1/phone> <tel:253-836-1876%20x045>.
+<http://example.org/person/66Fae%20Hermiston> <http://schema.org/birthDate> "1968-09-25"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/67Annabel%20Lind> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/67Annabel%20Lind> <http://schema.org/height> "78514"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/67Annabel%20Lind> <http://schema.org/weight> "1031"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/67Annabel%20Lind> <http://xmlns.com/foaf/0.1/name> "Annabel Lind".
+<http://example.org/person/67Annabel%20Lind> <http://xmlns.com/foaf/0.1/mbox> <mailto:Mekhi83%40yahoo.com>.
+<http://example.org/person/67Annabel%20Lind> <http://xmlns.com/foaf/0.1/phone> <tel:110.809.8465%20x2703>.
+<http://example.org/person/67Annabel%20Lind> <http://schema.org/birthDate> "1979-06-11"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/68Ricky%20Wiegand> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/68Ricky%20Wiegand> <http://schema.org/height> "73332"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/68Ricky%20Wiegand> <http://schema.org/weight> "58782"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/68Ricky%20Wiegand> <http://xmlns.com/foaf/0.1/name> "Ricky Wiegand".
+<http://example.org/person/68Ricky%20Wiegand> <http://xmlns.com/foaf/0.1/mbox> <mailto:Shirley.Rath92%40hotmail.com>.
+<http://example.org/person/68Ricky%20Wiegand> <http://xmlns.com/foaf/0.1/phone> <tel:337.381.3102%20x92259>.
+<http://example.org/person/68Ricky%20Wiegand> <http://schema.org/birthDate> "1973-07-02"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/69Tressie%20D%27Amore> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/69Tressie%20D%27Amore> <http://schema.org/height> "92911"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/69Tressie%20D%27Amore> <http://schema.org/weight> "82266"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/69Tressie%20D%27Amore> <http://xmlns.com/foaf/0.1/name> "Tressie D'Amore".
+<http://example.org/person/69Tressie%20D%27Amore> <http://xmlns.com/foaf/0.1/mbox> <mailto:Barbara.Nienow1%40yahoo.com>.
+<http://example.org/person/69Tressie%20D%27Amore> <http://xmlns.com/foaf/0.1/phone> <tel:426-969-2612%20x3199>.
+<http://example.org/person/69Tressie%20D%27Amore> <http://schema.org/birthDate> "1958-01-04"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/70Ryley%20Pfannerstill> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/70Ryley%20Pfannerstill> <http://schema.org/height> "22368"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/70Ryley%20Pfannerstill> <http://schema.org/weight> "50196"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/70Ryley%20Pfannerstill> <http://xmlns.com/foaf/0.1/name> "Ryley Pfannerstill".
+<http://example.org/person/70Ryley%20Pfannerstill> <http://xmlns.com/foaf/0.1/mbox> <mailto:Seamus25%40yahoo.com>.
+<http://example.org/person/70Ryley%20Pfannerstill> <http://xmlns.com/foaf/0.1/phone> <tel:1-058-138-2605%20x0921>.
+<http://example.org/person/70Ryley%20Pfannerstill> <http://schema.org/birthDate> "1999-06-04"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/71Geraldine%20Mertz> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/71Geraldine%20Mertz> <http://schema.org/height> "67527"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/71Geraldine%20Mertz> <http://schema.org/weight> "57170"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/71Geraldine%20Mertz> <http://xmlns.com/foaf/0.1/name> "Geraldine Mertz".
+<http://example.org/person/71Geraldine%20Mertz> <http://xmlns.com/foaf/0.1/mbox> <mailto:Arlo.Dooley%40hotmail.com>.
+<http://example.org/person/71Geraldine%20Mertz> <http://xmlns.com/foaf/0.1/phone> <tel:1-176-533-9474%20x185>.
+<http://example.org/person/71Geraldine%20Mertz> <http://schema.org/birthDate> "1955-09-18"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/72Emilio%20Romaguera> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/72Emilio%20Romaguera> <http://schema.org/height> "33466"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/72Emilio%20Romaguera> <http://schema.org/weight> "90629"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/72Emilio%20Romaguera> <http://xmlns.com/foaf/0.1/name> "Emilio Romaguera".
+<http://example.org/person/72Emilio%20Romaguera> <http://xmlns.com/foaf/0.1/mbox> <mailto:Creola63%40gmail.com>.
+<http://example.org/person/72Emilio%20Romaguera> <http://xmlns.com/foaf/0.1/phone> <tel:841-186-0586%20x8758>.
+<http://example.org/person/72Emilio%20Romaguera> <http://schema.org/birthDate> "1914-08-11"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/73Dr.%20Wilbert%20Feeney> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/73Dr.%20Wilbert%20Feeney> <http://schema.org/height> "42332"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/73Dr.%20Wilbert%20Feeney> <http://schema.org/weight> "48413"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/73Dr.%20Wilbert%20Feeney> <http://xmlns.com/foaf/0.1/name> "Dr. Wilbert Feeney".
+<http://example.org/person/73Dr.%20Wilbert%20Feeney> <http://xmlns.com/foaf/0.1/mbox> <mailto:Dillan_Lehner67%40yahoo.com>.
+<http://example.org/person/73Dr.%20Wilbert%20Feeney> <http://xmlns.com/foaf/0.1/phone> <tel:702-813-3242>.
+<http://example.org/person/73Dr.%20Wilbert%20Feeney> <http://schema.org/birthDate> "1929-01-06"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/74Gerda%20Hackett> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/74Gerda%20Hackett> <http://schema.org/height> "33280"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/74Gerda%20Hackett> <http://schema.org/weight> "84779"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/74Gerda%20Hackett> <http://xmlns.com/foaf/0.1/name> "Gerda Hackett".
+<http://example.org/person/74Gerda%20Hackett> <http://xmlns.com/foaf/0.1/mbox> <mailto:Clare_Mitchell18%40yahoo.com>.
+<http://example.org/person/74Gerda%20Hackett> <http://xmlns.com/foaf/0.1/phone> <tel:%28304%29%20168-0301>.
+<http://example.org/person/74Gerda%20Hackett> <http://schema.org/birthDate> "1922-11-18"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/75Edwin%20Dickinson> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/75Edwin%20Dickinson> <http://schema.org/height> "34949"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/75Edwin%20Dickinson> <http://schema.org/weight> "81359"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/75Edwin%20Dickinson> <http://xmlns.com/foaf/0.1/name> "Edwin Dickinson".
+<http://example.org/person/75Edwin%20Dickinson> <http://xmlns.com/foaf/0.1/mbox> <mailto:Uriah58%40hotmail.com>.
+<http://example.org/person/75Edwin%20Dickinson> <http://xmlns.com/foaf/0.1/phone> <tel:326.379.5736%20x1265>.
+<http://example.org/person/75Edwin%20Dickinson> <http://schema.org/birthDate> "1926-09-24"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/76Laurine%20Armstrong> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/76Laurine%20Armstrong> <http://schema.org/height> "40440"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/76Laurine%20Armstrong> <http://schema.org/weight> "12971"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/76Laurine%20Armstrong> <http://xmlns.com/foaf/0.1/name> "Laurine Armstrong".
+<http://example.org/person/76Laurine%20Armstrong> <http://xmlns.com/foaf/0.1/mbox> <mailto:Carmen89%40gmail.com>.
+<http://example.org/person/76Laurine%20Armstrong> <http://xmlns.com/foaf/0.1/phone> <tel:654-453-2352>.
+<http://example.org/person/76Laurine%20Armstrong> <http://schema.org/birthDate> "1920-01-06"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/77Christopher%20Conroy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/77Christopher%20Conroy> <http://schema.org/height> "74878"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/77Christopher%20Conroy> <http://schema.org/weight> "10320"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/77Christopher%20Conroy> <http://xmlns.com/foaf/0.1/name> "Christopher Conroy".
+<http://example.org/person/77Christopher%20Conroy> <http://xmlns.com/foaf/0.1/mbox> <mailto:Theodora_Wilderman65%40hotmail.com>.
+<http://example.org/person/77Christopher%20Conroy> <http://xmlns.com/foaf/0.1/phone> <tel:%28151%29%20816-8808%20x47601>.
+<http://example.org/person/77Christopher%20Conroy> <http://schema.org/birthDate> "2005-12-05"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/78Jackeline%20Jast> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/78Jackeline%20Jast> <http://schema.org/height> "99859"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/78Jackeline%20Jast> <http://schema.org/weight> "5182"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/78Jackeline%20Jast> <http://xmlns.com/foaf/0.1/name> "Jackeline Jast".
+<http://example.org/person/78Jackeline%20Jast> <http://xmlns.com/foaf/0.1/mbox> <mailto:Josh59%40gmail.com>.
+<http://example.org/person/78Jackeline%20Jast> <http://xmlns.com/foaf/0.1/phone> <tel:772-683-2222%20x646>.
+<http://example.org/person/78Jackeline%20Jast> <http://schema.org/birthDate> "1924-08-28"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/79Mr.%20Sallie%20O%27Kon> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/79Mr.%20Sallie%20O%27Kon> <http://schema.org/height> "41937"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/79Mr.%20Sallie%20O%27Kon> <http://schema.org/weight> "17550"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/79Mr.%20Sallie%20O%27Kon> <http://xmlns.com/foaf/0.1/name> "Mr. Sallie O'Kon".
+<http://example.org/person/79Mr.%20Sallie%20O%27Kon> <http://xmlns.com/foaf/0.1/mbox> <mailto:Royce31%40hotmail.com>.
+<http://example.org/person/79Mr.%20Sallie%20O%27Kon> <http://xmlns.com/foaf/0.1/phone> <tel:%28008%29%20863-6367>.
+<http://example.org/person/79Mr.%20Sallie%20O%27Kon> <http://schema.org/birthDate> "1943-05-31"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/80Dr.%20Ken%20Jacobi> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/80Dr.%20Ken%20Jacobi> <http://schema.org/height> "17933"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/80Dr.%20Ken%20Jacobi> <http://schema.org/weight> "68002"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/80Dr.%20Ken%20Jacobi> <http://xmlns.com/foaf/0.1/name> "Dr. Ken Jacobi".
+<http://example.org/person/80Dr.%20Ken%20Jacobi> <http://xmlns.com/foaf/0.1/mbox> <mailto:Dave63%40yahoo.com>.
+<http://example.org/person/80Dr.%20Ken%20Jacobi> <http://xmlns.com/foaf/0.1/phone> <tel:918.522.5017%20x408>.
+<http://example.org/person/80Dr.%20Ken%20Jacobi> <http://schema.org/birthDate> "1990-11-02"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/81Amely%20Crist> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/81Amely%20Crist> <http://schema.org/height> "69705"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/81Amely%20Crist> <http://schema.org/weight> "46775"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/81Amely%20Crist> <http://xmlns.com/foaf/0.1/name> "Amely Crist".
+<http://example.org/person/81Amely%20Crist> <http://xmlns.com/foaf/0.1/mbox> <mailto:Marty20%40yahoo.com>.
+<http://example.org/person/81Amely%20Crist> <http://xmlns.com/foaf/0.1/phone> <tel:948.734.0488%20x037>.
+<http://example.org/person/81Amely%20Crist> <http://schema.org/birthDate> "1946-10-12"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/82Candida%20Kerluke%20I> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/82Candida%20Kerluke%20I> <http://schema.org/height> "74215"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/82Candida%20Kerluke%20I> <http://schema.org/weight> "32519"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/82Candida%20Kerluke%20I> <http://xmlns.com/foaf/0.1/name> "Candida Kerluke I".
+<http://example.org/person/82Candida%20Kerluke%20I> <http://xmlns.com/foaf/0.1/mbox> <mailto:Romaine_OKon%40yahoo.com>.
+<http://example.org/person/82Candida%20Kerluke%20I> <http://xmlns.com/foaf/0.1/phone> <tel:137-415-0385>.
+<http://example.org/person/82Candida%20Kerluke%20I> <http://schema.org/birthDate> "1933-06-29"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/83Roscoe%20Schuppe> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/83Roscoe%20Schuppe> <http://schema.org/height> "49175"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/83Roscoe%20Schuppe> <http://schema.org/weight> "15895"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/83Roscoe%20Schuppe> <http://xmlns.com/foaf/0.1/name> "Roscoe Schuppe".
+<http://example.org/person/83Roscoe%20Schuppe> <http://xmlns.com/foaf/0.1/mbox> <mailto:Natasha_Hammes26%40gmail.com>.
+<http://example.org/person/83Roscoe%20Schuppe> <http://xmlns.com/foaf/0.1/phone> <tel:422-403-4888>.
+<http://example.org/person/83Roscoe%20Schuppe> <http://schema.org/birthDate> "1998-06-17"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/84Alexie%20Zboncak> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/84Alexie%20Zboncak> <http://schema.org/height> "95682"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/84Alexie%20Zboncak> <http://schema.org/weight> "42600"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/84Alexie%20Zboncak> <http://xmlns.com/foaf/0.1/name> "Alexie Zboncak".
+<http://example.org/person/84Alexie%20Zboncak> <http://xmlns.com/foaf/0.1/mbox> <mailto:Marvin45%40yahoo.com>.
+<http://example.org/person/84Alexie%20Zboncak> <http://xmlns.com/foaf/0.1/phone> <tel:276.611.2256>.
+<http://example.org/person/84Alexie%20Zboncak> <http://schema.org/birthDate> "1972-05-28"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/85Ara%20Douglas%20DVM> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/85Ara%20Douglas%20DVM> <http://schema.org/height> "42333"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/85Ara%20Douglas%20DVM> <http://schema.org/weight> "37838"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/85Ara%20Douglas%20DVM> <http://xmlns.com/foaf/0.1/name> "Ara Douglas DVM".
+<http://example.org/person/85Ara%20Douglas%20DVM> <http://xmlns.com/foaf/0.1/mbox> <mailto:Sarina.Dietrich63%40yahoo.com>.
+<http://example.org/person/85Ara%20Douglas%20DVM> <http://xmlns.com/foaf/0.1/phone> <tel:133-881-9701>.
+<http://example.org/person/85Ara%20Douglas%20DVM> <http://schema.org/birthDate> "1994-04-29"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/86Landen%20Lueilwitz> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/86Landen%20Lueilwitz> <http://schema.org/height> "62876"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/86Landen%20Lueilwitz> <http://schema.org/weight> "57473"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/86Landen%20Lueilwitz> <http://xmlns.com/foaf/0.1/name> "Landen Lueilwitz".
+<http://example.org/person/86Landen%20Lueilwitz> <http://xmlns.com/foaf/0.1/mbox> <mailto:Aurelie83%40gmail.com>.
+<http://example.org/person/86Landen%20Lueilwitz> <http://xmlns.com/foaf/0.1/phone> <tel:740-113-5324>.
+<http://example.org/person/86Landen%20Lueilwitz> <http://schema.org/birthDate> "1968-07-24"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/87Wilfrid%20Moen%20DVM> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/87Wilfrid%20Moen%20DVM> <http://schema.org/height> "29172"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/87Wilfrid%20Moen%20DVM> <http://schema.org/weight> "14789"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/87Wilfrid%20Moen%20DVM> <http://xmlns.com/foaf/0.1/name> "Wilfrid Moen DVM".
+<http://example.org/person/87Wilfrid%20Moen%20DVM> <http://xmlns.com/foaf/0.1/mbox> <mailto:Zora17%40gmail.com>.
+<http://example.org/person/87Wilfrid%20Moen%20DVM> <http://xmlns.com/foaf/0.1/phone> <tel:441-987-6601%20x514>.
+<http://example.org/person/87Wilfrid%20Moen%20DVM> <http://schema.org/birthDate> "1946-12-18"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/88Noemi%20Beer> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/88Noemi%20Beer> <http://schema.org/height> "66407"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/88Noemi%20Beer> <http://schema.org/weight> "65600"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/88Noemi%20Beer> <http://xmlns.com/foaf/0.1/name> "Noemi Beer".
+<http://example.org/person/88Noemi%20Beer> <http://xmlns.com/foaf/0.1/mbox> <mailto:Marisa.Kulas%40yahoo.com>.
+<http://example.org/person/88Noemi%20Beer> <http://xmlns.com/foaf/0.1/phone> <tel:835.074.3005%20x33088>.
+<http://example.org/person/88Noemi%20Beer> <http://schema.org/birthDate> "2013-09-03"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/89Jaeden%20Wisoky> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/89Jaeden%20Wisoky> <http://schema.org/height> "14144"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/89Jaeden%20Wisoky> <http://schema.org/weight> "42026"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/89Jaeden%20Wisoky> <http://xmlns.com/foaf/0.1/name> "Jaeden Wisoky".
+<http://example.org/person/89Jaeden%20Wisoky> <http://xmlns.com/foaf/0.1/mbox> <mailto:Karianne.Fahey86%40hotmail.com>.
+<http://example.org/person/89Jaeden%20Wisoky> <http://xmlns.com/foaf/0.1/phone> <tel:%28213%29%20477-9989>.
+<http://example.org/person/89Jaeden%20Wisoky> <http://schema.org/birthDate> "2011-09-27"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/90Ms.%20Dameon%20Johns> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/90Ms.%20Dameon%20Johns> <http://schema.org/height> "48428"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/90Ms.%20Dameon%20Johns> <http://schema.org/weight> "14651"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/90Ms.%20Dameon%20Johns> <http://xmlns.com/foaf/0.1/name> "Ms. Dameon Johns".
+<http://example.org/person/90Ms.%20Dameon%20Johns> <http://xmlns.com/foaf/0.1/mbox> <mailto:Gavin_Prohaska%40hotmail.com>.
+<http://example.org/person/90Ms.%20Dameon%20Johns> <http://xmlns.com/foaf/0.1/phone> <tel:982.376.5554%20x2073>.
+<http://example.org/person/90Ms.%20Dameon%20Johns> <http://schema.org/birthDate> "1939-11-01"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/91Marcelle%20Shields> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/91Marcelle%20Shields> <http://schema.org/height> "1201"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/91Marcelle%20Shields> <http://schema.org/weight> "76997"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/91Marcelle%20Shields> <http://xmlns.com/foaf/0.1/name> "Marcelle Shields".
+<http://example.org/person/91Marcelle%20Shields> <http://xmlns.com/foaf/0.1/mbox> <mailto:Grayson.Pollich%40yahoo.com>.
+<http://example.org/person/91Marcelle%20Shields> <http://xmlns.com/foaf/0.1/phone> <tel:519.308.3737>.
+<http://example.org/person/91Marcelle%20Shields> <http://schema.org/birthDate> "1976-05-31"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/92Obie%20Kertzmann> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/92Obie%20Kertzmann> <http://schema.org/height> "88497"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/92Obie%20Kertzmann> <http://schema.org/weight> "1332"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/92Obie%20Kertzmann> <http://xmlns.com/foaf/0.1/name> "Obie Kertzmann".
+<http://example.org/person/92Obie%20Kertzmann> <http://xmlns.com/foaf/0.1/mbox> <mailto:Vicente_Lindgren8%40yahoo.com>.
+<http://example.org/person/92Obie%20Kertzmann> <http://xmlns.com/foaf/0.1/phone> <tel:575-841-1792%20x62533>.
+<http://example.org/person/92Obie%20Kertzmann> <http://schema.org/birthDate> "1962-05-01"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/93Eda%20Windler> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/93Eda%20Windler> <http://schema.org/height> "69816"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/93Eda%20Windler> <http://schema.org/weight> "4610"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/93Eda%20Windler> <http://xmlns.com/foaf/0.1/name> "Eda Windler".
+<http://example.org/person/93Eda%20Windler> <http://xmlns.com/foaf/0.1/mbox> <mailto:Marie_Wyman%40gmail.com>.
+<http://example.org/person/93Eda%20Windler> <http://xmlns.com/foaf/0.1/phone> <tel:1-229-892-4515%20x510>.
+<http://example.org/person/93Eda%20Windler> <http://schema.org/birthDate> "2003-01-13"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/94Veda%20Jakubowski> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/94Veda%20Jakubowski> <http://schema.org/height> "85613"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/94Veda%20Jakubowski> <http://schema.org/weight> "88257"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/94Veda%20Jakubowski> <http://xmlns.com/foaf/0.1/name> "Veda Jakubowski".
+<http://example.org/person/94Veda%20Jakubowski> <http://xmlns.com/foaf/0.1/mbox> <mailto:Orlo_Maggio74%40hotmail.com>.
+<http://example.org/person/94Veda%20Jakubowski> <http://xmlns.com/foaf/0.1/phone> <tel:1-384-930-2265%20x879>.
+<http://example.org/person/94Veda%20Jakubowski> <http://schema.org/birthDate> "2014-09-25"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/95Rudolph%20Cartwright%20MD> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/95Rudolph%20Cartwright%20MD> <http://schema.org/height> "53073"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/95Rudolph%20Cartwright%20MD> <http://schema.org/weight> "53455"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/95Rudolph%20Cartwright%20MD> <http://xmlns.com/foaf/0.1/name> "Rudolph Cartwright MD".
+<http://example.org/person/95Rudolph%20Cartwright%20MD> <http://xmlns.com/foaf/0.1/mbox> <mailto:Maryjane_Kunde4%40gmail.com>.
+<http://example.org/person/95Rudolph%20Cartwright%20MD> <http://xmlns.com/foaf/0.1/phone> <tel:1-806-926-1237%20x03947>.
+<http://example.org/person/95Rudolph%20Cartwright%20MD> <http://schema.org/birthDate> "1904-08-11"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/96Mr.%20Jany%20Schroeder> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/96Mr.%20Jany%20Schroeder> <http://schema.org/height> "52483"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/96Mr.%20Jany%20Schroeder> <http://schema.org/weight> "4335"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/96Mr.%20Jany%20Schroeder> <http://xmlns.com/foaf/0.1/name> "Mr. Jany Schroeder".
+<http://example.org/person/96Mr.%20Jany%20Schroeder> <http://xmlns.com/foaf/0.1/mbox> <mailto:Regan.McLaughlin%40hotmail.com>.
+<http://example.org/person/96Mr.%20Jany%20Schroeder> <http://xmlns.com/foaf/0.1/phone> <tel:1-116-689-3181%20x723>.
+<http://example.org/person/96Mr.%20Jany%20Schroeder> <http://schema.org/birthDate> "2006-05-21"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/97Retha%20Balistreri> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/97Retha%20Balistreri> <http://schema.org/height> "17313"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/97Retha%20Balistreri> <http://schema.org/weight> "33691"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/97Retha%20Balistreri> <http://xmlns.com/foaf/0.1/name> "Retha Balistreri".
+<http://example.org/person/97Retha%20Balistreri> <http://xmlns.com/foaf/0.1/mbox> <mailto:Dagmar_Terry66%40yahoo.com>.
+<http://example.org/person/97Retha%20Balistreri> <http://xmlns.com/foaf/0.1/phone> <tel:%28618%29%20153-3666>.
+<http://example.org/person/97Retha%20Balistreri> <http://schema.org/birthDate> "1996-08-22"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/98Lelia%20Price> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/98Lelia%20Price> <http://schema.org/height> "99344"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/98Lelia%20Price> <http://schema.org/weight> "47903"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/98Lelia%20Price> <http://xmlns.com/foaf/0.1/name> "Lelia Price".
+<http://example.org/person/98Lelia%20Price> <http://xmlns.com/foaf/0.1/mbox> <mailto:Idella.Kuhn50%40gmail.com>.
+<http://example.org/person/98Lelia%20Price> <http://xmlns.com/foaf/0.1/phone> <tel:121-220-0461>.
+<http://example.org/person/98Lelia%20Price> <http://schema.org/birthDate> "1978-06-25"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<http://example.org/person/99Maxie%20O%27Reilly%20Sr.> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>.
+<http://example.org/person/99Maxie%20O%27Reilly%20Sr.> <http://schema.org/height> "85009"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/99Maxie%20O%27Reilly%20Sr.> <http://schema.org/weight> "74648"^^<http://www.w3.org/2001/XMLSchema#decimal>.
+<http://example.org/person/99Maxie%20O%27Reilly%20Sr.> <http://xmlns.com/foaf/0.1/name> "Maxie O'Reilly Sr.".
+<http://example.org/person/99Maxie%20O%27Reilly%20Sr.> <http://xmlns.com/foaf/0.1/mbox> <mailto:Kali_Brekke28%40yahoo.com>.
+<http://example.org/person/99Maxie%20O%27Reilly%20Sr.> <http://xmlns.com/foaf/0.1/phone> <tel:985-150-7566%20x191>.
+<http://example.org/person/99Maxie%20O%27Reilly%20Sr.> <http://schema.org/birthDate> "1948-01-29"^^<http://www.w3.org/2001/XMLSchema#dateTime>.

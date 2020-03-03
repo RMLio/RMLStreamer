@@ -23,6 +23,7 @@
 package io.rml.framework.engine.statement
 
 
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.model._
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.Engine
@@ -32,16 +33,6 @@ import io.rml.framework.flink.item.Item
   *
   */
 object TermMapGenerators {
-
-  private var BASE_URL = ""
-
-  def setBaseUrl(url: String): Unit = {
-    BASE_URL = url
-  }
-
-  def getBaseUrl: String = {
-    BASE_URL
-  }
 
   def constantUriGenerator(constant: Entity): Item => Option[Iterable[Uri]] = {
     // return a function that just returns the constant
@@ -126,37 +117,22 @@ object TermMapGenerators {
     }
   }
 
-  def processIRI(origIRI: String): Iterable[String] = {
-    /**
-      * Extra check to prevent calling validator which costs more time if
-      * done repeatedly per item since it uses regex
-      */
-    val default = origIRI
-    if (BASE_URL.length > 0) {
-
-      val appended = BASE_URL + origIRI
-
-      if (Util.isValidUri(appended)) {
-
-        List(appended)
-
-      } else if (Util.isValidUri(default)) {
-
-        List(default)
-
-      } else {
-
-        List()
-
-      }
-
-
+  private def processIRI(origIri: String): Iterable[String] =  {
+    if (Util.isValidAbsoluteUri(origIri)) {
+      List(origIri)
     } else {
-      List(default)
+      val baseIRI = RMLEnvironment.getGeneratorBaseIRI()
+      if (baseIRI.isDefined) {
+        val completeUri = baseIRI.get + origIri
+        if (Util.isValidAbsoluteUri(completeUri)) {
+          List(completeUri)
+        } else {
+          List()
+        }
+      } else {
+        List()
+      }
     }
-
-
   }
-
 
 }

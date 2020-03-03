@@ -28,8 +28,8 @@ object FileDataSet extends Logging {
   def apply(logicalSource: LogicalSource)(implicit env: ExecutionEnvironment): FileDataSet = {
     logicalSource.referenceFormulation match {
       case Uri(RMLVoc.Class.CSV) => createCSVDataSet(logicalSource.source.uri.toString)
-      case Uri(RMLVoc.Class.XPATH) => createXMLWithXPathDataSet(logicalSource.source.uri.toString, logicalSource.iterators.head.get.value)
-      case Uri(RMLVoc.Class.JSONPATH) => createJSONWithJSONPathDataSet(logicalSource.source.uri.toString, logicalSource.iterators.head.get.value)
+      case Uri(RMLVoc.Class.XPATH) => createXMLWithXPathDataSet(logicalSource.source.uri.toString, logicalSource.iterators.head)
+      case Uri(RMLVoc.Class.JSONPATH) => createJSONWithJSONPathDataSet(logicalSource.source.uri.toString, logicalSource.iterators.head)
     }
 
   }
@@ -48,7 +48,7 @@ object FileDataSet extends Logging {
     * Not used
     *
     * @param path
-    * @param tag
+    * @param xpath
     * @param env
     * @return
     */

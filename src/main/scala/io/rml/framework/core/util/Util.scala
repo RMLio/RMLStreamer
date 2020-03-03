@@ -1,12 +1,14 @@
 package io.rml.framework.core.util
 
 import java.io.{ByteArrayInputStream, File, FileInputStream, InputStream}
+import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
 import java.util.regex.Pattern
 
-import io.rml.framework.core.model.Literal
-import org.apache.commons.validator.routines.UrlValidator
+import io.rml.framework.core.extractors.MappingReader
+import io.rml.framework.core.model.{FormattedRMLMapping, Literal}
+import io.rml.framework.shared.ReadException
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
@@ -18,7 +20,6 @@ object Util {
   private val regexPatternLanguageTag = Pattern.compile("^((?:(en-GB-oed|i-ami|i-bnn|i-default|i-enochian|i-hak|i-klingon|i-lux|i-mingo|i-navajo|i-pwn|i-tao|i-tay|i-tsu|sgn-BE-FR|sgn-BE-NL|sgn-CH-DE)|(art-lojban|cel-gaulish|no-bok|no-nyn|zh-guoyu|zh-hakka|zh-min|zh-min-nan|zh-xiang))|((?:([A-Za-z]{2,3}(-(?:[A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4})(-(?:[A-Za-z]{4}))?(-(?:[A-Za-z]{2}|[0-9]{3}))?(-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-(?:[0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(?:x(-[A-Za-z0-9]{1,8})+))?)|(?:x(-[A-Za-z0-9]{1,8})+))$")
 
   private val baseDirectiveCapture = "@base <([^<>]*)>.*".r
-  private val VALIDATOR = new UrlValidator()
 
 
   /**
@@ -103,17 +104,82 @@ object Util {
   }
 
 
-  def isValidUri(uri: String): Boolean = {
-    VALIDATOR.isValid(uri)
+  def isValidAbsoluteUri(uri: String): Boolean = {
+    try {
+      val validatedUri = new URI(uri)
+      return validatedUri.getScheme != null
+    } catch {
+      case e: Throwable => {
+        false
+      }
+    }
   }
 
 
 
-  def isRootIteratorTag(tag:Option[Literal]): Boolean = {
-    tag match {
-      case None => true
-      case Some(x) =>  io.rml.framework.flink.source.Source.DEFAULT_ITERATOR_SET.contains(x.toString)
+  def isRootIteratorTag(tag: String): Boolean = {
+    io.rml.framework.flink.source.Source.DEFAULT_ITERATOR_SET.contains(tag)
+  }
+
+  // auto-close resources, seems to be missing in Scala
+  def tryWith[R, T <: AutoCloseable](resource: T)(doWork: T => R): R = {
+    try {
+      doWork(resource)
     }
+    finally {
+      try {
+        if (resource != null) {
+          resource.close()
+        }
+      }
+      catch {
+        case e: Exception => {
+          throw new ReadException(e.getMessage)
+        }
+      }
+    }
+  }
+
+  def guessFormatFromFileName(fileName: String): Option[Format] = {
+    val suffix = fileName.substring(fileName.lastIndexOf('.')).toLowerCase
+    suffix match {
+      case ".ttl" => Some(Turtle)
+      case ".nt" => Some(NTriples)
+      case ".nq" => Some(NQuads)
+      case ".json" => Some(JSON_LD)
+      case ".json-ld" => Some(JSON_LD)
+      case _ => None
+    }
+  }
+
+  /**
+    * Utility method for reading a mapping file and converting it to a formatted RML mapping.
+    *
+    * @param path
+    * @return
+    */
+  def readMappingFile(path: String): FormattedRMLMapping = {
+    val mappingFile = getFile(path)
+    val mapping = MappingReader().read(mappingFile)
+    FormattedRMLMapping.fromRMLMapping(mapping)
+  }
+
+  /**
+    * If the given path is absolute, then a File object representing that path is returned.
+    * If the given path is relative, then a File object representing the path relative to the root class directory is returned. This can also be a path in a jar.
+    * @param path
+    * @return
+    */
+  def getFile(path: String): File = {
+    val file_1 = new File(path)
+    val result = if (file_1.isAbsolute) {
+      new File(path)
+    } else {
+      println(path)
+      val classLoader = getClass.getClassLoader
+      new File(classLoader.getResource(path).getFile)
+    }
+    result
   }
 
 }

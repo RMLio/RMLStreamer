@@ -35,7 +35,7 @@ trait LogicalSource extends Node {
     *
     * @return
     */
-  def iterators: List[Option[Literal]]
+  def iterators: List[String]
 
   /**
     *
@@ -78,7 +78,7 @@ object LogicalSource {
 
   def apply(
              referenceFormulation: Uri,
-             iterators: List[Option[Literal]],
+             iterators: List[String],
              source: DataSource): LogicalSource = {
 
     StdLogicalSource(

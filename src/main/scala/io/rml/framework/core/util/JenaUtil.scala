@@ -22,7 +22,15 @@
 
 package io.rml.framework.core.util
 
-import org.apache.jena.riot.RDFFormat
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
+
+import org.apache.jena.query.{Dataset, DatasetFactory}
+import org.apache.jena.rdf.model.Model
+import org.apache.jena.riot.{Lang, RDFFormat, RDFParser}
+
+import scala.collection.mutable
+
 
 object JenaUtil {
 
@@ -31,6 +39,7 @@ object JenaUtil {
       case Turtle => "TURTLE"
       case NTriples => "N-TRIPLES"
       case JSON_LD => "JSON-LD"
+      case NQuads => "N-QUADS"
     }
   }
 
@@ -38,8 +47,44 @@ object JenaUtil {
     format match {
       case Turtle => RDFFormat.TURTLE
       case NTriples => RDFFormat.NTRIPLES
-      case JSON_LD => RDFFormat.JSONLD_COMPACT_FLAT
+      case JSON_LD => RDFFormat.JSONLD
+      case NQuads => RDFFormat.NQUADS
     }
   }
 
+  def toLang(format: Format): Lang = {
+    format match {
+      case Turtle => Lang.TURTLE
+      case NTriples => Lang.NTRIPLES
+      case NQuads => Lang.NQUADS
+      case JSON_LD => Lang.JSONLD
+    }
+  }
+
+  def readDataset(input: String, baseIRI: String, format: Format): Dataset = {
+    val dataset = DatasetFactory.create()
+    RDFParser.fromString(input)
+      .base(baseIRI)
+      .lang(toLang(format))
+      .parse(dataset)
+    dataset
+  }
+
+  def toModels(dataset: Dataset): List[(Model, String)] = {
+    var models = mutable.MutableList[(Model, String)]()
+    models = models ++ List((dataset.getDefaultModel, ""))
+    val iter = dataset.listNames();
+    while (iter.hasNext) {
+      val name = iter.next()
+      val model = dataset.getNamedModel(name)
+      models = models ++ List((model, name))
+    }
+    models.toList
+  }
+
+  def toString(model: Model): String = {
+    val bos = new ByteArrayOutputStream
+    model.write(bos, Lang.NQUADS.getName)
+    bos.toString(StandardCharsets.UTF_8.name)
+  }
 }

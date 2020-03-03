@@ -29,3 +29,5 @@ case object Turtle extends Format
 case object JSON_LD extends Format
 
 case object NTriples extends Format
+
+case object NQuads extends Format
