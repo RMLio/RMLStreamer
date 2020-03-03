@@ -95,7 +95,7 @@ function setProperties {
             shift # past argument
             shift # past value
             ;;
-         -l|--enable-local-parallel
+         -l|--enable-local-parallel)
             LOCAL_PARALLEL=true
             shift # option only
             ;;
