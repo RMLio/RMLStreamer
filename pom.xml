@@ -1,7 +1,7 @@
 <!--
 MIT License
 
-Copyright (c) 2019 RDF Mapping Language (RML)
+Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ SOFTWARE.
     <packaging>jar</packaging>
 
     <name>RMLStreamer</name>
-    <url>http://rml.io/</url>
+    <url>https://rml.io/</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -514,33 +514,6 @@ SOFTWARE.
                     </execution>
                 </executions>
             </plugin>
-
-            <!--plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>2.0.0</version>
-                <configuration>
-                    <extraExtensions>
-                        <scala>java</scala>
-                    </extraExtensions>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>first</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                            <licenseName>mit</licenseName>
-                            <roots>
-                                <root>src/main/scala</root>
-                                <root>src/test/scala</root>
-                            </roots>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin-->
         </plugins>
     </build>
 </project>
