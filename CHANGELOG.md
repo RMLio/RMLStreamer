@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Function mapping.
 * Joins of data streams
 
+## [1.2.2] - 2020-03-03
+
 ### Added
 
 * Option to switch on optimal usage of the task slots assigned to a task manager/job,
