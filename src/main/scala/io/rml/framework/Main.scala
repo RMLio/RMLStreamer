@@ -90,7 +90,7 @@ object Main extends Logging {
     var jobName = if (parameters.has("job-name")) parameters.get("job-name")
     else EMPTY_VALUE
 
-    var baseIRI = if (parameters.has("baseIRI")) parameters.get("base-IRI")
+    var baseIRI = if (parameters.has("base-IRI")) parameters.get("base-IRI")
     else EMPTY_VALUE
 
     var localParallelExecution = parameters.has("enable-local-parallel")
