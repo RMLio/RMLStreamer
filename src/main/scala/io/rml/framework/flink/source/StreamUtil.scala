@@ -58,7 +58,7 @@ object StreamUtil {
     */
   def paralleliseOverSlots(inputStream: DataStream[String]): DataStream[String] = {
     if (StreamerConfig.isExecuteLocalParallel()) {
-      inputStream.keyBy(input => input.hashCode)
+      inputStream.keyBy(input => System.nanoTime())
     } else {
       inputStream
     }
