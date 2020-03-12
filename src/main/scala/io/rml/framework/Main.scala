@@ -164,7 +164,12 @@ object Main extends Logging {
       }
 
       // write to a socket if the parameter is given
-      if (outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
+      if (outputSocket != EMPTY_VALUE) {
+        val parts = outputSocket.split(':')
+        val host = parts(0)
+        val port = parts(1).toInt
+        stream.writeToSocket(host, port, new SimpleStringSchema())
+      }
 
       else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE){
         val rmlPartitionProperties =  new Properties()
