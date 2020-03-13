@@ -384,6 +384,10 @@ SOFTWARE.
                             -->
                             <transformers>
                                 <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>io.rml.framework.Main</mainClass>
+                                </transformer>
+                                <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                             </transformers>
                             <!-- If you want to use ./bin/flink run <quickstart jar> uncomment the following lines.
