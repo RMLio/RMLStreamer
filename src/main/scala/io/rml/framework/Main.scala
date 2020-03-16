@@ -237,7 +237,15 @@ object Main extends Logging {
           .name("Execute mapping statements on items")
 
           // format every list of triples (as strings)
-          .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b) + "\n\n") else None)
+          .flatMap(
+            list => {
+              if (list.nonEmpty) {
+                Some(list.reduce((a, b) => a + "\n" + b) + "\n\n")
+              } else {
+                None
+              }
+            }
+          )
           .name("Convert triples to strings")
       })
 
