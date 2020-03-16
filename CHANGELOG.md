@@ -11,9 +11,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Function mapping.
 * Joins of data streams
 
+## [1.2.3] - 2020-03-16
+
+### Changed
+* Updated documentation
+
 ### Fixed
 * `baseIRI` parameter in `run.sh` was not correctly passed to the RMLStreamer application.
-* `-socket` parameter only allowed to set the port number, and output was assumed to go to `localhoat`. Now you can set `host:port` as value.
+* `socket` parameter only allowed to set the port number, and output was assumed to go to `localhost`. Now you have to set `host:port` as value.
 
 ## [1.2.2] - 2020-03-03
 
@@ -81,5 +86,6 @@ can be set with the program argument `--baseIRI`.
 [1.0.0]: https://github.com/RMLio/RMLStreamer/releases/tag/v1.0.0
 [1.1.0]: https://github.com/RMLio/RMLStreamer/compare/v1.0.0...v1.1.0
 [1.2.0]: https://github.com/RMLio/RMLStreamer/compare/v1.1.0...v1.2.0  
-[1.2.1]: https://github.com/RMLio/RMLStreamer/compare/v1.2.0...v1.2.1  
+[1.2.1]: https://github.com/RMLio/RMLStreamer/compare/v1.2.0...v1.2.1
 [1.2.2]: https://github.com/RMLio/RMLStreamer/compare/v1.2.1...v1.2.2  
+[1.2.3]: https://github.com/RMLio/RMLStreamer/compare/v1.2.2...v1.2.3  
