@@ -44,7 +44,7 @@ object StreamUtil {
         */
 
 
-      case TCPSocketStream.TYPE.PULL =>     new DataStream[String](env.getJavaEnv.socketTextStream(tCPSocketStream.hostName, tCPSocketStream.port, delimiter).setParallelism(1))
+      case TCPSocketStream.TYPE.PULL =>     new DataStream[String](env.getJavaEnv.socketTextStream(tCPSocketStream.hostName, tCPSocketStream.port, delimiter))
       case TCPSocketStream.TYPE.PUSH => env.addSource(new TcpReceiverSource(tCPSocketStream.port)).setParallelism(1) // to avoid library to setup multiple instances
     }
   }
