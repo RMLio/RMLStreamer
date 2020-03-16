@@ -15,7 +15,6 @@ RMLStreamer runs its jobs on Flink clusters.
 More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.9/getting-started/tutorials/local_setup.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
 Please note that this version works with Flink 1.9.1 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.1/flink-1.9.1-bin-scala_2.11.tgz).
-Note that the latest release version might require another version of Flink, check the README for that version.
 
 ### Building RMLStreamer
 
@@ -28,10 +27,18 @@ Clone or download and then build the code in this repository:
 ```
 $ git clone https://github.com/RMLio/RMLStreamer.git 
 $ cd RMLStreamer
+```
+and then run:
+```
 $ mvn -DskipTests clean package
 ```
 
-The resulting `RMLStreamer-<version>.jar` can be deployed on a Flink cluster.
+`-DskipTests` just builds and packages without running tests. If you want to run the tests, just omit this parameter.
+
+`clean` cleans any cached builds before packaging. While not strictly necessary, it is considered good practice to do
+so.
+
+The resulting `RMLStreamer-<version>.jar`, found in the `target` folder, can be deployed on a Flink cluster.
 
 ### Executing RML Mappings
 
@@ -53,7 +60,7 @@ Usage:
 ./run.sh -c CONFIG FILE
 
 Every option can be defined in its long form in the CONFIG FILE.
-E.g. flinkBin=/opt/flink-1.8.0/flink
+E.g. flinkBin=/opt/flink-1.9.1/flink
 
 Options:
 -a   --parallelism NUMBER            The parallelism to assign to the job. The default is 1.
@@ -67,7 +74,7 @@ Options:
 --pp --post-process NAME             The name of the post processing that will be done on generated triples
                                      Default is: None
                                      Currently supports:  "bulk", "json-ld"
--s   --socket PORT NUMBER            The port number of the socket.
+-s   --socket HOST:PORT              The host name (or IP address) and port number of the socket to write to.
 -t   --kafkaTopic TOPIC              The kafka topic to which the output will be streamed to.  
 
 -c   --config CONFIG FILE	         The path to a configuration file. Every parameter can be put in its long form 
@@ -176,7 +183,7 @@ See also https://stackoverflow.com/questions/38639019/flink-kafka-consumer-group
 
 The only option for spreading load is to use multiple topics, and assign one RMLStreamer job to one topic.
 
-##### Generating a stream from a file
+##### Generating a stream from a file (to be implemented)
 ```
 <#TripleMap>
 
@@ -247,7 +254,7 @@ The RML vocabulary have been extended with rmls to support streaming logical sou
 The following are the classes/terms currently used:
 * **rmls:[stream type]** 
     * **rmls:TCPSocketStream** specifies that the logical source will be a tcp socket stream.
-    * **rmls:FileStream** specifies that the logical source will be a file stream. 
+    * **rmls:FileStream** specifies that the logical source will be a file stream (to be implemented). 
     * **rmls:KafkaStream** specifies that the logical source will be a kafka stream.
    
  
