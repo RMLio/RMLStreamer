@@ -74,7 +74,7 @@ Options:
 --pp --post-process NAME             The name of the post processing that will be done on generated triples
                                      Default is: None
                                      Currently supports:  "bulk", "json-ld"
--s   --socket PORT NUMBER            The port number of the socket.
+-s   --socket HOST:PORT              The host name (or IP address) and port number of the socket to write to.
 -t   --kafkaTopic TOPIC              The kafka topic to which the output will be streamed to.  
 
 -c   --config CONFIG FILE	         The path to a configuration file. Every parameter can be put in its long form 
