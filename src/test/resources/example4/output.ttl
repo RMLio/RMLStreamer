@@ -19,7 +19,7 @@
 
 <http://loc.example.com/city/Gent> a <http://schema.org/City>.
 #<http://loc.example.com/city/Gent> wgs84_pos:location <http://loc.example.com/latlong/51.4657890,3.7166700>.
-<http://loc.example.com/city/Gent> gn:countryCode "BE".
+<http://loc.example.com/city/Gent> gn:countryCode "B\nE".
 <http://loc.example.com/city/Gent> geosp:onContinent "EU".
 <http://loc.example.com/city/Gent> wgs84_pos:lat "51.4657890".
 <http://loc.example.com/city/Gent> wgs84_pos:long "3.7166700".

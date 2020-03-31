@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Function mapping.
 * Joins of data streams
 
+### Fixed
+* Escape characters were not escaped in generated literals (Internal [issue #81](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/issues/81)).
+
 ## [1.2.3] - 2020-03-16
 
 ### Changed

@@ -42,7 +42,7 @@ object Blank {
   def apply(): Blank = StdBlank()
 
   def apply(id: String): Blank = {
-    StdBlank(Entity.clean(id))
+    StdBlank(id)
   }
 
 }
