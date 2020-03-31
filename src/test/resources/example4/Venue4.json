@@ -10,7 +10,7 @@
     },
     {
         "continent": "EU",
-        "country": "BE",
+        "country": "B\nE",
         "city": "Gent",
         "venue": {
             "latitude": "51.4657890",

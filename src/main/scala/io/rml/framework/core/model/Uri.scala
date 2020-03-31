@@ -48,13 +48,13 @@ object Uri {
     * @return
     */
   def apply(uri: String): Uri = {
-    if (uri != null) StdUri(Entity.clean(uri)) else Uri("")
+    if (uri != null) StdUri(uri) else Uri("")
   }
 
   def unapply(arg: Uri): Option[String] = Some(arg.toString)
 
   def encoded(uri: String): Uri = {
-    if (uri != null) StdUri(encode(Entity.clean(uri))) else Uri("")
+    if (uri != null) StdUri(encode(uri)) else Uri("")
   }
 
   def encode(s: String): String = {
