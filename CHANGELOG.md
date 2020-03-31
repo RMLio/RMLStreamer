@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Function mapping.
 * Joins of data streams
 
+### Changed
+* Updated Flink from version 1.9.1 to 1.9.2
+* Updated Kafka from version 2.2.0 to 2.2.2
+
 ### Fixed
 * Escape characters were not escaped in generated literals (Internal [issue #81](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/issues/81)).
 
