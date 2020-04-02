@@ -35,9 +35,10 @@ import io.rml.framework.core.model._
 import io.rml.framework.core.util.{StreamerConfig, Util}
 import io.rml.framework.engine._
 import io.rml.framework.engine.statement.StatementEngine
-import io.rml.framework.flink.connector.kafka.{PartitionerFormat, RMLPartitioner, UniversalKafkaConnectorFactory}
+import io.rml.framework.flink.connector.kafka.{RMLPartitioner, UniversalKafkaConnectorFactory}
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
+import io.rml.framework.flink.util.ParameterUtil
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala._
@@ -61,6 +62,8 @@ object Main extends Logging {
     */
   def main(args: Array[String]): Unit = {
 
+    ParameterUtil.processParameters(args)
+
 
     val EMPTY_VALUE = "__NO_VALUE_KEY"
 
@@ -81,11 +84,6 @@ object Main extends Logging {
 
     val partitionID = if (parameters.has("partition-id")) parameters.get("partition-id")
     else EMPTY_VALUE
-
-    val partitionFormatString = if (parameters.has("partition-type")) parameters.get("partition-type")
-    else EMPTY_VALUE
-
-    val partitionFormat: PartitionerFormat = PartitionerFormat.fromString(partitionFormatString)
 
     var jobName = if (parameters.has("job-name")) parameters.get("job-name")
     else EMPTY_VALUE
@@ -112,7 +110,6 @@ object Main extends Logging {
     logInfo("Kafka output topic: " +  kafkaTopic)
     logInfo("Post-process: "  + postProcessor.toString)
     logInfo("Kafka Partition: " +  partitionID)
-    logInfo("Kafka partition format: " + partitionFormatString)
     logInfo("Base IRI: " + baseIRI)
     logInfo(s"Parallelise over local task slots: ${StreamerConfig.isExecuteLocalParallel()}")
 
@@ -174,7 +171,6 @@ object Main extends Logging {
       else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE){
         val rmlPartitionProperties =  new Properties()
         rmlPartitionProperties.setProperty(RMLPartitioner.PARTITION_ID_PROPERTY,  partitionID)
-        rmlPartitionProperties.setProperty(RMLPartitioner.PARTITION_FORMAT_PROPERTY, partitionFormat.string())
         UniversalKafkaConnectorFactory.applySink[String](kafkaBrokers, rmlPartitionProperties, kafkaTopic, stream)
       }
       // write to a file if the parameter is given
