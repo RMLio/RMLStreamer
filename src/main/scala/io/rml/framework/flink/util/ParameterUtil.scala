@@ -1,6 +1,7 @@
 package io.rml.framework.flink.util
 
-import org.apache.flink.api.java.utils.ParameterTool
+import io.rml.framework.flink.util.ParameterUtil.OutputSinkOption.OutputSinkOption
+import io.rml.framework.flink.util.ParameterUtil.PostProcessorOption.PostProcessorOption
 
 /**
   * MIT License
@@ -28,93 +29,132 @@ import org.apache.flink.api.java.utils.ParameterTool
   **/
 object ParameterUtil {
 
-  // common parameters
-  val generalParams = Map(
-    "path" -> (true, "The path to an RML mapping file. The path must be accessible on the Flink cluster.", "PATH", None),
-    "job-name" -> (false, "The name that the job on the Flink cluster will get.", "JOB NAME", Some("RMLStreamer")),
-    "base-IRI" -> (false, "The base IRI as defined in the R2RML spec.", "BASE IRI", Some("")),
-    "enable-local-parallel" -> (false, "Distribute incoming data records over local task slots.", "true|false", Some("true"))
-  );
-
-  // define mutual exclusive parameter groups
-  val fileOutputParams = Map("outputPath"-> (true, "The path to an output file.", "OUTPUT PATH", None))
-  val socketOutputParams = Map("socket" -> (true, "The host name (or IP address) and port number of the socket to write to.", "HOST:SOCKET", None))
-
-  val kafkaOutputParams = Map(
-    "broker-list" -> (true, "A comma separated list of hosts where Kafka runs on", "HOST:PORT[,HOST:PORT...]", None),
-    "topic" -> (true, "The name of the Kafka topic to write output to", "TOPIC NAME", None),
-    "partition-id" -> (false, "EXPERIMENTAL. The partition id of kafka topic to which the output will be written to.", "PARTITION NAME", None)
-  );
-
-  val mutualExclusiveParameterList = List(
-    ("File parameters", fileOutputParams),
-    ("TCP socket parameters", socketOutputParams),
-    ("Kafka parameters", kafkaOutputParams)
-  )
-
-  def processParameters(args: Array[String]): Unit = {
-    val parameters = ParameterTool.fromArgs(args)
-    val paramMap = parameters.toMap
-    // TODO here
-
-    printHelp()
-
+  case class ParameterConfig(
+                              mappingFilePath: String = ".",
+                              jobName: String = "",
+                              baseIRI: Option[String] = None,
+                              localParallel: Boolean = true,
+                              postProcessor: PostProcessorOption = PostProcessorOption.None,
+                              checkpointInterval: Option[Long] = None,
+                              outputPath: Option[String] = None,
+                              brokerList: Option[String] = None,
+                              topic: Option[String] = None,
+                              partitionId: Option[Int] = None,
+                              socket: Option[String] = None,
+                              outputSink: OutputSinkOption = OutputSinkOption.File
+                            ) {
+    override def toString: String = {
+      val resultStr: String =
+        s"Mapping file: ${mappingFilePath}\n" +
+        s"Job name: ${jobName}\n" +
+        s"Base IRI: ${baseIRI.getOrElse("/")}\n" +
+        s"Parallelise over local task slots: ${localParallel}\n" +
+        s"Post processor: ${postProcessor}\n" +
+        s"Checkpoint interval: ${checkpointInterval.getOrElse("/")}\n" +
+        s"Output method: ${outputSink}\n" +
+        s"Output file: ${outputPath.getOrElse("/")}\n" +
+        s"Kafka broker list: ${brokerList.getOrElse("/")}\n" +
+        s"Kafka topic: ${topic.getOrElse("/")}\n" +
+        s"Kafka topic partition id: ${partitionId.getOrElse("/")}\n" +
+        s"Output TCP socket: ${socket.getOrElse("/")}"
+      resultStr
+    }
   }
 
-  def printHelp() = {
-    mutualExclusiveParameterList.foreach(paramMap => {
-      val allParams = generalParams ++ paramMap._2
-      println(s"${paramMap._1}: ${formatParameterMap(allParams)}")
-    })
-
-    println("\nGeneral parameters:")
-    printParameterHelp(generalParams)
-    mutualExclusiveParameterList.foreach(paramMap => {
-      val allParams = paramMap._2
-      println(s"${paramMap._1}:")
-      printParameterHelp(paramMap._2)
-    })
+  // possible output sink options
+  object OutputSinkOption extends Enumeration {
+    type OutputSinkOption = Value
+    val File, Socket, Kafka = Value
   }
 
-  /*def printUsageLines(): Unit = {
-    mutualExclusiveParameterList.foreach(paramMap => {
-      val allParams = generalParams ++ paramMap._2
-      println(s"${paramMap._1}: ${formatParameterMap(allParams)}")
-    })
-  }*/
-
-  def formatParameterMap(parameterMap: Map[String, (Boolean, String, String, Option[String])]): String = {
-    parameterMap
-      .map(entry => {
-        val parameter = entry._1
-        val (mandatory, explanation, valueName, defaultValue) = entry._2
-
-
-        if (mandatory) {
-          s"--${parameter} ${valueName}"
-        } else {
-          s"[--${parameter} ${valueName}]"
-        }
-      })
-      .reduce((p1, p2) => s"${p1} ${p2}")
+  // possible post processor options
+  object PostProcessorOption extends Enumeration {
+    type PostProcessorOption = Value
+    val None, Bulk, JsonLD = Value
   }
 
-  def printParameterHelp(parameterMap: Map[String, (Boolean, String, String, Option[String])]): Unit = {
-    parameterMap.foreach(entry => {
-      val parameter = entry._1
-      val (mandatory, explanation, valueName, defaultValue) = entry._2
-      val defaultValueString = defaultValue match {
-        case Some(value) => s"""Default: "$value"."""
-        case None => ""
-      }
-      val mandatoryValueString = if (mandatory) {
-        "Mandatory."
-      } else {
-        "Optional."
-      }
-      val padding = " %1$-21s %2$1s %3$1s %4$1s"
-      println(padding.format(parameter, explanation, defaultValueString, mandatoryValueString))
-    })
+
+  val parser = new scopt.OptionParser[ParameterConfig]("RMLStreamer") {
+    override def showUsageOnError = true
+
+    head("RMLStreamer", "1.2.4-SNAPSHOT")
+
+    opt[String]('j', "job-name").valueName("<job name>").withFallback(() => "RMLStreamer")
+      .optional()
+      .action((value, config) => config.copy(jobName = value))
+      .text("The name to assign to the job on the Flink cluster. Put some semantics in here ;)")
+
+    opt[String]('i', "base-iri").valueName("<base IRI>")
+      .optional()
+      .action((value, config) => config.copy(baseIRI = Some(value)))
+      .text("The base IRI as defined in the R2RML spec.")
+
+    opt[Unit]("disable-local-parallel")
+      .optional()
+      .action((_, config) => config.copy(localParallel = false))
+      .text("By default input records are spread over the available task slots within a task manager to optimise parallel processing," +
+        "at the cost of losing the order of the records throughout the process." +
+        " This option disables this behaviour to guarantee that the output order is the same as the input order.")
+
+    opt[String]('m', "mapping-file").valueName("<RML mapping file>").required()
+      .action((value, config) => config.copy(mappingFilePath = value))
+      .text("REQUIRED. The path to an RML mapping file. The path must be accessible on the Flink cluster.")
+
+    opt[Unit]("json-ld")
+        .optional()
+        .action((_, config) => config.copy(postProcessor = PostProcessorOption.JsonLD))
+        .text("Write the output as JSON-LD instead of N-Quads. An object contains all RDF generated from one input record. " +
+          "Note: this is slower than using the default N-Quads format.")
+
+    opt[Unit]("bulk")
+      .optional()
+      .action((_, config) => config.copy(postProcessor = PostProcessorOption.Bulk))
+      .text("Write all triples generated from one input record at once.")
+
+    opt[Long]("checkpoint-interval").valueName("<time (ms)>")
+        .optional()
+        .action((value, config) => config.copy(checkpointInterval = Some(value)))
+        .text("If given, Flink's checkpointing is enabled with the given interval. If not given, checkpointing is disabled.")
+
+    // options specifically for writing output to file
+    cmd("toFile")
+      .text("Write output to file")
+      .action((_, config) => config.copy(outputSink = OutputSinkOption.File))
+      .children(
+        opt[String]('o', "output-path").valueName("<output file>").required()
+          .action((value, config) => config.copy(outputPath = Some(value)))
+          .text("The path to an output file.")
+      )
+
+    // options specifically for writing output to a Kafka topic
+    cmd("toKafka")
+      .text("Write output to a Kafka topic")
+      .action((_, config) => config.copy(outputSink = OutputSinkOption.Kafka))
+      .children(
+        opt[String]('b', "broker-list").valueName("<host:port>[,<host:port>]...").required()
+          .action((value, config) => config.copy(brokerList = Some(value)))
+          .text("A comma separated list of Kafka brokers."),
+        opt[String]('t', "topic").valueName("<topic name>").required()
+          .action((value, config) => config.copy(topic = Some(value)))
+          .text("The name of the Kafka topic to write output to."),
+        opt[Int]("partition-id").valueName("<id>").optional()
+          .text("EXPERIMENTAL. The partition id of kafka topic to which the output will be written to.")
+          .action((value, config) => config.copy(partitionId = Some(value)))
+      )
+
+    // options specifically for writing to TCP socket
+    cmd("toTCPSocket")
+      .text("Write output to a TCP socket")
+      .action((_, config) => config.copy(outputSink = OutputSinkOption.Socket))
+      .children(
+        opt[String]('s', "output-socket").valueName("<host:port>").required()
+          .action((value, config) => config.copy(socket = Some(value)))
+          .text("The TCP socket to write to.")
+      )
+  }
+
+  def processParameters(args: Array[String]): Option[ParameterConfig] = {
+    parser.parse(args, ParameterConfig())
   }
 
 }

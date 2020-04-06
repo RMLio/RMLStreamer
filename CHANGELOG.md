@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Joins of data streams
 
 ### Changed
+* Improved parameter handling, using [scopt](https://github.com/scopt/scopt). Not compatible with previous CLI.
+* Parallelising over the (local) task slots per task manager is enabled by default.
+* Checkpointing is disabled by default.
 * Updated Flink from version 1.9.1 to 1.9.2
 * Updated Kafka from version 2.2.0 to 2.2.2
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# RML Framework run script
+# RMLStreamer run script
 #
 # Created by Wouter Maroy
 

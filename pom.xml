@@ -274,6 +274,13 @@ SOFTWARE.
             <version>${log4j.version}</version>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- command arguments line parser. License: MIT -->
+        <dependency>
+            <groupId>com.github.scopt</groupId>
+            <artifactId>scopt_${scala.binary.version}</artifactId>
+            <version>3.7.1</version>
+        </dependency>
     </dependencies>
 
     <!-- This profile helps to make things run out of the box in IntelliJ -->
