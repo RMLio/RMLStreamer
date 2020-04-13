@@ -15,7 +15,6 @@ RMLStreamer runs its jobs on Flink clusters.
 More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.9/getting-started/tutorials/local_setup.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
 Please note that this version works with Flink 1.9.1 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.1/flink-1.9.1-bin-scala_2.11.tgz).
-Note that the latest release version might require another version of Flink, check the README for that version.
 
 ### Building RMLStreamer
 
@@ -28,10 +27,18 @@ Clone or download and then build the code in this repository:
 ```
 $ git clone https://github.com/RMLio/RMLStreamer.git 
 $ cd RMLStreamer
+```
+and then run:
+```
 $ mvn -DskipTests clean package
 ```
 
-The resulting `RMLStreamer-<version>.jar` can be deployed on a Flink cluster.
+`-DskipTests` just builds and packages without running tests. If you want to run the tests, just omit this parameter.
+
+`clean` cleans any cached builds before packaging. While not strictly necessary, it is considered good practice to do
+so.
+
+The resulting `RMLStreamer-<version>.jar`, found in the `target` folder, can be deployed on a Flink cluster.
 
 ### Executing RML Mappings
 
@@ -39,41 +46,49 @@ The script `run.sh` helps running RMLStreamer on a given Flink cluster.
 
 ```
 Usage:
-run.sh -p RML MAPPING PATH -f FLINK PATH -o FILE OUTPUT PATH [-a PARALLELISM]
-run.sh -p RML MAPPING PATH -f FLINK PATH -s SOCKET [-a PARALLELISM] 
-run.sh -p RML MAPPING PATH -f FLINK PATH -b KAFKA BROKERS -t KAFKA TOPIC
-run.sh -c CONFIG FILE
+
+# write output to file(s) 
+./run.sh -p RML MAPPING PATH -f FLINK PATH -o FILE OUTPUT PATH [-a PARALLELISM] [--bi BASE IRI] [-l] [-n JOB NAME] [--pp NAME]
+
+# write output to a listening socket (only if logical source(s) are streams)
+./run.sh -p RML MAPPING PATH -f FLINK PATH -s SOCKET [-a PARALLELISM] [--bi BASE IRI] [-l] [-n JOB NAME] [--pp NAME]
+
+# write output to kafka topic (only if logical source(s) are streams)
+./run.sh -p RML MAPPING PATH -f FLINK PATH -b KAFKA BROKERS -t KAFKA TOPIC [-a PARALLELISM] [--bi BASE IRI] [-l] [-n JOB NAME] [--pp NAME] [--pi PARTITION ID] [--pt PARTITION TYPE] 
+
+# configure everyting in config file:
+./run.sh -c CONFIG FILE
 
 Every option can be defined in its long form in the CONFIG FILE.
-E.g. flinkBin=/opt/flink-1.8.0/flink
+E.g. flinkBin=/opt/flink-1.9.1/flink
 
 Options:
--n --job-name                      The name of the Flink job
--p --path RML MAPPING PATH         The path to an RML mapping file.
--o --outputPath FILE OUTPUT PATH   The path to an output file.
--f --flinkBin FLINK PATH           The path to the Flink binary.
--s --socket                        The port number of the socket.
--b --kafkaBrokerList KAFKA BROKERS The (list of) hosts where Kafka runs on
--t --kafkaTopic                    The kafka topic to which the output will be streamed to. 
---pp --post-process                 The name of the post processing that will be done on generated triples 
-                                   Default is: None
-                                   Currently supports:  "bulk", "json-ld"
+-a   --parallelism NUMBER            The parallelism to assign to the job. The default is 1.
+-b   --kafkaBrokerList KAFKA BROKERS The (list of) hosts where Kafka runs on
+--bi --base-iri BASE IRI             The base IRI as defined in the R2RML spec.
+-f   --flinkBin FLINK PATH           The path to the Flink binary.
+-l   --enable-local-parallel         Distribute incoming data records over local task slots.
+-n   --job-name JOB NAME             The name of the Flink job
+-o   --outputPath FILE OUTPUT PATH   The path to an output file.
+-p   --path RML MAPPING PATH         The path to an RML mapping file.
+--pp --post-process NAME             The name of the post processing that will be done on generated triples
+                                     Default is: None
+                                     Currently supports:  "bulk", "json-ld"
+-s   --socket HOST:PORT              The host name (or IP address) and port number of the socket to write to.
+-t   --kafkaTopic TOPIC              The kafka topic to which the output will be streamed to.  
 
--a --parallelism                   The parallelism to assign to the job. The default is 1.
--t --kafkaTopic                    The kafka topic to which the output will be streamed to. 
---pp --post-process                The name of the post processing that will be done on generated triples 
-                                   Default is: None
-                                   Currently supports:  "bulk", "json-ld"
---pi --partition-id                The partition id of kafka topic to which the output will be written to. 
-                                   Required for "--partition-type fix"
---pt --partition-type              The type of the partitioner which will be used to partition the output
-                                   Default is: flink's default partitioner
-                                   Currently supports: "fixed", "kafka", "default"  
--c --config CONFIG FILE	           The path to a configuration file. Every parameter can be put in its long form in the 
-                                   configuration file. e.g:
-                                    flinkBin=/opt/flink-1.8.0/bin/flink
-                                    path=/home/rml/mapping.rml.ttl
-                                   Commandline parameters override properties.
+-c   --config CONFIG FILE	         The path to a configuration file. Every parameter can be put in its long form 
+                                     in the configuration file. e.g:
+                                       flinkBin=/opt/flink-1.8.0/bin/flink
+                                       path=/home/rml/mapping.rml.ttl
+                                     Commandline parameters override properties.
+
+Experimental or deprecated options:
+--pi --partition-id PARTITION ID     The partition id of kafka topic to which the output will be written to. 
+                                     Required for "--partition-type fixed" 
+--pt --partition-type PARTITION TYPE The type of the partitioner which will be used to partition the output
+                                     Default is: flink's default partitioner
+                                     Currently supports: "fixed", "kafka", "default"
 ```
 
 ---
@@ -168,7 +183,7 @@ See also https://stackoverflow.com/questions/38639019/flink-kafka-consumer-group
 
 The only option for spreading load is to use multiple topics, and assign one RMLStreamer job to one topic.
 
-##### Generating a stream from a file
+##### Generating a stream from a file (to be implemented)
 ```
 <#TripleMap>
 
@@ -239,7 +254,7 @@ The RML vocabulary have been extended with rmls to support streaming logical sou
 The following are the classes/terms currently used:
 * **rmls:[stream type]** 
     * **rmls:TCPSocketStream** specifies that the logical source will be a tcp socket stream.
-    * **rmls:FileStream** specifies that the logical source will be a file stream. 
+    * **rmls:FileStream** specifies that the logical source will be a file stream (to be implemented). 
     * **rmls:KafkaStream** specifies that the logical source will be a kafka stream.
    
  

@@ -90,7 +90,7 @@ object Main extends Logging {
     var jobName = if (parameters.has("job-name")) parameters.get("job-name")
     else EMPTY_VALUE
 
-    var baseIRI = if (parameters.has("baseIRI")) parameters.get("baseIRI")
+    var baseIRI = if (parameters.has("base-IRI")) parameters.get("base-IRI")
     else EMPTY_VALUE
 
     var localParallelExecution = parameters.has("enable-local-parallel")
@@ -164,7 +164,12 @@ object Main extends Logging {
       }
 
       // write to a socket if the parameter is given
-      if (outputSocket != EMPTY_VALUE) stream.writeToSocket("localhost", outputSocket.toInt, new SimpleStringSchema())
+      if (outputSocket != EMPTY_VALUE) {
+        val parts = outputSocket.split(':')
+        val host = parts(0)
+        val port = parts(1).toInt
+        stream.writeToSocket(host, port, new SimpleStringSchema())
+      }
 
       else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE){
         val rmlPartitionProperties =  new Properties()
@@ -232,7 +237,15 @@ object Main extends Logging {
           .name("Execute mapping statements on items")
 
           // format every list of triples (as strings)
-          .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b) + "\n\n") else None)
+          .flatMap(
+            list => {
+              if (list.nonEmpty) {
+                Some(list.reduce((a, b) => a + "\n" + b) + "\n\n")
+              } else {
+                None
+              }
+            }
+          )
           .name("Convert triples to strings")
       })
 
