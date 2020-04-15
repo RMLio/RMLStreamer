@@ -14,7 +14,7 @@ If you want to deploy it yourself, read on.
 RMLStreamer runs its jobs on Flink clusters.
 More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.9/getting-started/tutorials/local_setup.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
-Please note that this version works with Flink 1.9.1 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.1/flink-1.9.1-bin-scala_2.11.tgz).
+Please note that this version works with Flink 1.9.2 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.2/).
 
 ### Building RMLStreamer
 
@@ -42,58 +42,67 @@ The resulting `RMLStreamer-<version>.jar`, found in the `target` folder, can be 
 
 ### Executing RML Mappings
 
-The script `run.sh` helps running RMLStreamer on a given Flink cluster.
+Here we give examples for running RMLStreamer from the command line. We use `FLINK_BIN` to denote the Flink CLI tool,
+usually found in the `bin` directory of the Flink installation. E.g. `/home/myuser/flink-1.9.2/bin/flink`.
+For Windows a `flink.bat` script is provided.
+
+The general usage is:
 
 ```
-Usage:
+$ FLINK_BIN run [Flink options] -c io.rml.framework.Main <path to RMLStreamer jar> [toFile|toKafka|toTCPSocket] [options]
+```
 
-# write output to file(s) 
-./run.sh -p RML MAPPING PATH -f FLINK PATH -o FILE OUTPUT PATH [-a PARALLELISM] [--bi BASE IRI] [-l] [-n JOB NAME] [--pp NAME]
+`FLINK HOME`  | The path to the provided Flink CLI script.
+Flink options | Options to the Flink run script. Example: `-p 4` sets the `parallelism` to 4.
+`-c io.rml.framework.Main` | This is the application class of RMLStreamer.
+Path to RMLStreamer jar | The absolute path to the RMLStreamer jar file.
+RMLStreamer options | The actual program arguments for RMLStreamer. See below for a full list.
+
+#### Basic commands:
+```shell script
+# write output to file(s)
+$FLINK_BIN run -c io.rml.framework.Main toFile --mapping-file <path to mapping file> --output-path <path to output file>  
 
 # write output to a listening socket (only if logical source(s) are streams)
-./run.sh -p RML MAPPING PATH -f FLINK PATH -s SOCKET [-a PARALLELISM] [--bi BASE IRI] [-l] [-n JOB NAME] [--pp NAME]
+$FLINK_BIN run -c io.rml.framework.Main toTCPSocket --output-socket <host:port>
 
 # write output to kafka topic (only if logical source(s) are streams)
-./run.sh -p RML MAPPING PATH -f FLINK PATH -b KAFKA BROKERS -t KAFKA TOPIC [-a PARALLELISM] [--bi BASE IRI] [-l] [-n JOB NAME] [--pp NAME] [--pi PARTITION ID] [--pt PARTITION TYPE] 
-
-# configure everyting in config file:
-./run.sh -c CONFIG FILE
-
-Every option can be defined in its long form in the CONFIG FILE.
-E.g. flinkBin=/opt/flink-1.9.1/flink
-
-Options:
--a   --parallelism NUMBER            The parallelism to assign to the job. The default is 1.
--b   --kafkaBrokerList KAFKA BROKERS The (list of) hosts where Kafka runs on
---bi --base-iri BASE IRI             The base IRI as defined in the R2RML spec.
--f   --flinkBin FLINK PATH           The path to the Flink binary.
--l   --enable-local-parallel         Distribute incoming data records over local task slots.
--n   --job-name JOB NAME             The name of the Flink job
--o   --outputPath FILE OUTPUT PATH   The path to an output file.
--p   --path RML MAPPING PATH         The path to an RML mapping file.
---pp --post-process NAME             The name of the post processing that will be done on generated triples
-                                     Default is: None
-                                     Currently supports:  "bulk", "json-ld"
--s   --socket HOST:PORT              The host name (or IP address) and port number of the socket to write to.
--t   --kafkaTopic TOPIC              The kafka topic to which the output will be streamed to.  
-
--c   --config CONFIG FILE	         The path to a configuration file. Every parameter can be put in its long form 
-                                     in the configuration file. e.g:
-                                       flinkBin=/opt/flink-1.8.0/bin/flink
-                                       path=/home/rml/mapping.rml.ttl
-                                     Commandline parameters override properties.
-
-Experimental or deprecated options:
---pi --partition-id PARTITION ID     The partition id of kafka topic to which the output will be written to. 
-                                     Required for "--partition-type fixed" 
---pt --partition-type PARTITION TYPE The type of the partitioner which will be used to partition the output
-                                     Default is: flink's default partitioner
-                                     Currently supports: "fixed", "kafka", "default"
+$FLINK_BIN run -c io.rml.framework.Main toKafka --broker-list <host:port> --topic <topic name>
 ```
 
----
+#### Complete RMLStreamer usage:
 
-*TODO: documentation below needs updates.* 
+```
+Usage: RMLStreamer [toFile|toKafka|toTCPSocket] [options]
+
+  -j, --job-name <job name>
+                           The name to assign to the job on the Flink cluster. Put some semantics in here ;)
+  -i, --base-iri <base IRI>
+                           The base IRI as defined in the R2RML spec.
+  --disable-local-parallel
+                           By default input records are spread over the available task slots within a task manager to optimise parallel processing,at the cost of losing the order of the records throughout the process. This option disables this behaviour to guarantee that the output order is the same as the input order.
+  -m, --mapping-file <RML mapping file>
+                           REQUIRED. The path to an RML mapping file. The path must be accessible on the Flink cluster.
+  --json-ld                Write the output as JSON-LD instead of N-Quads. An object contains all RDF generated from one input record. Note: this is slower than using the default N-Quads format.
+  --bulk                   Write all triples generated from one input record at once.
+  --checkpoint-interval <time (ms)>
+                           If given, Flink's checkpointing is enabled with the given interval. If not given, checkpointing is disabled.
+Command: toFile [options]
+Write output to file
+  -o, --output-path <output file>
+                           The path to an output file.
+Command: toKafka [options]
+Write output to a Kafka topic
+  -b, --broker-list <host:port>[,<host:port>]...
+                           A comma separated list of Kafka brokers.
+  -t, --topic <topic name>
+                           The name of the Kafka topic to write output to.
+  --partition-id <id>      EXPERIMENTAL. The partition id of kafka topic to which the output will be written to.
+Command: toTCPSocket [options]
+Write output to a TCP socket
+  -s, --output-socket <host:port>
+                           The TCP socket to write to.
+```
 
 #### Examples
 
@@ -139,17 +148,14 @@ $ nc -lk 5005 # This will start listening for input connections at port 5005
 $ nc -lk 9000 # This will start listening for output connections at port 9000
  # This is for testing purposes, your own application needs to start listening to the input and output ports. 
  ```
-Once the input and output ports are listened to by applications or by the above commands, the RML Mapping can be executed. The RML Framework will open the input and output sockets so it can act upon data that will be written to the input socket.
+Once the input and output ports are listened to by applications or by the above commands, the RML Mapping can be executed. RMLStreamer will open the input and output sockets so it can act upon data that will be written to the input socket.
 ```
-bash run.sh -p /home/wmaroy/framework/src/main/resources/json_stream_data_mapping.ttl -s 9000
-# The -p paramater sets the mapping file location
+$FLINK_BIN run -c io.rml.framework.Main toTCPSocket -s localhost:9000 -m .../framework/src/main/resources/json_stream_data_mapping.ttl
+# The -m paramater sets the mapping file location
 # The -s parameter sets the output socket port number
-# The -o parameter sets the output path if the output needs to be written to a file instead of a stream.
 ```
 
-Whenever data is written (every data object needs to end with `\r\n`) to the socket, this data will be processed by the RML Framework.
-
-The repository contains node.js scripts for setting up stream input and output. The readme can be found in the `scripts` folder.
+Whenever data is written (every data object needs to end with `\n`) to the socket, this data will be processed by the RML Framework.
 
 ##### Generating a stream from a Kafka Source
 

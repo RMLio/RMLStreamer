@@ -1,6 +1,6 @@
-# Running the RMLStreamer with Docker
+# Running RMLStreamer with Docker
 
-Get the RMLStreamer up and running using Docker. No Java, no Flink, no Maven required.
+Get RMLStreamer up and running using Docker. No Java, no Flink, no Maven required.
 
 ## 1. Prerequisites
 - [Docker or Docker Engine](https://www.docker.com/), version 19 or higher
@@ -63,9 +63,9 @@ You will see something like:
 
 Now open the Flink web interface on <http://localhost:8081>. We will use this interface to deploy an RMLStreamer job.
 
-## 3. Deploy the RMLStreamer (using the Flink web interface).
+## 3. Deploy RMLStreamer (using the Flink web interface).
 
-In general, deploying the RMLStreamer comes down to uploading the jar to the Flink cluster. This step is the same for
+In general, deploying RMLStreamer comes down to uploading the jar to the Flink cluster. This step is the same for
 every scenario. But the parameters you have to fill out depend on the scenario.
 
 The first steps are the same for every scenario:
@@ -89,7 +89,7 @@ Leave the browser open...
 
 ## 3.1 Scenario 1: read from file, write to file
 
-This is the most basic scenario. The RMLStreamer reads data from file(s) and writes RDF to an output file or directory.
+This is the most basic scenario. RMLStreamer reads data from file(s) and writes RDF to an output file or directory.
 
 We will use the example from the `scenario-1` folder.
 The input file `input.json` contains some data about two persons:
@@ -147,7 +147,7 @@ on `/var/lib/docker/volumes/docker_data/_data`, as shown by the `$ docker volume
 
 ### 1. Copy the input
  
-Copy `scenario-1` subfolder to our docker data volume, that can be read by the RMLStreamer:
+Copy `scenario-1` subfolder to our docker data volume, that can be read by RMLStreamer:
 
 ```
 $ [sudo] cp -r scenario-1 /var/lib/docker/volumes/docker_data/_data/
@@ -156,11 +156,11 @@ $ [sudo] chmod -R 777 /var/lib/docker/volumes/docker_data/_data
 
 (TODO: is there a more user-friendly way to put data on docker volumes?)
 
-### 2. Start the RMLStreamer
+### 2. Start RMLStreamer
 
 Go back to your browser, and fill in the following `Program Arguments`:
 
-`--path /mnt/data/scenario-1/mapping.ttl --outputPath /mnt/data/scenario-1/output.nt`
+`toFile --mapping-file /mnt/data/scenario-1/mapping.ttl --output-path /mnt/data/scenario-1/output.nt`
 
 This means that we read RML mappings from `mapping.ttl`, and write the resulting
 triples to `output.nt`.
