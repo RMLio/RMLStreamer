@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Parallelising over the (local) task slots per task manager is enabled by default.
 * Checkpointing is disabled by default.
 * Updated Flink from version 1.9.1 to 1.9.2
-* Updated Kafka from version 2.2.0 to 2.2.2
+* Updated Kafka support from version 2.2.0 to 2.2.2
+* Updated documentation
 
 ### Fixed
 * Escape characters were not escaped in generated literals (Internal [issue #81](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/issues/81)).
