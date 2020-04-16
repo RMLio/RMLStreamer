@@ -36,9 +36,9 @@ SOFTWARE.
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <flink.version>1.9.2</flink.version>
+        <flink.version>1.10.0</flink.version>
         <slf4j.version>1.7.26</slf4j.version>
-        <log4j.version>1.2.17</log4j.version>
+        <log4j.version>2.13.1</log4j.version>
         <jena.version>3.11.0</jena.version>
 
         <scala.binary.version>2.11</scala.binary.version>
@@ -127,11 +127,11 @@ SOFTWARE.
             <version>2.11</version>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-hadoop-compatibility_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
-        </dependency>
+        </dependency-->
 
         <dependency>
             <groupId>com.github.jsurfer</groupId>
@@ -269,9 +269,10 @@ SOFTWARE.
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
+            <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
+            <type>pom</type>
             <scope>runtime</scope>
         </dependency>
 
@@ -323,7 +324,7 @@ SOFTWARE.
     on a cluster. Change the value of Program-Class if your program entry point changes. -->
     <build>
         <plugins>
-            <plugin>
+            <!--plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>3.0.0-M2</version>
@@ -348,7 +349,7 @@ SOFTWARE.
 
                     </execution>
                 </executions>
-            </plugin>
+            </plugin-->
 
             <!-- We use the maven-shade plugin to create a fat jar that contains all dependencies
             except flink and it's transitive dependencies. The resulting fat-jar can be executed
