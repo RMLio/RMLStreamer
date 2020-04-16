@@ -116,7 +116,7 @@ object XMLItem extends Logging {
     documentBuilderFactory.setNamespaceAware(true)
     val documentBuilder = documentBuilderFactory.newDocumentBuilder()
 
-    val document: Document = documentBuilder.parse(IOUtils.toInputStream(xml))
+    val document: Document = documentBuilder.parse(IOUtils.toInputStream(xml, StandardCharsets.UTF_8))
 
     val tag = xpath match {
       case XMLStream.DEFAULT_PATH_OPTION => ""
