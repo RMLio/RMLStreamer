@@ -31,7 +31,7 @@ object ParameterUtil {
 
   case class ParameterConfig(
                               mappingFilePath: String = ".",
-                              jobName: String = "",
+                              jobName: String = "RMLStreamer",
                               baseIRI: Option[String] = None,
                               localParallel: Boolean = true,
                               postProcessor: PostProcessorOption = PostProcessorOption.None,
@@ -79,7 +79,7 @@ object ParameterUtil {
 
     head("RMLStreamer", "1.2.4-SNAPSHOT")
 
-    opt[String]('j', "job-name").valueName("<job name>").withFallback(() => "RMLStreamer")
+    opt[String]('j', "job-name").valueName("<job name>")
       .optional()
       .action((value, config) => config.copy(jobName = value))
       .text("The name to assign to the job on the Flink cluster. Put some semantics in here ;)")
