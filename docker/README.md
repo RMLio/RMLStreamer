@@ -20,7 +20,7 @@ This will start one Flink Job Manager and one Flink Task Manager. If you want to
 just run the following command (in another terminal):
 
 ```
-$ docker-compose scale taskmanager=2
+$ docker-compose up --scale taskmanager=2
 ```
 
 Replace the `2` with the number of Task Managers you actually want to have.
