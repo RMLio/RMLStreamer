@@ -105,8 +105,10 @@ object Main extends Logging {
       val dataset: DataSet[String] = createDataSetFromFormattedMapping(formattedMapping)
 
       // write dataset to file, depending on the given parameters
-      dataset.writeAsText(s"file://${config.outputPath}", WriteMode.OVERWRITE)
-        .name("Write to output")
+      if (config.outputSink.equals(OutputSinkOption.File)) {
+        dataset.writeAsText(s"file://${config.outputPath.get}", WriteMode.OVERWRITE)
+          .name("Write to output")
+      }
 
       // execute data set job
       env.execute(s"${config.jobName} (DATASET JOB)")
