@@ -14,7 +14,7 @@ If you want to deploy it yourself, read on.
 RMLStreamer runs its jobs on Flink clusters.
 More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.9/getting-started/tutorials/local_setup.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
-Please note that this version works with Flink 1.9.2 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.9.2/).
+Please note that this version works with Flink 1.10.0 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.10.0/).
 
 ### Building RMLStreamer
 
@@ -61,13 +61,13 @@ RMLStreamer options | The actual program arguments for RMLStreamer. See below fo
 #### Basic commands:
 ```shell script
 # write output to file(s)
-$FLINK_BIN run -c io.rml.framework.Main toFile --mapping-file <path to mapping file> --output-path <path to output file>  
+$FLINK_BIN run <path to RMLStreamer jar> toFile --mapping-file <path to mapping file> --output-path <path to output file>  
 
 # write output to a listening socket (only if logical source(s) are streams)
-$FLINK_BIN run -c io.rml.framework.Main toTCPSocket --output-socket <host:port>
+$FLINK_BIN run <path to RMLStreamer jar> toTCPSocket --output-socket <host:port>
 
 # write output to kafka topic (only if logical source(s) are streams)
-$FLINK_BIN run -c io.rml.framework.Main toKafka --broker-list <host:port> --topic <topic name>
+$FLINK_BIN run <path to RMLStreamer jar> toKafka --broker-list <host:port> --topic <topic name>
 ```
 
 #### Complete RMLStreamer usage:
@@ -150,7 +150,7 @@ $ nc -lk 9000 # This will start listening for output connections at port 9000
  ```
 Once the input and output ports are listened to by applications or by the above commands, the RML Mapping can be executed. RMLStreamer will open the input and output sockets so it can act upon data that will be written to the input socket.
 ```
-$FLINK_BIN run -c io.rml.framework.Main toTCPSocket -s localhost:9000 -m .../framework/src/main/resources/json_stream_data_mapping.ttl
+$FLINK_BIN run <path to RMLStreamer jar> toTCPSocket -s localhost:9000 -m .../framework/src/main/resources/json_stream_data_mapping.ttl
 # The -m paramater sets the mapping file location
 # The -s parameter sets the output socket port number
 ```

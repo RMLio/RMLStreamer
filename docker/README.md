@@ -79,7 +79,7 @@ Now you will see something like this:
 
 ![First deployment step](images/deploy_1.png)
 
-5. Set `Entry Class` to `io.rml.framework.Main`
+5. Set `Entry Class` to `io.rml.framework.Main`, if not filled out yet.
 6. If you want to increase the parallelism, you can put something ranging from `1` to the number of
 [available task slots](http://localhost:8081/#/overview).
 
