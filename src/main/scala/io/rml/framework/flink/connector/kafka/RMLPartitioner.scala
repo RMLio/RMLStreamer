@@ -66,5 +66,4 @@ class RMLFixedPartitioner[T](properties: Properties) extends RMLPartitioner[T](p
 
 object RMLPartitioner {
   val PARTITION_ID_PROPERTY =  "partition-id"
-  val PARTITION_FORMAT_PROPERTY = "partition-format"
 }

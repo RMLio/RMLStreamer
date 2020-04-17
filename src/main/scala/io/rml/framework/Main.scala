@@ -26,7 +26,6 @@ package io.rml.framework
   **/
 
 
-import java.io.File
 import java.util.Properties
 
 import io.rml.framework.api.RMLEnvironment
@@ -35,11 +34,12 @@ import io.rml.framework.core.model._
 import io.rml.framework.core.util.{StreamerConfig, Util}
 import io.rml.framework.engine._
 import io.rml.framework.engine.statement.StatementEngine
-import io.rml.framework.flink.connector.kafka.{PartitionerFormat, RMLPartitioner, UniversalKafkaConnectorFactory}
+import io.rml.framework.flink.connector.kafka.{RMLPartitioner, UniversalKafkaConnectorFactory}
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
+import io.rml.framework.flink.util.ParameterUtil
+import io.rml.framework.flink.util.ParameterUtil.{OutputSinkOption, PostProcessorOption}
 import org.apache.flink.api.common.serialization.SimpleStringSchema
-import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala._
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.CheckpointingMode
@@ -61,80 +61,41 @@ object Main extends Logging {
     */
   def main(args: Array[String]): Unit = {
 
+    val configRes = ParameterUtil.processParameters(args)
+    if (configRes.isEmpty) {
+      return
+    }
+    val config = configRes.get
 
-    val EMPTY_VALUE = "__NO_VALUE_KEY"
+    logInfo(config.toString())
 
     // get parameters
-    val parameters = ParameterTool.fromArgs(args)
-    val mappingPath = if (parameters.has("path")) parameters.get("path")
-    else EMPTY_VALUE
-    val outputPath = if (parameters.has("outputPath")) new File(parameters.get("outputPath")).getAbsolutePath // file prefix necessary for Flink API
-    else EMPTY_VALUE
-    val outputSocket = if (parameters.has("socket")) parameters.get("socket")
-    else EMPTY_VALUE
-
-    val kafkaBrokers = if (parameters.has("broker-list")) parameters.get("broker-list")
-    else EMPTY_VALUE
-
-    val kafkaTopic = if (parameters.has("topic")) parameters.get("topic")
-    else EMPTY_VALUE
-
-    val partitionID = if (parameters.has("partition-id")) parameters.get("partition-id")
-    else EMPTY_VALUE
-
-    val partitionFormatString = if (parameters.has("partition-type")) parameters.get("partition-type")
-    else EMPTY_VALUE
-
-    val partitionFormat: PartitionerFormat = PartitionerFormat.fromString(partitionFormatString)
-
-    var jobName = if (parameters.has("job-name")) parameters.get("job-name")
-    else EMPTY_VALUE
-
-    var baseIRI = if (parameters.has("base-IRI")) parameters.get("base-IRI")
-    else EMPTY_VALUE
-
-    var localParallelExecution = parameters.has("enable-local-parallel")
-    StreamerConfig.setExecuteLocalParallel(localParallelExecution)
+    StreamerConfig.setExecuteLocalParallel(config.localParallel)
 
     implicit val postProcessor:PostProcessor =
-      parameters.get("post-process") match {
-        case "bulk" => new BulkPostProcessor
-        case "json-ld" => new JsonLDProcessor
+      config.postProcessor match {
+        case PostProcessorOption.Bulk => new BulkPostProcessor
+        case PostProcessorOption.JsonLD => new JsonLDProcessor
         case _ => new NopPostProcessor
       }
 
-
-    logInfo("Job name: " + jobName)
-    logInfo("Mapping path: " + mappingPath)
-    logInfo("Output path: " + outputPath)
-    logInfo("Output socket: " + outputSocket)
-    logInfo("Kafka brokers: " +  kafkaBrokers)
-    logInfo("Kafka output topic: " +  kafkaTopic)
-    logInfo("Post-process: "  + postProcessor.toString)
-    logInfo("Kafka Partition: " +  partitionID)
-    logInfo("Kafka partition format: " + partitionFormatString)
-    logInfo("Base IRI: " + baseIRI)
-    logInfo(s"Parallelise over local task slots: ${StreamerConfig.isExecuteLocalParallel()}")
-
     // determine the base IRI of the RDF to generate
-    val baseIRIOption: Option[String] = baseIRI match {
-      case EMPTY_VALUE => None
-      case iri => Some(iri)
-    }
-    RMLEnvironment.setGeneratorBaseIRI(baseIRIOption)
+    RMLEnvironment.setGeneratorBaseIRI(config.baseIRI)
 
     // determine the base IRI of the mapping file
-    RMLEnvironment.setMappingFileBaseIRI(Some(new File(mappingPath).getAbsolutePath))
+    RMLEnvironment.setMappingFileBaseIRI(Some((config.mappingFilePath)))
 
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.
     // Triple maps are also organized in categories (does it contain streams, does it contain joins, ... )
-    val formattedMapping = Util.readMappingFile(mappingPath)
+    val formattedMapping = Util.readMappingFile(config.mappingFilePath)
 
     // set up execution environments, Flink needs these to know how to operate (local, cluster mode, ...)
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
-    senv.enableCheckpointing(5000, CheckpointingMode.AT_LEAST_ONCE);  // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
+    if (config.checkpointInterval.isDefined) {
+      senv.enableCheckpointing(config.checkpointInterval.get, CheckpointingMode.AT_LEAST_ONCE); // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
+    }
 
     if (formattedMapping.containsDatasetTriplesMaps() && !formattedMapping.containsStreamTriplesMaps()) {
 
@@ -144,11 +105,13 @@ object Main extends Logging {
       val dataset: DataSet[String] = createDataSetFromFormattedMapping(formattedMapping)
 
       // write dataset to file, depending on the given parameters
-      dataset.writeAsText("file://" + outputPath, WriteMode.OVERWRITE)
-        .name("Write to output")
+      if (config.outputSink.equals(OutputSinkOption.File)) {
+        dataset.writeAsText(s"file://${config.outputPath.get}", WriteMode.OVERWRITE)
+          .name("Write to output")
+      }
 
       // execute data set job
-      env.execute(jobName + " (DATASET JOB)")
+      env.execute(s"${config.jobName} (DATASET JOB)")
 
       // check if the mapping contains streamed mappings
     } else if (formattedMapping.containsStreamTriplesMaps()) {
@@ -164,26 +127,27 @@ object Main extends Logging {
       }
 
       // write to a socket if the parameter is given
-      if (outputSocket != EMPTY_VALUE) {
-        val parts = outputSocket.split(':')
+      if (config.outputSink.equals(OutputSinkOption.Socket)) {
+        val parts = config.socket.get.split(':')
         val host = parts(0)
         val port = parts(1).toInt
         stream.writeToSocket(host, port, new SimpleStringSchema())
       }
 
-      else if (kafkaBrokers != EMPTY_VALUE && kafkaTopic != EMPTY_VALUE){
+      else if (config.outputSink.equals(OutputSinkOption.Kafka)){
         val rmlPartitionProperties =  new Properties()
-        rmlPartitionProperties.setProperty(RMLPartitioner.PARTITION_ID_PROPERTY,  partitionID)
-        rmlPartitionProperties.setProperty(RMLPartitioner.PARTITION_FORMAT_PROPERTY, partitionFormat.string())
-        UniversalKafkaConnectorFactory.applySink[String](kafkaBrokers, rmlPartitionProperties, kafkaTopic, stream)
+        if (config.partitionId.isDefined) {
+          rmlPartitionProperties.setProperty(RMLPartitioner.PARTITION_ID_PROPERTY, config.partitionId.get.toString)
+        }
+        UniversalKafkaConnectorFactory.applySink[String](config.brokerList.get, rmlPartitionProperties, config.topic.get, stream)
       }
       // write to a file if the parameter is given
-      else if (!outputPath.contains(EMPTY_VALUE)) {
-        stream.writeAsText(outputPath, WriteMode.OVERWRITE)
+      else if (config.outputSink.equals(OutputSinkOption.File)) {
+        stream.writeAsText(config.outputPath.get, WriteMode.OVERWRITE)
       }
 
       // execute stream job
-      senv.execute(jobName + " (DATASTREAM JOB)")
+      senv.execute(s"${config.jobName} (DATASTREAM JOB)")
 
     }
 
