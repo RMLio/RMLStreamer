@@ -56,7 +56,8 @@ object ParameterUtil {
         s"Kafka broker list: ${brokerList.getOrElse("/")}\n" +
         s"Kafka topic: ${topic.getOrElse("/")}\n" +
         s"Kafka topic partition id: ${partitionId.getOrElse("/")}\n" +
-        s"Output TCP socket: ${socket.getOrElse("/")}"
+        s"Output TCP socket: ${socket.getOrElse("/")}\n" +
+      s"Discard output: ${outputSink.equals(OutputSinkOption.None)}"
       resultStr
     }
   }
@@ -64,7 +65,7 @@ object ParameterUtil {
   // possible output sink options
   object OutputSinkOption extends Enumeration {
     type OutputSinkOption = Value
-    val File, Socket, Kafka = Value
+    val File, Socket, Kafka, None = Value
   }
 
   // possible post processor options
@@ -151,6 +152,10 @@ object ParameterUtil {
           .action((value, config) => config.copy(socket = Some(value)))
           .text("The TCP socket to write to.")
       )
+
+    cmd("noOutput")
+      .text("Do everything, but discard output")
+      .action((_, config) => config.copy(outputSink = OutputSinkOption.None))
   }
 
   def processParameters(args: Array[String]): Option[ParameterConfig] = {

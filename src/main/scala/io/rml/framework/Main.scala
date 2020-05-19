@@ -145,6 +145,10 @@ object Main extends Logging {
       else if (config.outputSink.equals(OutputSinkOption.File)) {
         stream.writeAsText(config.outputPath.get, WriteMode.OVERWRITE)
       }
+      // discard output if the parameter is given
+      else if (config.outputSink.equals(OutputSinkOption.None)) {
+        stream.addSink(output => {}).name("No output sink")
+      }
 
       // execute stream job
       senv.execute(s"${config.jobName} (DATASTREAM JOB)")
