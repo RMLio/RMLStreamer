@@ -29,7 +29,7 @@ import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFNode, RDFResource}
 import io.rml.framework.core.vocabulary.RDFVoc
 import org.apache.commons.lang3.builder.HashCodeBuilder
-import org.apache.jena.rdf.model.Resource
+import org.apache.jena.rdf.model.{RDFList, Resource}
 
 import scala.collection.JavaConverters._
 
@@ -127,7 +127,15 @@ class JenaResource(val resource: Resource) extends RDFResource {
     Some(types.head.asInstanceOf[RDFResource].uri)
   }
 
+  override def getList: List[RDFNode] = {
+    try {
+      val list = resource.as(classOf[RDFList]).asJavaList()
+      list.asScala.toList.map(JenaNode(_))
+    } catch {
+      case _: Exception => List(JenaNode(resource))
+    }
 
+  }
 }
 
 object JenaResource {

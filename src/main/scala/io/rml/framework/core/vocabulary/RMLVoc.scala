@@ -30,6 +30,15 @@ package io.rml.framework.core.vocabulary
   */
 object RMLVoc {
 
+  object Type {
+    val XSD_STRING = Namespaces("xsd", "string")
+    val XSD_INTEGER = Namespaces("xsd", "integer")
+    val XSD_DOUBLE = Namespaces("xsd", "decimal")
+    val RDF_LIST = Namespaces("rdf", "List")
+    val XSD_POSITIVE_INTEGER = Namespaces("xsd", "positiveInteger")
+
+  }
+
   object Property {
 
     ///////////////////////////////////////////////////////////////////////////
@@ -85,6 +94,13 @@ object RMLVoc {
 
 
     ///////////////////////////////////////////////////////////////////////////
+    // GREL
+    ///////////////////////////////////////////////////////////////////////////
+    val GREL_RANDOM = Namespaces("grel", "random")
+    val GREL_UPPERCASE = Namespaces("grel", "toUpperCase")
+
+
+    ///////////////////////////////////////////////////////////////////////////
     // FNML
     ///////////////////////////////////////////////////////////////////////////
 
@@ -95,6 +111,22 @@ object RMLVoc {
     ///////////////////////////////////////////////////////////////////////////
 
     val EXECUTES = Namespaces("fno", "executes")
+    val FNO_SOLVES = Namespaces("fno", "solves")
+    val FNO_IMPLEMENTS = Namespaces("fno", "implements")
+    val FNO_PREDICATE = Namespaces("fno", "predicate")
+    val FNO_EXPECTS = Namespaces("fno", "expects")
+    val FNO_RETURNS = Namespaces("fno", "returns")
+    val FNO_TYPE = Namespaces("fno", "type")
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // LIB
+    ///////////////////////////////////////////////////////////////////////////
+
+    val LIB_PROVIDED_BY = Namespaces("lib", "providedBy")
+    val LIB_CLASS = Namespaces("lib", "class")
+    val LIB_METHOD = Namespaces("lib", "method")
+    val LIB_LOCAL_LIBRARY = Namespaces("lib", "localLibrary")
 
   }
 
@@ -131,6 +163,17 @@ object RMLVoc {
     ///////////////////////////////////////////////////////////////////////////
 
     val FUNCTIONTERMMAP = Namespaces("fnml", "FunctionTermMap")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // FNO
+    ///////////////////////////////////////////////////////////////////////////
+    val FNO_FUNCTION = Namespaces("fno", "Function")
+    val FNO_PARAMETER = Namespaces("fno", "Parameter")
+    val FNO_EXECUTION = Namespaces("fno", "Execution")
+    val FNO_OUTPUT = Namespaces("fno", "Output")
+    val FNO_ALGORITHM = Namespaces("fno", "Algorithm")
+    val FNO_PROBLEM = Namespaces("fno", "Problem")
+
 
   }
 

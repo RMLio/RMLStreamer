@@ -43,6 +43,9 @@ trait RDFResource extends RDFNode {
 
   def getType: Option[Uri]
 
+
+  def getList: List[RDFNode]
+
   /**
     *
     * @param property

@@ -24,7 +24,7 @@
   **/
 package io.rml.framework.flink.sink
 
-import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
+import io.rml.framework.core.model.rdf.{RDFLiteral, RDFNode, RDFResource}
 
 class FlinkResource extends RDFResource {
   /**
@@ -65,4 +65,6 @@ class FlinkResource extends RDFResource {
   override def uri = ???
 
   override def getType = ???
+
+  override def getList: List[RDFNode] = ???
 }
