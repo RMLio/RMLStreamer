@@ -73,11 +73,20 @@ class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtracto
     * @return
     */
   private def extractPredicateObjectMap(resource: RDFResource): PredicateObjectMap = {
+    this.logInfo("%s extractPredicateObjectMap : extracting object maps".format(this.getClass.getName))
     val objectMaps = objectMapExtractor.extract(resource)
+
+    this.logInfo("%s extractPredicateObjectMap : extracting function maps".format(this.getClass.getName))
     val functionMaps = functionMapExtractor.extract(resource)
+
+    this.logInfo("%s extractPredicateObjectMap : extracting predicate maps".format(this.getClass.getName))
     val predicateMaps = predicateMapExtractor.extract(resource)
+
+    this.logInfo("%s extractPredicateObjectMap : extracting graph map".format(this.getClass.getName))
     val graphMap = graphMapExtractor.extract(resource)
-    PredicateObjectMap(resource.uri.toString, objectMaps, functionMaps, predicateMaps, graphMap)
+
+    this.logInfo("%s extractPredicateObjectMap : returning resulting PredicateObjectMap".format(this.getClass.getName))
+    PredicateObjectMap(resource.uri.toString, objectMaps, predicateMaps, graphMap)
   }
 
 }

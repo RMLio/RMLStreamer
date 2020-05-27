@@ -66,6 +66,7 @@ class StdTriplesMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     */
   private def filterTriplesMaps(graph: RDFGraph): List[RDFResource] = {
 
+
     // filter all triple map resources from the graph
     val typeUri = Uri(RMLVoc.Class.TRIPLESMAP)
     val triplesMapResources = (graph.filterResources(typeUri) ++

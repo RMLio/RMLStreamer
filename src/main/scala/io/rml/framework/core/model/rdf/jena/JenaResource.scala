@@ -27,7 +27,7 @@ package io.rml.framework.core.model.rdf.jena
 
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFNode, RDFResource}
-import io.rml.framework.core.vocabulary.RDFVoc
+import io.rml.framework.core.vocabulary.{RDFVoc, RMLVoc}
 import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.apache.jena.rdf.model.{RDFList, Resource}
 
@@ -117,14 +117,31 @@ class JenaResource(val resource: Resource) extends RDFResource {
 
   override def getType: Option[Uri] = {
     val types: Seq[RDFNode] = listProperties(RDFVoc.Property.TYPE)
-    // check if there are type statements, or else return None
-    if (types.size != 1) return None
-    // if there is a type statement, make sure this is a Resource and that there is only one in total
-    require(types.head.isInstanceOf[RDFResource], "Type must be a resource.")
-
-    // TODO: what if there are multiple types?
-
-    Some(types.head.asInstanceOf[RDFResource].uri)
+    types.size match {
+      case 0 => {
+        // no type defined
+        this.logWarning("No rdf:type defined for resource.")
+        None
+      }
+      case 1 => {
+        require(types.head.isInstanceOf[RDFResource], "Type must be a resource.")
+        Some(types.head.asInstanceOf[RDFResource].uri)
+      }
+      case _ => {
+        // multiple types defined...
+        // TODO: what if there are multiple types?
+        this.logWarning("Multiple rdf:types defined for resource.")
+        None
+      }
+    }
+//    // check if there are type statements, or else return None
+//    if (types.size != 1) return None
+//    // if there is a type statement, make sure this is a Resource and that there is only one in total
+//    require(types.head.isInstanceOf[RDFResource], "Type must be a resource.")
+//
+//    // TODO: what if there are multiple types?
+//
+//    Some(types.head.asInstanceOf[RDFResource].uri)
   }
 
   override def getList: List[RDFNode] = {

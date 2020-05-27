@@ -28,13 +28,14 @@ package io.rml.framework.engine.statement
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RDFVoc
 import io.rml.framework.flink.item.{Item, JoinedItem}
-
+import io.rml.framework.core.internal.Logging
 /**
   * Creates statements from triple maps.
   */
 class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectGeneratorAssembler(),
                           predicateObjectAssembler: PredicateObjectGeneratorAssembler = PredicateObjectGeneratorAssembler(),
-                          graphAssembler: GraphGeneratorAssembler = GraphGeneratorAssembler()) {
+                          graphAssembler: GraphGeneratorAssembler = GraphGeneratorAssembler())
+extends Logging{
 
   /**
     * Creates statements from a triple map.
@@ -43,6 +44,7 @@ class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectG
     * @return
     */
   def assembleStatements(triplesMap: TriplesMap): List[(Item => Option[Iterable[TermNode]], Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
+    this.logInfo("%s assembleStatements(triplesmaps)".format(this.getClass.getName))
     val subjectGraphGenerator = graphAssembler.assemble(triplesMap.subjectMap.graphMap)
 
 

@@ -25,14 +25,14 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{JoinConditionExtractor, ObjectMapExtractor, TriplesMapExtractor}
+import io.rml.framework.core.extractors.{FunctionMapExtractor, JoinConditionExtractor, ObjectMapExtractor, TriplesMapExtractor}
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.util.Util
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
-class StdObjectMapExtractor extends ObjectMapExtractor {
+class StdObjectMapExtractor(stdFunctionMapExtractor: FunctionMapExtractor) extends ObjectMapExtractor {
   /**
     * Extract.
     *
@@ -69,6 +69,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     * @return
     */
   private def extractObjectMaps(resource: RDFResource): List[ObjectMap] = {
+    this.logInfo("%s extractObjectMaps(resource)".format(this.getClass.getName))
     val property = RMLVoc.Property.OBJECTMAP
     val properties = resource.listProperties(property)
 
@@ -76,11 +77,24 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     properties.flatMap {
       case literal: RDFLiteral =>
         throw new RMLException(literal.toString + ": Cannot convert literal to predicate map.")
-      case resource: RDFResource => resource.getType match {
-        case Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP)) => None // TODO: rethink this
-        case _ => Some(extractObjectMap(resource))
+      case resource: RDFResource => Some(extractObjectMap(resource))
       }
-    }
+
+
+//      //case resource: RDFResource => Some(extractObjectMap(resource))
+//      case resource: RDFResource => {
+//        // if resource hasn't a type specified, check whether it has the function value property
+//        val functionValueProperties = resource.listProperties(Uri(RMLVoc.Property.FUNCTIONVALUE).toString)
+//        if(functionValueProperties.nonEmpty | resource.getType.eq(Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP))))
+//          None
+//        else
+//          Some(extractObjectMap(resource))
+//      }
+//      // case resource.getType match {
+//        //        case Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP)) => None // TODO: rethink this
+//        //        case _ => Some(extractObjectMap(resource))
+//        //      }
+//    }
 
   }
 
@@ -102,8 +116,8 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     val joinCondition = extractJoinCondition(resource)
     val language = extractLanguage(resource)
     val datatype = extractDatatype(resource)
-
-    ObjectMap(resource.uri.toString, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition)
+    val functionMap = stdFunctionMapExtractor.extract(resource)
+    ObjectMap(resource.uri.toString, functionMap, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition)
   }
 
   def extractDatatype(resource: RDFResource): Option[Uri] = {
@@ -137,10 +151,15 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
       } else {
 
         // if this is a reference-based term map or contains an referenceFormulation or has a datatype property the
+        // or has a functionValue property or a template without term type, the
         // term type is a literal
-        val elements = resource.listProperties(RMLVoc.Property.REFERENCE) ++
+        val elements =
+          resource.listProperties(RMLVoc.Property.REFERENCE) ++
           resource.listProperties(RMLVoc.Property.REFERENCEFORMULATION) ++
-          resource.listProperties(RMLVoc.Property.DATATYPE)
+          resource.listProperties(RMLVoc.Property.DATATYPE) ++
+          resource.listProperties(RMLVoc.Property.FUNCTIONVALUE) ++
+          resource.listProperties(RMLVoc.Property.TEMPLATE)
+
         if (elements.nonEmpty) Some(Uri(RMLVoc.Class.LITERAL))
         else Some(Uri(RMLVoc.Class.IRI))
       }

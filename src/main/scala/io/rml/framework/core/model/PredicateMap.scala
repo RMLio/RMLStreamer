@@ -39,12 +39,14 @@ trait PredicateMap extends TermMap
 
 object PredicateMap {
   def apply(identifier: String,
+            functionMap: List[FunctionMap] = List(),
             constant: Option[Entity] = None,
             reference: Option[Literal] = None,
             template: Option[Literal] = None,
             termType: Option[Uri] = None): PredicateMap =
 
     StdPredicateMap(identifier,
+      functionMap,
       constant,
       reference,
       template,

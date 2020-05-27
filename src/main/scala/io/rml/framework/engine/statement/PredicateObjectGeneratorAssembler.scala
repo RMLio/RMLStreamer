@@ -32,23 +32,21 @@ class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGe
                                         objectGeneratorAssembler: ObjectGeneratorAssembler,
                                         functionMapGeneratorAssembler: FunctionMapGeneratorAssembler,
                                         graphGeneratorAssembler: GraphGeneratorAssembler) {
-
   def assemble(predicateObjectMap: PredicateObjectMap)
+
   : List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
 
 
+    val graphStatement = graphGeneratorAssembler.assemble(predicateObjectMap.graphMap)
     predicateObjectMap.predicateMaps.flatMap(predicateMap => {
       predicateObjectMap.objectMaps.map(objectMap => {
         (predicateGeneratorAssembler.assemble(predicateMap),
           objectGeneratorAssembler.assemble(objectMap),
-        graphGeneratorAssembler.assemble(predicateObjectMap.graphMap))
-      }) ++
-        predicateObjectMap.functionMaps.map(fnMap => {
-          (predicateGeneratorAssembler.assemble(predicateMap),
-            functionMapGeneratorAssembler.assemble(fnMap),
-          graphGeneratorAssembler.assemble(predicateObjectMap.graphMap))
-        })
+          graphStatement)
+      })
+
     })
+
   }
 }
 

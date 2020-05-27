@@ -24,7 +24,8 @@
   **/
 package io.rml.framework.core.model
 
-case class FunctionMap(identifier: String, functionValue: TriplesMap) extends TermMap {
+case class FunctionMap(parentMap : String, identifier: String, functionValue: List[PredicateObjectMap]) extends TermMap {
+
 
   /**
     *

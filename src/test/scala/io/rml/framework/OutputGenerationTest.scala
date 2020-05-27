@@ -35,11 +35,22 @@ import scala.util.control.Exception
 
 class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
 
-  val failing = Array( "negative_test_cases")
-  val passing = Array(
-    ("bugs","noopt"),
-    ("rml-testcases","noopt"))
-  val temp = Array(("rml-testcases/temp","noopt") )
+  // dev note:
+  // Explicit type annotation allows to completely comment out the elements of the failing, passing or temp arrays
+  //  without causing compilation failures.
+  //  This is useful, for example, if you only want to check the tests that should pass.
+
+  val failing : Array[String] = Array(
+//    "negative_test_cases"
+  )
+  val passing : Array[Tuple2[String,String]] =Array(
+//    ("bugs","noopt"),
+      //("rml-testcases","noopt"),
+    ("fno-testcases", "noopt")
+  )
+  val temp : Array[Tuple2[String,String]] = Array(
+    ("rml-testcases/temp","noopt")
+  )
 
 
   "Valid mapping file" should behave like validMappingFile("rml-testcases")
@@ -73,6 +84,7 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
     val eitherGenerated = catcher.either(TripleGeneratorTestUtil.processFilesInTestFolder(testFolderPath))
 
 
+
     if (eitherGenerated.isRight & testFolderPath.contains("RMLTC")) {
       val (generatedOutput, format) = eitherGenerated.right.get.head
       Logger.logInfo(testFolderPath)
@@ -90,6 +102,7 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
     * @param testFolderPath
     */
   def checkGeneratedOutput(testFolderPath: String)(implicit postProcessor: PostProcessor): Unit = {
+    Logger.logInfo("checkGeneratedOutput(%s)".format(testFolderPath))
     val (expectedOutput, expectedOutputFormat) = ExpectedOutputTestUtil.processFilesInTestFolder(testFolderPath).head
     val tester = TripleGeneratorTestUtil(postProcessor)
     var (generatedOutput, generatedOutputFormat) = tester.processFilesInTestFolder(testFolderPath).head

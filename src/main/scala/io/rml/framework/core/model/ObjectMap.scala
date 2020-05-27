@@ -46,6 +46,7 @@ case class JoinCondition(child: Literal, parent: Literal) // TODO: make this a t
 
 object ObjectMap {
   def apply(identifier: String,
+            functionMap: List[FunctionMap] = List(),
             constant: Option[Entity] = None,
             reference: Option[Literal] = None,
             template: Option[Literal] = None,
@@ -56,6 +57,7 @@ object ObjectMap {
             joinCondition: Option[JoinCondition] = None): ObjectMap =
 
     StdObjectMap(identifier,
+      functionMap,
       constant,
       reference,
       template,

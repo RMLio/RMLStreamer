@@ -24,47 +24,98 @@
   **/
 package io.rml.framework.core.extractors
 
+import io.rml.framework.core.extractors.std.{StdFunctionMapExtractor, TermMapExtractor}
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.model.{FunctionMap, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
-case class FunctionMapExtractor() extends ResourceExtractor[List[FunctionMap]] {
-
-  lazy val triplesMapExtractor: TriplesMapExtractor = TriplesMapExtractor()
-
+trait FunctionMapExtractor extends TermMapExtractor[List[FunctionMap]] {
   /**
-    * Extract.
-    *
-    * @param node Node to extract from.
-    * @return
-    */
-  override def extract(node: RDFResource): List[FunctionMap] = {
-    val properties = node.listProperties(RMLVoc.Property.OBJECTMAP)
-    properties.flatMap {
-      case literal: RDFLiteral =>
-        throw new RMLException(literal.toString +
-          ": A literal cannot be converted to a predicate object map")
+   * Extract.
+   *
+   * @param node Node to extract from.
+   * @return
+   */
+  override def extract(node: RDFResource): List[FunctionMap]
 
-      case resource: RDFResource =>
-        resource.getType match {
-          case Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP)) => Some(extractFunctionMap(resource))
-          case _ => None
-        }
 
-    }
-  }
 
-  private def extractFunctionMap(resource: RDFResource): FunctionMap = {
-    val functionValues = resource.listProperties(RMLVoc.Property.FUNCTIONVALUE)
-
-    require(functionValues.size == 1, "Only 1 function value allowed.")
-    require(functionValues.head.isInstanceOf[RDFResource], "FunctionValue must be a resource.")
-
-    val functionValue = functionValues.head.asInstanceOf[RDFResource]
-    val triplesMap = triplesMapExtractor.extractTriplesMapProperties(functionValue)
-    require(triplesMap.isDefined)
-    FunctionMap(functionValue.uri.toString, triplesMap.get)
-  }
-
+  def loadFunctionsIntoEnvironment():Unit
 }
+
+
+
+object FunctionMapExtractor {
+
+
+  def apply(logicalSourceExtractor: LogicalSourceExtractor = LogicalSourceExtractor(),
+            subjectMapExtractor: SubjectMapExtractor = SubjectMapExtractor()):FunctionMapExtractor = {
+
+    new StdFunctionMapExtractor(subjectMapExtractor, logicalSourceExtractor)
+  }
+}
+
+//case class FunctionMapExtractor() extends ResourceExtractor[List[FunctionMap]] {
+//
+//  lazy val triplesMapExtractor: TriplesMapExtractor = TriplesMapExtractor()
+//
+//  /**
+//    * Extract.
+//    *
+//    * @param node Node to extract from.
+//    * @return
+//    */
+//  override def extract(node: RDFResource): List[FunctionMap] = {
+//
+//
+//    val properties = node.listProperties(RMLVoc.Property.OBJECTMAP) // : Seq[RDFNode]
+//
+//
+//    /**
+//     * Note: object-maps pointing to a resource with type fnml:FunctionTermMap are matched as FunctionTermMaps.
+//     *      However, it's not always the case that resource are explicitely defined as "  a fnml:FunctionTermMap".
+//     *      Therefore, a resource should also be considered a FunctionTermMap when it points to a
+//     *      resource with a fnml:functionValue property.
+//     *
+//     * TODO: what's the type of properties element when not explicitly defining functiontermmap type
+//     *    --> it turns out that resource.getType is None when not explicitely defining the function term map type
+//     */
+//
+//    properties.flatMap {
+//      case literal: RDFLiteral =>
+//        throw new RMLException(literal.toString +
+//          ": A literal cannot be converted to a predicate object map")
+//
+//      case resource: RDFResource =>
+//        resource.getType match {
+//          case Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP)) => Some(extractFunctionMap(resource))
+//          case _ => {
+//            // if resource hasn't a type specified, check whether it has the function value property
+//            val functionValueProperties = resource.listProperties(Uri(RMLVoc.Property.FUNCTIONVALUE).toString)
+//            if(functionValueProperties.nonEmpty)
+//              Some(extractFunctionMap(resource))
+//            else
+//              None
+//          }
+//        }
+//    }
+//  }
+//
+//  private def extractFunctionMap(resource: RDFResource): FunctionMap = {
+//    logInfo("%s extractFunctionMap ".format(this.getClass.getName))
+//    val functionValues = resource.listProperties(RMLVoc.Property.FUNCTIONVALUE)
+//
+//    // TODO: [SUGGESTION] extract function map requirement checking into private method to separate extraction from
+//    //  validating the spec-rules -- thoughts?
+//    require(functionValues.size == 1, "Only 1 function value allowed.")
+//    require(functionValues.head.isInstanceOf[RDFResource], "FunctionValue must be a resource.")
+//
+//    val functionValue = functionValues.head.asInstanceOf[RDFResource]
+//    val triplesMap = triplesMapExtractor.extractTriplesMapProperties(functionValue)
+//    require(triplesMap.isDefined)
+//    //FunctionMap(functionValue.uri.toString, triplesMap.get)
+//    throw new NotImplementedError()
+//  }
+//
+//}
