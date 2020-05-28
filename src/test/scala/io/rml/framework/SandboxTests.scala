@@ -55,9 +55,7 @@ class SandboxTests extends FunSuite with Matchers  {
     val testDir = Util.getFile(new File(mappingFile).getParent)
     val mappingFileAbs = new File(testDir, new File(mappingFile).getName)
 
-    // load functions [depr: transormations]
-    TransformationLoader().parseTransformations(functionFile)
-
+    // load functions
     MappingReader(MappingExtractor(TransformationMapping)).read(functionFile)
     // read the mapping
     val formattedMapping = Util.readMappingFile(mappingFileAbs.getAbsolutePath)
