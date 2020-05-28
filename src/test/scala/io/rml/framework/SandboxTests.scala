@@ -113,5 +113,38 @@ class SandboxTests extends FunSuite with Matchers  {
   }
 
 
+  /**
+   * [STATE @ do 28 mei 2020 14:48:03 CEST] FAILING
+   * log. source: students.csv
+   * used function: grel:toUpperCaseURL
+   *  value parameter: reference to "Name"
+   */
+  test("sandbox/fno-testcases/RMLFNOTC0004-CSV") {
+    executeTest("sandbox/fno-testcases/RMLFNOTC0004-CSV/mapping.ttl")
+  }
+
+
+  /**
+   * [STATE @ do 28 mei 2020 14:48:03 CEST] WORKING
+   * log. source: students.csv
+   * used function: grel:toUpperCase
+   *  value parameter: template using {Name}
+   */
+  test("sandbox/fno-testcases/RMLFNOTC0008-CSV") {
+    executeTest("sandbox/fno-testcases/RMLFNOTC0008-CSV/mapping.ttl")
+  }
+
+
+  /**
+   * [STATE @ ]
+   * log. source: students.csv
+   * used function: grel:toUpperCase
+   *  value parameter: reference to "Name"
+   */
+  test("sandbox/fno-testcases/RMLFNOTC0011-CSV") {
+    executeTest("sandbox/fno-testcases/RMLFNOTC0011-CSV/mapping.ttl")
+  }
+
+
 
 }
