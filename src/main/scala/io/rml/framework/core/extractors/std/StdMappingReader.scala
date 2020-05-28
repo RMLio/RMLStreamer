@@ -30,14 +30,14 @@ import java.io.File
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.{MappingExtractor, MappingReader}
 import io.rml.framework.core.model.rdf.RDFGraph
-import io.rml.framework.core.model.{RMLMapping, Uri}
+import io.rml.framework.core.model.{Graph, RMLMapping, Uri}
 import io.rml.framework.core.util.Turtle
 import io.rml.framework.shared.ReadException
 
 /**
   * Standard implementation of the MappingReader trait
   */
-class StdMappingReader(mappingExtractor: MappingExtractor) extends MappingReader {
+class StdMappingReader[T<:Graph](mappingExtractor: MappingExtractor[T]) extends MappingReader[T] {
 
   /**
     * Reads a file and converts it to an RMLMapping.
@@ -47,7 +47,7 @@ class StdMappingReader(mappingExtractor: MappingExtractor) extends MappingReader
     * @return
     */
   @throws(classOf[ReadException])
-  override def read(file: File): RMLMapping = {
+  override def read(file: File): T = {
     val graph: RDFGraph = RDFGraph.fromFile(file, RMLEnvironment.getMappingFileBaseIRI(), Turtle)
     mappingExtractor.extract(graph)
   }
@@ -61,7 +61,7 @@ class StdMappingReader(mappingExtractor: MappingExtractor) extends MappingReader
     * @return
     */
   @throws(classOf[ReadException])
-  override def read(dump: String, graphUri: Uri): RMLMapping = {
+  override def read(dump: String, graphUri: Uri): T = {
     val graph: RDFGraph = RDFGraph(Some(graphUri))
     graph.read(dump, RMLEnvironment.getMappingFileBaseIRI(), Turtle)
     mappingExtractor.extract(graph)

@@ -58,7 +58,7 @@ object RMLEnvironment {
 
   def loadMappingFromFile(path: String): RMLMapping = {
     val file = new File(path)
-    FormattedRMLMapping.fromRMLMapping(MappingReader().read(file))
+    FormattedRMLMapping.fromRMLMapping(MappingReader().read(file).asInstanceOf[RMLMapping])
   }
 
   def executeMapping(): Unit = ???

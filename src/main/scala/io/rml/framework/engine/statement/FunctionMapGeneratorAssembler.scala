@@ -25,6 +25,7 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.function.model.Transformation
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
@@ -53,8 +54,9 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
 
   private def parseFunction(assembledPom:
                             List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]):
-  FunctionMap = {
+  Transformation = {
 
+    this.logInfo("parseFunction (assembledPom)")
     val placeHolder: List[FlinkRDFQuad] = generateFunctionTriples(new EmptyItem(), assembledPom)
     val functionName = Uri(placeHolder
       .filter( quad => quad.predicate.value == Uri(RMLVoc.Property.EXECUTES))
@@ -63,15 +65,15 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
       .value
       .toString)
 
-    throw new NotImplementedError()
-//    val transformationMapping =  TransformationMapping
-//      .getOpt
-//      .getOrElse( throw new IllegalStateException("Transformation mapping hasn't been read/init yet"))
-//
-//    transformationMapping
-//      .transformationLoader
-//      .loadTransformation(functionName)
-//      .getOrElse(throw new IllegalStateException(s"Function $functionName doesn't exist"))
+    //throw new NotImplementedError()
+    val transformationMapping =  TransformationMapping
+      .getOpt
+      .getOrElse( throw new IllegalStateException("Transformation mapping hasn't been read/init yet"))
+
+    transformationMapping
+      .transformationLoader
+      .loadTransformation(functionName)
+      .getOrElse(throw new IllegalStateException(s"Function $functionName doesn't exist"))
   }
 
   /**
@@ -81,7 +83,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
    * @param assembledPom List of predicate object generator functions
    * @return anon function taking in [[Item]] and returns entities using the function
    */
-  private def createAssemblerFunction(function: FunctionMap, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Item => Option[Iterable[Entity]] = {
+  private def createAssemblerFunction(function: Transformation, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Item => Option[Iterable[Entity]] = {
     (item: Item) => {
       val triples: List[FlinkRDFQuad] = generateFunctionTriples(item, assembledPom)
       val args: Map[Uri, String] = triples.filter(triple => triple.predicate.uri != Uri(RMLVoc.Property.EXECUTES))
@@ -91,9 +93,9 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
           parameterName -> parameterValue
         })
         .toMap
-      throw new NotImplementedError()
-//      function.initialize()
-//      function.execute(args)
+      //throw new NotImplementedError()
+      function.initialize()
+      function.execute(args)
     }
   }
 

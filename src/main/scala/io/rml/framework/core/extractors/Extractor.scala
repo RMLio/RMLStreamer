@@ -34,7 +34,7 @@ import io.rml.framework.shared.RMLException
   * @tparam T RDFNode to extract from.
   * @tparam R Return type of extract.
   */
-trait Extractor[T <: RDFNode, R] {
+trait Extractor[T <: RDFNode, +R] {
 
   /**
     * Extract.

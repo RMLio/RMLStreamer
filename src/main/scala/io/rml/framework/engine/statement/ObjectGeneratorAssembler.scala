@@ -25,7 +25,8 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.model.{Entity, ObjectMap, Uri}
+import io.rml.framework.core.function.TransformationUtils
+import io.rml.framework.core.model.{Entity, Literal, ObjectMap, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
 
@@ -44,9 +45,9 @@ class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
           termTypeString match {
             case RMLVoc.Class.IRI => item.map(iter => iter.map(elem => Uri(elem.toString)))
             case _ => item.map(iter => iter.flatMap(elem => {
-              throw new NotImplementedError()
-//              val castedResult = TransformationUtils.typeCastDataType(elem, objectMap.datatype)
-//              castedResult.map(v => Literal(v.toString, objectMap.datatype, objectMap.language))
+
+              val castedResult = TransformationUtils.typeCastDataType(elem, objectMap.datatype)
+              castedResult.map(v => Literal(v.toString, objectMap.datatype, objectMap.language))
             }))
           }
 
