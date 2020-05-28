@@ -28,15 +28,23 @@ import java.io.File
 
 import io.rml.framework.Main
 import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.extractors.{MappingExtractor, MappingReader}
+import io.rml.framework.core.function.TransformationLoader
+import io.rml.framework.core.model.TransformationMapping
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.NopPostProcessor
 import io.rml.framework.util.TestUtil
+
 import io.rml.framework.util.logging.Logger
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
 import org.scalatest.{FunSuite, Matchers}
+import io.rml.framework.util.logging.Logger
 
-class SandboxTests extends FunSuite with Matchers {
+class SandboxTests extends FunSuite with Matchers  {
+
+  val functionFile = new File(getClass.getClassLoader.getResource("functions.ttl").getFile)
+
 
   private def executeTest(mappingFile: String): Unit = {
     RMLEnvironment.setGeneratorBaseIRI(Some("http://example.org/base/"))
@@ -47,6 +55,10 @@ class SandboxTests extends FunSuite with Matchers {
     val testDir = Util.getFile(new File(mappingFile).getParent)
     val mappingFileAbs = new File(testDir, new File(mappingFile).getName)
 
+    // load functions [depr: transormations]
+    TransformationLoader().parseTransformations(functionFile)
+
+    MappingReader(MappingExtractor(TransformationMapping)).read(functionFile)
     // read the mapping
     val formattedMapping = Util.readMappingFile(mappingFileAbs.getAbsolutePath)
 
@@ -76,6 +88,16 @@ class SandboxTests extends FunSuite with Matchers {
   //        mapping.ttl vs. mapping_explicit.ttl
   //
 
+  test("log with colors"){
+    Logger.logInfo("this is info")
+    Logger.logDebug("this is debug") // must be turned on
+    Logger.logSuccess("this is success")
+    Logger.logError("this is error")
+    Logger.logWarning("this is warning")
+    Logger.lineBreak()
+  }
+
+
   test("sandbox/fno-testcases/RMLFNOTC0000-CSV") {
     executeTest("sandbox/fno-testcases/RMLFNOTC0000-CSV/mapping.ttl")
   }
@@ -83,6 +105,15 @@ class SandboxTests extends FunSuite with Matchers {
   test("sandbox/fno-testcases/RMLFNOTC0000-CSV-explicit") {
     executeTest("sandbox/fno-testcases/RMLFNOTC0000-CSV/mapping_explicit.ttl")
   }
+
+  test("sandbox/fno-testcases/RMLFNOTC0001-CSV") {
+    executeTest("sandbox/fno-testcases/RMLFNOTC0001-CSV/mapping.ttl")
+  }
+
+  test("sandbox/fno-testcases/RMLFNOTC0001-CSV-explicit") {
+    executeTest("sandbox/fno-testcases/RMLFNOTC0001-CSV/mapping_explicit.ttl")
+  }
+
 
 
 }
