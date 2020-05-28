@@ -3,7 +3,7 @@ package io.rml.framework.core.function
 import java.io.File
 
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.model.{DynamicMethodTransformation, Parameter, Transformation, TransientTransformation}
+import io.rml.framework.core.function.model.{DynamicMethodTransformation, Parameter, Transformation, TransformationMetaData}
 import io.rml.framework.core.function.std.StdTransformationLoader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.Uri
@@ -23,16 +23,13 @@ abstract class TransformationLoader extends Logging {
   /**
    * Map names of [[Transformation]] to concrete [[Transformation]] object
    */
-  protected val transformationMap: MutableMap[Uri, Transformation] = MutableMap()
+  protected val transformationMap: MutableMap[Uri, TransformationMetaData] = MutableMap()
 
 
-  def getClassLibraryMap: ImmutableMap[String, String] = {
-    classLibraryMap.toMap
-  }
+  def getClassLibraryMap: ImmutableMap[String, String] = classLibraryMap.toMap
 
-  def getTransformationMap: ImmutableMap[Uri, Transformation] = {
-    transformationMap.toMap
-  }
+  def getTransformationMap = transformationMap.toMap
+
 
   def parseTransformations(file: File): TransformationLoader = {
 
@@ -53,6 +50,7 @@ abstract class TransformationLoader extends Logging {
    * @return  [[Option]] of dynamically loaded transformation
    */
   def loadTransformation(uri: Uri): Option[Transformation] = {
+    logInfo(s"loadTransformation: ${uri.uri}")
 
     val optTransformation = transformationMap.get(uri)
 
@@ -62,10 +60,14 @@ abstract class TransformationLoader extends Logging {
       logInfo(s"Dynamically loading transformation: $uri, ${trans.toString}" )
 
       trans match {
-        case transient: TransientTransformation =>
-          val loadedTrans = transient.initialize()
-          transformationMap.put(uri, loadedTrans)
-          Some(loadedTrans)
+        case transformationMetaData: TransformationMetaData => {
+          //          val loadedTrans = transient.initialize()
+          //          transformationMap.put(uri, loadedTrans)
+          //          Some(loadedTrans)
+
+          Some(Transformation(transformationMetaData.identifier, transformationMetaData))
+          }
+
         case loadedTrans: DynamicMethodTransformation => Some(loadedTrans)
         case _ => None
       }

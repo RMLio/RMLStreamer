@@ -1,6 +1,6 @@
 package io.rml.framework.core.function.std
 
-import io.rml.framework.core.function.model.{Parameter, TransientTransformation}
+import io.rml.framework.core.function.model.{Parameter, TransformationMetaData}
 import io.rml.framework.core.function.{TransformationLoader, TransformationUtils}
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.jena.JenaResource
@@ -13,7 +13,7 @@ case class StdTransformationLoader() extends TransformationLoader {
 
   override def parseTransformations(graph: RDFGraph): TransformationLoader = {
     val transformationMaps = graph.filterProperties(Uri(RMLVoc.Property.LIB_PROVIDED_BY))
-
+    logInfo("found %d transformation maps".format( transformationMaps.length))
 
     for (map <- transformationMaps) {
 
@@ -23,25 +23,26 @@ case class StdTransformationLoader() extends TransformationLoader {
       val classNames = providedByTermMap.listProperties(RMLVoc.Property.LIB_CLASS).flatMap(Util.getLiteral)
       val methodNames = providedByTermMap.listProperties(RMLVoc.Property.LIB_METHOD).flatMap(Util.getLiteral)
 
+      logInfo("\t" + "lib path: %s".format(libPath))
       if (libPath.nonEmpty && classNames.nonEmpty && methodNames.nonEmpty) {
 
         val classNameLit = classNames.head
         val methodNameLit = methodNames.head
         classLibraryMap.put(classNameLit.toString.trim, libPath.get.toString.trim)
-
+        logInfo("\t\t" + "class: %s - method: %s".format(classNameLit, methodNameLit))
         val inputParams = parseParameterList(map, RMLVoc.Property.FNO_EXPECTS).sorted
 
 
         val outputParams = parseParameterList(map, RMLVoc.Property.FNO_RETURNS).sorted
 
 
-        val transformation = TransientTransformation(libPath.get.toString.trim, classNameLit.toString.trim,
+        val transformationMetaData = TransformationMetaData(libPath.get.toString.trim, classNameLit.toString.trim,
           methodNameLit.toString.trim,
           inputParams,
           outputParams
         )
 
-        transformationMap.put(map.uri, transformation)
+        transformationMap.put(map.uri, transformationMetaData)
       }
     }
 

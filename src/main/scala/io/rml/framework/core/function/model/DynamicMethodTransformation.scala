@@ -9,12 +9,12 @@ import io.rml.framework.core.model.{Entity, Literal, Uri}
 
 /**
  * A dynamic transformer which will use the functions of a class specified in an external jar
- * The information needed to do reflection is contained inside the variable 'transientTransformation' of type [[TransientTransformation]]
+ * The information needed to do reflection is contained inside the variable 'transientTransformation' of type [[TransformationMetaData]]
  *
  * @param identifier [[String]] used to identify this DynamicTransformation
  * @param metaData   contains information required for method reflection
  */
-case class DynamicMethodTransformation(identifier: String, metaData: TransientTransformation) extends Transformation {
+case class DynamicMethodTransformation(identifier: String, metaData: TransformationMetaData) extends Transformation {
 
   @transient
   private var optMethod: Option[Method] = None
@@ -25,7 +25,10 @@ case class DynamicMethodTransformation(identifier: String, metaData: TransientTr
   }
 
   override def initialize(): Transformation = {
+    logInfo("intializing transformation (identifier: %s)".format(this.identifier))
+
     if(optMethod.isEmpty) {
+      logInfo("optMethod is empty -> loading method from jar %s".format(metaData.source))
       val jarFile = getClass.getClassLoader.getResource(metaData.source.toString).getFile
 
       val classOfMethod = TransformationUtils.loadClassFromJar(new File(jarFile), metaData.className)
@@ -45,6 +48,7 @@ case class DynamicMethodTransformation(identifier: String, metaData: TransientTr
   }
 
   override def execute(arguments: Map[Uri, String]): Option[Iterable[Entity]] = {
+    logInfo("execute")
     if (optMethod.isEmpty) {
       throw new IllegalStateException(s"DynamicTransformation doesn't have the reflected method yet: ${this.identifier}")
     }

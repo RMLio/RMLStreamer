@@ -3,8 +3,8 @@ package io.rml.framework.core.function.model
 import java.lang.reflect.Method
 
 import io.rml.framework.core.model.{Entity, Node, Uri}
-
-trait Transformation extends Node {
+import io.rml.framework.core.internal.Logging
+trait Transformation extends Node with Logging{
 
 
   def name: Uri = Uri(identifier)
@@ -15,14 +15,17 @@ trait Transformation extends Node {
   // it currently only support string representable outputs!
   def execute(arguments: Map[Uri, String]): Option[Iterable[Entity]]
 
-  def initialize(): Transformation  = this
+  def initialize(): Transformation  = {
+    logInfo("initializing transformation")
+    this
+  }
 
 }
 
-object Transformation{
+object Transformation extends Logging{
 
-  def apply(identifier:String, transientTransformation: TransientTransformation): Transformation={
-    DynamicMethodTransformation(identifier, transientTransformation)
-
+  def apply(identifier:String, transformationMetaData: TransformationMetaData): Transformation={
+    logInfo("Companion: Transformation - apply(identifier, transformationMetaData)")
+    DynamicMethodTransformation(identifier, transformationMetaData)
   }
 }
