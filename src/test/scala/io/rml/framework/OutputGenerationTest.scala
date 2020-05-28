@@ -24,7 +24,11 @@
   **/
 package io.rml.framework
 
+import java.io.File
+
 import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.extractors.{MappingExtractor, MappingReader}
+import io.rml.framework.core.model.TransformationMapping
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.TestUtil
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
@@ -35,6 +39,7 @@ import scala.util.control.Exception
 
 class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
 
+  val functionFile = new File(getClass.getClassLoader.getResource("functions.ttl").getFile)
   // dev note:
   // Explicit type annotation allows to completely comment out the elements of the failing, passing or temp arrays
   //  without causing compilation failures.
@@ -53,12 +58,16 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
   )
 
 
+
   "Valid mapping file" should behave like validMappingFile("rml-testcases")
 
   "Valid mapping output generation" should "match the output from output.ttl" in {
+    // load functions
+    MappingReader(MappingExtractor(TransformationMapping)).read(functionFile)
 
     passing.foreach(test =>  {
       RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
+
       implicit val postProcessor: PostProcessor= TestUtil.pickPostProcessor(test._2)
       ExpectedOutputTestUtil.test(test._1, checkGeneratedOutput)
     })
