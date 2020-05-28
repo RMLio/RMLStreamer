@@ -28,7 +28,7 @@ package io.rml.framework.core.model.std
 import io.rml.framework.core.model._
 
 case class StdPredicateMap(identifier: String,
-                           functionMap: List[FunctionMap],
+                           override val functionMap: List[FunctionMap],
                            constant: Option[Entity],
                            reference: Option[Literal],
                            template: Option[Literal],

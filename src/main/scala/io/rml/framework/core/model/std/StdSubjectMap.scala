@@ -29,7 +29,7 @@ import io.rml.framework.core.model._
 
 case class StdSubjectMap(identifier: String,
                          `class`: List[Uri],
-                         functionMap:List[FunctionMap],
+                         override val functionMap:List[FunctionMap],
                          constant: Option[Entity],
                          reference: Option[Literal],
                          template: Option[Literal],

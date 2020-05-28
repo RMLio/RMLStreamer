@@ -28,14 +28,16 @@ package io.rml.framework.engine.statement
 import io.rml.framework.core.model.{Entity, PredicateObjectMap, Uri}
 import io.rml.framework.flink.item.Item
 
+import io.rml.framework.core.internal.Logging
 class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGeneratorAssembler,
                                         objectGeneratorAssembler: ObjectGeneratorAssembler,
                                         functionMapGeneratorAssembler: FunctionMapGeneratorAssembler,
-                                        graphGeneratorAssembler: GraphGeneratorAssembler) {
-  def assemble(predicateObjectMap: PredicateObjectMap)
+                                        graphGeneratorAssembler: GraphGeneratorAssembler) extends Logging{
 
+  def assemble(predicateObjectMap: PredicateObjectMap)
   : List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
 
+    this.logInfo("%s assemble (predicateObjectMap)".format(this.getClass.getName))
 
     val graphStatement = graphGeneratorAssembler.assemble(predicateObjectMap.graphMap)
     predicateObjectMap.predicateMaps.flatMap(predicateMap => {

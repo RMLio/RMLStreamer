@@ -33,6 +33,7 @@ import io.rml.framework.flink.source.EmptyItem
 
 case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
 
+
   override def assemble(termMap: TermMap): (Item) => Option[Iterable[Entity]] = {
     require(termMap.isInstanceOf[FunctionMap], "Wrong TermMap instance.")
 
