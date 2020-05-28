@@ -28,7 +28,7 @@ import java.io.File
 
 import io.rml.framework.Main
 import io.rml.framework.core.extractors.MappingReader
-import io.rml.framework.core.model.FormattedRMLMapping
+import io.rml.framework.core.model.{FormattedRMLMapping, RMLMapping}
 import io.rml.framework.core.util.{Format, NQuads}
 import io.rml.framework.engine.{NopPostProcessor, PostProcessor}
 import io.rml.framework.util.logging.Logger
@@ -68,7 +68,7 @@ object TripleGeneratorTestUtil extends TestFilesUtil[(List[String], Format)] {
      try {
        val mapping = MappingReader().read(file)
 
-       val formattedMapping = FormattedRMLMapping.fromRMLMapping(mapping)
+       val formattedMapping = FormattedRMLMapping.fromRMLMapping(mapping.asInstanceOf[RMLMapping])
        val dataSet = Main.createDataSetFromFormattedMapping(formattedMapping).collect
 
        // we assume quads, since we don't use a post processor
