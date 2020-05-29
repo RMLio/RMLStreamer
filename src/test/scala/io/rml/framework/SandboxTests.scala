@@ -81,28 +81,6 @@ class SandboxTests extends FunSuite with Matchers  {
   }
 
 
-  //
-  //  sandbox/fno-testcases/RMLFNOTC0000-CSV
-  //        mapping.ttl vs. mapping_explicit.ttl
-  //
-
-  test("log with colors"){
-    Logger.logInfo("this is info")
-    Logger.logDebug("this is debug") // must be turned on
-    Logger.logSuccess("this is success")
-    Logger.logError("this is error")
-    Logger.logWarning("this is warning")
-    Logger.lineBreak()
-  }
-
-
-  test("sandbox/fno-testcases/RMLFNOTC0000-CSV") {
-    executeTest("sandbox/fno-testcases/RMLFNOTC0000-CSV/mapping.ttl")
-  }
-
-  test("sandbox/fno-testcases/RMLFNOTC0000-CSV-explicit") {
-    executeTest("sandbox/fno-testcases/RMLFNOTC0000-CSV/mapping_explicit.ttl")
-  }
 
   test("sandbox/fno-testcases/RMLFNOTC0001-CSV") {
     executeTest("sandbox/fno-testcases/RMLFNOTC0001-CSV/mapping.ttl")
@@ -120,6 +98,7 @@ class SandboxTests extends FunSuite with Matchers  {
    *  value parameter: reference to "Name"
    */
   test("sandbox/fno-testcases/RMLFNOTC0004-CSV") {
+    pending
     executeTest("sandbox/fno-testcases/RMLFNOTC0004-CSV/mapping.ttl")
   }
 
@@ -142,7 +121,8 @@ class SandboxTests extends FunSuite with Matchers  {
    *  value parameter: reference to "Name"
    */
   test("sandbox/fno-testcases/RMLFNOTC0011-CSV") {
-    executeTest("sandbox/fno-testcases/RMLFNOTC0011-CSV/mapping.ttl")
+    pending
+    //executeTest("sandbox/fno-testcases/RMLFNOTC0011-CSV/mapping.ttl")
   }
 
 
