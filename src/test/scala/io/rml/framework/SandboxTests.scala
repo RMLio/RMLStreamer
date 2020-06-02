@@ -142,6 +142,7 @@ class SandboxTests extends FunSuite with Matchers  {
    *  value parameter: template using {Name}
    */
   test("sandbox/fno-testcases/RMLFNOTC0008-CSV") {
+    pending
     executeTest("sandbox/fno-testcases/RMLFNOTC0008-CSV/mapping.ttl")
   }
 
