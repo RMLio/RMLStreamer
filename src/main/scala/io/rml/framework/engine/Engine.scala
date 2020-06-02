@@ -96,7 +96,12 @@ object Engine extends Logging {
           }
         })
       }
-      Some(result)
+
+      // TODO: @gerald, is this assumption correct?
+      // when all template-references are replaced with their corresponding value,
+      // any escaped curly bracket can be unescaped.
+      // \{ -> {
+      Some(result.map(unescapeCurlyBrackets))
 
     }
   }
@@ -123,6 +128,12 @@ object Engine extends Logging {
   = {
     s.replace("{", "")
       .replace("}", "")
+  }
+
+  private def unescapeCurlyBrackets(s: String) : String = {
+    s
+      .replaceAllLiterally("""\{""", "{")
+      .replaceAllLiterally("""\}""", "}")
   }
 
 }
