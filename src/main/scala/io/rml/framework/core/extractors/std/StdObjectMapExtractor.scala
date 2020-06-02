@@ -80,21 +80,21 @@ class StdObjectMapExtractor(stdFunctionMapExtractor: FunctionMapExtractor) exten
       case resource: RDFResource => Some(extractObjectMap(resource))
       }
 
-
-//      //case resource: RDFResource => Some(extractObjectMap(resource))
-//      case resource: RDFResource => {
-//        // if resource hasn't a type specified, check whether it has the function value property
-//        val functionValueProperties = resource.listProperties(Uri(RMLVoc.Property.FUNCTIONVALUE).toString)
-//        if(functionValueProperties.nonEmpty | resource.getType.eq(Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP))))
-//          None
-//        else
-//          Some(extractObjectMap(resource))
-//      }
-//      // case resource.getType match {
-//        //        case Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP)) => None // TODO: rethink this
-//        //        case _ => Some(extractObjectMap(resource))
-//        //      }
-//    }
+    // TODO: safe to delete?
+    //      //case resource: RDFResource => Some(extractObjectMap(resource))
+    //      case resource: RDFResource => {
+    //        // if resource hasn't a type specified, check whether it has the function value property
+    //        val functionValueProperties = resource.listProperties(Uri(RMLVoc.Property.FUNCTIONVALUE).toString)
+    //        if(functionValueProperties.nonEmpty | resource.getType.eq(Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP))))
+    //          None
+    //        else
+    //          Some(extractObjectMap(resource))
+    //      }
+    //      // case resource.getType match {
+    //        //        case Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP)) => None // TODO: rethink this
+    //        //        case _ => Some(extractObjectMap(resource))
+    //        //      }
+    //    }
 
   }
 
@@ -149,16 +149,16 @@ class StdObjectMapExtractor(stdFunctionMapExtractor: FunctionMapExtractor) exten
         }
 
       } else {
-
-        // if this is a reference-based term map or contains an referenceFormulation or has a datatype property the
-        // or has a functionValue property or a template without term type, the
-        // term type is a literal
+        // the term type is Literal when one of the following is true
+        //  - the resource is a reference-based term map
+        //  - the resource contains a referenceFormulation
+        //  - the resource has a datatype property
+        //  - the resource has a functionValue property // TODO: verify
         val elements =
           resource.listProperties(RMLVoc.Property.REFERENCE) ++
           resource.listProperties(RMLVoc.Property.REFERENCEFORMULATION) ++
           resource.listProperties(RMLVoc.Property.DATATYPE) ++
-          resource.listProperties(RMLVoc.Property.FUNCTIONVALUE) ++
-          resource.listProperties(RMLVoc.Property.TEMPLATE)
+          resource.listProperties(RMLVoc.Property.FUNCTIONVALUE)
 
         if (elements.nonEmpty) Some(Uri(RMLVoc.Class.LITERAL))
         else Some(Uri(RMLVoc.Class.IRI))
