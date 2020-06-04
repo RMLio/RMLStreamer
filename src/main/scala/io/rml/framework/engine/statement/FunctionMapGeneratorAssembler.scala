@@ -31,6 +31,7 @@ import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.sink.FlinkRDFQuad
 import io.rml.framework.flink.source.EmptyItem
+import io.rml.framework.shared.RMLException
 
 case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
 
@@ -58,8 +59,14 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
 
     this.logInfo("parseFunction (assembledPom)")
     val placeHolder: List[FlinkRDFQuad] = generateFunctionTriples(new EmptyItem(), assembledPom)
-    val functionName = Uri(placeHolder
-      .filter( quad => quad.predicate.value == Uri(RMLVoc.Property.EXECUTES))
+
+    val executeProperties = placeHolder.filter( quad => quad.predicate.value == Uri(RMLVoc.Property.EXECUTES))
+    if(executeProperties.isEmpty)
+      throw new RMLException(s"Couldn't find ${RMLVoc.Property.EXECUTES} property." +
+        s"Is the namespace correct? (e.g. HTTP vs. HTTPS)")
+
+    val functionName = Uri(
+      executeProperties
       .head
       .`object`
       .value
