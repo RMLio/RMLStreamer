@@ -58,7 +58,8 @@ extends Logging{
     })
     // create the statements
     predicateObjects.map(predicateObject => {
-      (subjectGenerator, predicateObject._1, predicateObject._2, subjectGraphGenerator)
+      val graphGenerator = if(triplesMap.subjectMap.graphMap.isDefined) subjectGraphGenerator else predicateObject._3
+      (subjectGenerator, predicateObject._1, predicateObject._2, graphGenerator)
     }) ++ classMappings // add class mappings
 
   }

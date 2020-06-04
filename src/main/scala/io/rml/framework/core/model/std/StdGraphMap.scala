@@ -28,6 +28,7 @@ import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RMLVoc
 
 case class StdGraphMap(identifier: String,
+                       override val functionMap:List[FunctionMap],
                        constant: Option[Entity],
                        reference: Option[Literal],
                        template: Option[Literal]) extends GraphMap {

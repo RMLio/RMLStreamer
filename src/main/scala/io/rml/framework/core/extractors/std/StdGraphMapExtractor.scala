@@ -24,7 +24,7 @@
   **/
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.GraphMapExtractor
+import io.rml.framework.core.extractors.{FunctionMapExtractor, GraphMapExtractor}
 import io.rml.framework.core.model.rdf.{RDFNode, RDFResource}
 import io.rml.framework.core.model.{GraphMap, Literal, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
@@ -77,7 +77,7 @@ class StdGraphMapExtractor extends GraphMapExtractor {
 
   def extractGraph(resource: RDFResource): Option[GraphMap] = {
 
-    Some(GraphMap(resource.uri.toString, Some(resource.uri), None, None, extractTermType(resource)))
+    Some(GraphMap(resource.uri.toString, List(), Some(resource.uri), None, None, extractTermType(resource)))
 
   }
 
@@ -86,7 +86,8 @@ class StdGraphMapExtractor extends GraphMapExtractor {
     val template = extractTemplate(resource)
     val constant = extractConstant(resource)
     val reference = extractReference(resource)
-    Some(GraphMap(constant.getOrElse(resource.uri).toString, constant, reference, template, termType))
+    val functionMap = FunctionMapExtractor().extract(resource)
+    Some(GraphMap(constant.getOrElse(resource.uri).toString, functionMap, constant, reference, template, termType))
   }
 
 }

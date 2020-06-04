@@ -25,6 +25,7 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.model.{GraphMap, TermMap, Uri}
+import io.rml.framework.core.util.Util
 import io.rml.framework.flink.item.Item
 
 class GraphGeneratorAssembler extends TermMapGeneratorAssembler {
@@ -38,8 +39,16 @@ class GraphGeneratorAssembler extends TermMapGeneratorAssembler {
 
 
   override def assemble(termMap: TermMap): Item => Option[Iterable[Uri]] =
+    if (termMap.hasFunctionMap) {
+      val assembled = FunctionMapGeneratorAssembler().assemble(termMap.functionMap.head)
 
+
+      assembled.andThen(result => {
+        result.map(iter => iter.map(elem => Uri(elem.toString)))
+      })
+    } else {
     super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[Uri]]]
+    }
 
 
 }
