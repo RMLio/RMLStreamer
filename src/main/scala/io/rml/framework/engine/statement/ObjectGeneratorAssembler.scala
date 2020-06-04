@@ -45,9 +45,9 @@ class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
           termTypeString match {
             case RMLVoc.Class.IRI => item.map(iter => iter.map(elem => Uri(elem.toString)))
             case _ => item.map(iter => iter.flatMap(elem => {
-
-              val castedResult = TransformationUtils.typeCastDataType(elem, objectMap.datatype)
-              castedResult.map(v => Literal(v.toString, objectMap.datatype, objectMap.language))
+              //val castedResult = TransformationUtils.typeCastDataType(elem, objectMap.datatype)
+              //castedResult.map(v => Literal(v.toString, objectMap.datatype, objectMap.language))
+              Some(Literal(elem.identifier, objectMap.datatype, objectMap.language))
             }))
           }
 
