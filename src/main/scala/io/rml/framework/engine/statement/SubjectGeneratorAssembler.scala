@@ -25,7 +25,8 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.model.{TermMap, TermNode}
+import io.rml.framework.core.function.TransformationUtils
+import io.rml.framework.core.model.{TermMap, TermNode, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
 import io.rml.framework.shared.TermTypeException
@@ -34,19 +35,37 @@ import io.rml.framework.shared.TermTypeException
 class SubjectGeneratorAssembler extends TermMapGeneratorAssembler {
   override def assemble(termMap: TermMap): (Item) => Option[Iterable[TermNode]] = {
 
-    /**
-      * Tried implementing literal check in subject map extractor but it was assumed
-      * that the extractor would just extract subject maps even if it is typed to be literal.
-      *
-      * Maybe move this check to subject map extractor for early checking during the reading process? 
-      */
-    termMap.termType.get.toString match {
-      case RMLVoc.Class.LITERAL => throw new TermTypeException("Subject cannot be of type Literal!")
-      case _ =>
+    if(termMap.hasFunctionMap){
+      val fmap = termMap.functionMap.head
+      val assembledFunction = FunctionMapGeneratorAssembler().assemble(fmap)
+      assembledFunction.andThen(item => {
 
+        if(item.isDefined) {
+          item.map(iter => iter.flatMap(elem => {
+            val castedResult = TransformationUtils.typeCastDataType(elem, termMap.datatype)
+            castedResult.map(v => Uri(v.toString))
+          }))
+        }else {
+          None
+        }
+      })
+
+    }else {
+
+
+      /**
+       * Tried implementing literal check in subject map extractor but it was assumed
+       * that the extractor would just extract subject maps even if it is typed to be literal.
+       *
+       * Maybe move this check to subject map extractor for early checking during the reading process?
+       */
+      termMap.termType.get.toString match {
+        case RMLVoc.Class.LITERAL => throw new TermTypeException("Subject cannot be of type Literal!")
+        case _ =>
+
+      }
+      super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[TermNode]]]
     }
-    super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[TermNode]]]
-
   }
 
 }
