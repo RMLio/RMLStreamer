@@ -78,7 +78,7 @@ object ParameterUtil {
   val parser = new scopt.OptionParser[ParameterConfig]("RMLStreamer") {
     override def showUsageOnError = true
 
-    head("RMLStreamer", "1.2.4-SNAPSHOT")
+    head("RMLStreamer", "2.0.0")
 
     opt[String]('j', "job-name").valueName("<job name>")
       .optional()
