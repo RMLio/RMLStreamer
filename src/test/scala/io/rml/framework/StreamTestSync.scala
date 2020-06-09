@@ -36,10 +36,10 @@ import io.rml.framework.util.fileprocessing.StreamDataSourceTestUtil
 import io.rml.framework.util.logging.Logger
 import io.rml.framework.util.server.{TestData, TestSink2}
 import io.rml.framework.util.{StreamTestUtil, TestUtil}
-import org.apache.flink.api.common.JobID
+import org.apache.flink.api.common.{JobID, JobStatus}
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.configuration.Configuration
-import org.apache.flink.runtime.jobgraph.{JobGraph, JobStatus}
+import org.apache.flink.runtime.jobgraph.JobGraph
 import org.apache.flink.runtime.minicluster.{MiniCluster, MiniClusterConfiguration}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 

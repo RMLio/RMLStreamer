@@ -36,9 +36,9 @@ import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
+import org.apache.flink.table.api.Table
 import org.apache.flink.table.api.scala.StreamTableEnvironment
-import org.apache.flink.table.api.{Table, Types}
-import org.apache.flink.table.sources.CsvTableSource
+import org.apache.flink.table.descriptors.FileSystem
 import org.apache.flink.types.Row
 
 case class CSVStream(stream: DataStream[Iterable[Item]] ) extends Stream
@@ -111,21 +111,26 @@ object CSVStream {
     val header: Option[Array[String]] = CSVHeader(Paths.get(path), format)
 
     // create table source, tables are use for dynamically assigning headers
-    val source = CsvTableSource.builder()
+    /*val source = CsvTableSource.builder()
       .path(path.replaceFirst("file://", ""))
       .ignoreFirstLine() // skip the header
-      .fieldDelimiter(delimiter.toString)
+      .fieldDelimiter(delimiter.toString)*/
 
     // assign headers dynamically
-    val builder = header.get.foldLeft(source)((a, b) => a.field(b, Types.STRING)).build()
+    //val builder = header.get.foldLeft(source)((a, b) => a.field(b, DataTypes.STRING())).build()
 
     // register the table to the table environment
-    tEnv.registerTableSource(path, builder)
+    //tEnv.registerTableSource(path, builder)
+    val fileSys = (new FileSystem).path(path)
+
+    val tableDescriptor = tEnv.connect(fileSys)
 
     // create the table
-    val table: Table = tEnv
+    /*val table: Table = tEnv
       .scan(path)
-      .select(convertToSelection(header.get))
+      .select(convertToSelection(header.get))*/
+
+    val table: Table = tEnv.from(fileSys.toString)
 
     // create the header->index map
     val headersMap = convertToIndexMap(header.get)

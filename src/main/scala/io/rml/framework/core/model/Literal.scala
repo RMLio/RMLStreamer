@@ -63,7 +63,23 @@ trait Literal extends Entity  with ExplicitNode{
 object Literal {
 
   def apply(value: String, `type`: Option[Uri] = None, language: Option[Literal] = None): Literal = {
-    StdLiteral(Entity.clean(value, replace = false), `type`, language)
+    StdLiteral(clean(value), `type`, language)
+  }
+
+  def clean(s: String): String = {
+    if (s.isEmpty) return ""
+
+    // replace characters
+    s.flatMap {
+      case '\n' => "\\n"
+      case '"' => "\\\""
+      case '\\' => "\\\\"
+      case '\r' => "\\r"
+      case '\b' => "\\b"
+      case '\t' => "\\t"
+      case '\f' => "\\f"
+      case any => any.toString
+    }
   }
 
 }

@@ -5,11 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2020-06-08
 
 ## Unreleased
 
 * Function mapping.
 * Joins of data streams
+
+### Changed
+* Improved parameter handling, using [scopt](https://github.com/scopt/scopt). Not compatible with previous CLI.
+* Parallelising over the (local) task slots per task manager is enabled by default.
+* Checkpointing is disabled by default.
+* Updated Flink from version 1.9.1 to 1.10.0
+* Updated Kafka support from version 2.2.0 to 2.2.2
+* Updated documentation
+
+### Fixed
+* Escape characters were not escaped in generated literals (Internal [issue #81](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/issues/81)).
+* Curly brackets were not escaped correctly (Internal [issue #65](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/issues/65)).
 
 ## [1.2.3] - 2020-03-16
 
@@ -88,4 +101,5 @@ can be set with the program argument `--baseIRI`.
 [1.2.0]: https://github.com/RMLio/RMLStreamer/compare/v1.1.0...v1.2.0  
 [1.2.1]: https://github.com/RMLio/RMLStreamer/compare/v1.2.0...v1.2.1
 [1.2.2]: https://github.com/RMLio/RMLStreamer/compare/v1.2.1...v1.2.2  
-[1.2.3]: https://github.com/RMLio/RMLStreamer/compare/v1.2.2...v1.2.3  
+[1.2.3]: https://github.com/RMLio/RMLStreamer/compare/v1.2.2...v1.2.3
+[2.0.0]: https://github.com/RMLio/RMLStreamer/compare/v1.2.3...v2.0.0  

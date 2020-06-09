@@ -29,28 +29,3 @@ package io.rml.framework.core.model
   *  RML entity representing the uri, blank or literal nodes.
   */
 trait Entity extends Node
-
-object Entity {
-
-  /**
-    * Utility method for cleaning up values with a predefined configuration.
-    *
-    * @param s
-    * @return
-    */
-  def clean(s: String, replace: Boolean = true): String = {
-    if (s.isEmpty) return ""
-    // characters to be removed from the string
-    val toBeRemoved = Array('"')
-    // characters to be replaced with a predefined character
-    val replaceMap = Map() //Map(' ' -> '_')
-
-    // filter out characters
-    val filtered: String = s.filter(character => !toBeRemoved.contains(character))
-    // replace characters
-    if (replace) {
-      replaceMap.foldLeft(filtered)((a, b) => a.replaceAll(b._1.toString, b._2.toString))
-    } else filtered
-
-  }
-}

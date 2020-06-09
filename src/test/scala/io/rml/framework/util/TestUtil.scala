@@ -121,7 +121,27 @@ object TestUtil extends Logging {
       if (generatedModel.isIsomorphicWith(expectedModel)) {
         logInfo("Both graphs are isomorphic")
       } else {
-        logError(s"Graphs are not isomorphic!\n---- Generated graph: Name: [${generatedModelName}]\n${generatedStr}\n---- Expected graph: Name: [${expectedModelName}]\n${expectedStr}")
+        /**
+         * Log the difference between generated and expected graph
+         *
+         * Example
+         * Given a generated set Gset, and the expected set Eset
+         * Gset : {A, B, C, D}
+         * Eset: {A, B, E}
+         *
+         * Eset - Gset = {E}    // expected elements in Eset, that were NOT in Gset
+         * Gset - Eset = {C, D} // generated elements in Gset, that were NOT in Eset
+         */
+
+        val diffStillExpected = expectedModel.difference(generatedModel)
+        val diffWasNotExpected = generatedModel.difference(expectedModel)
+
+        logError(s"Graphs are not isomorphic!" +
+          s"\n---- Generated graph: Name: [${generatedModelName}]\n${generatedStr}\n---- Expected graph: Name: [${expectedModelName}]\n${expectedStr}"+
+          s"\n---- Difference graphs \n" +
+          s"\nThe following difference graph represents what is still missing in the generated graph (i.e. what is still expected):\n${JenaUtil.toString(diffStillExpected)}"+
+          s"\nThe following difference graph represents what shouldn't be in the generated graph (i.e. what was not expected):\n${JenaUtil.toString(diffWasNotExpected)}"
+        )
         result = false
       }
 
