@@ -5,8 +5,8 @@ import io.rml.framework.core.function.FunctionLoader
 import io.rml.framework.core.model.FunctionMapping
 import io.rml.framework.core.model.rdf.RDFGraph
 
-//TODO: to be consistent with the terminology, Function should be replaced with Function
-class StdTransformationMappingExtractor extends MappingExtractor[FunctionMapping] {
+
+class StdFunctionMappingExtractor extends MappingExtractor[FunctionMapping] {
   /**
    * Extract.
    *
