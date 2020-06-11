@@ -28,7 +28,7 @@ import java.io.File
 
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.{MappingExtractor, MappingReader}
-import io.rml.framework.core.model.TransformationMapping
+import io.rml.framework.core.model.FunctionMapping
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.TestUtil
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
@@ -63,7 +63,7 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
 
   "Valid mapping output generation" should "match the output from output.ttl" in {
     // load functions
-    MappingReader(MappingExtractor(TransformationMapping)).read(functionFile)
+    MappingReader(MappingExtractor(FunctionMapping)).read(functionFile)
 
     passing.foreach(test =>  {
       RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))

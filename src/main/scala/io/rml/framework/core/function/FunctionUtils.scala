@@ -12,7 +12,7 @@ import io.rml.framework.shared.RMLException
 
 import scala.reflect.internal.util.ScalaClassLoader.URLClassLoader
 
-object TransformationUtils extends Logging {
+object FunctionUtils extends Logging {
 
 
   /** *
@@ -34,10 +34,10 @@ object TransformationUtils extends Logging {
    * @return
    */
   def loadClassFromJar(jarFile: File, className: String): Class[_] = {
-    logInfo(s"Loading $className from jar file $jarFile")
+    logDebug(s"Loading $className from jar file $jarFile")
     try {
       val classloader = new URLClassLoader(List(jarFile.toURI.toURL), RMLEnvironment.getClass.getClassLoader)
-      logInfo(s"Class loader ${classloader.getParent}")
+      logDebug(s"Class loader ${classloader.getParent}")
       Class.forName(className, true, classloader)
     } catch {
       case e@(_: MalformedURLException | _: ClassNotFoundException) =>

@@ -1,21 +1,21 @@
 package io.rml.framework.core.function.std
 
-import io.rml.framework.core.function.model.{Parameter, TransformationMetaData}
-import io.rml.framework.core.function.{TransformationLoader, TransformationUtils}
+import io.rml.framework.core.function.model.{Parameter, FunctionMetaData}
+import io.rml.framework.core.function.{FunctionLoader, FunctionUtils}
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.jena.JenaResource
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFNode, RDFResource}
 import io.rml.framework.core.util.{JenaUtil, Util}
 import io.rml.framework.core.vocabulary.RMLVoc
 
-case class StdTransformationLoader() extends TransformationLoader {
+case class StdFunctionLoader() extends FunctionLoader {
 
 
-  override def parseTransformations(graph: RDFGraph): TransformationLoader = {
-    val transformationMaps = graph.filterProperties(Uri(RMLVoc.Property.LIB_PROVIDED_BY))
-    logInfo("found %d transformation maps".format( transformationMaps.length))
+  override def parseFunctions(graph: RDFGraph): FunctionLoader = {
+    val functionMaps = graph.filterProperties(Uri(RMLVoc.Property.LIB_PROVIDED_BY))
+    logDebug("found %d transformation maps".format( functionMaps.length))
 
-    for (map <- transformationMaps) {
+    for (map <- functionMaps) {
 
       val providedByTermMap = map.listProperties(RMLVoc.Property.LIB_PROVIDED_BY).head.asInstanceOf[RDFResource]
 
@@ -23,26 +23,26 @@ case class StdTransformationLoader() extends TransformationLoader {
       val classNames = providedByTermMap.listProperties(RMLVoc.Property.LIB_CLASS).flatMap(Util.getLiteral)
       val methodNames = providedByTermMap.listProperties(RMLVoc.Property.LIB_METHOD).flatMap(Util.getLiteral)
 
-      logInfo("\t" + "lib path: %s".format(libPath))
+      logDebug("\t" + "lib path: %s".format(libPath))
       if (libPath.nonEmpty && classNames.nonEmpty && methodNames.nonEmpty) {
 
         val classNameLit = classNames.head
         val methodNameLit = methodNames.head
         classLibraryMap.put(classNameLit.toString.trim, libPath.get.toString.trim)
-        logInfo("\t\t" + "class: %s - method: %s".format(classNameLit, methodNameLit))
+        logDebug("\t\t" + "class: %s - method: %s".format(classNameLit, methodNameLit))
         val inputParams = parseParameterList(map, RMLVoc.Property.FNO_EXPECTS).sorted
 
 
         val outputParams = parseParameterList(map, RMLVoc.Property.FNO_RETURNS).sorted
 
 
-        val transformationMetaData = TransformationMetaData(libPath.get.toString.trim, classNameLit.toString.trim,
+        val functionMetaData = FunctionMetaData(libPath.get.toString.trim, classNameLit.toString.trim,
           methodNameLit.toString.trim,
           inputParams,
           outputParams
         )
 
-        transformationMap.put(map.uri, transformationMetaData)
+        functionMap.put(map.uri, functionMetaData)
       }
     }
 
@@ -60,7 +60,7 @@ case class StdTransformationLoader() extends TransformationLoader {
     val inputResource = inputNode.asInstanceOf[JenaResource]
     val paramType = inputResource.listProperties(RMLVoc.Property.FNO_TYPE).head.toString
     val paramUri = inputResource.listProperties(RMLVoc.Property.FNO_PREDICATE).head.toString
-    val typeClass = TransformationUtils.getTypeClass(Uri(paramType))
+    val typeClass = FunctionUtils.getTypeClass(Uri(paramType))
     Parameter(typeClass, Uri(paramUri), pos)
   }
 }

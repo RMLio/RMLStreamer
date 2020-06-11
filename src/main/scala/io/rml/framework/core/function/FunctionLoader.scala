@@ -3,8 +3,8 @@ package io.rml.framework.core.function
 import java.io.File
 
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.model.{DynamicMethodTransformation, Parameter, Transformation, TransformationMetaData}
-import io.rml.framework.core.function.std.StdTransformationLoader
+import io.rml.framework.core.function.model.{DynamicMethodFunction, Parameter, Function, FunctionMetaData}
+import io.rml.framework.core.function.std.StdFunctionLoader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFNode}
@@ -13,7 +13,7 @@ import io.rml.framework.core.util.Turtle
 import scala.collection.immutable.{Map => ImmutableMap}
 import scala.collection.mutable.{Map => MutableMap}
 
-abstract class TransformationLoader extends Logging {
+abstract class FunctionLoader extends Logging {
   /**
    * Map string value of classes to library path
    */
@@ -21,54 +21,54 @@ abstract class TransformationLoader extends Logging {
 
 
   /**
-   * Map names of [[Transformation]] to concrete [[Transformation]] object
+   * Map names of [[Function]] to concrete [[Function]] object
    */
-  protected val transformationMap: MutableMap[Uri, TransformationMetaData] = MutableMap()
+  protected val functionMap: MutableMap[Uri, FunctionMetaData] = MutableMap()
 
 
   def getClassLibraryMap: ImmutableMap[String, String] = classLibraryMap.toMap
 
-  def getTransformationMap = transformationMap.toMap
+  def getFunctionMap = functionMap.toMap
 
 
-  def parseTransformations(file: File): TransformationLoader = {
+  def parseFunctions(file: File): FunctionLoader = {
 
     //TODO: passing hardcoding Turtle-format.
     // HELP: shouldn't we derive the format from the file itself?
     val graph = RDFGraph.fromFile(file, RMLEnvironment.getGeneratorBaseIRI(),Turtle)
 
-    parseTransformations(graph)
+    parseFunctions(graph)
     this
   }
 
   /**
-   * Given the [[Uri]] representation of the transformation, the [[TransformationLoader]]
-   * will search for the transformation in the [[transformationMap]] and dynamically load
+   * Given the [[Uri]] representation of the transformation, the [[FunctionLoader]]
+   * will search for the transformation in the [[functionMap]] and dynamically load
    * the transformation.
    *
    * @param uri Uri representing a transformation
    * @return  [[Option]] of dynamically loaded transformation
    */
-  def loadTransformation(uri: Uri): Option[Transformation] = {
-    logInfo(s"loadTransformation: ${uri.uri}")
+  def loadFunction(uri: Uri): Option[Function] = {
+    logDebug(s"loadFunction: ${uri.uri}")
 
-    val optTransformation = transformationMap.get(uri)
+    val optTransformation = functionMap.get(uri)
 
     if (optTransformation.isDefined) {
       val trans = optTransformation.get
 
-      logInfo(s"Dynamically loading transformation: $uri, ${trans.toString}" )
+      logDebug(s"Dynamically loading function: $uri, ${trans.toString}" )
 
       trans match {
-        case transformationMetaData: TransformationMetaData => {
+        case transformationMetaData: FunctionMetaData => {
           //          val loadedTrans = transient.initialize()
-          //          transformationMap.put(uri, loadedTrans)
+          //          functionMap.put(uri, loadedTrans)
           //          Some(loadedTrans)
 
-          Some(Transformation(transformationMetaData.identifier, transformationMetaData))
+          Some(Function(transformationMetaData.identifier, transformationMetaData))
           }
 
-        case loadedTrans: DynamicMethodTransformation => Some(loadedTrans)
+        case loadedFunction: DynamicMethodFunction => Some(loadedFunction)
         case _ => None
       }
 
@@ -81,9 +81,9 @@ abstract class TransformationLoader extends Logging {
    * Parse transformations from the [[RDFGraph]] of the whole function mapping file.
    *
    * @param graph [[RDFGraph]] representing the whole function mapping file
-   * @return [[TransformationLoader]]
+   * @return [[FunctionLoader]]
    */
-  def parseTransformations(graph: RDFGraph): TransformationLoader
+  def parseFunctions(graph: RDFGraph): FunctionLoader
 
 
   /**
@@ -97,9 +97,9 @@ abstract class TransformationLoader extends Logging {
 }
 
 
-object TransformationLoader {
+object FunctionLoader {
 
-  def apply(): TransformationLoader = StdTransformationLoader()
+  def apply(): FunctionLoader = StdFunctionLoader()
 }
 
 

@@ -4,8 +4,8 @@ import java.io.File
 
 import io.rml.framework.StaticTestSpec
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.model.{DynamicMethodTransformation, Transformation}
-import io.rml.framework.core.function.{TransformationLoader, TransformationUtils}
+import io.rml.framework.core.function.model.{DynamicMethodFunction, Function}
+import io.rml.framework.core.function.{FunctionLoader, FunctionUtils}
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.vocabulary.{Namespaces, RMLVoc}
 
@@ -15,28 +15,28 @@ class FunctionLoaderTest extends StaticTestSpec {
   "Loading default grel functions classes" should "succeed without error" in {
 
     val filePath = RMLEnvironment.getClass.getClassLoader.getResource("GrelFunctions.jar").getFile
-    val cls = TransformationUtils.loadClassFromJar(new File(filePath), "GrelFunctions")
+    val cls = FunctionUtils.loadClassFromJar(new File(filePath), "GrelFunctions")
     println(cls)
     assert(cls.getDeclaredMethods.length > 0, "Declared methods must be more than 0 for now")
   }
 
   "FunctionLoader" should "initialize the transformation lazily and correctly" in {
-    val loader = TransformationLoader().parseTransformations(functionFile)
+    val loader = FunctionLoader().parseFunctions(functionFile)
     val test = Uri("http://users.ugent.be/~bjdmeest/function/grel.ttl#toUpperCase")
-    val transformation = loader.loadTransformation(test)
+    val transformation = loader.loadFunction(test)
 
-    assume(transformation.isInstanceOf[Option[DynamicMethodTransformation]])
+    assume(transformation.isInstanceOf[Option[DynamicMethodFunction]])
   }
 
 
   "Dynamic Function" should "be loaded and executable" in {
-    val loader = TransformationLoader().parseTransformations(functionFile)
+    val loader = FunctionLoader().parseFunctions(functionFile)
 
     val testValue = "qmlsdkfje sdfesdfFJ"
     val functionUri = Uri(Namespaces("grel", "toUpperCase"))
 
     // map: uri -> trans. metadata
-    val transformationMap = loader.getTransformationMap
+    val transformationMap = loader.getFunctionMap
 
     // transformation meta data for given function uri
     val transformationMetaData = transformationMap.getOrElse(
@@ -44,9 +44,9 @@ class FunctionLoaderTest extends StaticTestSpec {
       throw new Exception("Unable to find transformation meta data in transformation map"))
 
 
-    val transformation = Transformation(functionUri.identifier,transformationMetaData)
-    // initializedTransformation is a DynamicMethodTransformation
-    val initializedTransformation: Transformation = transformation.initialize()
+    val transformation = Function(functionUri.identifier,transformationMetaData)
+    // initializedTransformation is a DynamicMethodFunction
+    val initializedTransformation: Function = transformation.initialize()
 
     // bind value parameter to its actual value
     val paramMap = Map(Uri(Namespaces("grel", "valueParameter")) -> testValue)

@@ -69,7 +69,7 @@ class StdObjectMapExtractor(stdFunctionMapExtractor: FunctionMapExtractor) exten
     * @return
     */
   private def extractObjectMaps(resource: RDFResource): List[ObjectMap] = {
-    this.logInfo("%s extractObjectMaps(resource)".format(this.getClass.getName))
+    this.logDebug("%s extractObjectMaps(resource)".format(this.getClass.getName))
     val property = RMLVoc.Property.OBJECTMAP
     val properties = resource.listProperties(property)
 
@@ -80,21 +80,6 @@ class StdObjectMapExtractor(stdFunctionMapExtractor: FunctionMapExtractor) exten
       case resource: RDFResource => Some(extractObjectMap(resource))
       }
 
-    // TODO: safe to delete?
-    //      //case resource: RDFResource => Some(extractObjectMap(resource))
-    //      case resource: RDFResource => {
-    //        // if resource hasn't a type specified, check whether it has the function value property
-    //        val functionValueProperties = resource.listProperties(Uri(RMLVoc.Property.FUNCTIONVALUE).toString)
-    //        if(functionValueProperties.nonEmpty | resource.getType.eq(Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP))))
-    //          None
-    //        else
-    //          Some(extractObjectMap(resource))
-    //      }
-    //      // case resource.getType match {
-    //        //        case Some(Uri(RMLVoc.Class.FUNCTIONTERMMAP)) => None // TODO: rethink this
-    //        //        case _ => Some(extractObjectMap(resource))
-    //        //      }
-    //    }
 
   }
 

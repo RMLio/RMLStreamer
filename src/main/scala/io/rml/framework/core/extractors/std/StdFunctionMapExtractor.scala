@@ -21,7 +21,7 @@ class StdFunctionMapExtractor(subjectMapExtractor: SubjectMapExtractor,
    * @return
    */
   override def extract(node: RDFResource): List[FunctionMap] = {
-    this.logInfo("%s extract(node)".format(this.getClass.getName))
+    this.logDebug("%s extract(node)".format(this.getClass.getName))
     extractFunctionMap("", node)
   }
 
@@ -43,7 +43,7 @@ class StdFunctionMapExtractor(subjectMapExtractor: SubjectMapExtractor,
       val poms = pomExtractor.extract(functionValue)
 
       FunctionMap(fnParentMap, functionValue.uri.toString, poms)
-      //throw new NotImplementedError()
+
     })
 
     result

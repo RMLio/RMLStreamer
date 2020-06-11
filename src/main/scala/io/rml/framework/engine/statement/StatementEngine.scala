@@ -76,7 +76,7 @@ object StatementEngine extends Logging {
     */
   def fromTriplesMaps(triplesMaps: List[TriplesMap]): StatementEngine[Item] = {
     // assemble the statements
-    this.logInfo("fromTriplesMaps(triplesMaps) - creating statement engine")
+    this.logDebug("fromTriplesMaps(triplesMaps) - creating statement engine")
     //Group the triple maps with their iterator as the key
     val iteratorGroup = triplesMaps.groupBy(tm => {
       // here we require the triples map to have only one iterator

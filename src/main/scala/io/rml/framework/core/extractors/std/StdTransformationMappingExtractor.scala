@@ -1,22 +1,23 @@
 package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.MappingExtractor
-import io.rml.framework.core.function.TransformationLoader
-import io.rml.framework.core.model.TransformationMapping
+import io.rml.framework.core.function.FunctionLoader
+import io.rml.framework.core.model.FunctionMapping
 import io.rml.framework.core.model.rdf.RDFGraph
 
-class StdTransformationMappingExtractor extends MappingExtractor[TransformationMapping] {
+//TODO: to be consistent with the terminology, Function should be replaced with Function
+class StdTransformationMappingExtractor extends MappingExtractor[FunctionMapping] {
   /**
    * Extract.
    *
    * @param node Node to extract from.
    * @return
    */
-  override def extract(node: RDFGraph): TransformationMapping =  {
-    val loader = TransformationLoader()
+  override def extract(node: RDFGraph): FunctionMapping =  {
+    val loader = FunctionLoader()
 
-    loader.parseTransformations(node)
+    loader.parseFunctions(node)
 
-    TransformationMapping("defaulty", loader)
+    FunctionMapping("defaulty", loader)
   }
 }

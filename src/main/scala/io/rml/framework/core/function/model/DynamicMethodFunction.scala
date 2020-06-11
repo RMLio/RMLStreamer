@@ -3,18 +3,18 @@ package io.rml.framework.core.function.model
 import java.io.{File, IOException, ObjectInputStream, ObjectOutputStream}
 import java.lang.reflect.Method
 
-import io.rml.framework.core.function.TransformationUtils
+import io.rml.framework.core.function.FunctionUtils
 import io.rml.framework.core.model.{Entity, Literal, Uri}
 
 
 /**
  * A dynamic transformer which will use the functions of a class specified in an external jar
- * The information needed to do reflection is contained inside the variable 'transientTransformation' of type [[TransformationMetaData]]
+ * The information needed to do reflection is contained inside the variable 'transientTransformation' of type [[FunctionMetaData]]
  *
  * @param identifier [[String]] used to identify this DynamicTransformation
  * @param metaData   contains information required for method reflection
  */
-case class DynamicMethodTransformation(identifier: String, metaData: TransformationMetaData) extends Transformation {
+case class DynamicMethodFunction(identifier: String, metaData: FunctionMetaData) extends Function {
 
   @transient
   private var optMethod: Option[Method] = None
@@ -24,14 +24,14 @@ case class DynamicMethodTransformation(identifier: String, metaData: Transformat
     out.defaultWriteObject()
   }
 
-  override def initialize(): Transformation = {
-    logInfo("intializing transformation (identifier: %s)".format(this.identifier))
+  override def initialize(): Function = {
+    logDebug("intializing function (identifier: %s)".format(this.identifier))
 
     if(optMethod.isEmpty) {
-      logInfo("optMethod is empty -> loading method from jar %s".format(metaData.source))
+      logDebug("optMethod is empty -> loading method from jar %s".format(metaData.source))
       val jarFile = getClass.getClassLoader.getResource(metaData.source.toString).getFile
 
-      val classOfMethod = TransformationUtils.loadClassFromJar(new File(jarFile), metaData.className)
+      val classOfMethod = FunctionUtils.loadClassFromJar(new File(jarFile), metaData.className)
       val method = classOfMethod.getDeclaredMethod(metaData.methodName, metaData.inputParam.map(_.paramType): _*)
       optMethod = Some(method)
     }
@@ -48,7 +48,7 @@ case class DynamicMethodTransformation(identifier: String, metaData: Transformat
   }
 
   override def execute(arguments: Map[Uri, String]): Option[Iterable[Entity]] = {
-    logInfo("execute")
+    logDebug("execute")
     if (optMethod.isEmpty) {
       throw new IllegalStateException(s"DynamicTransformation doesn't have the reflected method yet: ${this.identifier}")
     }

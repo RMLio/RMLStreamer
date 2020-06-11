@@ -374,7 +374,7 @@ object Main extends Logging {
                                         senv: StreamExecutionEnvironment,
                                         postProcessor: PostProcessor): DataSet[String] = {
 
-    this.logInfo("createDataSetFromFormattedMapping(...)")
+    this.logDebug("createDataSetFromFormattedMapping(...)")
     require(!postProcessor.isInstanceOf[AtMostOneProcessor], "Bulk output and JSON-LD output are not supported in the static version")
 
     /**
@@ -420,7 +420,7 @@ object Main extends Logging {
                                              (implicit env: ExecutionEnvironment,
                                               senv: StreamExecutionEnvironment,
                                               postProcessor: PostProcessor): DataSet[String] = {
-    this.logInfo("createStandardTriplesMapPipeline(standard triples maps..)")
+    this.logDebug("createStandardTriplesMapPipeline(standard triples maps..)")
     // group triple maps by logical sources
     val grouped = standardTriplesMaps.groupBy(triplesMap => triplesMap.logicalSource)
 

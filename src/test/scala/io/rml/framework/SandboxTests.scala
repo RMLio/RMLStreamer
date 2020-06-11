@@ -29,8 +29,8 @@ import java.io.File
 import io.rml.framework.Main
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.{MappingExtractor, MappingReader}
-import io.rml.framework.core.function.TransformationLoader
-import io.rml.framework.core.model.TransformationMapping
+import io.rml.framework.core.function.FunctionLoader
+import io.rml.framework.core.model.FunctionMapping
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.NopPostProcessor
 import io.rml.framework.util.TestUtil
@@ -56,7 +56,7 @@ class SandboxTests extends FunSuite with Matchers  {
     val mappingFileAbs = new File(testDir, new File(mappingFile).getName)
 
     // load functions
-    MappingReader(MappingExtractor(TransformationMapping)).read(functionFile)
+    MappingReader(MappingExtractor(FunctionMapping)).read(functionFile)
     // read the mapping
     val formattedMapping = Util.readMappingFile(mappingFileAbs.getAbsolutePath)
 
