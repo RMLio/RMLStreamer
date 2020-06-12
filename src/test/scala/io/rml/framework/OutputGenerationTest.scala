@@ -28,6 +28,7 @@ import java.io.File
 
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.{MappingExtractor, MappingReader}
+import io.rml.framework.core.function.FunctionLoader
 import io.rml.framework.core.model.FunctionMapping
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.TestUtil
@@ -63,7 +64,9 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
 
   "Valid mapping output generation" should "match the output from output.ttl" in {
     // load functions
-    MappingReader(MappingExtractor(FunctionMapping)).read(functionFile)
+    val grelJavaMappingFile = new File(getClass.getClassLoader.getResource("grel_java_mapping.ttl").getFile)
+    FunctionLoader().parseFunctions(grelJavaMappingFile) // singleton FunctionLoader
+
 
     passing.foreach(test =>  {
       RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
