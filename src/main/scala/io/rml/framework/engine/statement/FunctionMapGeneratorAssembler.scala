@@ -24,7 +24,9 @@
  **/
 package io.rml.framework.engine.statement
 
+import java.io.File
 import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.function.FunctionLoader
 import io.rml.framework.core.function.model.Function
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RMLVoc
@@ -54,8 +56,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
   }
 
   private def parseFunction(assembledPom:
-                            List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]):
-  Function = {
+                            List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Function = {
 
     this.logDebug("parseFunction (assembledPom)")
     val placeHolder: List[FlinkRDFQuad] = generateFunctionTriples(new EmptyItem(), assembledPom)
@@ -71,16 +72,12 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
       .`object`
       .value
       .toString)
-
-    //throw new NotImplementedError()
-    val functionMapping =  FunctionMapping
-      .getOpt
-      .getOrElse( throw new IllegalStateException("Function mapping hasn't been read/init yet"))
-
-    functionMapping
-      .functionLoader
-      .loadFunction(functionName)
-      .getOrElse(throw new IllegalStateException(s"Function $functionName doesn't exist"))
+    
+    val loadedFunctionOption = FunctionLoader().loadFunction(functionName)
+    loadedFunctionOption.getOrElse{
+      // complain about function that isn't present
+      throw new RMLException("Can't load function..")
+    }
   }
 
   /**

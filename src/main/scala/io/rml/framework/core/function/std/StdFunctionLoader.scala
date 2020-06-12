@@ -1,67 +1,112 @@
 package io.rml.framework.core.function.std
 
-import io.rml.framework.core.function.model.{Parameter, FunctionMetaData}
+import java.net.MalformedURLException
+
+import io.rml.framework.core.extractors.SubjectMapExtractor
+import io.rml.framework.core.function.FunctionUtils.logError
 import io.rml.framework.core.function.{FunctionLoader, FunctionUtils}
-import io.rml.framework.core.model.Uri
+import io.rml.framework.core.function.model.{FunctionMetaData, Parameter}
+import io.rml.framework.core.model.{Uri, rdf}
+import io.rml.framework.core.model.rdf.{RDFGraph, RDFNode, RDFResource, RDFTriple}
 import io.rml.framework.core.model.rdf.jena.JenaResource
-import io.rml.framework.core.model.rdf.{RDFGraph, RDFNode, RDFResource}
 import io.rml.framework.core.util.{JenaUtil, Util}
 import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.shared.{FnOException, RMLException}
 
-case class StdFunctionLoader() extends FunctionLoader {
+
+case class StdFunctionLoader(functionDescriptionTriplesGraph : RDFGraph) extends FunctionLoader {
 
 
   override def parseFunctions(graph: RDFGraph): FunctionLoader = {
-    val functionMaps = graph.filterProperties(Uri(RMLVoc.Property.LIB_PROVIDED_BY))
-    logDebug("found %d transformation maps".format( functionMaps.length))
+    logDebug("parsing functions the new way (i.e. using StdFunctionLoader)")
 
-    for (map <- functionMaps) {
+    // a fnoi:Mapping
+    //  property: fno:function
+    //  property: fno:implementation
+    //            an fno:implementation resource have type a like
+    //                - fnoi:JavaClass
+    //
+    val fnoFunctionProperty = Uri(RMLVoc.Property.FNO_FUNCTION)
 
-      val providedByTermMap = map.listProperties(RMLVoc.Property.LIB_PROVIDED_BY).head.asInstanceOf[RDFResource]
+    // subject resources with fno:function property
+    // these resources have type fnoi:Mapping
+    val mappings = graph.filterProperties(fnoFunctionProperty)
+    if(mappings.isEmpty)
+      throw new RMLException("No function mappings found...")
 
-      val libPath = providedByTermMap.listProperties(RMLVoc.Property.LIB_LOCAL_LIBRARY).flatMap(Util.getLiteral).headOption
-      val classNames = providedByTermMap.listProperties(RMLVoc.Property.LIB_CLASS).flatMap(Util.getLiteral)
-      val methodNames = providedByTermMap.listProperties(RMLVoc.Property.LIB_METHOD).flatMap(Util.getLiteral)
+    val functionDescriptionResources = this.functionDescriptionTriplesGraph.filterResources(Uri(RMLVoc.Class.FNO_FUNCTION))
+    logDebug(s"${functionDescriptionResources.length} functionDescriptionResources present")
+    logDebug(s"The current function description graph contains ${mappings.length} mappings")
+    for (map <- mappings) {
+      logDebug(s"Processing mapping: ${map.uri}")
+      try {
+        val functionUri = map.listProperties(RMLVoc.Property.FNO_FUNCTION).head.asInstanceOf[RDFResource].uri
 
-      logDebug("\t" + "lib path: %s".format(libPath))
-      if (libPath.nonEmpty && classNames.nonEmpty && methodNames.nonEmpty) {
+        val methodMappingResource = map.listProperties(RMLVoc.Property.FNO_METHOD_MAPPING).head.asInstanceOf[RDFResource]
+        val methodName = methodMappingResource.listProperties(RMLVoc.Property.FNOM_METHOD_NAME).head.toString
+        val implementationResource = map.listProperties(RMLVoc.Property.FNO_IMPLEMENTATION).head.asInstanceOf[RDFResource]
 
-        val classNameLit = classNames.head
-        val methodNameLit = methodNames.head
-        classLibraryMap.put(classNameLit.toString.trim, libPath.get.toString.trim)
-        logDebug("\t\t" + "class: %s - method: %s".format(classNameLit, methodNameLit))
-        val inputParams = parseParameterList(map, RMLVoc.Property.FNO_EXPECTS).sorted
+        val className = Util.getLiteral(implementationResource.listProperties(RMLVoc.Property.FNOI_CLASS_NAME).head)
+        val downloadPage = Util.getLiteral(implementationResource.listProperties(RMLVoc.Property.DOAP_DOWNLOAD_PAGE).head)
+        logDebug(s"Found map with methodname: ${methodName}, className: ${className}, downloadPage: ${downloadPage}")
+
+        // Get function description resource that corresponds with the current functionUri
+        // If not present, throw appropriate exception
+        val functionDescriptionResourceOption = functionDescriptionResources.find(fd => fd.uri == functionUri)
+        if(functionDescriptionResourceOption.isEmpty)
+          throw new FnOException(s"No function description resource found with uri: ${functionUri}")
 
 
-        val outputParams = parseParameterList(map, RMLVoc.Property.FNO_RETURNS).sorted
+        // extraction of input parameters
+        val expectsResource = functionDescriptionResourceOption.get.listProperties(RMLVoc.Property.FNO_EXPECTS).headOption
+        val inputParameterResources = expectsResource.get.asInstanceOf[RDFResource].getList.asInstanceOf[List[RDFResource]]
+        val inputParamList = parseParameterResources(inputParameterResources)
 
+        // extraction of output parameters
+        val returnsResource = functionDescriptionResourceOption.get.listProperties(RMLVoc.Property.FNO_RETURNS).headOption
+        val outputParameterResources = returnsResource.get.asInstanceOf[RDFResource].getList.asInstanceOf[List[RDFResource]]
+        val outputParamList = parseParameterResources(outputParameterResources)
 
-        val functionMetaData = FunctionMetaData(libPath.get.toString.trim, classNameLit.toString.trim,
-          methodNameLit.toString.trim,
-          inputParams,
-          outputParams
-        )
+        // construct function meta data object and store it in the functionMap
+        val functionMetaData = FunctionMetaData(downloadPage.get.value, className.get.value, methodName, inputParamList, outputParamList)
+        this.functionMap.put(functionUri, functionMetaData)
 
-        functionMap.put(map.uri, functionMetaData)
+      }catch {
+        case e@(_: RMLException | _: FnOException) =>
+          logError(e.getMessage)
       }
+
     }
 
+    logDebug(s"${this.functionMap.size} functions are parsed. The function maps contains the following functions")
+    this.functionMap.foreach{
+      kv =>
+        logDebug(s"\t${kv._1}")
+    }
     this
   }
 
-  def parseParameterList(resource: RDFResource, property: String): List[Parameter] = {
-    JenaUtil
-      .parseListNodes(resource, property)
-      .map { case (node, pos) => parseParameter(node, pos) }
 
+  def parseParameterResources(parameterResources : List[RDFResource]) : List[Parameter] = {
+    parameterResources.zipWithIndex.map{
+      case (paramResource, paramIndex) =>
+        parseParameter(paramResource, paramIndex)
+    }
   }
 
   override def parseParameter(inputNode: RDFNode, pos: Int): Parameter = {
     val inputResource = inputNode.asInstanceOf[JenaResource]
-    val paramType = inputResource.listProperties(RMLVoc.Property.FNO_TYPE).head.toString
-    val paramUri = inputResource.listProperties(RMLVoc.Property.FNO_PREDICATE).head.toString
-    val typeClass = FunctionUtils.getTypeClass(Uri(paramType))
-    Parameter(typeClass, Uri(paramUri), pos)
+    val paramType = inputResource.listProperties(RMLVoc.Property.FNO_TYPE).headOption
+    val paramUri = inputResource.listProperties(RMLVoc.Property.FNO_PREDICATE).headOption
+
+    if(paramType.isEmpty)
+      throw new FnOException("Parameter Type not defined")
+
+    if(paramUri.isEmpty)
+      throw new FnOException("Parameter Uri not defined")
+
+
+    val typeClass = FunctionUtils.getTypeClass(Uri(paramType.get.toString))
+    Parameter(typeClass, Uri(paramUri.get.toString), pos)
   }
 }
-

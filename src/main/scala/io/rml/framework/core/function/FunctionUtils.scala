@@ -62,9 +62,13 @@ object FunctionUtils extends Logging {
 
       case Uri(RMLVoc.Type.XSD_POSITIVE_INTEGER) => classOf[Int]
       case Uri(RMLVoc.Type.XSD_INTEGER) => classOf[Int]
+      case Uri(RMLVoc.Type.XSD_INT) => classOf[Int]
+      case Uri(RMLVoc.Type.XSD_NUMBER) => classOf[Int] // see todo @ RMLVoc.Type
       case Uri(RMLVoc.Type.XSD_STRING) => classOf[String]
       case Uri(RMLVoc.Type.XSD_DOUBLE) => classOf[Double]
+      case Uri(RMLVoc.Type.XSD_BOOLEAN) => classOf[Boolean]
       case Uri(RMLVoc.Type.RDF_LIST) => classOf[List[_]]
+      case Uri(RMLVoc.Type.XSD_ANY) => classOf[Any]
       case _ => throw new RMLException(s"Type $uri not supported for parameter")
     }
   }

@@ -32,10 +32,17 @@ object RMLVoc {
 
   object Type {
     val XSD_STRING = Namespaces("xsd", "string")
-    val XSD_INTEGER = Namespaces("xsd", "integer")
+    val XSD_INT = Namespaces("xsd", "int")         // signed 32-bit integer
+    val XSD_INTEGER = Namespaces("xsd", "integer") // integer value
+    // TODO: xsd:number isn't defined in the XML Schema; however it's being used by grel.tll
+    //  Therefore, this "Type" is added as a temporary solution
+    val XSD_NUMBER = Namespaces("xsd", "number")
     val XSD_DOUBLE = Namespaces("xsd", "decimal")
     val RDF_LIST = Namespaces("rdf", "List")
     val XSD_POSITIVE_INTEGER = Namespaces("xsd", "positiveInteger")
+    val XSD_BOOLEAN = Namespaces("xsd", "boolean")
+
+    val XSD_ANY  = Namespaces("xsd", "any")
 
   }
 
@@ -118,6 +125,11 @@ object RMLVoc {
     val FNO_RETURNS = Namespaces("fno", "returns")
     val FNO_TYPE = Namespaces("fno", "type")
 
+    val FNO_IMPLEMENTATION = Namespaces("fno", "implementation")
+
+    val FNO_FUNCTION = Namespaces("fno", "function")
+
+    val FNO_METHOD_MAPPING = Namespaces("fno", "methodMapping")
 
     ///////////////////////////////////////////////////////////////////////////
     // LIB
@@ -127,6 +139,27 @@ object RMLVoc {
     val LIB_CLASS = Namespaces("lib", "class")
     val LIB_METHOD = Namespaces("lib", "method")
     val LIB_LOCAL_LIBRARY = Namespaces("lib", "localLibrary")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // FNOM(apping)
+    ///////////////////////////////////////////////////////////////////////////
+
+    val FNOM_METHOD_NAME = Namespaces("fnom", "method-name")
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // FNOI
+    ///////////////////////////////////////////////////////////////////////////
+    val FNOI_CLASS_NAME = Namespaces("fnoi", "class-name")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // DOAP
+    ///////////////////////////////////////////////////////////////////////////
+
+    val DOAP_DOWNLOAD_PAGE = Namespaces("doap", "download-page")
+
+
 
   }
 
@@ -174,6 +207,20 @@ object RMLVoc {
     val FNO_ALGORITHM = Namespaces("fno", "Algorithm")
     val FNO_PROBLEM = Namespaces("fno", "Problem")
 
+    val FNO_MAPPING = Namespaces("fno", "Mapping")
+    val FNO_METHOD_MAPPING = Namespaces("fno", "MethodMapping")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // FNOI
+    ///////////////////////////////////////////////////////////////////////////
+
+    val FNOI_JAVA_CLASS = Namespaces("fnoi", "JavaClass")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // FNOM(apping)
+    ///////////////////////////////////////////////////////////////////////////
+
+    val FNOM_STRING_METHOD_MAPPING = Namespaces("fnom", "StringMethodMapping")
 
   }
 

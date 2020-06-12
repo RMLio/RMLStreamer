@@ -3,12 +3,13 @@ package io.rml.framework.core.function
 import java.io.File
 
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.model.{DynamicMethodFunction, Parameter, Function, FunctionMetaData}
+import io.rml.framework.core.function.model.{DynamicMethodFunction, Function, FunctionMetaData, Parameter}
 import io.rml.framework.core.function.std.StdFunctionLoader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFNode}
 import io.rml.framework.core.util.Turtle
+import io.rml.framework.shared.RMLException
 
 import scala.collection.immutable.{Map => ImmutableMap}
 import scala.collection.mutable.{Map => MutableMap}
@@ -32,11 +33,7 @@ abstract class FunctionLoader extends Logging {
 
 
   def parseFunctions(file: File): FunctionLoader = {
-
-    //TODO: passing hardcoding Turtle-format.
-    // HELP: shouldn't we derive the format from the file itself?
     val graph = RDFGraph.fromFile(file, RMLEnvironment.getGeneratorBaseIRI(),Turtle)
-
     parseFunctions(graph)
     this
   }
@@ -94,12 +91,32 @@ abstract class FunctionLoader extends Logging {
    * @return
    */
   def parseParameter(rdfNode: RDFNode, pos: Int): Parameter
+
+
 }
 
 
 object FunctionLoader {
 
-  def apply(): FunctionLoader = StdFunctionLoader()
+  private var singletonFunctionLoader : Option[FunctionLoader] = None
+
+  def apply(): FunctionLoader = {
+
+    if(singletonFunctionLoader.isEmpty) {
+      // construct functionDescriptionTriplesGraph
+      val functionsGrelFile = new File(getClass.getClassLoader.getResource("functions_grel.ttl").getFile)
+      if (!functionsGrelFile.exists())
+        throw new RMLException(s"Couldn't find ${functionsGrelFile.getName}")
+
+      // construct function description graph
+      // this graph will be used by the function loader to map the function descriptions to their implementations
+      val functionDescriptionTriplesGraph = RDFGraph.fromFile(functionsGrelFile, RMLEnvironment.getGeneratorBaseIRI(), Turtle)
+      // construct functionLoader
+      singletonFunctionLoader = Some(StdFunctionLoader(functionDescriptionTriplesGraph))
+    }
+    singletonFunctionLoader.get
+  }
+
 }
 
 
