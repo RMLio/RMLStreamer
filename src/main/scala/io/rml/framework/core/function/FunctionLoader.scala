@@ -9,10 +9,11 @@ import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFNode}
 import io.rml.framework.core.util.Turtle
-import io.rml.framework.shared.RMLException
+import io.rml.framework.shared.{FnOException, RMLException}
 
 import scala.collection.immutable.{Map => ImmutableMap}
-import scala.collection.mutable.{Map => MutableMap}
+import scala.collection.mutable
+import scala.collection.mutable.{MutableList, Map => MutableMap}
 
 abstract class FunctionLoader extends Logging {
   /**
@@ -26,17 +27,10 @@ abstract class FunctionLoader extends Logging {
    */
   protected val functionMap: MutableMap[Uri, FunctionMetaData] = MutableMap()
 
-
   def getClassLibraryMap: ImmutableMap[String, String] = classLibraryMap.toMap
 
   def getFunctionMap = functionMap.toMap
 
-
-  def parseFunctions(file: File): FunctionLoader = {
-    val graph = RDFGraph.fromFile(file, RMLEnvironment.getGeneratorBaseIRI(),Turtle)
-    parseFunctions(graph)
-    this
-  }
 
   /**
    * Given the [[Uri]] representation of the transformation, the [[FunctionLoader]]
@@ -75,12 +69,29 @@ abstract class FunctionLoader extends Logging {
   }
 
   /**
-   * Parse transformations from the [[RDFGraph]] of the whole function mapping file.
+   * The given `functionMappingFile` should be a Turtle-file containing the function mappings. These mappings will be parsed and
+   * the FunctionLoader's functionMap is updated accordingly.
    *
-   * @param graph [[RDFGraph]] representing the whole function mapping file
+   * @param functionMappingFile
+   * @return
+   */
+  def parseFunctions(functionMappingFile: File): FunctionLoader = {
+    val graph = RDFGraph.fromFile(functionMappingFile, RMLEnvironment.getGeneratorBaseIRI(),Turtle)
+    parseFunctions(graph)
+    this
+  }
+
+
+  /**
+   * The given `graph` should contain the function mappings. These mappings will be parsed and
+   * the FunctionLoader's functionMap is updated accordingly.
+   *
+   * @param graph [[RDFGraph]] representing a function mapping
    * @return [[FunctionLoader]]
    */
   def parseFunctions(graph: RDFGraph): FunctionLoader
+
+
 
 
   /**
@@ -100,19 +111,47 @@ object FunctionLoader {
 
   private var singletonFunctionLoader : Option[FunctionLoader] = None
 
-  def apply(): FunctionLoader = {
+  private val defaultFunctionDescriptionFilePaths = List(
+    "functions_grel.ttl"
+  )
+
+  private def readFunctionDescriptionsFromFile(filePath : String): RDFGraph = {
+    val functionDescriptionsFile = new File(getClass.getClassLoader.getResource(filePath).getFile)
+    if (!functionDescriptionsFile.exists())
+      throw new RMLException(s"Couldn't find ${functionDescriptionsFile.getName}")
+
+    RDFGraph.fromFile(functionDescriptionsFile, RMLEnvironment.getGeneratorBaseIRI(), Turtle)
+  }
+
+  def apply(functionDescriptionFilePaths : List[String] = List()): FunctionLoader = {
 
     if(singletonFunctionLoader.isEmpty) {
-      // construct functionDescriptionTriplesGraph
-      val functionsGrelFile = new File(getClass.getClassLoader.getResource("functions_grel.ttl").getFile)
-      if (!functionsGrelFile.exists())
-        throw new RMLException(s"Couldn't find ${functionsGrelFile.getName}")
 
-      // construct function description graph
-      // this graph will be used by the function loader to map the function descriptions to their implementations
-      val functionDescriptionTriplesGraph = RDFGraph.fromFile(functionsGrelFile, RMLEnvironment.getGeneratorBaseIRI(), Turtle)
+      // The functionDescriptionsGraph is populated by iterating over the filepaths of the function description files.
+      // When no filepaths are provided (i.e. functionDescriptionFilePaths is empty), the function loader will use the
+      // default function description files (i.e. defaultFunctionDescriptionFilePaths)
+      val fdit = if(functionDescriptionFilePaths.isEmpty) defaultFunctionDescriptionFilePaths.iterator else functionDescriptionFilePaths.iterator
+
+
+      // construct the initial functionDescriptionTriplesGraph using the first functiondescription filepath
+      val functionDescriptionsGraph : Option[RDFGraph] =
+        if(fdit.hasNext)
+          Some(readFunctionDescriptionsFromFile(fdit.next()))
+      else
+        None
+
+      // If more function description filepaths are specified, they will be read in.
+      // The resulting triples will be added to the functionDescriptionsGraph
+      while (fdit.hasNext) {
+        val fdescGraph = readFunctionDescriptionsFromFile(fdit.next())
+        functionDescriptionsGraph.get.addTriples(fdescGraph.listTriples)
+      }
+
       // construct functionLoader
-      singletonFunctionLoader = Some(StdFunctionLoader(functionDescriptionTriplesGraph))
+      if(functionDescriptionsGraph.isDefined)
+        singletonFunctionLoader = Some(StdFunctionLoader(functionDescriptionsGraph.get))
+      else
+        throw new FnOException("No function description functionMappingGraph was created...")
     }
     singletonFunctionLoader.get
   }
