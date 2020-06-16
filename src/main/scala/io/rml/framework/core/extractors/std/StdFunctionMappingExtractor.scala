@@ -16,7 +16,7 @@ class StdFunctionMappingExtractor extends MappingExtractor[FunctionMapping] {
   override def extract(node: RDFGraph): FunctionMapping =  {
     val loader = FunctionLoader()
 
-    loader.parseFunctions(node)
+    loader.parseFunctionMapping(node)
 
     FunctionMapping("defaulty", loader)
   }
