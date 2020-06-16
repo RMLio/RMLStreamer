@@ -15,7 +15,7 @@ class FunctionLoaderTest extends StaticTestSpec {
 
 
   "FunctionLoader" should "initialize the transformation lazily and correctly" in {
-    val loader = FunctionLoader().parseFunctions(functionMappingFile)
+    val loader = FunctionLoader().parseFunctionMapping(functionMappingFile)
     assert(loader.isInstanceOf[StdFunctionLoader])
 
 //    val test = Uri("http://users.ugent.be/~bjdmeest/function/grel.ttl#toUpperCase")

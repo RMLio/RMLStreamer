@@ -16,8 +16,7 @@ import io.rml.framework.shared.{FnOException, RMLException}
 
 case class StdFunctionLoader(functionDescriptionTriplesGraph : RDFGraph) extends FunctionLoader {
 
-
-  override def parseFunctions(graph: RDFGraph): FunctionLoader = {
+  override def parseFunctionMapping(graph: RDFGraph): FunctionLoader = {
     logDebug("parsing functions the new way (i.e. using StdFunctionLoader)")
 
     // a fnoi:Mapping

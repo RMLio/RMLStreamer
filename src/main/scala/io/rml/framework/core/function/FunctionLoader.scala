@@ -21,7 +21,6 @@ abstract class FunctionLoader extends Logging {
    */
   protected val classLibraryMap: MutableMap[String, String] = MutableMap()
 
-
   /**
    * Map names of [[Function]] to concrete [[Function]] object
    */
@@ -43,22 +42,15 @@ abstract class FunctionLoader extends Logging {
   def loadFunction(uri: Uri): Option[Function] = {
     logDebug(s"loadFunction: ${uri.uri}")
 
-    val optTransformation = functionMap.get(uri)
+    val optFunction = functionMap.get(uri)
 
-    if (optTransformation.isDefined) {
-      val trans = optTransformation.get
+    if (optFunction.isDefined) {
+      val functionMetaData = optFunction.get
 
-      logDebug(s"Dynamically loading function: $uri, ${trans.toString}" )
+      logDebug(s"Dynamically loading function: $uri, ${functionMetaData.toString}" )
 
-      trans match {
-        case transformationMetaData: FunctionMetaData => {
-          //          val loadedTrans = transient.initialize()
-          //          functionMap.put(uri, loadedTrans)
-          //          Some(loadedTrans)
-
-          Some(Function(transformationMetaData.identifier, transformationMetaData))
-          }
-
+      functionMetaData match {
+        case functionMetaData: FunctionMetaData => Some(Function(functionMetaData.identifier, functionMetaData))
         case loadedFunction: DynamicMethodFunction => Some(loadedFunction)
         case _ => None
       }
@@ -75,12 +67,11 @@ abstract class FunctionLoader extends Logging {
    * @param functionMappingFile
    * @return
    */
-  def parseFunctions(functionMappingFile: File): FunctionLoader = {
+  def parseFunctionMapping(functionMappingFile: File): FunctionLoader = {
     val graph = RDFGraph.fromFile(functionMappingFile, RMLEnvironment.getGeneratorBaseIRI(),Turtle)
-    parseFunctions(graph)
+    parseFunctionMapping(graph)
     this
   }
-
 
   /**
    * The given `graph` should contain the function mappings. These mappings will be parsed and
@@ -89,10 +80,7 @@ abstract class FunctionLoader extends Logging {
    * @param graph [[RDFGraph]] representing a function mapping
    * @return [[FunctionLoader]]
    */
-  def parseFunctions(graph: RDFGraph): FunctionLoader
-
-
-
+  def parseFunctionMapping(graph: RDFGraph): FunctionLoader
 
   /**
    * Parse [[Parameter]] from the given [[RDFNode]] which represents the parameter
@@ -115,6 +103,11 @@ object FunctionLoader {
     "functions_grel.ttl"
   )
 
+  /**
+   * Private helper method for reading in the function descriptions as an RDFGraph.
+   * @param filePath
+   * @return RDFGraph containing the function descriptions.
+   */
   private def readFunctionDescriptionsFromFile(filePath : String): RDFGraph = {
     val functionDescriptionsFile = new File(getClass.getClassLoader.getResource(filePath).getFile)
     if (!functionDescriptionsFile.exists())
@@ -123,6 +116,12 @@ object FunctionLoader {
     RDFGraph.fromFile(functionDescriptionsFile, RMLEnvironment.getGeneratorBaseIRI(), Turtle)
   }
 
+  /**
+   * Construction of the (singleton) FunctionLoader instance.
+   * When the funcitonDescriptionFilePaths-list is empty, the default function descriptions are used.
+   * @param functionDescriptionFilePaths filepaths to the function descriptions. Default value is an empty list.
+   * @return FunctionLoader
+   */
   def apply(functionDescriptionFilePaths : List[String] = List()): FunctionLoader = {
 
     if(singletonFunctionLoader.isEmpty) {

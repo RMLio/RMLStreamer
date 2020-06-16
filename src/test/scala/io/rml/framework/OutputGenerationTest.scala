@@ -47,7 +47,7 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
   //  This is useful, for example, if you only want to check the tests that should pass.
 
   val failing : Array[String] = Array(
-//    "negative_test_cases"
+    "negative_test_cases"
   )
   val passing : Array[Tuple2[String,String]] =Array(
 //    ("bugs","noopt"),
@@ -65,7 +65,7 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
   "Valid mapping output generation" should "match the output from output.ttl" in {
     // load functions
     val grelJavaMappingFile = new File(getClass.getClassLoader.getResource("grel_java_mapping.ttl").getFile)
-    FunctionLoader().parseFunctions(grelJavaMappingFile) // singleton FunctionLoader
+    FunctionLoader().parseFunctionMapping(grelJavaMappingFile) // singleton FunctionLoader
 
 
     passing.foreach(test =>  {
