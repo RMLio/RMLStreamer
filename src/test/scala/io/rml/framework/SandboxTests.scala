@@ -97,22 +97,12 @@ class SandboxTests extends FunSuite with Matchers  {
       }
     }
   }
+  // Example
+//  test("sandbox/fno-testcases/RMLFNOTC0004-CSV") {
+//    pending
+//    executeTest("sandbox/fno-testcases/RMLFNOTC0004-CSV/mapping.ttl")
+//  }
 
-  /**
-   * FNO TEST CASES
-   */
-
-  test("sandbox/fno-testcases/RMLFNOTC0004-CSV") {
-    executeTest("sandbox/fno-testcases/RMLFNOTC0004-CSV/mapping.ttl")
-  }
-
-  test("sandbox/fno-testcases/RMLFNOTC0005-CSV") {
-    executeTest("sandbox/fno-testcases/RMLFNOTC0005-CSV/mapping.ttl")
-  }
-
-  test("sandbox/fno-testcases/RMLFNOTC0006-CSV") {
-    executeTest("sandbox/fno-testcases/RMLFNOTC0006-CSV/mapping.ttl")
-  }
 
 
 
