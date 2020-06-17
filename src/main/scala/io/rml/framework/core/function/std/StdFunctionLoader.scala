@@ -98,11 +98,12 @@ case class StdFunctionLoader(functionDescriptionTriplesGraph : RDFGraph) extends
     val paramType = inputResource.listProperties(RMLVoc.Property.FNO_TYPE).headOption
     val paramUri = inputResource.listProperties(RMLVoc.Property.FNO_PREDICATE).headOption
 
+
     if(paramType.isEmpty)
-      throw new FnOException("Parameter Type not defined")
+      throw new FnOException(s"Parameter Type not defined for parameter resource: ${inputResource.uri}")
 
     if(paramUri.isEmpty)
-      throw new FnOException("Parameter Uri not defined")
+      throw new FnOException(s"Parameter Uri not defined for parameter resource: ${inputResource.uri}")
 
 
     val typeClass = FunctionUtils.getTypeClass(Uri(paramType.get.toString))
