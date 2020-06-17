@@ -36,9 +36,9 @@ SOFTWARE.
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <flink.version>1.10.0</flink.version>
+        <flink.version>1.10.1</flink.version>
         <slf4j.version>1.7.26</slf4j.version>
-        <log4j.version>2.13.1</log4j.version>
+        <log4j.version>2.13.3</log4j.version>
         <jena.version>3.11.0</jena.version>
 
         <scala.binary.version>2.11</scala.binary.version>
@@ -184,17 +184,11 @@ SOFTWARE.
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.java-websocket</groupId>
-            <artifactId>Java-WebSocket</artifactId>
-            <version>1.3.6</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.8.2</version>
+            <version>${log4j.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.scalatest/scalatest_2.10 -->
@@ -254,7 +248,7 @@ SOFTWARE.
             <exclusions>
                 <exclusion>
                     <artifactId>log4j</artifactId>
-                    <groupId>log4j</groupId>
+                    <groupId>org.apache.logging.log4j</groupId>
                 </exclusion>
                 <!-- provided by Jena -->
                 <exclusion>
