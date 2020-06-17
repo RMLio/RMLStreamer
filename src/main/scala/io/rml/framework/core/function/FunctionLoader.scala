@@ -52,11 +52,13 @@ abstract class FunctionLoader extends Logging {
       functionMetaData match {
         case functionMetaData: FunctionMetaData => Some(Function(functionMetaData.identifier, functionMetaData))
         case loadedFunction: DynamicMethodFunction => Some(loadedFunction)
-        case _ => None
+        case _ => throw new FnOException("Can't match the function meta data")
       }
 
     } else {
-      None
+      val availableFunctionURIs = functionMap.keys.map(u=>u.toString)
+      throw new FnOException(s"The function with URI ${uri.toString} can not be found.\n" +
+        s"The available function URIs are: " + availableFunctionURIs)
     }
   }
 
@@ -95,12 +97,13 @@ abstract class FunctionLoader extends Logging {
 }
 
 
-object FunctionLoader {
+object FunctionLoader extends Logging{
 
   private var singletonFunctionLoader : Option[FunctionLoader] = None
 
   private val defaultFunctionDescriptionFilePaths = List(
     "functions_grel.ttl"
+
   )
 
   /**
@@ -113,6 +116,7 @@ object FunctionLoader {
     if (!functionDescriptionsFile.exists())
       throw new RMLException(s"Couldn't find ${functionDescriptionsFile.getName}")
 
+    logDebug(s"FunctionLoader is reading function descriptions from : ${filePath}")
     RDFGraph.fromFile(functionDescriptionsFile, RMLEnvironment.getGeneratorBaseIRI(), Turtle)
   }
 

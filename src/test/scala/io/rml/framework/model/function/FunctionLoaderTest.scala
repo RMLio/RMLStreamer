@@ -9,19 +9,12 @@ import io.rml.framework.core.function.std.StdFunctionLoader
 import io.rml.framework.core.function.{FunctionLoader, FunctionUtils}
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.vocabulary.{Namespaces, RMLVoc}
+import org.scalatest.{DoNotDiscover, Ignore}
 
+@DoNotDiscover
 class FunctionLoaderTest extends StaticTestSpec {
-  val functionMappingFile = new File(getClass.getClassLoader.getResource("grel_java_mapping.ttl").getFile)
 
 
-  "FunctionLoader" should "initialize the transformation lazily and correctly" in {
-    val loader = FunctionLoader().parseFunctionMapping(functionMappingFile)
-    assert(loader.isInstanceOf[StdFunctionLoader])
 
-//    val test = Uri("http://users.ugent.be/~bjdmeest/function/grel.ttl#toUpperCase")
-//    val transformation = loader.loadFunction(test)
-//
-//    assume(transformation.isInstanceOf[Option[DynamicMethodFunction]])
-  }
 
 }

@@ -38,7 +38,6 @@ object MappingExtractor {
   def apply [T<:Graph](cls: Any): MappingExtractor[Graph] = {
     cls match{
       case RMLMapping => new StdMappingExtractor()
-      case FunctionMapping => new StdFunctionMappingExtractor()
       case _ => throw new IllegalArgumentException("Given args can only be subclasses of Mapping")
     }
 

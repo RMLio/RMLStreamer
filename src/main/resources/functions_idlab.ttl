@@ -43,18 +43,14 @@ grel:dataset
 # - Problems (per java) prob_{var}
 #   - Functions (per java)
 
-################################
-####    PROBLEMS
-################################
+
 
 grel:prob_ucase
     a                   fno:Problem ;
     fno:name            "The ucase problem"^^xsd:string ;
     dcterms:description "Converting a string to upper case characters."^^xsd:string .
 
-################################
-####    FUNCTIONS
-################################
+
 
 idlab-fn:toUpperCaseURL
     a                   fno:Function ;
@@ -65,9 +61,7 @@ idlab-fn:toUpperCaseURL
     fno:expects         ( idlab-fn:_str ) ;
     fno:returns         ( idlab-fn:_stringOut ) .
 
-################################
-####    PARAMETERS
-################################
+
 idlab-fn:_path
     a             fno:Parameter ;
     fno:name      "input path" ;

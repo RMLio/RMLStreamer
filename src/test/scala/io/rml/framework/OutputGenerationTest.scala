@@ -34,13 +34,38 @@ import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.TestUtil
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
 import io.rml.framework.util.logging.Logger
+import org.scalatest.BeforeAndAfter
 
 import scala.util.control.Exception
 
 
-class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
+class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with BeforeAndAfter {
 
-  val functionFile = new File(getClass.getClassLoader.getResource("functions.ttl").getFile)
+  private def setupFunctionLoader() : Unit = {
+    // function descriptions
+    val functionDescriptionFilePaths = List(
+      "functions_grel.ttl",
+      "functions_idlab.ttl"
+    )
+
+    // function mappings
+    val grelJavaMappingFile = new File(getClass.getClassLoader.getResource("grel_java_mapping.ttl").getFile)
+    val idlabJavaMappingFile = new File(getClass.getClassLoader.getResource("idlab_java_mapping.ttl").getFile)
+
+    // singleton FunctionLoader created and initialized with given function descriptions
+    val functionLoader = FunctionLoader(functionDescriptionFilePaths)
+
+    // Parse the function mapping files.
+    // The functionloader will construct a mapping between function uris and the corresponding function meta data objects
+    functionLoader
+      .parseFunctionMapping(grelJavaMappingFile)
+      .parseFunctionMapping(idlabJavaMappingFile)
+  }
+  before {
+    setupFunctionLoader()
+  }
+
+
   // dev note:
   // Explicit type annotation allows to completely comment out the elements of the failing, passing or temp arrays
   //  without causing compilation failures.
@@ -63,26 +88,9 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour {
   "Valid mapping file" should behave like validMappingFile("rml-testcases")
 
   "Valid mapping output generation" should "match the output from output.ttl" in {
-    // load functions
 
-    // function descriptions
-    val functionDescriptionFilePaths = List(
-      "functions_grel.ttl",
-      "functions_idlab.ttl"
-    )
 
-    // function mappings
-    val grelJavaMappingFile = new File(getClass.getClassLoader.getResource("grel_java_mapping.ttl").getFile)
-    val idlabJavaMappingFile = new File(getClass.getClassLoader.getResource("idlab_java_mapping.ttl").getFile)
 
-    // singleton FunctionLoader created and initialized with given function descriptions
-    val functionLoader = FunctionLoader(functionDescriptionFilePaths)
-
-    // Parse the function mapping files.
-    // The functionloader will construct a mapping between function uris and the corresponding function meta data objects
-    functionLoader
-      .parseFunctionMapping(grelJavaMappingFile)
-      .parseFunctionMapping(idlabJavaMappingFile)
 
     passing.foreach(test =>  {
       RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))

@@ -34,13 +34,12 @@ import io.rml.framework.core.model.FunctionMapping
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.NopPostProcessor
 import io.rml.framework.util.TestUtil
-
 import io.rml.framework.util.logging.Logger
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.{DoNotDiscover, FunSuite, Ignore, Matchers}
 import io.rml.framework.util.logging.Logger
-
+@DoNotDiscover
 class SandboxTests extends FunSuite with Matchers  {
 
   val functionFile = new File(getClass.getClassLoader.getResource("functions.ttl").getFile)
