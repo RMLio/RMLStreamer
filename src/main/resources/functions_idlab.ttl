@@ -1,0 +1,62 @@
+@prefix cc:      <http://creativecommons.org/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix fno:     <https://w3id.org/function/ontology#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix grel:    <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix void:    <http://rdfs.org/ns/void#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+grel:void
+    a                 void:DatasetDescription ;
+    dcterms:title     "A VoID Description of the GREL Fno Descriptions Dataset" ;
+    dcterms:creator   <https://ben.de-meester.org/#me> ;
+    foaf:primaryTopic grel:dataset ;
+.
+
+<https://ben.de-meester.org/#me>
+    rdf:type  foaf:Person ;
+    foaf:mbox "mailto:Ben.DeMeester@UGent.be" ;
+    foaf:name "Ben De Meester"@en .
+
+grel:dataset
+    a                    void:Dataset ;
+    foaf:homepage        <https://github.com/OpenRefine/OpenRefine/wiki/General-Refine-Expression-Language> ;
+    foaf:homepage        <https://fno.io> ;
+    dcterms:title        "FnO descriptions for IDLab functions"@en ;
+    dcterms:description  "The FnO descriptions of the IDLab functions" ;
+    dcterms:contributor  <https://ben.de-meester.org/#me> ;
+    dcterms:modified     "2020-06-16"^^xsd:date ;
+    cc:license           <http://creativecommons.org/license/by/3.0/> ;
+    dcterms:issued       "2016-12-15"^^xsd:date ;
+    dcterms:rights       "Copyright © Ghent University – imec – IDLab"@en ;
+    dcterms:subject      <http://dbpedia.org/resource/Function_(mathematics)> ;
+    dcterms:subject      <http://dbpedia.org/resource/Function_model> ;
+    void:feature         <http://www.w3.org/ns/formats/Turtle> ;
+    void:exampleResource grel:boolean_and ;
+    void:vocabulary      <https://w3id.org/function/ontology#> .
+
+# Contents:
+# - Parameters (per java) param_{var} with predicate p_{type}_{var}
+# - Outputs (per java) output_{type} with predicate o_{type}
+# - Problems (per java) prob_{var}
+#   - Functions (per java)
+
+
+grel:prob_ucase
+    a                   fno:Problem ;
+    fno:name            "The ucase problem"^^xsd:string ;
+    dcterms:description "Converting a string to upper case characters."^^xsd:string .
+
+grel:toUpperCaseURL
+    a                   fno:Function ;
+    fno:name            "toUppercaseURL" ;
+    rdfs:label          "toUppercaseURL" ;
+    dcterms:description "Returns an uppercase, valid url." ;
+    fno:solves          grel:prob_ucase ;
+    fno:expects         ( grel:valueParam ) ;
+    fno:returns         ( grel:stringOut ) .
+
+
+
