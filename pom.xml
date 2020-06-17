@@ -363,6 +363,10 @@ SOFTWARE.
                                 to use the transformer to include those files in the fat-jar.
                                 -->
                                 <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>io.rml.framework.Main</mainClass>
+                                </transformer>
+                                <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
 
                                 <!--  This will add a Main-Class entry to the manifest file -->
