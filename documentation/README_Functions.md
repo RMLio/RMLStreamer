@@ -31,49 +31,42 @@ public class IDLabFunctions {
 Use Maven to build a JAR-file, and move this JAR-file to the RMLStreamer’s `main/resources`.
 
 ### Step 2: defining the FnO descriptions
-An FnO description represents the abstract definition of a function. 
-
-The testcases mentioned above require a function that returns a valid URL in uppercase, and is described as follows
-
+An FnO description represents the abstract definition of a function.<br> 
+The aforementioned testcases require a function that returns a valid URL in uppercase.
+ Its description is shown in the following listing, and can be found in `functions_idlab.ttl`.  
 
 ```Turtle
-# source:  `functions_idlab.ttl`.
-grel:prob_ucase
-    a                   fno:Problem ;
-    fno:name            "The ucase problem"^^xsd:string ;
-    dcterms:description "Converting a string to upper case characters."^^xsd:string .
-
-grel:toUpperCaseURL
+idlab-fn:toUpperCaseURL
     a                   fno:Function ;
     fno:name            "toUppercaseURL" ;
     rdfs:label          "toUppercaseURL" ;
     dcterms:description "Returns an uppercase, valid url." ;
     fno:solves          grel:prob_ucase ;
-    fno:expects         ( grel:valueParam ) ;
-    fno:returns         ( grel:stringOut ) .
+    fno:expects         ( idlab-fn:_str ) ;
+    fno:returns         ( idlab-fn:_stringOut ) .
 ```
 
 ### Step 3: map FnO descriptions to the corresponding implementations
 In the previous step, the abstract functions were created. 
-The current step will define the link between abstract function descriptions and the corresponding implementation. This is illustrated by the following snippet.
+The current step will define the link between abstract function descriptions and the corresponding implementation.
+ This is illustrated by the following listing, extracted from `idlab_java_mapping.ttl`.
 ```Turtle 
 grelm:IDLabFunctions
     a                  fnoi:JavaClass ;
     doap:download-page "IDLabFunctions.jar" ;
     fnoi:class-name    "io.fno.idlab.IDLabFunctions" .
 
-#UPPERCASERURL
+
 grelm:uppercaseURLMapping
     a                    fno:Mapping ;
-    fno:function         grel:toUpperCaseURL ;
+    fno:function         idlab-fn:toUpperCaseURL;
     fno:implementation   grelm:IDLabFunctions ;
     fno:parameterMapping [ ] ;
     fno:returnMapping    [ ] ;
-    fno:methodMapping    [ 
-        a   fnom:StringMethodMapping ;
-            fnom:method-name "toUpperCaseURL" 
-    ] ;
+    fno:methodMapping    [ a                fnom:StringMethodMapping ;
+                           fnom:method-name "toUpperCaseURL" ] ;
 .
+
 ```
 This mapping instructs the RML Streamer to look for a method called `toUpperCaseURL` within the `io.fno.idlab.IDLabFunctions`-class of the `IDLabFunctions.jar`. Make sure that the JAR-file is located in `main/resources`.
 
@@ -82,17 +75,19 @@ This mapping instructs the RML Streamer to look for a method called `toUpperCase
 The function descriptions and mappings mentioned in the previous steps will be used by the `FunctionLoader`.
 
 First, a `FunctionLoader` has to be aware of the available functions. 
-Therefore, it can be instantiated providing file paths to the function description files. When no such file paths where provided, the default function descriptions are used (e.g. `functions_grel.ttl`). 
+Therefore, it can be instantiated providing file paths to the function description files. 
+When no such file paths are provided, the default function descriptions are used (i.e. `functions_grel.ttl`). 
 
-Secondly, function URIs are mapped to the corresponding implementations by parsing the function mappings (e.g. `resources/grel_java_mapping.ttl` and `resources/idlab_java_mapping.ttl`). During this step, every function URI is mapped to a `FunctionMetaData`-object which contains the necessary meta data  such as: the *download-page* of the library, the *class-name* of the function, the *method-name*, *input parameters* and *output parameters*.
+Secondly, function URIs are mapped to the corresponding implementations by parsing the function mappings
+ (e.g. `resources/grel_java_mapping.ttl` and `resources/idlab_java_mapping.ttl`). 
+ During this step, every function URI is mapped to a `FunctionMetaData`-object which contains the necessary meta data  such as: the *download-page* of the library, the *class-name* of the function, the *method-name*, *input parameters* and *output parameters*.
 
 
 ## How the `FunctionLoader` is used
 
-Initially, the `FunctionLoader` is used to read and parse function descriptions and mappings. Afterwards, when running FNOT-testcases, the `FunctionLoader`-instance is used to load and bind every function as specified in the `mapping.ttl`. 
+Initially, the `FunctionLoader` is used to read and parse function descriptions and mappings. 
+Afterwards, when running FNOT-testcases, the `FunctionLoader`-instance is used by `io.rml.framework.engine.statement.FunctionMapGeneratorAssembler` 
+to load and bind every function as specified in the testcase's `mapping.ttl`. 
 
-
-## Remarks
-- When running the `SandboxTests` , make sure to set the *Working Directory* of the *Run-configuration* to the absolute path of `rml-streamer/src/test/resources/sandbox`.
 
 
