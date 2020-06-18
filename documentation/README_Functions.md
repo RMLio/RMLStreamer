@@ -68,7 +68,7 @@ grelm:uppercaseURLMapping
 .
 
 ```
-This mapping instructs the RML Streamer to look for a method called `toUpperCaseURL` within the `io.fno.idlab.IDLabFunctions`-class of the `IDLabFunctions.jar`. Make sure that the JAR-file is located in `main/resources`.
+This mapping instructs the RML Streamer to look for a method called `toUpperCaseURL` within the `io.fno.idlab.IDLabFunctions`-class of the `IDLabFunctions.jar`. Make sure the JAR-file is located in `main/resources`.
 
 ## How the `FunctionLoader` works
 
@@ -80,7 +80,7 @@ When no such file paths are provided, the default function descriptions are used
 
 Secondly, function URIs are mapped to the corresponding implementations by parsing the function mappings
  (e.g. `resources/grel_java_mapping.ttl` and `resources/idlab_java_mapping.ttl`). 
- During this step, every function URI is mapped to a `FunctionMetaData`-object which contains the necessary meta data  such as: the *download-page* of the library, the *class-name* of the function, the *method-name*, *input parameters* and *output parameters*.
+ During this step, every function URI is mapped to a `FunctionMetaData`-object which contains the necessary metadata  such as: the *download-page* of the library, the *class-name* of the function, the *method-name*, *input parameters* and *output parameters*.
 
 
 ## How the `FunctionLoader` is used

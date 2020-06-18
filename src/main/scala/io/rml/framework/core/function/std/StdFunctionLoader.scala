@@ -19,12 +19,6 @@ case class StdFunctionLoader(functionDescriptionTriplesGraph : RDFGraph) extends
   override def parseFunctionMapping(graph: RDFGraph): FunctionLoader = {
     logDebug("parsing functions the new way (i.e. using StdFunctionLoader)")
 
-    // a fnoi:Mapping
-    //  property: fno:function
-    //  property: fno:implementation
-    //            an fno:implementation resource have type a like
-    //                - fnoi:JavaClass
-    //
     val fnoFunctionProperty = Uri(RMLVoc.Property.FNO_FUNCTION)
 
     // subject resources with fno:function property
@@ -74,13 +68,6 @@ case class StdFunctionLoader(functionDescriptionTriplesGraph : RDFGraph) extends
         case e@(_: RMLException | _: FnOException) =>
           logError(e.getMessage)
       }
-
-    }
-
-    logDebug(s"${this.functionMap.size} functions are parsed. The function maps contains the following functions")
-    this.functionMap.foreach{
-      kv =>
-        logDebug(s"\t${kv._1}")
     }
     this
   }
@@ -94,7 +81,7 @@ case class StdFunctionLoader(functionDescriptionTriplesGraph : RDFGraph) extends
   }
 
   override def parseParameter(inputNode: RDFNode, pos: Int): Parameter = {
-    val inputResource = inputNode.asInstanceOf[JenaResource]
+    val inputResource = inputNode.asInstanceOf[RDFResource]
     val paramType = inputResource.listProperties(RMLVoc.Property.FNO_TYPE).headOption
     val paramUri = inputResource.listProperties(RMLVoc.Property.FNO_PREDICATE).headOption
 

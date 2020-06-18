@@ -17,45 +17,34 @@ import scala.collection.mutable.{MutableList, Map => MutableMap}
 
 abstract class FunctionLoader extends Logging {
   /**
-   * Map string value of classes to library path
-   */
-  protected val classLibraryMap: MutableMap[String, String] = MutableMap()
-
-  /**
-   * Map names of [[Function]] to concrete [[Function]] object
+   * Map Function Uri to FunctionMetaData object
    */
   protected val functionMap: MutableMap[Uri, FunctionMetaData] = MutableMap()
 
-  def getClassLibraryMap: ImmutableMap[String, String] = classLibraryMap.toMap
-
-  def getFunctionMap = functionMap.toMap
-
-
   /**
-   * Given the [[Uri]] representation of the transformation, the [[FunctionLoader]]
-   * will search for the transformation in the [[functionMap]] and dynamically load
-   * the transformation.
+   * Searches for the given function uri in the function map and dynamically load
+   * that function, if present.
    *
-   * @param uri Uri representing a transformation
-   * @return  [[Option]] of dynamically loaded transformation
+   * @param uri Function Uri
+   * @return  [[Option]] of dynamically loaded function
    */
   def loadFunction(uri: Uri): Option[Function] = {
     logDebug(s"loadFunction: ${uri.uri}")
 
-    val optFunction = functionMap.get(uri)
+    val optFunctionMetaData = functionMap.get(uri)
 
-    if (optFunction.isDefined) {
-      val functionMetaData = optFunction.get
-
+    if (optFunctionMetaData.isDefined) {
+      val functionMetaData = optFunctionMetaData.get
       logDebug(s"Dynamically loading function: $uri, ${functionMetaData.toString}" )
-
-      functionMetaData match {
-        case functionMetaData: FunctionMetaData => Some(Function(functionMetaData.identifier, functionMetaData))
-        case loadedFunction: DynamicMethodFunction => Some(loadedFunction)
-        case _ => throw new FnOException("Can't match the function meta data")
-      }
+      Some(Function(functionMetaData.identifier, functionMetaData))
+//      optFunctionMetaData.get match {
+//        case functionMetaData: FunctionMetaData => Some(Function(functionMetaData.identifier, functionMetaData))
+//        case loadedFunction: DynamicMethodFunction => Some(loadedFunction)
+//        case _ => throw new FnOException("Can't match the function meta data")
+//      }
 
     } else {
+      // when the function uri is not present in the function map,
       val availableFunctionURIs = functionMap.keys.map(u=>u.toString)
       throw new FnOException(s"The function with URI ${uri.toString} can not be found.\n" +
         s"The available function URIs are: " + availableFunctionURIs)

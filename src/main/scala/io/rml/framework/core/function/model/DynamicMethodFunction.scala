@@ -29,7 +29,7 @@ case class DynamicMethodFunction(identifier: String, metaData: FunctionMetaData)
 
     if(optMethod.isEmpty) {
       logDebug("optMethod is empty -> loading method from jar %s".format(metaData.source))
-      val jarFile = getClass.getClassLoader.getResource(metaData.source.toString).getFile
+      val jarFile = getClass.getClassLoader.getResource(metaData.source).getFile
 
       val classOfMethod = FunctionUtils.loadClassFromJar(new File(jarFile), metaData.className)
       val method = classOfMethod.getDeclaredMethod(metaData.methodName, metaData.inputParam.map(_.paramType): _*)
