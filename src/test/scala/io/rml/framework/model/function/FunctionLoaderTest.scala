@@ -4,7 +4,7 @@ import java.io.File
 
 import io.rml.framework.StaticTestSpec
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.model.{DynamicMethodFunction, Function}
+import io.rml.framework.core.function.model.{DynamicFunction, Function}
 import io.rml.framework.core.function.std.StdFunctionLoader
 import io.rml.framework.core.function.{FunctionLoader, FunctionUtils}
 import io.rml.framework.core.model.Uri

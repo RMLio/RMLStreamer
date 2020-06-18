@@ -1,19 +1,16 @@
 package io.rml.framework.core.function
 
-import java.io.File
+import java.io.{File, FileNotFoundException, IOException}
 
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.model.{DynamicMethodFunction, Function, FunctionMetaData, Parameter}
+import io.rml.framework.core.function.model.{Function, FunctionMetaData, Parameter}
 import io.rml.framework.core.function.std.StdFunctionLoader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFNode}
 import io.rml.framework.core.util.Turtle
-import io.rml.framework.shared.{FnOException, RMLException}
 
-import scala.collection.immutable.{Map => ImmutableMap}
-import scala.collection.mutable
-import scala.collection.mutable.{MutableList, Map => MutableMap}
+import scala.collection.mutable.{Map => MutableMap}
 
 abstract class FunctionLoader extends Logging {
   /**
@@ -37,16 +34,10 @@ abstract class FunctionLoader extends Logging {
       val functionMetaData = optFunctionMetaData.get
       logDebug(s"Dynamically loading function: $uri, ${functionMetaData.toString}" )
       Some(Function(functionMetaData.identifier, functionMetaData))
-//      optFunctionMetaData.get match {
-//        case functionMetaData: FunctionMetaData => Some(Function(functionMetaData.identifier, functionMetaData))
-//        case loadedFunction: DynamicMethodFunction => Some(loadedFunction)
-//        case _ => throw new FnOException("Can't match the function meta data")
-//      }
-
     } else {
-      // when the function uri is not present in the function map,
+      // when the function uri is not present in the function map, complain.
       val availableFunctionURIs = functionMap.keys.map(u=>u.toString)
-      throw new FnOException(s"The function with URI ${uri.toString} can not be found.\n" +
+      throw new IOException(s"The function with URI ${uri.toString} can not be found.\n" +
         s"The available function URIs are: " + availableFunctionURIs)
     }
   }
@@ -82,17 +73,14 @@ abstract class FunctionLoader extends Logging {
    */
   def parseParameter(rdfNode: RDFNode, pos: Int): Parameter
 
-
 }
 
 
 object FunctionLoader extends Logging{
-
   private var singletonFunctionLoader : Option[FunctionLoader] = None
 
   private val defaultFunctionDescriptionFilePaths = List(
     "functions_grel.ttl"
-
   )
 
   /**
@@ -103,7 +91,7 @@ object FunctionLoader extends Logging{
   private def readFunctionDescriptionsFromFile(filePath : String): RDFGraph = {
     val functionDescriptionsFile = new File(getClass.getClassLoader.getResource(filePath).getFile)
     if (!functionDescriptionsFile.exists())
-      throw new RMLException(s"Couldn't find ${functionDescriptionsFile.getName}")
+      throw new FileNotFoundException(s"Couldn't find ${functionDescriptionsFile.getName}")
 
     logDebug(s"FunctionLoader is reading function descriptions from : ${filePath}")
     RDFGraph.fromFile(functionDescriptionsFile, RMLEnvironment.getGeneratorBaseIRI(), Turtle)
@@ -111,7 +99,7 @@ object FunctionLoader extends Logging{
 
   /**
    * Construction of the (singleton) FunctionLoader instance.
-   * When the funcitonDescriptionFilePaths-list is empty, the default function descriptions are used.
+   * When the functionDescriptionFilePaths-list is empty, the default function descriptions are used.
    * @param functionDescriptionFilePaths filepaths to the function descriptions. Default value is an empty list.
    * @return FunctionLoader
    */
@@ -123,7 +111,6 @@ object FunctionLoader extends Logging{
       // When no filepaths are provided (i.e. functionDescriptionFilePaths is empty), the function loader will use the
       // default function description files (i.e. defaultFunctionDescriptionFilePaths)
       val fdit = if(functionDescriptionFilePaths.isEmpty) defaultFunctionDescriptionFilePaths.iterator else functionDescriptionFilePaths.iterator
-
 
       // construct the initial functionDescriptionTriplesGraph using the first functiondescription filepath
       val functionDescriptionsGraph : Option[RDFGraph] =
@@ -143,7 +130,7 @@ object FunctionLoader extends Logging{
       if(functionDescriptionsGraph.isDefined)
         singletonFunctionLoader = Some(StdFunctionLoader(functionDescriptionsGraph.get))
       else
-        throw new FnOException("No function description functionMappingGraph was created...")
+        throw new Exception("Function description graph is none...")
     }
     singletonFunctionLoader.get
   }

@@ -26,6 +26,6 @@ object Function extends Logging{
 
   def apply(identifier:String, functionMetaData: FunctionMetaData): Function={
     logDebug("Companion: Function - apply(identifier, functionMetaData)")
-    DynamicMethodFunction(identifier, functionMetaData)
+    DynamicFunction(identifier, functionMetaData)
   }
 }
