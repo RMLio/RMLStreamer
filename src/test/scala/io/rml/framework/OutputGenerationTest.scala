@@ -75,7 +75,7 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with
     "negative_test_cases"
   )
   val passing : Array[Tuple2[String,String]] =Array(
-//    ("bugs","noopt"),
+    ("bugs","noopt"),
     ("rml-testcases","noopt"),
     ("fno-testcases", "noopt")
   )
