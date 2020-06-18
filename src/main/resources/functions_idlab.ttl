@@ -62,6 +62,15 @@ idlab-fn:toUpperCaseURL
     fno:returns         ( idlab-fn:_stringOut ) .
 
 
+idlab-fn:trueCondition
+    a                   fno:Function ;
+    fno:name            "True condition" ;
+    rdfs:label          "True condition" ;
+    dcterms:description "Returns the value if the given boolean is true, else null" ;
+    fno:expects         ( idlab-fn:_strBoolean idlab-fn:_str ) ;
+    fno:returns         ( idlab-fn:_stringOut ) .
+
+
 idlab-fn:_path
     a             fno:Parameter ;
     fno:name      "input path" ;
