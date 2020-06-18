@@ -51,8 +51,6 @@ class SubjectGeneratorAssembler extends TermMapGeneratorAssembler {
       })
 
     }else {
-
-
       /**
        * Tried implementing literal check in subject map extractor but it was assumed
        * that the extractor would just extract subject maps even if it is typed to be literal.
