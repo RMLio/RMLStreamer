@@ -17,7 +17,7 @@
   a rr:TriplesMap;
 
   rml:logicalSource [
-    rml:source "fno-testcases/student.csv";
+    rml:source "sandbox/function_related/student.csv";
     rml:referenceFormulation ql:CSV
   ];
 
