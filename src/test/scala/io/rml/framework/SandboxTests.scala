@@ -93,23 +93,19 @@ class SandboxTests extends FunSuite with Matchers  {
     }
   }
 
-  // Example
-  test("sandbox/function_related/equal") {
 
+  test("sandbox/function_related/equal") {
     executeTest("sandbox/function_related/equal/mapping.ttl")
   }
 
-
-
   test("sandbox/function_related/notEqual") {
-
     executeTest("sandbox/function_related/notEqual/mapping.ttl")
   }
-  // Example
-//  test("sandbox/fno-testcases/RMLFNOTC0004-CSV") {
-//    pending
-//    executeTest("sandbox/fno-testcases/RMLFNOTC0004-CSV/mapping.ttl")
-//  }
+
+  test("sandbox/function_related/contains") {
+    executeTest("sandbox/function_related/contains/mapping.ttl")
+  }
+
 
 
 

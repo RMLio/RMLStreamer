@@ -50,8 +50,11 @@ abstract class Parameter extends Node {
     val DoubleString = classOf[Double].getName
     val ListString = classOf[List[_]].getName
     val ArrayString = classOf[Array[_]].getName
+
+    val BooleanString = classOf[Boolean].getName
     try {
       paramType.getName match {
+        case BooleanString |"boolean" => Some(paraValue)
         case ScalaString | "java.lang.String" => Some(paraValue.toString)
         case IntegerString | "int" => Some(paraValue.toString.toInt)
         case DoubleString | "double" => Some(paraValue.toString.toDouble)
