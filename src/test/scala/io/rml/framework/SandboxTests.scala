@@ -26,21 +26,16 @@ package io.rml.framework
 
 import java.io.File
 
-import io.rml.framework.Main
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.extractors.{MappingExtractor, MappingReader}
 import io.rml.framework.core.function.FunctionLoader
-import io.rml.framework.core.model.FunctionMapping
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.NopPostProcessor
 import io.rml.framework.util.TestUtil
-
 import io.rml.framework.util.logging.Logger
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
-import org.scalatest.{FunSuite, Matchers}
-import io.rml.framework.util.logging.Logger
-
+import org.scalatest.{DoNotDiscover, FunSuite, Matchers}
+@DoNotDiscover
 class SandboxTests extends FunSuite with Matchers  {
 
   val functionFile = new File(getClass.getClassLoader.getResource("functions.ttl").getFile)
@@ -55,8 +50,26 @@ class SandboxTests extends FunSuite with Matchers  {
     val testDir = Util.getFile(new File(mappingFile).getParent)
     val mappingFileAbs = new File(testDir, new File(mappingFile).getName)
 
-    // load functions
-    MappingReader(MappingExtractor(FunctionMapping)).read(functionFile)
+    // function descriptions
+    val functionDescriptionFilePaths = List(
+      "functions_grel.ttl",
+      "functions_idlab.ttl"
+    )
+
+    // function mappings
+    val grelJavaMappingFile = new File(getClass.getClassLoader.getResource("grel_java_mapping.ttl").getFile)
+    val idlabJavaMappingFile = new File(getClass.getClassLoader.getResource("idlab_java_mapping.ttl").getFile)
+
+    // singleton FunctionLoader created and initialized with given function descriptions
+    val functionLoader = FunctionLoader(functionDescriptionFilePaths)
+
+    // Parse the function mapping files.
+    // The functionloader will construct a mapping between function uris and the corresponding function meta data objects
+    functionLoader
+      .parseFunctionMapping(grelJavaMappingFile)
+      .parseFunctionMapping(idlabJavaMappingFile)
+
+
     // read the mapping
     val formattedMapping = Util.readMappingFile(mappingFileAbs.getAbsolutePath)
 
@@ -79,84 +92,16 @@ class SandboxTests extends FunSuite with Matchers  {
       }
     }
   }
-
-
-  /**
-   * RML TESTCASES
-   */
-
-  /**
-   * [STATE @ ]
-
-   */
-  test("sandbox/rml-testcases/RMLTC0011b-CSV") {
-    pending
-    executeTest("sandbox/rml-testcases/RMLTC0011b-CSV/mapping.ttl")
-
-  }
-
-  /**
-   * [STATE @ ]
-   *
-
-   */
-  test("sandbox/rml-testcases/RMLTC0011b-CSV-small") {
-    pending
-    executeTest("sandbox/rml-testcases/RMLTC0011b-CSV-small/mapping.ttl")
-
-  }
+  // Example
+//  test("sandbox/fno-testcases/RMLFNOTC0004-CSV") {
+//    pending
+//    executeTest("sandbox/fno-testcases/RMLFNOTC0004-CSV/mapping.ttl")
+//  }
 
 
 
-  /**
-   * FNO TEST CASES
-   */
-
-  test("sandbox/fno-testcases/RMLFNOTC0001-CSV") {
-    pending
-    executeTest("sandbox/fno-testcases/RMLFNOTC0001-CSV/mapping.ttl")
-  }
-
-  test("sandbox/fno-testcases/RMLFNOTC0001-CSV-explicit") {
-    pending
-    executeTest("sandbox/fno-testcases/RMLFNOTC0001-CSV/mapping_explicit.ttl")
-  }
 
 
-  /**
-   * [STATE @ do 28 mei 2020 14:48:03 CEST] FAILING
-   * log. source: students.csv
-   * used function: grel:toUpperCaseURL
-   *  value parameter: reference to "Name"
-   */
-  test("sandbox/fno-testcases/RMLFNOTC0004-CSV") {
-    pending
-    executeTest("sandbox/fno-testcases/RMLFNOTC0004-CSV/mapping.ttl")
-  }
-
-
-  /**
-   * [STATE @ do 28 mei 2020 14:48:03 CEST] WORKING
-   * log. source: students.csv
-   * used function: grel:toUpperCase
-   *  value parameter: template using {Name}
-   */
-  test("sandbox/fno-testcases/RMLFNOTC0008-CSV") {
-    pending
-    executeTest("sandbox/fno-testcases/RMLFNOTC0008-CSV/mapping.ttl")
-  }
-
-
-  /**
-   * [STATE @ ]
-   * log. source: students.csv
-   * used function: grel:toUpperCase
-   *  value parameter: reference to "Name"
-   */
-  test("sandbox/fno-testcases/RMLFNOTC0011-CSV") {
-    pending
-    //executeTest("sandbox/fno-testcases/RMLFNOTC0011-CSV/mapping.ttl")
-  }
 
 
 

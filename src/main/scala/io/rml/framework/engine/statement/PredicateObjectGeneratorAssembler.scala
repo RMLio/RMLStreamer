@@ -25,13 +25,11 @@
 
 package io.rml.framework.engine.statement
 
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{Entity, PredicateObjectMap, Uri}
 import io.rml.framework.flink.item.Item
-
-import io.rml.framework.core.internal.Logging
 class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGeneratorAssembler,
                                         objectGeneratorAssembler: ObjectGeneratorAssembler,
-                                        functionMapGeneratorAssembler: FunctionMapGeneratorAssembler,
                                         graphGeneratorAssembler: GraphGeneratorAssembler) extends Logging{
 
   def assemble(predicateObjectMap: PredicateObjectMap)
@@ -57,10 +55,8 @@ object PredicateObjectGeneratorAssembler {
   def apply(
              predicateGeneratorAssembler: PredicateGeneratorAssembler = PredicateGeneratorAssembler(),
              objectGeneratorAssembler: ObjectGeneratorAssembler = ObjectGeneratorAssembler(),
-             functionMapGeneratorAssembler: FunctionMapGeneratorAssembler = FunctionMapGeneratorAssembler(),
              graphGeneratorAssembler: GraphGeneratorAssembler = GraphGeneratorAssembler())
 
   : PredicateObjectGeneratorAssembler = new PredicateObjectGeneratorAssembler(predicateGeneratorAssembler,
-    objectGeneratorAssembler,
-    functionMapGeneratorAssembler, graphGeneratorAssembler)
+    objectGeneratorAssembler, graphGeneratorAssembler)
 }

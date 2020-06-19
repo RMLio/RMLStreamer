@@ -2,8 +2,8 @@ package io.rml.framework.core.function.model
 
 import java.lang.reflect.Method
 
-import io.rml.framework.core.model.{Entity, Node, Uri}
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.model.{Entity, Node, Uri}
 trait Function extends Node with Logging{
 
 
@@ -26,6 +26,6 @@ object Function extends Logging{
 
   def apply(identifier:String, functionMetaData: FunctionMetaData): Function={
     logDebug("Companion: Function - apply(identifier, functionMetaData)")
-    DynamicMethodFunction(identifier, functionMetaData)
+    DynamicFunction(identifier, functionMetaData)
   }
 }

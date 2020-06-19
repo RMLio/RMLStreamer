@@ -1,4 +1,5 @@
 ## RMLStreamer
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3887065.svg)](https://doi.org/10.5281/zenodo.3887065)
 
 The RMLStreamer generates [RDF](https://www.w3.org/2001/sw/wiki/RDF) from files or data streams
 using [RML](http://rml.io/). The difference with other RML implementations is that it can handle
@@ -12,7 +13,7 @@ If you want to deploy it yourself, read on.
 
 ### Installing Flink
 RMLStreamer runs its jobs on Flink clusters.
-More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.9/getting-started/tutorials/local_setup.html).
+More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.10/getting-started/tutorials/local_setup.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
 Please note that this version works with Flink 1.10.0 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.10.0/).
 
@@ -43,7 +44,7 @@ The resulting `RMLStreamer-<version>.jar`, found in the `target` folder, can be 
 ### Executing RML Mappings
 
 Here we give examples for running RMLStreamer from the command line. We use `FLINK_BIN` to denote the Flink CLI tool,
-usually found in the `bin` directory of the Flink installation. E.g. `/home/myuser/flink-1.9.2/bin/flink`.
+usually found in the `bin` directory of the Flink installation. E.g. `/home/myuser/flink-1.10.0/bin/flink`.
 For Windows a `flink.bat` script is provided.
 
 The general usage is:

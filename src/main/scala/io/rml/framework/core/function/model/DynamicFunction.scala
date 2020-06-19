@@ -8,13 +8,11 @@ import io.rml.framework.core.model.{Entity, Literal, Uri}
 
 
 /**
- * A dynamic transformer which will use the functions of a class specified in an external jar
- * The information needed to do reflection is contained inside the variable 'transientTransformation' of type [[FunctionMetaData]]
- *
- * @param identifier [[String]] used to identify this DynamicTransformation
- * @param metaData   contains information required for method reflection
+ * A dynamic function is loaded from an external jar at-runtime.
+ * @param identifier [[String]] used to identify this DynamicFunction
+ * @param metaData   contains information required for loading, initializing the function
  */
-case class DynamicMethodFunction(identifier: String, metaData: FunctionMetaData) extends Function {
+case class DynamicFunction(identifier: String, metaData: FunctionMetaData) extends Function {
 
   @transient
   private var optMethod: Option[Method] = None
@@ -25,11 +23,8 @@ case class DynamicMethodFunction(identifier: String, metaData: FunctionMetaData)
   }
 
   override def initialize(): Function = {
-    logDebug("intializing function (identifier: %s)".format(this.identifier))
-
     if(optMethod.isEmpty) {
-      logDebug("optMethod is empty -> loading method from jar %s".format(metaData.source))
-      val jarFile = getClass.getClassLoader.getResource(metaData.source.toString).getFile
+      val jarFile = getClass.getClassLoader.getResource(metaData.source).getFile
 
       val classOfMethod = FunctionUtils.loadClassFromJar(new File(jarFile), metaData.className)
       val method = classOfMethod.getDeclaredMethod(metaData.methodName, metaData.inputParam.map(_.paramType): _*)
@@ -44,15 +39,9 @@ case class DynamicMethodFunction(identifier: String, metaData: FunctionMetaData)
     in.defaultReadObject()
     optMethod = None
     initialize()
-
   }
 
   override def execute(arguments: Map[Uri, String]): Option[Iterable[Entity]] = {
-    logDebug("execute")
-    if (optMethod.isEmpty) {
-      throw new IllegalStateException(s"DynamicTransformation doesn't have the reflected method yet: ${this.identifier}")
-    }
-
     val inputParams = metaData.inputParam
     // casted to List[AnyRef] since method.invoke(...) only accepts reference type but not primitive type of Scala
     val paramsOrdered = inputParams

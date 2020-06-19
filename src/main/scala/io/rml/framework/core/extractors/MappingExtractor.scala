@@ -25,8 +25,8 @@
 
 package io.rml.framework.core.extractors
 
-import io.rml.framework.core.extractors.std.{StdFunctionMapExtractor, StdMappingExtractor, StdFunctionMappingExtractor}
-import io.rml.framework.core.model.{Graph, RMLMapping, FunctionMapping}
+import io.rml.framework.core.extractors.std.StdMappingExtractor
+import io.rml.framework.core.model.{Graph, RMLMapping}
 
 trait MappingExtractor [+T<: Graph]extends GraphExtractor[T]
 
@@ -38,7 +38,6 @@ object MappingExtractor {
   def apply [T<:Graph](cls: Any): MappingExtractor[Graph] = {
     cls match{
       case RMLMapping => new StdMappingExtractor()
-      case FunctionMapping => new StdFunctionMappingExtractor()
       case _ => throw new IllegalArgumentException("Given args can only be subclasses of Mapping")
     }
 

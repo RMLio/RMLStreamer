@@ -1,5 +1,3 @@
-
-
 # Test
 
 The following section goes into detail on what the test case folders are.

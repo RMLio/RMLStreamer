@@ -43,8 +43,6 @@ import io.rml.framework.core.model.std.StdPredicateObjectMap
 trait PredicateObjectMap extends Node {
   def objectMaps: List[ObjectMap]
 
-  //def functionMaps: List[FunctionMap]
-
   def predicateMaps: List[PredicateMap]
 
   def graphMap: Option[GraphMap]
