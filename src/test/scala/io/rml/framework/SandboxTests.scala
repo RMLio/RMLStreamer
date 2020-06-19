@@ -111,6 +111,11 @@ class SandboxTests extends FunSuite with Matchers  {
   }
 
 
+  test("sandbox/function_related/using_trueCondition_and_contains") {
+    executeTest("sandbox/function_related/using_trueCondition_and_contains/mapping.ttl")
+  }
+
+
 
 
 
