@@ -82,3 +82,25 @@ grelm:trueConditionMapping
 .
 
 
+grelm:equalMapping
+    a                    fno:Mapping ;
+    fno:function         idlab-fn:equal;
+    fno:implementation   grelm:IDLabFunctions ;
+    fno:parameterMapping [ ] ;
+    fno:returnMapping    [ ] ;
+    fno:methodMapping    [ a                fnom:StringMethodMapping ;
+                           fnom:method-name "equal" ] ;
+.
+
+
+grelm:notEqualMapping
+    a                    fno:Mapping ;
+    fno:function         idlab-fn:notEqual;
+    fno:implementation   grelm:IDLabFunctions ;
+    fno:parameterMapping [ ] ;
+    fno:returnMapping    [ ] ;
+    fno:methodMapping    [ a                fnom:StringMethodMapping ;
+                           fnom:method-name "notEqual" ] ;
+.
+
+

@@ -8,6 +8,7 @@
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix fnml:   <http://semweb.mmlab.be/ns/fnml#> .
 @prefix fno: 	<https://w3id.org/function/ontology#> .
+@prefix idlab-fn: <http://example.com/idlab/function/> .
 @prefix grel: 	<http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
 
 @base <http://example.com/base/> .
@@ -25,17 +26,24 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate foaf:name;
-    rr:objectMap [ rml:reference "Name"] ;
-    rr:graphMap [
+    rr:predicate ex:isNotEqual;
+    rr:objectMap [ 
       fnml:functionValue [
         rr:predicateObjectMap [
           rr:predicate fno:executes ;
-          rr:objectMap [ rr:constant grel:toUpperCaseURL ] ] ;
+          rr:objectMap [ rr:constant idlab-fn:notEqual ] ] ;
+
         rr:predicateObjectMap [
           rr:predicate grel:valueParameter ;
-          rr:objectMap [ rml:reference "Name" ] ]
+          rr:objectMap [ rml:reference "Name" ] ];
+
+        rr:predicateObjectMap [
+          rr:predicate grel:valueParameter2 ;
+          rr:objectMap [ rr:constant "notVENUS" ] ]
+
       ] ;
-      rr:termType rr:IRI
-    ]
+
+
+    ] ;
+    
   ].

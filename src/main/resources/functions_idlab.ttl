@@ -70,6 +70,21 @@ idlab-fn:trueCondition
     fno:expects         ( idlab-fn:_strBoolean idlab-fn:_str ) ;
     fno:returns         ( idlab-fn:_stringOut ) .
 
+idlab-fn:equal
+    a                   fno:Function ;
+    fno:name            "equal" ;
+    rdfs:label          "equal" ;
+    dcterms:description "Returns true if strings are equal." ;
+    fno:expects         ( grel:valueParam grel:valueParam2 ) ;
+    fno:returns         ( grel:stringOut ) .
+
+idlab-fn:notEqual
+    a                   fno:Function ;
+    fno:name            "not equal" ;
+    rdfs:label          "not equal" ;
+    dcterms:description "Returns true if strings are not equal." ;
+    fno:expects         ( grel:valueParam grel:valueParam2 ) ;
+    fno:returns         ( grel:stringOut ) .
 
 idlab-fn:_path
     a             fno:Parameter ;
