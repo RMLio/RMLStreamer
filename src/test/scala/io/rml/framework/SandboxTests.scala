@@ -35,7 +35,7 @@ import io.rml.framework.util.logging.Logger
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
 import org.scalatest.{DoNotDiscover, FunSuite, Matchers}
-@DoNotDiscover
+
 class SandboxTests extends FunSuite with Matchers  {
 
   val functionFile = new File(getClass.getClassLoader.getResource("functions.ttl").getFile)
