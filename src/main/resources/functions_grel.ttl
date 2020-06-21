@@ -197,6 +197,15 @@ grel:param_false
     fno:type      xsd:any ;
     fno:required  "true"^^xsd:boolean .
 
+
+grel:output_any
+    a             fno:Parameter ;
+    #fno:name      "" ;
+    #rdfs:label    "" ;
+    fno:predicate grel:any_output ;
+    fno:type      rdf:object;
+    fno:required  "true"^^xsd:boolean .
+
 grel:prob_string
     a                   fno:Problem ;
     fno:name            "The string problem"^^xsd:string ;
@@ -493,6 +502,7 @@ grel:output_array
     rdfs:label    "array" ;
     fno:predicate grel:o_array ;
     fno:type      rdf:List .
+
 
 grel:param_regex
     a             fno:Parameter ;

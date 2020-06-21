@@ -152,13 +152,13 @@ grelm:javaControls
 grelm:ifthenelseMapping
     a                    fno:Mapping ;
     fno:function         grel:controls_if ;
-    fno:implementation   grelm:javaBoolean ;
+    fno:implementation   grelm:javaControls ;
 # TODO if not clear
     fno:parameterMapping [ ] ;
 # TODO if not clear
     fno:returnMapping    [ ] ;
     fno:methodMapping    [ a                fnom:StringMethodMapping ;
-                           fnom:method-name "xor" ] ;
+                           fnom:method-name "ifThenElse" ] ;
 .
 
 grelm:javaString

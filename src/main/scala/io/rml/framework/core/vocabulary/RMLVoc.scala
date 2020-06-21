@@ -43,6 +43,7 @@ object RMLVoc {
     val XSD_BOOLEAN = Namespaces("xsd", "boolean")
 
     val XSD_ANY  = Namespaces("xsd", "any")
+    val RDF_OBJECT = Namespaces("rdf", "object")
 
   }
 

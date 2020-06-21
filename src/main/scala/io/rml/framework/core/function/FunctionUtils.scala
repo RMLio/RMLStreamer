@@ -69,6 +69,7 @@ object FunctionUtils extends Logging {
       case Uri(RMLVoc.Type.XSD_BOOLEAN) => classOf[Boolean]
       case Uri(RMLVoc.Type.RDF_LIST) => classOf[List[_]]
       case Uri(RMLVoc.Type.XSD_ANY) => classOf[Any]
+      case Uri(RMLVoc.Type.RDF_OBJECT) => classOf[Any]
       case _ => throw new RMLException(s"Type $uri not supported for parameter")
     }
   }

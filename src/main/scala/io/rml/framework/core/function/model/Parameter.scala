@@ -44,20 +44,26 @@ abstract class Parameter extends Node {
    * @return value of the parameter of type specified by [[paramType]]
    */
 
+
   def getValue(paraValue: Any): Option[Any] = {
     val ScalaString = classOf[String].getName
     val IntegerString = classOf[Int].getName
     val DoubleString = classOf[Double].getName
     val ListString = classOf[List[_]].getName
     val ArrayString = classOf[Array[_]].getName
-
+    val ObjectString = classOf[Object].getName
     val BooleanString = classOf[Boolean].getName
-    try {
+
+    if(paramType== null)
+      throw new NullPointerException("parameter type is null..")
+    else{
       paramType.getName match {
         case BooleanString |"boolean" => Some(paraValue)
         case ScalaString | "java.lang.String" => Some(paraValue.toString)
         case IntegerString | "int" => Some(paraValue.toString.toInt)
         case DoubleString | "double" => Some(paraValue.toString.toDouble)
+        case ObjectString|"java.lang.Object" => Some(paraValue)
+
         case ListString | ArrayString | "java.util.List" =>
 
           val parsedListEither = JSON.parseFull(paraValue.toString).toRight("Value can't be parsed as List")
@@ -70,15 +76,18 @@ abstract class Parameter extends Node {
                 case _ =>
                   None
               }
-            case Left(exMessage) => throw new IllegalArgumentException(exMessage)
+
+
+        case Left(exMessage) => throw new IllegalArgumentException(exMessage)
           }
-        case _ => None
+        case _ => throw new Error(s"Couldn't derive type: ${paramType.getName}")
 
       }
-    }catch {
-      case _: Throwable => None
     }
   }
+
+
+
 
 
 }
