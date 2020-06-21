@@ -48,9 +48,9 @@ The sandbox testcases are
     - `idlab-fn:equal` 
 
 
-# Tutorial
 
-## Using a function from a local JAR
+
+## Tutorial: Using a function from a local JAR
 
 The following FnO-testcases use the function `toUpperCaseURL` 
 - RMLFNOTC0004-CSV
@@ -63,7 +63,7 @@ The following steps show how to integrate the `toUpperCaseURL` function in the R
 This step is based on the best-practice example [`grel-functions-java`](https://github.com/FnOio/grel-functions-java).
 - Create package  `io.fno.idlab` and within that package, create the class `IDLabFunctions`
 - For these testcases, we need a function that returns the given URL in uppercase. 
-- Make sure to set the Maven's compiler to a version compatible with the RMLStreamer's version.
+- Make sure to set the Maven compiler to a version compatible with the RMLStreamer's version.
 
 The following listing serves a minimalistic example that shows a possible implementation of the `toUpperCaseURL`-function.   
 ```Java
