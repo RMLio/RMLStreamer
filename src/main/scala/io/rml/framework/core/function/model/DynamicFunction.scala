@@ -34,7 +34,6 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
         // first filter out methods with the same name
         val filteredMethods = declaredMethods.filter(_.getName == metaData.methodName)
         // Currently, just return the first available method and assume (hope) it will be correct // TODO: more specific method search
-        val candidateMethod = filteredMethods.head
         filteredMethods.headOption
       }
     }
