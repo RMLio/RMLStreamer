@@ -1,4 +1,4 @@
-# generate triples using trueCondition and Equal
+# generate triples using trueCondition and contains
 
 @prefix rr: <http://www.w3.org/ns/r2rml#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
