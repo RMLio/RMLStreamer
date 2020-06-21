@@ -1,10 +1,58 @@
+# README: Functions
+## Test Cases
+### FnO Tests
+The official FnO testcases that are working can be found at `test/resources/fno-testcases`. 
+
+### SandboxTests
+> These tests are still experimental.
+
+The resources can be found at `test/resources/sandbox/function_related` and are executed from `io.rml.framework.SandboxTests`.
+Every test output is compared to the RMLMapper's output (e.g. `output.ttl`) for that test. A test passes when its output is equal to the RMLMapper's output.
+Tests marked as `pending` should be considered as not working.<br>
+
+The sandbox testcases are
+- `condition-function-on-po`: uses the functions
+    - `idlab-fn:trueCondition`
+    - `idlab-fn:stringContainsOtherString` 
+    - `grel:toUpperCase`
+  
+- `condition-on-mapping-subject-function`: uses the functions
+    - `idlab-fn:trueCondition`
+    - `idlab-fn:notEqual` 
+
+- `condition-on-po`: uses the functions
+    - `idlab-fn:trueCondition`
+    - `idlab-fn:equal` 
+    
+
+- `contains` uses function  `grel:string_contains`
+
+- `controls_if_contains`: uses the functions
+    - `grel:controls_if`
+    - `grel:string_contains`
+
+- `controls_if_true`: uses the functions `grel:controls_if`. 
+    
+- `controls_if_false`: uses the functions `grel:controls_if`
+    
+- `equal`: uses function `idlab-fn:equal`
+
+- `notEqual`: uses function `idlab-fn:notEqual`
+
+- `using_trueCondition_and_contains`
+    - `idlab-fn:trueCondition`
+    - `grel:string_contains` 
+    
+- `using_trueCondition_and_equal`
+    - `idlab-fn:trueCondition`
+    - `idlab-fn:equal` 
+
+
 # Tutorial
-> Under construction
 
 ## Using a function from a local JAR
 
-The following testcases use the function `toUpperCaseURL`, which isn’t implemented yet: 
-
+The following FnO-testcases use the function `toUpperCaseURL` 
 - RMLFNOTC0004-CSV
 - RMLFNOTC0005-CSV
 - RMLFNOTC0006-CSV
@@ -12,10 +60,12 @@ The following testcases use the function `toUpperCaseURL`, which isn’t impleme
 The following steps show how to integrate the `toUpperCaseURL` function in the RML Streamer.
 
 ### Step 1: creating the JAR
-This step is based on best-practice example `grel-functions-java`.
+This step is based on the best-practice example [`grel-functions-java`](https://github.com/FnOio/grel-functions-java).
 - Create package  `io.fno.idlab` and within that package, create the class `IDLabFunctions`
 - For these testcases, we need a function that returns the given URL in uppercase. 
+- Make sure to set the Maven's compiler to a version compatible with the RMLStreamer's version.
 
+The following listing serves a minimalistic example that shows a possible implementation of the `toUpperCaseURL`-function.   
 ```Java
 package io.fno.idlab;
 
@@ -91,3 +141,6 @@ to load and bind every function as specified in the testcase's `mapping.ttl`.
 
 
 
+# Remarks
+- When the RMLStreamer is unable to find a function description or function mapping, bind method parameters to values, it will be logged as an error to the console.
+ 
