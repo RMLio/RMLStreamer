@@ -43,6 +43,30 @@ class StdTriplesMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
   extends TriplesMapExtractor with Logging {
 
   /**
+   * Helper method for inferring whether the given resource is a TriplesMap.
+   * A resource can be considered a TriplesMap when any of the following conditions are met
+   *  1. (trival case) the resource has the TriplesMap type
+   *  2. the resource has the properties: logicalSource, subjectMap, predicateObjectMap
+   * @param resource
+   * @return [Boolean] indicating whether the resource is a TriplesMap
+   */
+  private def isTriplesMap(resource : RDFResource) : Boolean = {
+    val logicalSourceProperty = RMLVoc.Property.LOGICALSOURCE
+    val subjectMapProperty = RMLVoc.Property.SUBJECTMAP
+    val predicateObjectMapProperty =RMLVoc.Property.PREDICATEOBJECTMAP
+
+    val isTriplesMap = resource.getType == Some(Uri(RMLVoc.Class.TRIPLESMAP))
+
+
+    val hasLogicalSource = !resource.listProperties(logicalSourceProperty).isEmpty
+    val hasSubjectMap = !resource.listProperties(subjectMapProperty).isEmpty
+    val hasPredicateObjectMap = !resource.listProperties(predicateObjectMapProperty).isEmpty
+
+
+    val resourceIsTriplesMap = isTriplesMap|(hasLogicalSource&hasSubjectMap&hasPredicateObjectMap)
+    resourceIsTriplesMap
+  }
+  /**
     * Extracts a set of triple maps from a graph.
     * If extraction for a triple map fails, this triple map will be skipped.
     *
@@ -50,7 +74,6 @@ class StdTriplesMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     * @return
     */
   override def extract(graph: RDFGraph): List[TriplesMap] = {
-
     val triplesMapResources = filterTriplesMaps(graph)
 
     // iterate over each triple map resource
@@ -69,7 +92,10 @@ class StdTriplesMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
 
     // filter all triple map resources from the graph
     val typeUri = Uri(RMLVoc.Class.TRIPLESMAP)
-    val triplesMapResources = graph.filterResources(typeUri)
+    val logicalSourcePropertyUri = Uri(RMLVoc.Property.LOGICALSOURCE)
+    val potentialTriplesMapResources = graph.filterProperties(logicalSourcePropertyUri)
+    //val triplesMapResources = graph.filterResources(typeUri)
+    val triplesMapResources = potentialTriplesMapResources.filter(isTriplesMap)
 
 
     // debug log, inside check for performance
