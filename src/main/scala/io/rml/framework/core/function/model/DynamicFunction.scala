@@ -104,6 +104,7 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
         None
     } else {
       //TODO: complain about inputparams size != params ordered
+      logError(s"Not all input parameters for ${metaData.methodName} could be bound...")
       None
     }
   }
