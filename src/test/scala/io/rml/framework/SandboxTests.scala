@@ -131,10 +131,17 @@ class SandboxTests extends FunSuite with Matchers  {
     pending
     executeTest("sandbox/function_related/controls_if_contains_true_execute_triplesmap/mapping.ttl")
   }
-  test("sandbox/function_related/condition-on-po") {
 
+  test("sandbox/function_related/condition-on-po") {
     executeTest("sandbox/function_related/condition-on-po/mapping.rml.ttl")
   }
+
+  test("sandbox/function_related/condition-function-on-po") {
+    executeTest("sandbox/function_related/condition-function-on-po/mapping.ttl")
+  }
+
+
+
 
 
 

@@ -86,6 +86,14 @@ idlab-fn:notEqual
     fno:expects         ( grel:valueParam grel:valueParam2 ) ;
     fno:returns         ( grel:stringOut ) .
 
+idlab-fn:stringContainsOtherString
+    a                   fno:Function ;
+    fno:name            "stringContainsOtherString" ;
+    rdfs:label          "stringContainsOtherString" ;
+    dcterms:description "Returns true if a string is found in a delimited string." ;
+    fno:expects         ( idlab-fn:_str idlab-fn:_otherStr idlab-fn:_delimiter ) ;
+    fno:returns         ( idlab-fn:_stringOut ) .
+
 idlab-fn:_path
     a             fno:Parameter ;
     fno:name      "input path" ;
