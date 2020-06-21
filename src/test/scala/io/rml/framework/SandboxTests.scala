@@ -140,6 +140,10 @@ class SandboxTests extends FunSuite with Matchers  {
     executeTest("sandbox/function_related/condition-function-on-po/mapping.ttl")
   }
 
+  test("sandbox/function_related/condition-on-mapping-subject-function") {
+    executeTest("sandbox/function_related/condition-on-mapping-subject-function/mapping.ttl")
+  }
+
 
 
 
