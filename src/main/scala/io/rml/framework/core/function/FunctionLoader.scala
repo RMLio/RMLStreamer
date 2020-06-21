@@ -80,7 +80,8 @@ object FunctionLoader extends Logging{
   private var singletonFunctionLoader : Option[FunctionLoader] = None
 
   private val defaultFunctionDescriptionFilePaths = List(
-    "functions_grel.ttl"
+    "functions_grel.ttl",
+    "functions_idlab.ttl"
   )
 
   /**
