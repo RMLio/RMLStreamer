@@ -97,7 +97,6 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
           parameterName -> parameterValue
         })
         .toMap
-      //throw new NotImplementedError()
       function.initialize()
       function.execute(args)
     }

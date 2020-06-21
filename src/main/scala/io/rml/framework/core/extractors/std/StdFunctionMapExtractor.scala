@@ -49,7 +49,5 @@ class StdFunctionMapExtractor(subjectMapExtractor: SubjectMapExtractor,
     result
   }
 
-  override def loadFunctionsIntoEnvironment(): Unit = {
-    throw new NotImplementedError()
-  }
+
 }

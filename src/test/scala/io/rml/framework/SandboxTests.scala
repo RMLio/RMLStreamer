@@ -38,9 +38,6 @@ import org.scalatest.{DoNotDiscover, FunSuite, Matchers}
 
 class SandboxTests extends FunSuite with Matchers  {
 
-  val functionFile = new File(getClass.getClassLoader.getResource("functions.ttl").getFile)
-
-
   private def executeTest(mappingFile: String): Unit = {
     RMLEnvironment.setGeneratorBaseIRI(Some("http://example.org/base/"))
     implicit val env = ExecutionEnvironment.getExecutionEnvironment

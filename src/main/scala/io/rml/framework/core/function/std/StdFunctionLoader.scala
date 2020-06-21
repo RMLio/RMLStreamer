@@ -9,7 +9,7 @@ import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.{FnOException, RMLException}
 
 
-case class StdFunctionLoader(functionDescriptionTriplesGraph : RDFGraph) extends FunctionLoader {
+case class StdFunctionLoader private (functionDescriptionTriplesGraph : RDFGraph) extends FunctionLoader {
 
   override def parseFunctionMapping(graph: RDFGraph): FunctionLoader = {
     logDebug("parsing functions the new way (i.e. using StdFunctionLoader)")

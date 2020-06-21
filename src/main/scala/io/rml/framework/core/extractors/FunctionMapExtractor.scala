@@ -38,8 +38,6 @@ trait FunctionMapExtractor extends TermMapExtractor[List[FunctionMap]] {
   override def extract(node: RDFResource): List[FunctionMap]
 
 
-
-  def loadFunctionsIntoEnvironment():Unit
 }
 
 

@@ -21,7 +21,7 @@ abstract class Parameter extends Node {
    * Models the parameters used by the functions.
    *
    * `paramType` type of the parameter
-   * `paramUri`  Uri representation of the parameter (as defined in functions.ttl)
+   * `paramUri`  Uri representation of the parameter
    * `paraValue` [[String]] representation of the parameter
    * `position`  [[Int]] position of the parameter in the argument of the function needed for reflection
    *
