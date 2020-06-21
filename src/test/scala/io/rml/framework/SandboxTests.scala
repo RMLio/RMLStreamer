@@ -123,6 +123,20 @@ class SandboxTests extends FunSuite with Matchers  {
     executeTest("sandbox/function_related/controls_if_false/mapping.ttl")
   }
 
+  test("sandbox/function_related/controls_if_contains") {
+    executeTest("sandbox/function_related/controls_if_contains/mapping.ttl")
+  }
+
+  test("sandbox/function_related/controls_if_contains_true_execute_triplesmap") {
+    pending
+    executeTest("sandbox/function_related/controls_if_contains_true_execute_triplesmap/mapping.ttl")
+  }
+  test("sandbox/function_related/condition-on-po") {
+
+    executeTest("sandbox/function_related/condition-on-po/mapping.rml.ttl")
+  }
+
+
 
 
 

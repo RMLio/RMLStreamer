@@ -1,4 +1,4 @@
-# Function on graph, 1 parameter
+# Generate literals using grel:controls_if and grel:string_contains
 
 @prefix rr: <http://www.w3.org/ns/r2rml#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -35,17 +35,25 @@
 
                                                               rr:predicateObjectMap [
                                                                                       rr:predicate grel:bool_b ;
-                                                                                      rr:object  "true"
+                                                                                      rr:objectMap  <ContainsMap>
 
                                                                                     ];
 
                                                               rr:predicateObjectMap [
                                                                                       rr:predicate grel:any_true ;
-                                                                                      rr:objectMap [ rml:reference "Name"; rr:datatype xsd:string ] ];
+                                                                                      rr:objectMap [ 
+                                                                                        rr:template "{Name} contains us" ;
+                                                                                        rr:termType rr:Literal
+                                                                                    ]
+                                                              ];
 
                                                               rr:predicateObjectMap [
                                                                                       rr:predicate grel:any_false ;
-                                                                                      rr:objectMap [ rr:constant "IF_CLAUSE_WAS_FALSE" ] ]
+                                                                                      rr:objectMap [ 
+                                                                                        rr:template "{Name} does NOT contain us" ; 
+                                                                                        rr:termType rr:Literal;
+                                                                                      ] 
+                                                                                    ]
 
                                                             ] ;
 
@@ -53,3 +61,20 @@
                                        ] ;
 
                         ].
+<ContainsMap>
+fnml:functionValue [
+        rr:predicateObjectMap [
+          rr:predicate fno:executes ;
+          rr:objectMap [ rr:constant grel:string_contains ] ] ;
+
+        rr:predicateObjectMap [
+          rr:predicate grel:valueParameter ;
+          rr:objectMap [ rml:reference "Name" ] ];
+
+        rr:predicateObjectMap [
+          rr:predicate grel:string_sub ;
+          rr:objectMap [ rr:constant "us" ] ]
+
+      ] .
+
+
