@@ -134,14 +134,7 @@ class JenaResource(val resource: Resource) extends RDFResource {
         None
       }
     }
-//    // check if there are type statements, or else return None
-//    if (types.size != 1) return None
-//    // if there is a type statement, make sure this is a Resource and that there is only one in total
-//    require(types.head.isInstanceOf[RDFResource], "Type must be a resource.")
-//
-//    // TODO: what if there are multiple types?
-//
-//    Some(types.head.asInstanceOf[RDFResource].uri)
+
   }
 
   override def getList: List[RDFNode] = {

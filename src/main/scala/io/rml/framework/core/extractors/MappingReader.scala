@@ -63,16 +63,11 @@ trait MappingReader[+OUT] {
   * Object with factory apply method for MappingReader.
   */
 object MappingReader {
-  def apply(mappingExtractor: MappingExtractor[Graph] = MappingExtractor(RMLMapping)): MappingReader[Graph] = {
+  def apply(mappingExtractor: MappingExtractor[Graph] = MappingExtractor()) = {
     lazy val reader = new StdMappingReader(mappingExtractor)
     reader
   }
 
-//  def apply(mappingExtractor: MappingExtractor[Graph] = MappingExtractor())
-//  : MappingReader[Graph] = {
-//    lazy val reader = new StdMappingReader(mappingExtractor)
-//    reader
-//  }
 
 }
 

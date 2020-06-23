@@ -44,7 +44,7 @@ extends Logging{
     * @return
     */
   def assembleStatements(triplesMap: TriplesMap): List[(Item => Option[Iterable[TermNode]], Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
-    this.logDebug("%s assembleStatements(triplesmaps)".format(this.getClass.getName))
+    this.logDebug("assembleStatements(triplesmaps)")
     val subjectGraphGenerator = graphAssembler.assemble(triplesMap.subjectMap.graphMap)
 
 

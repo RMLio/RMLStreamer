@@ -21,7 +21,7 @@ class StdFunctionMapExtractor(subjectMapExtractor: SubjectMapExtractor,
    * @return
    */
   override def extract(node: RDFResource): List[FunctionMap] = {
-    this.logDebug("%s extract(node)".format(this.getClass.getName))
+    this.logDebug("extract(node)")
     extractFunctionMap("", node)
   }
 

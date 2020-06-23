@@ -35,7 +35,7 @@ class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGe
   def assemble(predicateObjectMap: PredicateObjectMap)
   : List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
 
-    this.logDebug("%s assemble (predicateObjectMap)".format(this.getClass.getName))
+    this.logDebug("assemble (predicateObjectMap)")
 
     val graphStatement = graphGeneratorAssembler.assemble(predicateObjectMap.graphMap)
     predicateObjectMap.predicateMaps.flatMap(predicateMap => {
