@@ -75,10 +75,7 @@ class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtracto
   private def extractPredicateObjectMap(resource: RDFResource): PredicateObjectMap = {
     this.logDebug("extractPredicateObjectMap : extracting object maps")
     val objectMaps = objectMapExtractor.extract(resource)
-
-    this.logDebug("extractPredicateObjectMap : extracting function maps")
-    val functionMaps = functionMapExtractor.extract(resource) // TODO: not used. can be removed?
-
+    
     this.logDebug("extractPredicateObjectMap : extracting predicate maps")
     val predicateMaps = predicateMapExtractor.extract(resource)
 
