@@ -63,7 +63,6 @@ object FunctionUtils extends Logging {
       case Uri(RMLVoc.Type.XSD_POSITIVE_INTEGER) => classOf[Int]
       case Uri(RMLVoc.Type.XSD_INTEGER) => classOf[Int]
       case Uri(RMLVoc.Type.XSD_INT) => classOf[Int]
-      case Uri(RMLVoc.Type.XSD_NUMBER) => classOf[Int] // see todo @ RMLVoc.Type
       case Uri(RMLVoc.Type.XSD_STRING) => classOf[String]
       case Uri(RMLVoc.Type.XSD_DOUBLE) => classOf[Double]
       case Uri(RMLVoc.Type.XSD_BOOLEAN) => classOf[Boolean]

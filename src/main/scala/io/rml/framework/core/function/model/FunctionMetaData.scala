@@ -5,9 +5,7 @@ import java.lang.reflect.Method
 import io.rml.framework.core.model.{Entity, Uri}
 
 /**
- * A case class which is made to hold the string values of class and method names
- * of a [[Function]] so that it can be initialized lazily later when needed in the rml mapping file
- * [Dev note ~ SMO] Only contains string data like, function name, class name, source jar file name
+ * Contains metadata of a function that can be called by an RML Mapping.
  *
  * @param source      string path of the source
  * @param className   class name containing the [[Function]]
@@ -22,8 +20,5 @@ case class FunctionMetaData(source: String, className: String, methodName: Strin
    *
    * @return
    */
-  //override def identifier: String = s"($source, $className, $methodName, $inputParam, $outputParam)"
-
-
   def identifier: String = s"($source, $className, $methodName, $inputParam, $outputParam)"
 }

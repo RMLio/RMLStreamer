@@ -69,7 +69,7 @@ class StdObjectMapExtractor(stdFunctionMapExtractor: FunctionMapExtractor) exten
     * @return
     */
   private def extractObjectMaps(resource: RDFResource): List[ObjectMap] = {
-    this.logDebug("%s extractObjectMaps(resource)".format(this.getClass.getName))
+    this.logDebug("extractObjectMaps(resource)")
     val property = RMLVoc.Property.OBJECTMAP
     val properties = resource.listProperties(property)
 

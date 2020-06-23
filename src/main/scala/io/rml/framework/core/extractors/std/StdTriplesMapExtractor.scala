@@ -46,25 +46,29 @@ class StdTriplesMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
    * Helper method for inferring whether the given resource is a TriplesMap.
    * A resource can be considered a TriplesMap when any of the following conditions are met
    *  1. (trival case) the resource has the TriplesMap type
-   *  2. the resource has the properties: logicalSource, subjectMap, predicateObjectMap
+   *  2. the resource references the following resources:
+   *      - exactly ONE logicalSource, specified by rml:logicalSource.
+   *      - exactly ONE subjectMap. It may be specified in two ways
+   *          - a) using rr:subjectMap
+   *          - b) using constant shortcut property rr:subject
    * @param resource
    * @return [Boolean] indicating whether the resource is a TriplesMap
    */
   private def isTriplesMap(resource : RDFResource) : Boolean = {
     val logicalSourceProperty = RMLVoc.Property.LOGICALSOURCE
     val subjectMapProperty = RMLVoc.Property.SUBJECTMAP
-    val predicateObjectMapProperty =RMLVoc.Property.PREDICATEOBJECTMAP
+    val subjectConstantProperty = RMLVoc.Property.SUBJECT
 
     // trivial case
     val isTriplesMap = resource.getType == Some(Uri(RMLVoc.Class.TRIPLESMAP))
 
-    // required properties for being a triplesmap
-    val hasLogicalSource = !resource.listProperties(logicalSourceProperty).isEmpty
-    val hasSubjectMap = !resource.listProperties(subjectMapProperty).isEmpty
-    val hasPredicateObjectMap = !resource.listProperties(predicateObjectMapProperty).isEmpty
+    // property requirements for a triplesmap
+    val hasExactlyOneLogicalSource = resource.listProperties(logicalSourceProperty).length==1
+    val hasExactlyOneSubjectMap =
+      (resource.listProperties(subjectMapProperty) ++ resource.listProperties(subjectConstantProperty)).length==1
 
     // infer whether the resource is a triples map
-    val resourceIsTriplesMap = isTriplesMap|(hasLogicalSource&hasSubjectMap&hasPredicateObjectMap)
+    val resourceIsTriplesMap = isTriplesMap|(hasExactlyOneLogicalSource&hasExactlyOneSubjectMap)
     resourceIsTriplesMap
   }
   /**

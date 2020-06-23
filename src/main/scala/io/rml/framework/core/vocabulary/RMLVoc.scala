@@ -34,9 +34,6 @@ object RMLVoc {
     val XSD_STRING = Namespaces("xsd", "string")
     val XSD_INT = Namespaces("xsd", "int")         // signed 32-bit integer
     val XSD_INTEGER = Namespaces("xsd", "integer") // integer value
-    // TODO: xsd:number isn't defined in the XML Schema; however it's being used by grel.tll
-    //  Therefore, this "Type" is added as a temporary solution
-    val XSD_NUMBER = Namespaces("xsd", "number")
     val XSD_DOUBLE = Namespaces("xsd", "decimal")
     val RDF_LIST = Namespaces("rdf", "List")
     val XSD_POSITIVE_INTEGER = Namespaces("xsd", "positiveInteger")
@@ -59,6 +56,7 @@ object RMLVoc {
     val OBJECTMAP = Namespaces("rr", "objectMap")
     val TRIPLESMAP = Namespaces("rr", "triplesMap")
     val SUBJECTMAP = Namespaces("rr", "subjectMap")
+    val SUBJECT = Namespaces("rr", "subject")
     val CONSTANT = Namespaces("rr", "constant")
     val TEMPLATE = Namespaces("rr", "template")
     val TERMTYPE = Namespaces("rr", "termType")

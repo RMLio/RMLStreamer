@@ -31,15 +31,5 @@ import io.rml.framework.core.model.{Graph, RMLMapping}
 trait MappingExtractor [+T<: Graph]extends GraphExtractor[T]
 
 object MappingExtractor {
-
-  // todo: can this be safely deleted?
   def apply(): MappingExtractor[RMLMapping] = new StdMappingExtractor()
-
-  def apply [T<:Graph](cls: Any): MappingExtractor[Graph] = {
-    cls match{
-      case RMLMapping => new StdMappingExtractor()
-      case _ => throw new IllegalArgumentException("Given args can only be subclasses of Mapping")
-    }
-
-  }
 }
