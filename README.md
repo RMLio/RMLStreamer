@@ -5,6 +5,8 @@ The RMLStreamer generates [RDF](https://www.w3.org/2001/sw/wiki/RDF) from files 
 using [RML](http://rml.io/). The difference with other RML implementations is that it can handle
 *big* input files and *continuous data streams*, like sensor data.
 
+Documentation regarding the use of (custom) functions can be found [here](documentation/README_Functions.md).
+
 ### Quick start
 
 If you want to get the RMLStreamer up and running within 5 minutes using Docker, check out [docker/README.md](docker/README.md)
