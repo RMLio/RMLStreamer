@@ -43,6 +43,35 @@ class StdTriplesMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
   extends TriplesMapExtractor with Logging {
 
   /**
+   * Helper method for inferring whether the given resource is a TriplesMap.
+   * A resource can be considered a TriplesMap when any of the following conditions are met
+   *  1. (trival case) the resource has the TriplesMap type
+   *  2. the resource references the following resources:
+   *      - exactly ONE logicalSource, specified by rml:logicalSource.
+   *      - exactly ONE subjectMap. It may be specified in two ways
+   *          - a) using rr:subjectMap
+   *          - b) using constant shortcut property rr:subject
+   * @param resource
+   * @return [Boolean] indicating whether the resource is a TriplesMap
+   */
+  private def isTriplesMap(resource : RDFResource) : Boolean = {
+    val logicalSourceProperty = RMLVoc.Property.LOGICALSOURCE
+    val subjectMapProperty = RMLVoc.Property.SUBJECTMAP
+    val subjectConstantProperty = RMLVoc.Property.SUBJECT
+
+    // trivial case
+    val isTriplesMap = resource.getType == Some(Uri(RMLVoc.Class.TRIPLESMAP))
+
+    // property requirements for a triplesmap
+    val hasExactlyOneLogicalSource = resource.listProperties(logicalSourceProperty).length==1
+    val hasExactlyOneSubjectMap =
+      (resource.listProperties(subjectMapProperty) ++ resource.listProperties(subjectConstantProperty)).length==1
+
+    // infer whether the resource is a triples map
+    val resourceIsTriplesMap = isTriplesMap|(hasExactlyOneLogicalSource&hasExactlyOneSubjectMap)
+    resourceIsTriplesMap
+  }
+  /**
     * Extracts a set of triple maps from a graph.
     * If extraction for a triple map fails, this triple map will be skipped.
     *
@@ -50,7 +79,6 @@ class StdTriplesMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     * @return
     */
   override def extract(graph: RDFGraph): List[TriplesMap] = {
-
     val triplesMapResources = filterTriplesMaps(graph)
 
     // iterate over each triple map resource
@@ -65,12 +93,10 @@ class StdTriplesMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     * @param graph
     */
   private def filterTriplesMaps(graph: RDFGraph): List[RDFResource] = {
-
     // filter all triple map resources from the graph
-    val typeUri = Uri(RMLVoc.Class.TRIPLESMAP)
-    val triplesMapResources = (graph.filterResources(typeUri) ++
-      graph.filterProperties(Uri(RMLVoc.Property.LOGICALSOURCE))).distinct
-
+    val logicalSourcePropertyUri = Uri(RMLVoc.Property.LOGICALSOURCE)
+    val potentialTriplesMapResources = graph.filterProperties(logicalSourcePropertyUri)
+    val triplesMapResources = potentialTriplesMapResources.filter(isTriplesMap)
 
     // debug log, inside check for performance
     if (isDebugEnabled) {

@@ -45,7 +45,7 @@ trait Logging {
 
   def logWarning(log: String): Unit = logger.warn(log)
 
-  def isDebugEnabled: Boolean = logger.isDebugEnabled
+  def isDebugEnabled: Boolean = logger.isDebugEnabled()
 
   def isWarnEnabled: Boolean = logger.isWarnEnabled()
 

@@ -59,13 +59,14 @@ object SubjectMap {
     */
   def apply(identifier: String,
             `class`: List[Uri],
+            functionMap: List[FunctionMap],
             constant: Option[Entity],
             reference: Option[Literal],
             template: Option[Literal],
             termType: Option[Uri],
             graphMap: Option[GraphMap]): SubjectMap = {
 
-    StdSubjectMap(identifier, `class`, constant, reference, template, termType, graphMap)
+    StdSubjectMap(identifier, `class`, functionMap, constant, reference, template, termType, graphMap)
   }
 
 }

@@ -25,13 +25,14 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.PredicateMapExtractor
+import io.rml.framework.core.extractors.{FunctionMapExtractor, PredicateMapExtractor}
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.model.{PredicateMap, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
-class StdPredicateMapExtractor extends PredicateMapExtractor {
+
+class StdPredicateMapExtractor(functionMapExtractor: FunctionMapExtractor) extends PredicateMapExtractor {
   /**
     * Extract.
     *
@@ -91,7 +92,9 @@ class StdPredicateMapExtractor extends PredicateMapExtractor {
     val template = extractTemplate(resource)
     val constant = extractConstant(resource)
     val reference = extractReference(resource)
-    PredicateMap(resource.uri.toString, constant, reference, template, termType)
+    val functionMap = functionMapExtractor.extract(resource)
+
+    PredicateMap(resource.uri.toString, functionMap, constant, reference, template, termType)
   }
 
 }

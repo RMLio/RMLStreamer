@@ -26,12 +26,13 @@
 package io.rml.framework.core.model.rdf
 
 import io.rml.framework.core.model.Uri
+import io.rml.framework.core.internal.Logging
 
 /**
   * This trait represents a resource that is able to query an underlying RDF model.
   * Different third-party libraries can be used by implementing implicits.
   */
-trait RDFResource extends RDFNode {
+trait RDFResource extends RDFNode with Logging {
 
 
   def uri: Uri
@@ -42,6 +43,9 @@ trait RDFResource extends RDFNode {
 
 
   def getType: Option[Uri]
+
+
+  def getList: List[RDFNode]
 
   /**
     *

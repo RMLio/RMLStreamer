@@ -44,6 +44,7 @@ package io.rml.framework.core.model
   */
 trait TermMap extends Node {
 
+  def functionMap: List[FunctionMap]= List()
 
   /**
     *
@@ -87,6 +88,7 @@ trait TermMap extends Node {
     */
   def hasConstant: Boolean = constant.isDefined
 
+  def hasFunctionMap:Boolean = functionMap.nonEmpty
   /**
     *
     * @return

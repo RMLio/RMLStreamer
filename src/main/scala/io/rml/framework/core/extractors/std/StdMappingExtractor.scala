@@ -33,7 +33,7 @@ import io.rml.framework.core.model.rdf.RDFGraph
   * Extractor for RMLMappings that injects all dependencies for all
   * sub-extractors.
   */
-class StdMappingExtractor extends MappingExtractor {
+class StdMappingExtractor extends MappingExtractor[RMLMapping] {
 
   /**
     * Extract.

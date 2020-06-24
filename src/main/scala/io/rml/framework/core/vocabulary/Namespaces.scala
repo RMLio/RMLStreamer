@@ -38,7 +38,16 @@ object Namespaces {
     "rml" -> "http://semweb.mmlab.be/ns/rml#",
     "rmls" -> "http://semweb.mmlab.be/ns/rmls#",
     "fnml" -> "http://semweb.mmlab.be/ns/fnml#",
-    "fno" -> "http://w3id.org/function/ontology#"
+
+    "fno" -> "https://w3id.org/function/ontology#",
+    "fnom" -> "https://w3id.org/function/vocabulary/mapping#",
+    "fnoi" -> "https://w3id.org/function/vocabulary/implementation#",
+
+    "grel" -> "http://users.ugent.be/~bjdmeest/function/grel.ttl#",
+    "lib" -> "http://example.com/library#",
+    "xsd" -> "http://www.w3.org/2001/XMLSchema#",
+
+    "doap" -> "http://usefulinc.com/ns/doap#"
   )
 
   /**

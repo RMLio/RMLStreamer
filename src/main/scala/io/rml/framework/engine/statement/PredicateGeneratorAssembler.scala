@@ -25,13 +25,32 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.model.{TermMap, Uri}
+import io.rml.framework.core.function.FunctionUtils
+import io.rml.framework.core.model.{Literal, TermMap, Uri}
 import io.rml.framework.flink.item.Item
 
 class PredicateGeneratorAssembler extends TermMapGeneratorAssembler {
 
   override def assemble(termMap: TermMap): (Item) => Option[Iterable[Uri]] = {
-    super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[Uri]]]
+
+    // Note: this code is very redundant to ObjectGeneratorAssembler. TODO: generalize?
+    if(termMap.hasFunctionMap){
+      val fmap = termMap.functionMap.head
+      val assembledFunction = FunctionMapGeneratorAssembler().assemble(fmap)
+      assembledFunction.andThen(item => {
+        if(item.isDefined) {
+          item.map(iter => iter.flatMap(elem => {
+            val castedResult = FunctionUtils.typeCastDataType(elem, termMap.datatype)
+            castedResult.map(v => Uri(v.toString))
+          }))
+        }else {
+          None
+        }
+      })
+    }
+    else {
+      super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[Uri]]]
+    }
   }
 
 }

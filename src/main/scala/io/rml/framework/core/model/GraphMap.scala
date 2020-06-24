@@ -41,8 +41,9 @@ trait GraphMap extends TermMap
 
 object GraphMap {
   def apply(identifier: String,
+            functionMap: List[FunctionMap],
             constant: Option[Entity],
             reference: Option[Literal],
             template: Option[Literal],
-            termType: Option[Uri]): GraphMap = StdGraphMap(identifier, constant, reference, template)
+            termType: Option[Uri]): GraphMap = StdGraphMap(identifier, functionMap, constant, reference, template)
 }

@@ -28,13 +28,13 @@ package io.rml.framework.core.extractors
 import java.io.File
 
 import io.rml.framework.core.extractors.std.StdMappingReader
-import io.rml.framework.core.model.{RMLMapping, Uri}
+import io.rml.framework.core.model.{Graph, RMLMapping, Uri}
 import io.rml.framework.shared.ReadException
 
 /**
   * This trait defines interfaces for reading RML mappings from file or from in-memory strings.
   */
-trait MappingReader {
+trait MappingReader[+OUT] {
 
   /**
     * Reads a file and converts it to an RMLMapping.
@@ -44,7 +44,7 @@ trait MappingReader {
     * @return
     */
   @throws(classOf[ReadException])
-  def read(file: File): RMLMapping
+  def read(file: File): OUT
 
   /**
     * Reads a dump and converts it to an RMLMapping
@@ -55,7 +55,7 @@ trait MappingReader {
     * @return
     */
   @throws(classOf[ReadException])
-  def read(dump: String, graphUri: Uri): RMLMapping
+  def read(dump: String, graphUri: Uri): OUT
 
 }
 
@@ -63,11 +63,11 @@ trait MappingReader {
   * Object with factory apply method for MappingReader.
   */
 object MappingReader {
-
-  def apply(mappingExtractor: MappingExtractor = MappingExtractor()): MappingReader = {
+  def apply(mappingExtractor: MappingExtractor[Graph] = MappingExtractor()) = {
     lazy val reader = new StdMappingReader(mappingExtractor)
     reader
   }
+
 
 }
 

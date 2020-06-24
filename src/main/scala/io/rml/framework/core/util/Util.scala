@@ -31,7 +31,7 @@ import java.nio.file.{Files, Paths}
 import java.util.regex.Pattern
 
 import io.rml.framework.core.extractors.MappingReader
-import io.rml.framework.core.model.FormattedRMLMapping
+import io.rml.framework.core.model.{FormattedRMLMapping, Literal, Node, RMLMapping}
 import io.rml.framework.shared.ReadException
 
 import scala.collection.mutable.ListBuffer
@@ -45,6 +45,12 @@ object Util {
 
   private val baseDirectiveCapture = "@base <([^<>]*)>.*".r
 
+  def getLiteral(node: Node):Option[Literal]= {
+    node match{
+      case lit:Literal => Some(lit)
+      case _ => None
+    }
+  }
 
   /**
     * Check if conforming to https://tools.ietf.org/html/bcp47#section-2.2.9
@@ -184,7 +190,7 @@ object Util {
     */
   def readMappingFile(path: String): FormattedRMLMapping = {
     val mappingFile = getFile(path)
-    val mapping = MappingReader().read(mappingFile)
+    val mapping = MappingReader().read(mappingFile).asInstanceOf[RMLMapping]
     FormattedRMLMapping.fromRMLMapping(mapping)
   }
 
