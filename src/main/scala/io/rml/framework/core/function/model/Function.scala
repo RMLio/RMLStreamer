@@ -15,6 +15,7 @@ abstract class Function extends Node with Logging{
 
   def execute(paramTriples: List[FlinkRDFQuad]): Option[Iterable[Entity]]
 
+  @deprecated("Please use execute(paramTriples: List[FlinkRDFQuad]) instead")
   def execute(argumentsMap: Map[Uri, String]): Option[Iterable[Entity]]
 
   def initialize(): Function  = {
