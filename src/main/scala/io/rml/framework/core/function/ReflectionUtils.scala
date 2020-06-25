@@ -80,10 +80,12 @@ object ReflectionUtils {
               ip.asInstanceOf[List[_]].foreach(e=>resultArrayList.add(e.toString))
               resultArrayList
             }
+            case "java.lang.Boolean"|"Boolean" => ip.toString.toBoolean
             case _ => ip
           }
         }
       )
+      .map(_.asInstanceOf[AnyRef])
   }
 
 }
