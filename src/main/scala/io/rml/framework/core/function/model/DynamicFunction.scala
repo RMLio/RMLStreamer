@@ -50,15 +50,11 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
 
     val orderedArgValues = metaData
       .inputParam
-      .sortBy(_.position) // iterate over input parameters by position
-      .map(
-        ip=>
-        {
+      .sortBy(_.position).flatMap(ip => {
 
-          argObjectsGroupedByUri.get(ip.paramUri)
+      argObjectsGroupedByUri.get(ip.paramUri)
 
-        }
-      ).flatten
+    })
 
     if(orderedArgValues.size == metaData.inputParam.size){
       val method = optMethod.getOrElse(throw new Exception("No method was initialized."))
