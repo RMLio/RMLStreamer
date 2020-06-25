@@ -34,8 +34,8 @@ object ReflectionUtils {
     cls.getDeclaredMethods.filter(m=>m.getName.endsWith(methodName)).toList
   }
 
-  def castMethodUsingGenericParameterTypes(method : java.lang.reflect.Method, inputParameterValues : List[AnyRef]) = {
-    println(s"${getClass.getCanonicalName}#castMethodUsingGenericParameterTypes")
+  def castUsingGenericMethodParameterTypes(method : java.lang.reflect.Method, inputParameterValues : List[AnyRef]) = {
+    println(s"${getClass.getCanonicalName}#castUsingGenericMethodParameterTypes")
 
     val genericParameterTypes = method.getGenericParameterTypes
     genericParameterTypes
@@ -57,15 +57,15 @@ object ReflectionUtils {
   }
 
   /**
-   * Given a method and inputParameterValues, castMethodUsingParameterTypes will use the given method's parameter types
+   * Given a method and inputParameterValues, castUsingMethodParameterTypes will use the given method's parameter types
    * to cast the input parameter values.
  *
    * @param method
    * @param inputParameterValues
    * @return
    */
-  def castMethodUsingParameterTypes(method : java.lang.reflect.Method, inputParameterValues : List[AnyRef]) = {
-    println(s"${getClass.getCanonicalName}#castMethodUsingParameterTypes")
+  def castUsingMethodParameterTypes(method : java.lang.reflect.Method, inputParameterValues : List[AnyRef]) = {
+    println(s"${getClass.getCanonicalName}#castUsingMethodParameterTypes")
 
     val parameterTypes = method.getParameterTypes
     parameterTypes

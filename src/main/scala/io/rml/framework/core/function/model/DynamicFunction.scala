@@ -62,7 +62,7 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
 
     if(orderedArgValues.size == metaData.inputParam.size){
       val method = optMethod.getOrElse(throw new Exception("No method was initialized."))
-      val castParameterValues = ReflectionUtils.castMethodUsingParameterTypes(method, orderedArgValues)
+      val castParameterValues = ReflectionUtils.castUsingMethodParameterTypes(method, orderedArgValues)
       val output = method.invoke(null, castParameterValues:_*)
 
       if(output!=null) {
@@ -117,44 +117,13 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
   override def execute(arguments: Map[Uri, String]): Option[Iterable[Entity]] = {
     val inputParams = metaData.inputParam
     // casted to List[AnyRef] since method.invoke(...) only accepts reference type but not primitive type of Scala
-//    val paramsOrdered = inputParams
-//      .flatMap(param => {
-//        val value = arguments.get(param.paramUri)
-//        value match {
-//          case Some(string) => param.getValue(string)
-//          case _ => None
-//        }
-//      })
-//      .map(_.asInstanceOf[AnyRef])
-
-
-    //val paramsOrdered = arguments.map(_._2.asInstanceOf[AnyRef]).toList
     val paramsOrdered = arguments.groupBy(_._1.uri).map(_._2.asInstanceOf[AnyRef]).toList
 
     val outputParams = metaData.outputParam
 
     if (paramsOrdered.size == inputParams.size) {
       val method = optMethod.get
-      val castedParameterValues = ReflectionUtils.castMethodUsingParameterTypes(method,paramsOrdered)
-
-      // let's cast every input parameter value to the corresponding parameter type of the method parameters
-//      val castedParameterValues =
-//        method
-//          .getParameterTypes
-//          .zip(paramsOrdered)
-//          .map(
-//              pair => {
-//                val t = pair._1.getName
-//                val v = pair._2
-//                t match {
-//                  case "java.lang.Boolean"|"Boolean" => v.toString.toBoolean
-//                  case _ => v
-//                }
-//              }
-//          )
-//          .map(_.asInstanceOf[AnyRef])
-//          .toList
-
+      val castedParameterValues = ReflectionUtils.castUsingMethodParameterTypes(method,paramsOrdered)
       val output = method.invoke(null, castedParameterValues: _*)
 
       if(output!=null) {
