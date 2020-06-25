@@ -3,8 +3,9 @@ package io.rml.framework.core.function.model
 import java.io.{File, IOException, ObjectInputStream, ObjectOutputStream}
 import java.lang.reflect.Method
 
-import io.rml.framework.core.function.FunctionUtils
+import io.rml.framework.core.function.{FunctionUtils, ReflectionUtils}
 import io.rml.framework.core.model.{Entity, Literal, Uri}
+import io.rml.framework.flink.sink.FlinkRDFQuad
 
 
 /**
@@ -20,6 +21,60 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
   @throws(classOf[IOException])
   private def writeObject(out: ObjectOutputStream): Unit = {
     out.defaultWriteObject()
+  }
+
+
+  override def execute(paramTriples: List[FlinkRDFQuad]): Option[Iterable[Entity]] = {
+    // if a group (key: uri) results in a list with 1 element, extract that single element
+    // otherwise, when a group has a list with more than 1 element, keep it as a list
+    val argResourcesGroupedByUri =  paramTriples.groupBy(_.predicate).map{
+      pair => {
+        pair._2.length match {
+          case 0 => pair._1.uri -> None
+          case 1 => pair._1.uri -> pair._2.head
+          case _ => pair._1.uri -> pair._2.toList
+        }
+      }
+    }
+
+    val argObjectsGroupedByUri = argResourcesGroupedByUri.map{
+      pair => {
+        if(pair._2.isInstanceOf[Iterable[FlinkRDFQuad]]){
+          pair._1 -> pair._2.asInstanceOf[Iterable[FlinkRDFQuad]].map(x=>x.`object`.value.toString)
+        }else{
+          pair._1 -> pair._2.asInstanceOf[FlinkRDFQuad].`object`.value.toString
+        }
+
+      }
+    }
+
+    val orderedArgValues = metaData
+      .inputParam
+      .sortBy(_.position) // iterate over input parameters by position
+      .map(
+        ip=>
+        {
+
+          argObjectsGroupedByUri.get(ip.paramUri)
+
+        }
+      ).flatten
+
+    if(orderedArgValues.size == metaData.inputParam.size){
+      val method = optMethod.getOrElse(throw new Exception("No method was initialized."))
+      val castParameterValues = ReflectionUtils.castMethodUsingParameterTypes(method, orderedArgValues)
+      val output = method.invoke(null, castParameterValues:_*)
+
+      if(output!=null) {
+        val result = metaData.outputParam.flatMap(elem => elem.getValue(output)) map (elem => Literal(elem.toString))
+        Some(result)
+      }else
+        None
+    }
+    else None
+
+
+
   }
 
   private def findMethod(classObject : Class[_], inputParameters : List[Parameter]) : Option[Method] = {
@@ -62,40 +117,45 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
   override def execute(arguments: Map[Uri, String]): Option[Iterable[Entity]] = {
     val inputParams = metaData.inputParam
     // casted to List[AnyRef] since method.invoke(...) only accepts reference type but not primitive type of Scala
-    val paramsOrdered = inputParams
-      .flatMap(param => {
-        val value = arguments.get(param.paramUri)
-        value match {
-          case Some(string) => param.getValue(string)
-          case _ => None
-        }
-      })
-      .map(_.asInstanceOf[AnyRef])
+//    val paramsOrdered = inputParams
+//      .flatMap(param => {
+//        val value = arguments.get(param.paramUri)
+//        value match {
+//          case Some(string) => param.getValue(string)
+//          case _ => None
+//        }
+//      })
+//      .map(_.asInstanceOf[AnyRef])
+
+
+    //val paramsOrdered = arguments.map(_._2.asInstanceOf[AnyRef]).toList
+    val paramsOrdered = arguments.groupBy(_._1.uri).map(_._2.asInstanceOf[AnyRef]).toList
 
     val outputParams = metaData.outputParam
 
     if (paramsOrdered.size == inputParams.size) {
-      val definiteMethod = optMethod.get
+      val method = optMethod.get
+      val castedParameterValues = ReflectionUtils.castMethodUsingParameterTypes(method,paramsOrdered)
 
       // let's cast every input parameter value to the corresponding parameter type of the method parameters
-      val castedParameterValues =
-        definiteMethod
-          .getParameterTypes
-          .zip(paramsOrdered)
-          .map(
-              pair => {
-                val t = pair._1.getName
-                val v = pair._2
-                t match {
-                  case "java.lang.Boolean"|"Boolean" => v.toString.toBoolean
-                  case _ => v
-                }
-              }
-          )
-          .map(_.asInstanceOf[AnyRef])
-          .toList
+//      val castedParameterValues =
+//        method
+//          .getParameterTypes
+//          .zip(paramsOrdered)
+//          .map(
+//              pair => {
+//                val t = pair._1.getName
+//                val v = pair._2
+//                t match {
+//                  case "java.lang.Boolean"|"Boolean" => v.toString.toBoolean
+//                  case _ => v
+//                }
+//              }
+//          )
+//          .map(_.asInstanceOf[AnyRef])
+//          .toList
 
-      val output = definiteMethod.invoke(null, castedParameterValues: _*)
+      val output = method.invoke(null, castedParameterValues: _*)
 
       if(output!=null) {
         val result = outputParams.flatMap(elem => elem.getValue(output)) map (elem => Literal(elem.toString))
@@ -108,6 +168,9 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
       None
     }
   }
+
+
+
 
   override def getMethod: Option[Method] = {
     optMethod

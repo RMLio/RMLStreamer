@@ -142,6 +142,9 @@ class SandboxTests extends FunSuite with Matchers  {
   }
 
 
+  test("failing/fno-testcases/RMLFNOTC0023-CSV") {
+    executeTest("failing/fno-testcases/RMLFNOTC0023-CSV/mapping.ttl")
+  }
 
 
 

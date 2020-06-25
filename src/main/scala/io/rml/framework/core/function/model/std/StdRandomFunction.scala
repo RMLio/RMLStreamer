@@ -5,6 +5,7 @@ import java.lang.reflect.Method
 import io.rml.framework.core.function.model.Function
 import io.rml.framework.core.model.{Entity, Literal, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.flink.sink.FlinkRDFQuad
 
 import scala.util.Random
 
@@ -14,6 +15,9 @@ case class StdRandomFunction(identifier:String = RMLVoc.Property.GREL_RANDOM) ex
   override def execute(arguments: Map[Uri, String]): Option[Iterable[Entity]] = {
       Some(List(Literal(random.nextString(10))))
   }
+
+
+  override def execute(paramTriples: List[FlinkRDFQuad]): Option[Iterable[Entity]] = ???
 
   override def getMethod: Option[Method] = {
     None
