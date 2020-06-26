@@ -1,4 +1,47 @@
 # README: Functions
+
+
+When deploying and running jobs on Flink, make sure
+- to place the external jar files, `IDLabFunctions.jar` and `GrelFunctions.jar`, in Flink's `lib` directory 
+- to place the following files in the directory where the `flink run ...` command is issued.
+These files can be obtained from `src/main/resources`:
+    - `functions_grel.ttl`
+    - `functions_grel.ttl`
+    - `grel_java_mapping.ttl`
+    - `idlab_java_mapping.ttl`
+---
+
+## Example: RML Streamer + Flink    
+Flink's `lib` directory should contain the jar-files with the custom functions. In this example, these are marked with `*`
+```
+flink-1.10.1-scala_2.11
+    └── lib
+        ├── GrelFunctions.jar                       *
+        ├── IDLabFunctions.jar                      *
+        ├── flink-dist_2.11-1.10.1.jar
+        ├── flink-table-blink_2.11-1.10.1.jar
+        ├── flink-table_2.11-1.10.1.jar
+        ├── log4j-1.2.17.jar
+        └── slf4j-log4j12-1.7.15.jar
+``` 
+When running the RML Streamer on Flink, the directory should look like
+```
+.
+├── RMLStreamer-2.0.1-SNAPSHOT.jar
+├── functions_grel.ttl
+├── functions_idlab.ttl
+├── grel_java_mapping.ttl
+├── idlab_java_mapping.ttl
+├── mapping.ttl
+└── input_data.csv
+```
+Note that the function descriptions and function mappings are present.
+
+The command for running the RML Streamer on Flink should look like
+```
+~/flink/flink-1.10.1-scala_2.11/bin/flink run -c io.rml.framework.Main RMLStreamer-2.0.1-SNAPSHOT.jar toFile --output-path $(pwd)'/out.ttl' -m mapping.ttl
+```       
+       
 ## Test Cases
 ### FnO Tests
 The official FnO testcases that are working can be found at `test/resources/fno-testcases`. 
