@@ -48,6 +48,7 @@ import org.apache.flink.streaming.api.scala.{DataStream, OutputTag, StreamExecut
 import org.apache.flink.util.Collector
 
 import scala.collection.{immutable, mutable}
+import scala.reflect.io.Path
 
 /**
   *
@@ -89,9 +90,36 @@ object Main extends Logging {
     // Triple maps are also organized in categories (does it contain streams, does it contain joins, ... )
     val formattedMapping = Util.readMappingFile(config.mappingFilePath)
 
+
+    // Adding the default function descripion and default function mapping files to the RMLEnvironment.
+    // RMLStreamer will look for these files in directory of the JAR-file.
+    // TODO: support adding function related files using CLI arguments
+    val defaultFunctionDescriptionFilePaths = List(
+      "./functions_grel.ttl",
+      "./functions_idlab.ttl"
+    )
+
+    val defaultFunctionMappingFilePaths = List(
+      "./grel_java_mapping.ttl",
+      "./idlab_java_mapping.ttl"
+    )
+    // adding default function description file paths to the RMLEnvironment
+    defaultFunctionDescriptionFilePaths.foreach(strPath=> {
+      val p = Path.string2path(Util.getFile(strPath).getAbsolutePath)
+      RMLEnvironment.addFunctionDescriptionFilePath(p)
+    })
+
+    // adding default function description file paths to the RMLEnvironment
+    defaultFunctionMappingFilePaths.foreach(strPath=> {
+      val p = Path.string2path(Util.getFile(strPath).getAbsolutePath)
+      RMLEnvironment.addFunctionMappingFilePaths(p)
+    })
+
+
     // set up execution environments, Flink needs these to know how to operate (local, cluster mode, ...)
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
+
 
     if (config.checkpointInterval.isDefined) {
       senv.enableCheckpointing(config.checkpointInterval.get, CheckpointingMode.AT_LEAST_ONCE); // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html

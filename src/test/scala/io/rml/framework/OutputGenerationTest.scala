@@ -39,28 +39,8 @@ import scala.util.control.Exception
 
 class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with BeforeAndAfter {
 
-  private def setupFunctionLoader() : Unit = {
-    // function descriptions
-    val functionDescriptionFilePaths = List(
-      "functions_grel.ttl",
-      "functions_idlab.ttl"
-    )
-
-    // function mappings
-    val grelJavaMappingFile = new File(getClass.getClassLoader.getResource("grel_java_mapping.ttl").getFile)
-    val idlabJavaMappingFile = new File(getClass.getClassLoader.getResource("idlab_java_mapping.ttl").getFile)
-
-    // singleton FunctionLoader created and initialized with given function descriptions
-    val functionLoader = FunctionLoader(functionDescriptionFilePaths)
-
-    // Parse the function mapping files.
-    // The functionloader will construct a mapping between function uris and the corresponding function meta data objects
-    functionLoader
-      .parseFunctionMapping(grelJavaMappingFile)
-      .parseFunctionMapping(idlabJavaMappingFile)
-  }
   before {
-    setupFunctionLoader()
+    FunctionMappingSetup.setupFunctionLoader()
   }
 
 
