@@ -26,6 +26,7 @@ package io.rml.framework
   **/
 
 
+import java.io.FileNotFoundException
 import java.util.Properties
 
 import io.rml.framework.api.RMLEnvironment
@@ -91,29 +92,10 @@ object Main extends Logging {
     val formattedMapping = Util.readMappingFile(config.mappingFilePath)
 
 
-    // Adding the default function descripion and default function mapping files to the RMLEnvironment.
-    // RMLStreamer will look for these files in directory of the JAR-file.
-    // TODO: support adding function related files using CLI arguments
-    val defaultFunctionDescriptionFilePaths = List(
-      "./functions_grel.ttl",
-      "./functions_idlab.ttl"
-    )
+    // Default function config
+    // TODO: support adding variable function related files using CLI arguments
+    loadDefaultFunctionConfiguration()
 
-    val defaultFunctionMappingFilePaths = List(
-      "./grel_java_mapping.ttl",
-      "./idlab_java_mapping.ttl"
-    )
-    // adding default function description file paths to the RMLEnvironment
-    defaultFunctionDescriptionFilePaths.foreach(strPath=> {
-      val p = Path.string2path(Util.getFile(strPath).getAbsolutePath)
-      RMLEnvironment.addFunctionDescriptionFilePath(p)
-    })
-
-    // adding default function description file paths to the RMLEnvironment
-    defaultFunctionMappingFilePaths.foreach(strPath=> {
-      val p = Path.string2path(Util.getFile(strPath).getAbsolutePath)
-      RMLEnvironment.addFunctionMappingFilePaths(p)
-    })
 
 
     // set up execution environments, Flink needs these to know how to operate (local, cluster mode, ...)
@@ -610,5 +592,44 @@ object Main extends Logging {
     } else head
   }
 
+  /**
+   *Adding the default function descripion and default function mapping files to the RMLEnvironment.
+   *RMLStreamer will look for these files in directory where the RMLStreamer is executed from.
+   *Note: make sure to add jars with custom functions to Flink's `/lib` directory.
+   */
+  private def loadDefaultFunctionConfiguration() = {
+
+    val defaultFunctionDescriptionFilePaths = List(
+      "./functions_grel.ttl",
+      "./functions_idlab.ttl"
+    )
+
+    val defaultFunctionMappingFilePaths = List(
+      "./grel_java_mapping.ttl",
+      "./idlab_java_mapping.ttl"
+    )
+
+    // adding default function description file paths to the RMLEnvironment
+    defaultFunctionDescriptionFilePaths.foreach(strPath=> {
+      try
+        {
+          val p = Path.string2path(Util.getFile(strPath).getAbsolutePath)
+          RMLEnvironment.addFunctionDescriptionFilePath(p)
+        }
+      catch {
+        case e : Exception => logWarning(s"Can't add function description file to RMLEnvironment ( $strPath ). This will result in errors when using functions! Exception: ${e.getMessage}")
+      }
+    })
+
+    // adding default function description file paths to the RMLEnvironment
+    defaultFunctionMappingFilePaths.foreach(strPath=> {
+      try {
+        val p = Path.string2path(Util.getFile(strPath).getAbsolutePath)
+        RMLEnvironment.addFunctionMappingFilePaths(p)
+      }catch {
+        case e : Exception => logWarning(s"Can't add function mapping file to RMLEnvironment ( $strPath ). This will result in errors when using functions! Exception: ${e.getMessage}")
+      }
+    })
+  }
 
 }

@@ -80,7 +80,6 @@ object RMLEnvironment {
     this.functionDescriptionFilePaths.toList
   }
   def addFunctionDescriptionFilePath(path : Path) = {
-    assert(path.exists)
     this.functionDescriptionFilePaths += path
   }
 
@@ -88,7 +87,6 @@ object RMLEnvironment {
     this.functionMappingFilePaths.toList
   }
   def addFunctionMappingFilePaths(path : Path) = {
-    assert(path.exists)
     this.functionMappingFilePaths += path
   }
 
