@@ -2,6 +2,7 @@ package io.rml.framework.core.function
 
 import java.io.File
 import java.net.MalformedURLException
+import java.time.Instant
 
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.function.model.Parameter
@@ -65,6 +66,8 @@ object FunctionUtils extends Logging {
       case Uri(RMLVoc.Type.XSD_INT) => classOf[Int]
       case Uri(RMLVoc.Type.XSD_STRING) => classOf[String]
       case Uri(RMLVoc.Type.XSD_DOUBLE) => classOf[Double]
+      case Uri(RMLVoc.Type.XSD_LONG) => classOf[Long]
+      case Uri(RMLVoc.Type.XSD_DATETIME) => classOf[Instant]
       case Uri(RMLVoc.Type.XSD_BOOLEAN) => classOf[Boolean]
       case Uri(RMLVoc.Type.RDF_LIST) => classOf[List[_]]
       case Uri(RMLVoc.Type.XSD_ANY) => classOf[Any]
