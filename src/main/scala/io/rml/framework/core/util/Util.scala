@@ -205,7 +205,6 @@ object Util {
     val result = if (file_1.isAbsolute) {
       new File(path)
     } else {
-      println(path)
       val classLoader = getClass.getClassLoader
       new File(classLoader.getResource(path).getFile)
     }

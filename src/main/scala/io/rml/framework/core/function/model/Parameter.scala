@@ -1,5 +1,7 @@
 package io.rml.framework.core.function.model
 
+import java.time.Instant
+
 import io.rml.framework.core.model.{Node, Uri}
 
 import scala.util.parsing.json.JSON
@@ -53,6 +55,8 @@ abstract class Parameter extends Node {
     val ArrayString = classOf[Array[_]].getName
     val ObjectString = classOf[Object].getName
     val BooleanString = classOf[Boolean].getName
+    val LongString = classOf[Long].getName
+    val InstantString = classOf[Instant].getName
 
     if(paramType== null)
       throw new NullPointerException("parameter type is null..")
@@ -62,6 +66,8 @@ abstract class Parameter extends Node {
         case ScalaString | "java.lang.String" => Some(paraValue.toString)
         case IntegerString | "int" => Some(paraValue.toString.toInt)
         case DoubleString | "double" => Some(paraValue.toString.toDouble)
+        case LongString | "long" => Some(paraValue.toString.toLong)
+        case InstantString => Some(Instant.parse(paraValue.toString))
         case ObjectString|"java.lang.Object" => Some(paraValue)
 
         case ListString | ArrayString | "java.util.List" =>
