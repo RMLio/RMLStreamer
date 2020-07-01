@@ -52,20 +52,28 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
       .inputParam
       .sortBy(_.position).flatMap(ip => {
 
-      argObjectsGroupedByUri.get(ip.paramUri)
+      if(argObjectsGroupedByUri.contains(ip.paramUri))
+        argObjectsGroupedByUri.get(ip.paramUri)
+      else
+        Some(null)
 
     })
 
     if(orderedArgValues.size == metaData.inputParam.size){
       val method = optMethod.getOrElse(throw new Exception("No method was initialized."))
-      val castParameterValues = ReflectionUtils.castUsingMethodParameterTypes(method, orderedArgValues)
-      val output = method.invoke(null, castParameterValues:_*)
+      val castParameterValues: Array[AnyRef] = ReflectionUtils.castUsingMethodParameterTypes(method, orderedArgValues)
 
-      if(output!=null) {
+      try {
+        val output = method.invoke(null, castParameterValues:_*)
         val result = metaData.outputParam.flatMap(elem => elem.getValue(output)) map (elem => Literal(elem.toString))
         Some(result)
-      }else
-        None
+      }catch {
+        case e : Exception => {
+          logError(s"The following exception occurred when invoking the method ${method.getName}: ${e.getMessage}." +
+            s"\nThe result will be set to None.")
+          None
+        }
+      }
     }
     else None
 
@@ -73,32 +81,13 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
 
   }
 
-  private def findMethod(classObject : Class[_], inputParameters : List[Parameter]) : Option[Method] = {
-    try {
-      Some(classObject.getDeclaredMethod(metaData.methodName, metaData.inputParam.map(_.paramType): _*))
-    }catch{
-      case e : NoSuchMethodException => {
-        this.logWarning(s"Unable to exactly match the function ${metaData.methodName} in ${metaData.className}.\n" +
-          s"Let's try to find the method ourself by filtering on method-name ONLY. [TODO]")
-        // try to find the method ourselfs
-        val declaredMethods = classObject.getDeclaredMethods
-        // first filter out methods with the same name
-        val filteredMethods = declaredMethods.filter(_.getName == metaData.methodName)
-        // Currently, just return the first available method and assume (hope) it will be correct // TODO: more specific method search
-        filteredMethods.headOption
-      }
-    }
 
-
-
-  }
 
   override def initialize(): Function = {
     if(optMethod.isEmpty) {
       val jarFile = getClass.getClassLoader.getResource(metaData.source).getFile
-
       val classOfMethod = FunctionUtils.loadClassFromJar(new File(jarFile), metaData.className)
-      optMethod = findMethod(classOfMethod, metaData.inputParam)
+      optMethod = ReflectionUtils.searchByMethodNameAndParameterTypes(classOfMethod, metaData.methodName, metaData.inputParam.map(_.paramType): _*)
     }
     this
   }

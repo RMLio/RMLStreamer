@@ -45,7 +45,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
     val functionMap = termMap.asInstanceOf[FunctionMap]
     val pomAssembler = PredicateObjectGeneratorAssembler()
 
-    val assembledPom = functionMap.functionValue
+    val assembledPom = functionMap.functionValue.sortBy(_.identifier) // sortBy required for retaining correct parameter ordering
       .flatMap(pomAssembler.assemble)
       .map {
         case (predicateGen, objGen, _) => (predicateGen, objGen)
@@ -95,7 +95,6 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
 
 
       function.initialize()
-      // efkes hier proberen om de method te invoken ipv in de function instantie zelf -- dit omzeilt aanpassingen aan execute signature
       logDebug(s"executing ${function.toString}")
       function.execute(paramTriples)
     }

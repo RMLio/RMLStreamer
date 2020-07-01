@@ -18,7 +18,7 @@ object ReflectionUtils {
       throw new Exception(s"unable to load ${className}")
   }
 
-  def searchByMethodName(cls : Class[_], methodName : String, parameterTypes : Class[_]*) : Option[Method] = {
+  def searchByMethodNameAndParameterTypes(cls : Class[_], methodName : String, parameterTypes : Class[_]*) : Option[Method] = {
     try {
       Some(cls.getDeclaredMethod(methodName, parameterTypes:_*))
     }
@@ -66,6 +66,8 @@ object ReflectionUtils {
    */
   def castUsingMethodParameterTypes(method : java.lang.reflect.Method, inputParameterValues : List[AnyRef]) = {
     println(s"${getClass.getCanonicalName}#castUsingMethodParameterTypes")
+
+
 
     val parameterTypes = method.getParameterTypes
     parameterTypes
