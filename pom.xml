@@ -364,7 +364,6 @@ SOFTWARE.
                                 -->
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
-                                    <mainClass>io.rml.framework.Main</mainClass>
                                 </transformer>
                                 <!--  This will add a Main-Class entry to the manifest file -->
                                 <transformer

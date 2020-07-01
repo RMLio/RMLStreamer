@@ -34,10 +34,12 @@ object RMLVoc {
     val XSD_STRING = Namespaces("xsd", "string")
     val XSD_INT = Namespaces("xsd", "int")         // signed 32-bit integer
     val XSD_INTEGER = Namespaces("xsd", "integer") // integer value
-    val XSD_DOUBLE = Namespaces("xsd", "decimal")
+    val XSD_DOUBLE = Namespaces("xsd", "double")
+    val XSD_LONG = Namespaces("xsd", "long")
     val RDF_LIST = Namespaces("rdf", "List")
     val XSD_POSITIVE_INTEGER = Namespaces("xsd", "positiveInteger")
     val XSD_BOOLEAN = Namespaces("xsd", "boolean")
+    val XSD_DATETIME = Namespaces("xsd", "dateTime")
 
     val XSD_ANY  = Namespaces("xsd", "any")
     val RDF_OBJECT = Namespaces("rdf", "object")

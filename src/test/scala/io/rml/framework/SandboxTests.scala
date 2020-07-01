@@ -27,16 +27,17 @@ package io.rml.framework
 import java.io.File
 
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.FunctionLoader
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.NopPostProcessor
 import io.rml.framework.util.TestUtil
 import io.rml.framework.util.logging.Logger
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
-import org.scalatest.{DoNotDiscover, FunSuite, Matchers}
+import org.scalatest.{FunSuite, Matchers}
 
-class SandboxTests extends FunSuite with Matchers  {
+
+class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
+
 
   private def executeTest(mappingFile: String): Unit = {
     RMLEnvironment.setGeneratorBaseIRI(Some("http://example.org/base/"))
@@ -46,26 +47,6 @@ class SandboxTests extends FunSuite with Matchers  {
 
     val testDir = Util.getFile(new File(mappingFile).getParent)
     val mappingFileAbs = new File(testDir, new File(mappingFile).getName)
-
-    // function descriptions
-    val functionDescriptionFilePaths = List(
-      "functions_grel.ttl",
-      "functions_idlab.ttl"
-    )
-
-    // function mappings
-    val grelJavaMappingFile = new File(getClass.getClassLoader.getResource("grel_java_mapping.ttl").getFile)
-    val idlabJavaMappingFile = new File(getClass.getClassLoader.getResource("idlab_java_mapping.ttl").getFile)
-
-    // singleton FunctionLoader created and initialized with given function descriptions
-    val functionLoader = FunctionLoader(functionDescriptionFilePaths)
-
-    // Parse the function mapping files.
-    // The functionloader will construct a mapping between function uris and the corresponding function meta data objects
-    functionLoader
-      .parseFunctionMapping(grelJavaMappingFile)
-      .parseFunctionMapping(idlabJavaMappingFile)
-
 
     // read the mapping
     val formattedMapping = Util.readMappingFile(mappingFileAbs.getAbsolutePath)
