@@ -240,6 +240,8 @@ SOFTWARE.
             <version>${flink.version}</version>
         </dependency>
 
+
+
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka_${scala.binary.version}</artifactId>
@@ -312,6 +314,12 @@ SOFTWARE.
                     <artifactId>flink-clients_${scala.binary.version}</artifactId>
                     <version>${flink.version}</version>
                     <scope>compile</scope>
+                </dependency>
+                <!-- Enables the Apache Flink Web UI DashBoard [https://stackoverflow.com/a/47000955/1728848] -->
+                <dependency>
+                    <groupId>org.apache.flink</groupId>
+                    <artifactId>flink-runtime-web_2.11</artifactId>
+                    <version>${flink.version}</version>
                 </dependency>
             </dependencies>
         </profile>

@@ -25,13 +25,14 @@
 package io.rml.framework.engine.statement
 
 import java.io.File
+
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.FunctionLoader
-import io.rml.framework.core.function.model.Function
+import io.rml.framework.core.function.{FunctionLoader, ReflectionUtils}
+import io.rml.framework.core.function.model.{DynamicFunction, Function}
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.sink.FlinkRDFQuad
+import io.rml.framework.flink.sink.{FlinkRDFNode, FlinkRDFQuad}
 import io.rml.framework.flink.source.EmptyItem
 import io.rml.framework.shared.RMLException
 
@@ -44,7 +45,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
     val functionMap = termMap.asInstanceOf[FunctionMap]
     val pomAssembler = PredicateObjectGeneratorAssembler()
 
-    val assembledPom = functionMap.functionValue
+    val assembledPom = functionMap.functionValue.sortBy(_.identifier) // sortBy required for retaining correct parameter ordering
       .flatMap(pomAssembler.assemble)
       .map {
         case (predicateGen, objGen, _) => (predicateGen, objGen)
@@ -90,15 +91,12 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
   private def createAssemblerFunction(function: Function, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Item => Option[Iterable[Entity]] = {
     (item: Item) => {
       val triples: List[FlinkRDFQuad] = generateFunctionTriples(item, assembledPom)
-      val args: Map[Uri, String] = triples.filter(triple => triple.predicate.uri != Uri(RMLVoc.Property.EXECUTES))
-        .map(triple => {
-          val parameterName = triple.predicate.uri
-          val parameterValue = triple.`object`.value.toString
-          parameterName -> parameterValue
-        })
-        .toMap
+      val paramTriples = triples.filter(triple => triple.predicate.uri != Uri(RMLVoc.Property.EXECUTES))
+
+
       function.initialize()
-      function.execute(args)
+      logDebug(s"executing ${function.toString}")
+      function.execute(paramTriples)
     }
   }
 

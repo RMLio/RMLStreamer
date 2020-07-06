@@ -19,7 +19,7 @@ map:map_person_0
 
 map:source_0
     a                        rml:LogicalSource ;
-    rml:source               "fno-testcases/RMLFNOTC0023-CSV/student.csv" ;
+    rml:source               "failing/fno-testcases/RMLFNOTC0023-CSV/student.csv" ;
     rml:referenceFormulation ql:CSV .
 
 map:s_0
@@ -29,7 +29,7 @@ map:s_0
 
 map:fn_0
     rml:logicalSource     map:source_0 ;
-    rr:predicateObjectMap map:pomexec_0, map:pom_0, map:pom_1 .
+    rr:predicateObjectMap map:pomexec_0, map:pom_0, map:pom_1 , map:pom_3 .
 
 map:pomexec_0
     rr:predicateMap map:pmexec_0 ;
@@ -97,3 +97,18 @@ map:om_2
     a           rr:ObjectMap ;
     rr:constant "http://xmlns.com/foaf/0.1/Person" ;
     rr:termType rr:IRI .
+
+# separator
+map:pom_3
+    a               rr:PredicateObjectMap ;
+    rr:predicateMap map:pm_3 ;
+    rr:objectMap    map:om_3 .
+
+map:pm_3
+    a           rr:PredicateMap ;
+    rr:constant grel:p_string_sep .
+
+map:om_3
+    a           rr:ObjectMap ;
+    rr:constant "SEPARATOOOOR" ;
+    rr:termType rr:Literal .

@@ -123,6 +123,10 @@ class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
   }
 
 
+  test("failing/fno-testcases/RMLFNOTC0023-CSV") {
+    pending
+    executeTest("failing/fno-testcases/RMLFNOTC0023-CSV/mapping.ttl")
+  }
 
 
 

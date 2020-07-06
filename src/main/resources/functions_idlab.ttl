@@ -94,6 +94,16 @@ idlab-fn:stringContainsOtherString
     fno:expects         ( idlab-fn:_str idlab-fn:_otherStr idlab-fn:_delimiter ) ;
     fno:returns         ( idlab-fn:_stringOut ) .
 
+
+
+idlab-fn:random
+    a                   fno:Function ;
+    fno:name            "random" ;
+    rdfs:label          "random" ;
+    dcterms:description "Returns a random uuid." ;
+    fno:expects         ( ) ;
+    fno:returns         ( idlab-fn:_stringOut ) .
+
 idlab-fn:_path
     a             fno:Parameter ;
     fno:name      "input path" ;
