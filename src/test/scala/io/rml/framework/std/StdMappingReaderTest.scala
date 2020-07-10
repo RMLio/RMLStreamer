@@ -61,6 +61,8 @@ class StdMappingReaderTest extends FunSuite with Matchers
    */
   test("relative paths: scenario02"){
     val mappingFile = "relative_paths/scenario02/RMLTC0001a-CSV/mapping.ttl"
+    // determine the base IRI of the mapping file
+    RMLEnvironment.setMappingFileBaseIRI(Some((mappingFile)))
     val formattedMapping = Util.readMappingFile(mappingFile)
   }
 
@@ -74,6 +76,8 @@ class StdMappingReaderTest extends FunSuite with Matchers
    */
   test("relative paths: scenario03"){
     val mappingFile = "relative_paths/scenario03/RMLTC0001a-CSV/mapping.ttl"
+    // determine the base IRI of the mapping file
+    RMLEnvironment.setMappingFileBaseIRI(Some((mappingFile)))
     val formattedMapping = Util.readMappingFile(mappingFile)
   }
 
