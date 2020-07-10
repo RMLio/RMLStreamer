@@ -211,4 +211,17 @@ object Util {
     result
   }
 
+
+  def resolveFileRelativeToSourceFileParent(sourcePathString: String, other : String) = {
+    val sourcePath = Paths.get(sourcePathString)
+
+    sourcePath
+      .getParent
+      .resolve(other)
+      .toFile
+      .getCanonicalFile
+  }
+
+
+
 }
