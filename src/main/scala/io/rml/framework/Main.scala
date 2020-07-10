@@ -27,9 +27,11 @@ package io.rml.framework
 
 
 import java.io.FileNotFoundException
+import java.net.URLClassLoader
 import java.util.Properties
 
-import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
+import io.rml.framework.core.function.flink.{FnOEnvironmentLoader, FnOEnvironmentStreamLoader, RichItemIdentityFunction, RichStreamItemIdentityFunction}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
 import io.rml.framework.core.util.{StreamerConfig, Util}
@@ -40,8 +42,11 @@ import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
 import io.rml.framework.flink.util.ParameterUtil
 import io.rml.framework.flink.util.ParameterUtil.{OutputSinkOption, PostProcessorOption}
+import org.apache.flink.api.common.functions.RichMapFunction
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.scala._
+import org.apache.flink.api.scala.typeutils.Types
+import org.apache.flink.configuration.Configuration
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.streaming.api.functions.ProcessFunction
@@ -50,6 +55,7 @@ import org.apache.flink.util.Collector
 
 import scala.collection.{immutable, mutable}
 import scala.reflect.io.Path
+import scala.util.{Failure, Success, Try}
 
 /**
   *
@@ -94,7 +100,8 @@ object Main extends Logging {
 
     // Default function config
     // TODO: support adding variable function related files using CLI arguments
-    loadDefaultFunctionConfiguration()
+    FnOEnvironment.loadDefaultConfiguration()
+    FnOEnvironment.intializeFunctionLoader()
 
 
 
@@ -203,6 +210,17 @@ object Main extends Logging {
       }
     })
 
+    val preProcessingFunction =
+      if(FnOEnvironment.getFunctionLoader.isDefined){
+        val functionLoaderOption = FnOEnvironment.getFunctionLoader
+        val jarSources = functionLoaderOption.get.getSources
+        val classNames = functionLoaderOption.get.getClassNames
+        new FnOEnvironmentStreamLoader(jarSources , classNames)
+      }else {
+        logInfo("FunctionLoader in RMLEnvironment is NOT DEFINED")
+        new RichStreamItemIdentityFunction()
+      }
+
     // This is the collection of all data streams that are created by the current mapping
     val processedStreams: immutable.Iterable[DataStream[String]] =
       sourceEngineMap.map(entry => {
@@ -211,6 +229,8 @@ object Main extends Logging {
         // link the different steps in each pipeline
         source.stream // this will generate a stream of items
           // process every item by a processor with a loaded engine
+
+          .map(preProcessingFunction)
           .map(new StdStreamProcessor(engine))
           .name("Execute mapping statements on items")
 
@@ -446,6 +466,17 @@ object Main extends Logging {
       }
     })
 
+    val preProcessingFunction =
+    if(FnOEnvironment.getFunctionLoader.isDefined){
+      val functionLoaderOption = FnOEnvironment.getFunctionLoader
+      val jarSources = functionLoaderOption.get.getSources
+      val classNames = functionLoaderOption.get.getClassNames
+      new FnOEnvironmentLoader(jarSources , classNames)
+    }else {
+      logInfo("FunctionLoader in RMLEnvironment is NOT DEFINED")
+      new RichItemIdentityFunction()
+    }
+
     // This is the collection of all data streams that are created by the current mapping
     val processedDataSets: immutable.Iterable[DataSet[String]] =
       sourceEngineMap.map(entry => {
@@ -455,6 +486,7 @@ object Main extends Logging {
         source.dataset // this will generate a dataset of items
 
           // process every item by a processor with a loaded engine
+            .map(preProcessingFunction)
           .map(new StdStaticProcessor(engine))
           .name("Execute mapping statements on items")
 
@@ -592,44 +624,7 @@ object Main extends Logging {
     } else head
   }
 
-  /**
-   *Adding the default function descripion and default function mapping files to the RMLEnvironment.
-   *RMLStreamer will look for these files in directory where the RMLStreamer is executed from.
-   *Note: make sure to add jars with custom functions to Flink's `/lib` directory.
-   */
-  private def loadDefaultFunctionConfiguration() = {
 
-    val defaultFunctionDescriptionFilePaths = List(
-      "./functions_grel.ttl",
-      "./functions_idlab.ttl"
-    )
 
-    val defaultFunctionMappingFilePaths = List(
-      "./grel_java_mapping.ttl",
-      "./idlab_java_mapping.ttl"
-    )
-
-    // adding default function description file paths to the RMLEnvironment
-    defaultFunctionDescriptionFilePaths.foreach(strPath=> {
-      try
-        {
-          val p = Path.string2path(Util.getFile(strPath).getAbsolutePath)
-          RMLEnvironment.addFunctionDescriptionFilePath(p)
-        }
-      catch {
-        case e : Exception => logWarning(s"Can't add function description file to RMLEnvironment ( $strPath ). This will result in errors when using functions! Exception: ${e.getMessage}")
-      }
-    })
-
-    // adding default function description file paths to the RMLEnvironment
-    defaultFunctionMappingFilePaths.foreach(strPath=> {
-      try {
-        val p = Path.string2path(Util.getFile(strPath).getAbsolutePath)
-        RMLEnvironment.addFunctionMappingFilePaths(p)
-      }catch {
-        case e : Exception => logWarning(s"Can't add function mapping file to RMLEnvironment ( $strPath ). This will result in errors when using functions! Exception: ${e.getMessage}")
-      }
-    })
-  }
 
 }

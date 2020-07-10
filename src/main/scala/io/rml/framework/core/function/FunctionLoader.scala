@@ -1,20 +1,16 @@
 package io.rml.framework.core.function
 
-import java.io.{File, FileNotFoundException, IOException}
+import java.io.{File, IOException}
 
-import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
 import io.rml.framework.core.function.model.{Function, FunctionMetaData, Parameter}
 import io.rml.framework.core.function.std.StdFunctionLoader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFNode}
 import io.rml.framework.core.util.Turtle
-import io.rml.framework.core.util.Util
-import org.apache.flink.api.scala.ExecutionEnvironment
-import org.apache.flink.runtime.taskmanager.RuntimeEnvironment
 
 import scala.collection.mutable.{Map => MutableMap}
-import scala.io.Source
 import scala.reflect.io.Path
 
 abstract class FunctionLoader extends Logging {
@@ -23,21 +19,26 @@ abstract class FunctionLoader extends Logging {
    */
   protected val functionMap: MutableMap[Uri, FunctionMetaData] = MutableMap()
 
+  def getSources: List[String] = {
+    functionMap.values.map(_.source).toList.distinct
+  }
+  def getClassNames : List[String] = {
+    functionMap.values.map(_.className).toList.distinct
+  }
   /**
-   * Searches for the given function uri in the function map and dynamically load
-   * that function, if present.
+   * Creates and returns a [[Function]] for [[FunctionMetaData]] given function [[Uri]], if the function uri is present.
    *
-   * @param uri Function Uri
-   * @return  [[Option]] of dynamically loaded function
+   * @param uri: function uri
+   * @return  function (if successful)
    */
-  def loadFunction(uri: Uri): Option[Function] = {
-    logDebug(s"loadFunction: ${uri.uri}")
+  def createFunction(uri: Uri): Option[Function] = {
+    logDebug(s"createFunction: ${uri.uri}")
 
     val optFunctionMetaData = functionMap.get(uri)
 
     if (optFunctionMetaData.isDefined) {
       val functionMetaData = optFunctionMetaData.get
-      logDebug(s"Dynamically loading function: $uri, ${functionMetaData.toString}" )
+      logDebug(s"Creating function: $uri, ${functionMetaData.toString}" )
       Some(Function(functionMetaData.identifier, functionMetaData))
     } else {
       // when the function uri is not present in the function map, complain.
@@ -96,12 +97,10 @@ object FunctionLoader extends Logging{
 
   /**
    * Construction of the (singleton) FunctionLoader instance.
-   * When the functionDescriptionFilePaths-list is empty, the default function descriptions are used.
-
    * @return FunctionLoader
    */
-  def apply(functionDescriptionPaths : List[Path] = RMLEnvironment.getFunctionDescriptionFilePaths(),
-            functionMappingPaths : List[Path] = RMLEnvironment.getFunctionMappingFilePaths()
+  def apply(functionDescriptionPaths : List[Path] = FnOEnvironment.getFunctionDescriptionFilePaths(),
+            functionMappingPaths : List[Path] = FnOEnvironment.getFunctionMappingFilePaths()
            ): FunctionLoader = {
       if(singletonFunctionLoader.isEmpty) {
 

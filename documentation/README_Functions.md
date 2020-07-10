@@ -2,7 +2,8 @@
 
 
 When deploying and running jobs on Flink, make sure
-- to place the external jar files, `IDLabFunctions.jar` and `GrelFunctions.jar`, in Flink's `lib` directory 
+- to either place the external jars (e.g. `IDLabFunctions.jar` and `GrelFunctions.jar`) in Flink's `lib` directory,
+or package the RMLStreamer along with those jars by placing them in `src/main/resources`.  
 - to place the following files in the directory where the `flink run ...` command is issued.
 These files can be obtained from `src/main/resources`:
     - `functions_grel.ttl`
