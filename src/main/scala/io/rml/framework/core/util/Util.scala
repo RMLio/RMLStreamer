@@ -24,7 +24,7 @@
   **/
 package io.rml.framework.core.util
 
-import java.io.{ByteArrayInputStream, File, FileInputStream, InputStream}
+import java.io.{ByteArrayInputStream, File, FileInputStream, FileNotFoundException, InputStream}
 import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
@@ -33,12 +33,14 @@ import java.util.regex.Pattern
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.model.{FormattedRMLMapping, Literal, Node, RMLMapping}
 import io.rml.framework.shared.ReadException
+import io.rml.framework.core.internal.Logging
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
+import scala.util.{Failure, Success, Try}
 
 
-object Util {
+object Util extends Logging{
 
   // Without support for custom registered languages of length 5-8 of the IANA language-subtag-registry
   private val regexPatternLanguageTag = Pattern.compile("^((?:(en-GB-oed|i-ami|i-bnn|i-default|i-enochian|i-hak|i-klingon|i-lux|i-mingo|i-navajo|i-pwn|i-tao|i-tay|i-tsu|sgn-BE-FR|sgn-BE-NL|sgn-CH-DE)|(art-lojban|cel-gaulish|no-bok|no-nyn|zh-guoyu|zh-hakka|zh-min|zh-min-nan|zh-xiang))|((?:([A-Za-z]{2,3}(-(?:[A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4})(-(?:[A-Za-z]{4}))?(-(?:[A-Za-z]{2}|[0-9]{3}))?(-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-(?:[0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(?:x(-[A-Za-z0-9]{1,8})+))?)|(?:x(-[A-Za-z0-9]{1,8})+))$")
@@ -190,13 +192,25 @@ object Util {
     */
   def readMappingFile(path: String): FormattedRMLMapping = {
     val mappingFile = getFile(path)
+
     val mapping = MappingReader().read(mappingFile).asInstanceOf[RMLMapping]
     FormattedRMLMapping.fromRMLMapping(mapping)
   }
 
+  private def getFileUsingClassLoader(path : String) = {
+    val classLoader = getClass.getClassLoader
+    new File(classLoader.getResource(path).getFile)
+  }
+  private def getFileRelativeToUserDir(path : String) = {
+    val userDir = System.getProperty("user.dir")
+    resolveFileRelativeToSourceFileParent(userDir,path)
+  }
   /**
     * If the given path is absolute, then a File object representing that path is returned.
-    * If the given path is relative, then a File object representing the path relative to the root class directory is returned. This can also be a path in a jar.
+    * If the given path is relative, then the following steps are taken to find the file
+   *  - 1. using the classloader (a File object representing the path relative to the root class directory is returned.
+   *  This can also be a path in a jar.)
+   *  - 2. try to find the file relative to the user directory
     * @param path
     * @return
     */
@@ -205,8 +219,25 @@ object Util {
     val result = if (file_1.isAbsolute) {
       new File(path)
     } else {
-      val classLoader = getClass.getClassLoader
-      new File(classLoader.getResource(path).getFile)
+      // Try to find the file use the class loader
+      val out = Try(getFileUsingClassLoader(path)) match {
+        case Success(file) => Some(file)
+        case Failure(exception) => {
+          logError("can't find file use class loader")
+          // Try to find the file relative to the user directory
+          Try(getFileRelativeToUserDir(path)) match {
+            case Success(file) =>  Some(file)
+            case Failure(exception) => {
+              logError(s"can't find file relative to user dir")
+              None
+            }
+          }
+        }
+      }
+      out.getOrElse(
+       throw new FileNotFoundException(s"Unable to find ${path}")
+      )
+
     }
     result
   }
