@@ -74,7 +74,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
       .value
       .toString)
     
-    val loadedFunctionOption = FunctionLoader().loadFunction(functionName)
+    val loadedFunctionOption = FunctionLoader().createFunction(functionName)
     loadedFunctionOption.getOrElse{
       // complain about function that isn't present
       throw new RMLException("Can't load function..")
@@ -94,8 +94,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
       val paramTriples = triples.filter(triple => triple.predicate.uri != Uri(RMLVoc.Property.EXECUTES))
 
 
-      function.initialize()
-      logDebug(s"executing ${function.toString}")
+
       function.execute(paramTriples)
     }
   }

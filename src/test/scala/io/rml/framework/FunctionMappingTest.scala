@@ -1,53 +1,24 @@
 package io.rml.framework
 
-import java.io.File
-
-import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.FunctionLoader
-import org.scalatest.{BeforeAndAfter, FunSuite}
-
-import scala.reflect.io.Path
-
+import io.rml.framework.api.FnOEnvironment
+import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll, FunSuite}
+import io.rml.framework.core.internal.Logging
 
 object FunctionMappingSetup {
   def setupFunctionLoader() = {
-    // function descriptions
-    val functionDescriptionFilePaths = List(
-      "functions_grel.ttl",
-      "functions_idlab.ttl"
-    ).map(fp=>
-    {
-      val f = new File(getClass.getClassLoader.getResource(fp).getFile)
-      Path.apply(f)
-    }
-    )
-
-    // add them to the RMLEnvironment
-    functionDescriptionFilePaths.foreach(p=>RMLEnvironment.addFunctionDescriptionFilePath(p))
-
-
-    // function mappings
-    val functionMappingPaths = List(
-      "grel_java_mapping.ttl",
-      "idlab_java_mapping.ttl"
-    ).map(fp=>
-    {
-      val f = new File(getClass.getClassLoader.getResource(fp).getFile)
-      Path.apply(f)
-    }
-    )
-
-    // add them to the RMLEnvironment
-    functionMappingPaths.foreach(p=>RMLEnvironment.addFunctionMappingFilePaths(p))
-
-    // singleton FunctionLoader created and initialized with function descriptions and mappings from the RMLENvironment
-    val functionLoader = FunctionLoader()
+    // singleton FunctionLoader created and initialized with default function descriptions and function mappings
+    FnOEnvironment.loadDefaultConfiguration()
+    FnOEnvironment.intializeFunctionLoader()
   }
 }
-trait FunctionMappingTest extends FunSuite with BeforeAndAfter {
 
-
-  before {
+/**
+ * Test helper trait that automatically initializes the function loader with the default configuration.
+ */
+trait FunctionMappingTest extends FunSuite  with BeforeAndAfterAll with Logging{
+  
+  override protected def beforeAll(): Unit = {
+    logInfo("Before All")
     FunctionMappingSetup.setupFunctionLoader()
   }
 }

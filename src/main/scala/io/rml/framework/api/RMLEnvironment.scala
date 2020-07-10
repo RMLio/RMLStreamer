@@ -41,9 +41,6 @@ object RMLEnvironment {
   private val sources: MutableMap[Uri, Iterable[Item]] = MutableMap()
   private var generatorBaseIRI: Option[String] = None
   private var mappingFileBaseIRI: Option[String] = None
-  private val functionDescriptionFilePaths : mutable.MutableList[Path] = mutable.MutableList()
-  private val functionMappingFilePaths : mutable.MutableList[Path] = mutable.MutableList()
-  private var functionLoader : Option[FunctionLoader] = None
 
   def setGeneratorBaseIRI(baseIRI: Option[String]) = {
     generatorBaseIRI = baseIRI
@@ -76,29 +73,7 @@ object RMLEnvironment {
     sources.put(uri, iterable)
   }
 
-  def getFunctionDescriptionFilePaths() = {
-    this.functionDescriptionFilePaths.toList
-  }
-  def addFunctionDescriptionFilePath(path : Path) = {
-    this.functionDescriptionFilePaths += path
-  }
 
-  def getFunctionMappingFilePaths() = {
-    this.functionMappingFilePaths.toList
-  }
-  def addFunctionMappingFilePaths(path : Path) = {
-    this.functionMappingFilePaths += path
-  }
-
-  def intializeFunctionLoader() = {
-    this.functionLoader = Some(FunctionLoader.apply(getFunctionDescriptionFilePaths(), getFunctionMappingFilePaths()))
-    this.functionLoader
-  }
-  def getFunctionLoader() = {
-    this.functionLoader.getOrElse{
-      intializeFunctionLoader().getOrElse(throw new Exception("Unable to intialize function loader"))
-    }
-  }
   def getSource(uri: Uri): Option[Iterable[Item]] = {
     sources.get(uri)
   }
