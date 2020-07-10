@@ -37,6 +37,10 @@ class StdMappingReaderTest extends FunSuite with Matchers
                                             with Logging {
 
 
+  after {
+    // clean up
+    RMLEnvironment.setMappingFileBaseIRI(None)
+  }
   /**
    * ├── scenario01
    * │   ├── RMLTC0001a-CSV
