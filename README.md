@@ -170,7 +170,7 @@ An example of how to define the generation of an RDF stream from a stream in an 
     rml:logicalSource [
         rml:source [
             rdf:type rmls:KafkaStream ;
-            rmls:broker "broker" ;
+            rmls:broker "localhost:9092" ;
             rmls:groupId "groupId";
             rmls:topic "topic";
         ];
