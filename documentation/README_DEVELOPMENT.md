@@ -14,4 +14,5 @@
 * IntelliJ probably asks to automatically download the dependencies; this is generally a good idea.
 * There should be a `Maven` tool window tab somewhere; open it. If not, you can open it via the menu: `View` > `Tool Windows` > `Maven`.
 * Enable the profile `add-dependencies-for-IDEA`.
+
 ![Maven profile selection](images/maven_intellij.png)
