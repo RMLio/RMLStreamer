@@ -22,7 +22,7 @@ Please note that this version works with Flink 1.10.1 with Scala 2.11 support, w
 ### Building RMLStreamer
 
 In order to build a jar file that can be deployed on a Flink cluster, you need:
-- a Java JDK 8 or higher
+- a Java JDK 11 or higher
 - Apache Maven 3 or higher 
 
 Clone or download and then build the code in this repository:
