@@ -115,7 +115,7 @@ SOFTWARE.
         <dependency>
             <groupId>org.apache.bahir</groupId>
             <artifactId>flink-connector-netty_${scala.binary.version}</artifactId>
-            <version>1.0</version>
+            <version>1.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.flink</groupId>
