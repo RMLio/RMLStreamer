@@ -37,7 +37,7 @@ import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.table.api.Table
-import org.apache.flink.table.api.bridge.scala.StreamTableEnvironment
+import org.apache.flink.table.api.scala.StreamTableEnvironment
 import org.apache.flink.table.descriptors.FileSystem
 import org.apache.flink.types.Row
 
