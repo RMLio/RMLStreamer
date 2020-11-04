@@ -17,3 +17,24 @@ Download [Apache Flink 1.11.2 for Scala 2.11](https://www.apache.org/dyn/closer.
 Make sure all function files are in place (see: [documentation](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/blob/development/documentation/README_Functions.md)) and execute the `flink-1.11.2/bin/start-cluster.sh`  and submit your job. Once you are done running all your jobs, stop the cluster by running the `flink-1.11.2/bin/stop-cluster.sh` script.
 
 Normally no errors should occur.
+
+### Using JitPack to get the latest Netty Snapshot
+
+Since there is no recent official release of Bahir-Flink-Netty, [JitPack](https://jitpack.io/) is used to get the latest snapshot. JitPack is a tool that can get you the a snapshot build from a GitHub/GitLab repo and use it with several build toos including Maven. The usage is very simple, go to the repo you want to use and copy the link and paste it in JitPack. Choose a build, release or commit you want to use and click on 'Get it'. After a couple seconds the the build will be ready and you van copy the `pom.xml` patches.
+
+1. Copy the repo url
+
+   ![Step 1: copy the repo link](/Users/macbookpro/Documents/imec/rml-streamer/documentation/img/copy_repo_link.png)
+
+2. Paste the repo url and look up the repo on JitPack
+
+   ![Step 2: look up repo on JitPack](/Users/macbookpro/Documents/imec/rml-streamer/documentation/img/paste_repo_link.png)
+
+3. Get the build, commit, ... you need
+
+   ![Step 3: get desired version](/Users/macbookpro/Documents/imec/rml-streamer/documentation/img/get_build.png)
+
+4. Copy the `pom.xml` patches
+
+   ![Step 4: copy patches](/Users/macbookpro/Documents/imec/rml-streamer/documentation/img/copy_patch.png)
+
