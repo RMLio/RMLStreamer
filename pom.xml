@@ -51,6 +51,13 @@ SOFTWARE.
         <license.licenseName>mit</license.licenseName>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <!--
 
         Execute "mvn clean package -Pbuild-jar"
@@ -113,9 +120,9 @@ SOFTWARE.
         </dependency>
 
         <dependency>
-            <groupId>org.apache.bahir</groupId>
-            <artifactId>flink-connector-netty_${scala.binary.version}</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <groupId>com.github.apache.bahir-flink</groupId>
+            <artifactId>flink-connector-netty_2.11</artifactId>
+            <version>master-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.flink</groupId>
