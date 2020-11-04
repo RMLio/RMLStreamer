@@ -24,17 +24,17 @@ Since there is no recent official release of Bahir-Flink-Netty, [JitPack](https:
 
 1. Copy the repo url
 
-   ![Step 1: copy the repo link](/Users/macbookpro/Documents/imec/rml-streamer/documentation/img/copy_repo_link.png)
+   ![Step 1: copy the repo link](img/copy_repo_link.png)
 
 2. Paste the repo url and look up the repo on JitPack
 
-   ![Step 2: look up repo on JitPack](/Users/macbookpro/Documents/imec/rml-streamer/documentation/img/paste_repo_link.png)
+   ![Step 2: look up repo on JitPack](img/paste_repo_link.png)
 
 3. Get the build, commit, ... you need
 
-   ![Step 3: get desired version](/Users/macbookpro/Documents/imec/rml-streamer/documentation/img/get_build.png)
+   ![Step 3: get desired version](img/get_build.png)
 
 4. Copy the `pom.xml` patches
 
-   ![Step 4: copy patches](/Users/macbookpro/Documents/imec/rml-streamer/documentation/img/copy_patch.png)
+   ![Step 4: copy patches](img/copy_patch.png)
 
