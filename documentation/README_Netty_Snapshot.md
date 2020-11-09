@@ -38,3 +38,7 @@ Since there is no recent official release of Bahir-Flink-Netty, [JitPack](https:
 
    ![Step 4: copy patches](img/copy_patch.png)
 
+When using a repo that contains different subprojetts, you can also select one of those subprojetts, instead of the entire project. In this example the `flink-netty-connector` is selected from the `bahir-flink` repo.
+
+![Select a subproject](img/select_subproject.png)
+
