@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Function mapping.
 * Joins of data streams
+* Updated Flink from version 1.10.1 to 1.11.2
+* Updated Kafka from version 2.2.2 to 2.4.2
+
+
 
 ### Changed
 * Updated Flink from version 1.10.0 to 1.10.1
