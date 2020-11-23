@@ -121,7 +121,7 @@ SOFTWARE.
 
         <dependency>
             <groupId>com.github.apache.bahir-flink</groupId>
-            <artifactId>flink-connector-netty_2.11</artifactId>
+            <artifactId>flink-connector-netty_${scala.binary.version}</artifactId>
             <version>master-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
