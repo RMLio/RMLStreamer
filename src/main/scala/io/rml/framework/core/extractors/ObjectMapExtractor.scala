@@ -30,5 +30,5 @@ import io.rml.framework.core.model.ObjectMap
 trait ObjectMapExtractor extends TermMapExtractor[List[ObjectMap]]
 
 object ObjectMapExtractor {
-  def apply(): ObjectMapExtractor = new StdObjectMapExtractor(FunctionMapExtractor())
+  def apply(): ObjectMapExtractor = new StdObjectMapExtractor()
 }

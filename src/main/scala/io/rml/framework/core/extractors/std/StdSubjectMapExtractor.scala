@@ -35,7 +35,7 @@ import io.rml.framework.shared.RMLException
 /**
   * Extractor for extracting Subject Maps from RDFResources.
   */
-class StdSubjectMapExtractor(graphMapExtractor: GraphMapExtractor) extends SubjectMapExtractor with Logging {
+class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
 
   /**
     * Extracts a SubjectMap from a resource.
@@ -81,7 +81,7 @@ class StdSubjectMapExtractor(graphMapExtractor: GraphMapExtractor) extends Subje
     val constant = extractConstant(resource)
     val template = extractTemplate(resource)
     val termType = extractTermType(resource)
-    val graphMap = graphMapExtractor.extract(resource)
+    val graphMap = GraphMapExtractor().extract(resource)
 
     val functionMap = FunctionMapExtractor().extract(resource)
 

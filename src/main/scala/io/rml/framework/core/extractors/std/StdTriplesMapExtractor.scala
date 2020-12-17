@@ -35,12 +35,8 @@ import io.rml.framework.shared.RMLException
 /**
   * Extractor for extracting triple maps from a graph.
   */
-class StdTriplesMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
-                             subjectMapExtractor: SubjectMapExtractor,
-                             graphMapExtractor: GraphMapExtractor,
-                             predicateObjectMapExtractor: PredicateObjectMapExtractor)
+class StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
 
-  extends TriplesMapExtractor with Logging {
 
   /**
    * Helper method for inferring whether the given resource is a TriplesMap.
@@ -118,11 +114,11 @@ class StdTriplesMapExtractor(logicalSourceExtractor: LogicalSourceExtractor,
     try {
 
       // create a new triple map by extracting all sub structures
-      val triplesMap = TriplesMap(predicateObjectMapExtractor.extract(resource),
-        logicalSourceExtractor.extract(resource),
-        subjectMapExtractor.extract(resource),
+      val triplesMap = TriplesMap(PredicateObjectMapExtractor().extract(resource),
+        LogicalSourceExtractor().extract(resource),
+        SubjectMapExtractor().extract(resource),
         resource.uri.toString,
-        graphMapExtractor.extract(resource)
+        GraphMapExtractor().extract(resource)
       )
       Some(triplesMap)
 

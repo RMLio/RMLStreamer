@@ -31,11 +31,8 @@ import io.rml.framework.core.model.PredicateObjectMap
 trait PredicateObjectMapExtractor extends ResourceExtractor[List[PredicateObjectMap]]
 
 object PredicateObjectMapExtractor {
-  def apply(objectMapExtractor: ObjectMapExtractor = ObjectMapExtractor(),
-            predicateMapExtractor: PredicateMapExtractor = PredicateMapExtractor(),
-            functionMapExtractor: FunctionMapExtractor = FunctionMapExtractor(),
-            graphMapExtractor: GraphMapExtractor = GraphMapExtractor())
+  def apply()
 
   : PredicateObjectMapExtractor =
-    new StdPredicateObjectMapExtractor(predicateMapExtractor, objectMapExtractor, functionMapExtractor, graphMapExtractor)
+    new StdPredicateObjectMapExtractor()
 }

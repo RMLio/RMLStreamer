@@ -32,7 +32,7 @@ import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
 
-class StdPredicateMapExtractor(functionMapExtractor: FunctionMapExtractor) extends PredicateMapExtractor {
+class StdPredicateMapExtractor() extends PredicateMapExtractor {
   /**
     * Extract.
     *
@@ -92,7 +92,7 @@ class StdPredicateMapExtractor(functionMapExtractor: FunctionMapExtractor) exten
     val template = extractTemplate(resource)
     val constant = extractConstant(resource)
     val reference = extractReference(resource)
-    val functionMap = functionMapExtractor.extract(resource)
+    val functionMap = FunctionMapExtractor().extract(resource)
 
     PredicateMap(resource.uri.toString, functionMap, constant, reference, template, termType)
   }

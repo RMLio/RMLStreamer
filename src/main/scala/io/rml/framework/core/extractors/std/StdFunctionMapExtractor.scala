@@ -1,12 +1,11 @@
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{FunctionMapExtractor, LogicalSourceExtractor, PredicateObjectMapExtractor, SubjectMapExtractor}
+import io.rml.framework.core.extractors.{FunctionMapExtractor, PredicateObjectMapExtractor}
 import io.rml.framework.core.model.FunctionMap
 import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.vocabulary.RMLVoc
 
-class StdFunctionMapExtractor(subjectMapExtractor: SubjectMapExtractor,
-                              logicalSourceExtractor: LogicalSourceExtractor) extends FunctionMapExtractor {
+class StdFunctionMapExtractor extends FunctionMapExtractor {
 
   /**
    * Lazy val to prevent circular reference and stack overflow when instantiating the class

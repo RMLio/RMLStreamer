@@ -32,7 +32,7 @@ import io.rml.framework.core.util.Util
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
-class StdObjectMapExtractor(stdFunctionMapExtractor: FunctionMapExtractor) extends ObjectMapExtractor {
+class StdObjectMapExtractor extends ObjectMapExtractor {
   /**
     * Extract.
     *
@@ -101,7 +101,7 @@ class StdObjectMapExtractor(stdFunctionMapExtractor: FunctionMapExtractor) exten
     val joinCondition = extractJoinCondition(resource)
     val language = extractLanguage(resource)
     val datatype = extractDatatype(resource)
-    val functionMap = stdFunctionMapExtractor.extract(resource)
+    val functionMap = FunctionMapExtractor().extract(resource)
     ObjectMap(resource.uri.toString, functionMap, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition)
   }
 

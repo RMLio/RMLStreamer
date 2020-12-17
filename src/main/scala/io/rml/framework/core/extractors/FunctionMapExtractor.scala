@@ -45,10 +45,9 @@ trait FunctionMapExtractor extends TermMapExtractor[List[FunctionMap]] {
 object FunctionMapExtractor {
 
 
-  def apply(logicalSourceExtractor: LogicalSourceExtractor = LogicalSourceExtractor(),
-            subjectMapExtractor: SubjectMapExtractor = SubjectMapExtractor()):FunctionMapExtractor = {
+  def apply():FunctionMapExtractor = {
 
-    new StdFunctionMapExtractor(subjectMapExtractor, logicalSourceExtractor)
+    new StdFunctionMapExtractor()
   }
 }
 
