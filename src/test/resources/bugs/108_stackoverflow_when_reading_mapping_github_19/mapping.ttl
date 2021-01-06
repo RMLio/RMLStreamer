@@ -1,0 +1,119 @@
+@prefix map: <http://example.org/map#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+ @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix vcard: <http://www.w3.org/2001/vcard-rdf/3.0#> . 
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> . 
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> . 
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix conf: <http://ufc.br/rdb2rdfmb/conf/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> . 
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix edtf: <http://id.loc.gov/datatypes/edtf> .
+@prefix meemoo: <http://data.meemoo.be/ns/> .
+
+map:FragmentMetadata rml:source "bugs/108_stackoverflow_when_reading_mapping_github_19/head.csv";
+    rml:referenceFormulation ql:CSV.
+
+map:Fragment a rr:TriplesMap;
+    rml:logicalSource  map:FragmentMetadata;
+    rr:subjectMap [
+        rr:template "http://data.meemoo.be/fm/{fragment_id_mam}";
+        rr:class meemoo:Fragment;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate meemoo:hasContentpartner;
+        rr:objectMap [ rr:parentTriplesMap map:Contentpartner ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate meemoo:hasServiceprovider;
+        rr:objectMap [ rr:parentTriplesMap map:Serviceprovider ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dcterms:isPartOf;
+        rr:objectMap [ rr:parentTriplesMap map:MediaObject ];
+    ].
+
+map:MediaObject a rr:TriplesMap;
+    rml:logicalSource map:FragmentMetadata;
+    rr:subjectMap [
+        rr:template "http://data.meemoo.be/mo/{mediaobject_id_mam}";
+        rr:class meemoo:MediaObject;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dcterms:hasPart;
+        rr:objectMap [ rr:parentTriplesMap map:Fragment ];
+    ].
+
+map:Contentpartner a rr:TriplesMap;
+    rml:logicalSource map:FragmentMetadata;
+    rr:subjectMap [
+        rr:template "http://data.meemoo.be/cp/{cp_id}";
+        rr:class meemoo:Contentpartner;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate rdfs:label;
+        rr:objectMap [ rml:reference "cp" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dc:identifier;
+        rr:objectMap [ rml:reference "cp_id" ];
+    ].
+
+
+map:Serviceprovider a rr:TriplesMap;
+    rml:logicalSource map:FragmentMetadata;
+    rr:subjectMap [
+        rr:template "http://data.meemoo.be/sp/{sp_id}";
+        rr:class meemoo:Serviceprovider;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate rdfs:label;
+        rr:objectMap [ rml:reference "sp_name" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dc:identifier;
+        rr:objectMap [ rml:reference "sp_id" ];
+    ].
+
+map:IntellectualEntity a rr:TriplesMap;
+    rml:logicalSource map:FragmentMetadata;
+    rr:subjectMap [
+        rr:template "http://data.meemoo.be/ie/{pid}";
+        rr:class meemoo:IntellectualEntity;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dcterms:title;
+        rr:objectMap [ rml:reference "dc_title" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dcterms:abstract;
+        rr:objectMap [ rml:reference "dcterms_abstract" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dcterms:created;
+        rr:objectMap [ rml:reference "dcterms_created" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dcterms:issued;
+        rr:objectMap [ rml:reference "dcterms_issued" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dcterms:description;
+        rr:objectMap [ rml:reference "dc_description" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dcterms:publisher;
+        rr:objectMap [ rml:reference "dc_publisher" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dcterms:source;
+        rr:objectMap [ rml:reference "dc_source" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate dcterms:date;
+        rr:objectMap [ rml:reference "dc_terms"; rr:datatype edtf:EDTF ];
+    ].

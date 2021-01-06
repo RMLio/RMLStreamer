@@ -1,0 +1,3 @@
+fragment_id_mam,mediaobject_id_mam,cp,cp_id,sp_id,sp_name,pid,dc_description,dc_format,dc_publisher,dc_source,dc_terms,dc_title,dcterms_abstract,dcterms_created,dcterms_issued
+f_id_mam_1,m_id_mam_1,cp1,cp_id1,sp_id1,sp_name1,pid1,dc_description1,dc_format1,dc_publisher1,dc_source1,dc_terms1,dc_title1,dcterms_abstract1,dcterms_created1,dcterms_issued1
+f_id_mam_2,m_id_mam_2,cp2,cp_id2,sp_id2,sp_name2,pid2,dc_description2,dc_format2,dc_publisher2,dc_source2,dc_terms2,dc_title2,dcterms_abstract2,dcterms_created2,dcterms_issued2

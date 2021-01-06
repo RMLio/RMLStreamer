@@ -1,0 +1,58 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix meemoo: <http://data.meemoo.be/ns/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://data.meemoo.be/cp/cp_id1> a meemoo:Contentpartner;
+  dc:identifier "cp_id1";
+  rdfs:label "cp1" .
+
+<http://data.meemoo.be/cp/cp_id2> a meemoo:Contentpartner;
+  dc:identifier "cp_id2";
+  rdfs:label "cp2" .
+
+<http://data.meemoo.be/fm/f_id_mam_1> a meemoo:Fragment;
+  meemoo:hasContentpartner <http://data.meemoo.be/cp/cp_id1>, <http://data.meemoo.be/cp/cp_id2>;
+  meemoo:hasServiceprovider <http://data.meemoo.be/sp/sp_id1>, <http://data.meemoo.be/sp/sp_id2>;
+  dcterms:isPartOf <http://data.meemoo.be/mo/m_id_mam_1>, <http://data.meemoo.be/mo/m_id_mam_2> .
+
+<http://data.meemoo.be/fm/f_id_mam_2> a meemoo:Fragment;
+  meemoo:hasContentpartner <http://data.meemoo.be/cp/cp_id1>, <http://data.meemoo.be/cp/cp_id2>;
+  meemoo:hasServiceprovider <http://data.meemoo.be/sp/sp_id1>, <http://data.meemoo.be/sp/sp_id2>;
+  dcterms:isPartOf <http://data.meemoo.be/mo/m_id_mam_1>, <http://data.meemoo.be/mo/m_id_mam_2> .
+
+<http://data.meemoo.be/ie/pid1> a meemoo:IntellectualEntity;
+  dcterms:abstract "dcterms_abstract1";
+  dcterms:created "dcterms_created1";
+  dcterms:date "dc_terms1"^^<http://id.loc.gov/datatypes/edtfEDTF>;
+  dcterms:description "dc_description1";
+  dcterms:issued "dcterms_issued1";
+  dcterms:publisher "dc_publisher1";
+  dcterms:source "dc_source1";
+  dcterms:title "dc_title1" .
+
+<http://data.meemoo.be/ie/pid2> a meemoo:IntellectualEntity;
+  dcterms:abstract "dcterms_abstract2";
+  dcterms:created "dcterms_created2";
+  dcterms:date "dc_terms2"^^<http://id.loc.gov/datatypes/edtfEDTF>;
+  dcterms:description "dc_description2";
+  dcterms:issued "dcterms_issued2";
+  dcterms:publisher "dc_publisher2";
+  dcterms:source "dc_source2";
+  dcterms:title "dc_title2" .
+
+<http://data.meemoo.be/mo/m_id_mam_1> a meemoo:MediaObject;
+  dcterms:hasPart <http://data.meemoo.be/fm/f_id_mam_1>, <http://data.meemoo.be/fm/f_id_mam_2> .
+
+<http://data.meemoo.be/mo/m_id_mam_2> a meemoo:MediaObject;
+  dcterms:hasPart <http://data.meemoo.be/fm/f_id_mam_1>, <http://data.meemoo.be/fm/f_id_mam_2> .
+
+<http://data.meemoo.be/sp/sp_id1> a meemoo:Serviceprovider;
+  dc:identifier "sp_id1";
+  rdfs:label "sp_name1" .
+
+<http://data.meemoo.be/sp/sp_id2> a meemoo:Serviceprovider;
+  dc:identifier "sp_id2";
+  rdfs:label "sp_name2" .
