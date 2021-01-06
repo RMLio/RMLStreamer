@@ -24,10 +24,7 @@
   **/
 package io.rml.framework
 
-import java.io.File
-
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.FunctionLoader
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.TestUtil
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
