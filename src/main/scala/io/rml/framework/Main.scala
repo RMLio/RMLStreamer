@@ -26,11 +26,8 @@ package io.rml.framework
   **/
 
 
-import java.io.FileNotFoundException
-import java.net.URLClassLoader
-import java.util.Properties
-
 import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
+import io.rml.framework.core.extractors.TriplesMapsCache
 import io.rml.framework.core.function.flink.{FnOEnvironmentLoader, FnOEnvironmentStreamLoader, RichItemIdentityFunction, RichStreamItemIdentityFunction}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
@@ -42,20 +39,16 @@ import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
 import io.rml.framework.flink.util.ParameterUtil
 import io.rml.framework.flink.util.ParameterUtil.{OutputSinkOption, PostProcessorOption}
-import org.apache.flink.api.common.functions.RichMapFunction
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.scala._
-import org.apache.flink.api.scala.typeutils.Types
-import org.apache.flink.configuration.Configuration
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.streaming.api.functions.ProcessFunction
 import org.apache.flink.streaming.api.scala.{DataStream, OutputTag, StreamExecutionEnvironment}
 import org.apache.flink.util.Collector
 
+import java.util.Properties
 import scala.collection.{immutable, mutable}
-import scala.reflect.io.Path
-import scala.util.{Failure, Success, Try}
 
 /**
   *
@@ -252,7 +245,7 @@ object Main extends Logging {
 
   }
 
-  def createMixedPipelineFromFormattedMapping(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[String] = {
+  private def createMixedPipelineFromFormattedMapping(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[String] = {
     // we assume a streaming child triples map and a static parent triples map
     require(formattedMapping.containsStreamTriplesMaps() && formattedMapping.containsDatasetTriplesMaps() && formattedMapping.containsParentTriplesMaps)
 
@@ -305,7 +298,7 @@ object Main extends Logging {
         val joinedStreamTm = triplesMap.asInstanceOf[JoinedTriplesMap]
         val engine = StatementEngine.fromJoinedTriplesMap(joinedStreamTm)
 
-        val parentTmId = joinedStreamTm.parentTriplesMap.identifier
+        val parentTmId = joinedStreamTm.parentTriplesMap
         val joinParentSource = joinedStreamTm.joinCondition.get.parent.identifier
         stream
           .flatMap(_.iterator)
@@ -353,20 +346,20 @@ object Main extends Logging {
     unionStreams(processedDataStreams)
   }
 
-  def getStaticParentSourceItems(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor)
+  private def getStaticParentSourceItems(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor)
   : Map[(String, String, String), Item] = {
     // map: (parent triples map identiefier, name of the variable to join on, the value of it) => generated subject string
     var parentTriplesMapId2JoinParentSource2JoinParentValue2ParentItem = mutable.HashMap.empty[(String, String, String), Item]
 
     formattedMapping.joinedSteamTriplesMaps.foreach(joinedTm => {
       // identify the parent triples map
-      val parentTm = joinedTm.parentTriplesMap
+      val parentTm = TriplesMapsCache.get(joinedTm.parentTriplesMap).get;
 
       // find the parent source of the join condition
       val joinParentSource = joinedTm.joinCondition.get.parent.identifier
 
       // get the subjects from the static logical source
-      val parentDataset = Source(joinedTm.parentTriplesMap.logicalSource).asInstanceOf[FileDataSet].dataset
+      val parentDataset = Source(parentTm.logicalSource).asInstanceOf[FileDataSet].dataset
 
       parentDataset
         // only keep items where the parent source of the join condition is defined
@@ -531,9 +524,10 @@ object Main extends Logging {
         })
 
 
+      val parentTriplesMap = TriplesMapsCache.get(tm.parentTriplesMap).get;
       val parentDataset =
       // Create a Source from the parents logical source
-        Source(tm.parentTriplesMap.logicalSource).asInstanceOf[FileDataSet]
+        Source(parentTriplesMap.logicalSource).asInstanceOf[FileDataSet]
           .dataset
 
           // filter out all items that do not contain the parents join condition
@@ -580,7 +574,9 @@ object Main extends Logging {
         // create a crossed data set
         val crossed = childDataset.cross(parentDataset)
 
-        crossed.map(items => JoinedItem(items._1, items._2)) // create a JoinedItem from the crossed items
+        crossed.map(items =>
+          JoinedItem(items._1, items._2)
+        ) // create a JoinedItem from the crossed items
           .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items") // process the joined items
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None) // format the triples
           .name("Convert joined triples to strings")

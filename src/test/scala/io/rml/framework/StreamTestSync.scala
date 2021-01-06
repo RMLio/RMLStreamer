@@ -24,11 +24,8 @@
   **/
 package io.rml.framework
 
-import java.io.File
-import java.nio.file.{Path, Paths}
-import java.util.concurrent.Executors
-
 import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.extractors.TriplesMapsCache
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.util.{StreamerConfig, Util}
 import io.rml.framework.engine.PostProcessor
@@ -43,6 +40,9 @@ import org.apache.flink.runtime.jobgraph.JobGraph
 import org.apache.flink.runtime.minicluster.{MiniCluster, MiniClusterConfiguration}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 
+import java.io.File
+import java.nio.file.{Path, Paths}
+import java.util.concurrent.Executors
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.reflect.io.Directory
 
@@ -104,6 +104,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
 
   // run the test cases
   for ((folderPath, postProcessorName) <- testCases) {
+    TriplesMapsCache.clear();
 
     //it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
     Logger.lineBreak(50)

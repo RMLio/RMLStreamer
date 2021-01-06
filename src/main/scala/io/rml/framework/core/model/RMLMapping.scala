@@ -24,6 +24,7 @@
   **/
 package io.rml.framework.core.model
 
+import io.rml.framework.core.extractors.TriplesMapsCache
 import io.rml.framework.core.model.std.StdRMLMapping
 
 /**
@@ -62,7 +63,9 @@ object RMLMapping {
     val parentTriplesMaps = tmWithParentTriplesMaps.flatMap(tm =>
       tm.predicateObjectMaps.flatMap(pm =>
         pm.objectMaps.flatMap(om => om.parentTriplesMap)))
-    val transformedPTM = parentTriplesMaps.map(ParentTriplesMap(_))
+    val transformedPTM = parentTriplesMaps.map(
+      resource => ParentTriplesMap(TriplesMapsCache.get(resource).get)
+    )
 
     // filter out all triple maps that are not parent triple maps themselves
     val nonPTMTriplesMaps = triplesMaps.filter(tm => !transformedPTM.contains(ParentTriplesMap(tm)))

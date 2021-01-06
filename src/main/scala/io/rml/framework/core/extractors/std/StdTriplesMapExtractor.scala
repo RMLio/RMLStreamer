@@ -25,7 +25,7 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors._
+import io.rml.framework.core.extractors.{TriplesMapsCache, _}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFResource}
 import io.rml.framework.core.model.{TriplesMap, Uri}
@@ -35,7 +35,7 @@ import io.rml.framework.shared.RMLException
 /**
   * Extractor for extracting triple maps from a graph.
   */
-class StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
+object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
 
 
   /**
@@ -56,7 +56,7 @@ class StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
     val subjectConstantProperty = RMLVoc.Property.SUBJECT
 
     // trivial case
-    val isTriplesMap = resource.getType == Some(Uri(RMLVoc.Class.TRIPLESMAP))
+    val isTriplesMap = resource.getType.equals(Some(Uri(RMLVoc.Class.TRIPLESMAP)))
 
     // property requirements for a triplesmap
     val hasExactlyOneLogicalSource = resource.listProperties(logicalSourceProperty).length==1
@@ -110,25 +110,31 @@ class StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
     * @return
     */
   def extractTriplesMapProperties(resource: RDFResource): Option[TriplesMap] = {
+    val resourceStr = resource.toString;
     // errors can occur during extraction of sub structures
-    try {
+    if (TriplesMapsCache.contains(resourceStr)) {
+      TriplesMapsCache.get(resourceStr)
+    } else {
+      try {
 
-      // create a new triple map by extracting all sub structures
-      val triplesMap = TriplesMap(PredicateObjectMapExtractor().extract(resource),
-        LogicalSourceExtractor().extract(resource),
-        SubjectMapExtractor().extract(resource),
-        resource.uri.toString,
-        GraphMapExtractor().extract(resource)
-      )
-      Some(triplesMap)
+        // create a new triple map by extracting all sub structures
+        val triplesMap = TriplesMap(PredicateObjectMapExtractor().extract(resource),
+          LogicalSourceExtractor().extract(resource),
+          SubjectMapExtractor().extract(resource),
+          resource.uri.toString,
+          GraphMapExtractor().extract(resource)
+        )
+        val t = TriplesMapsCache.put(resourceStr, triplesMap);
+        Some(triplesMap)
 
-    } catch {
-      // in case of an error, skip this triple map and log warnings
-      case e: RMLException =>
-        e.printStackTrace()
-        logWarning(e.getMessage)
-        logWarning(resource.uri + ": Skipping triple map.")
-        throw e
+      } catch {
+        // in case of an error, skip this triple map and log warnings
+        case e: RMLException =>
+          e.printStackTrace()
+          logWarning(e.getMessage)
+          logWarning(resource.uri + ": Skipping triple map.")
+          throw e
+      }
     }
   }
 

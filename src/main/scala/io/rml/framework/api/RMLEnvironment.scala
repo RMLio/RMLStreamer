@@ -24,16 +24,10 @@
   **/
 package io.rml.framework.api
 
-import java.io.File
-
-import io.rml.framework.core.extractors.MappingReader
-import io.rml.framework.core.function.FunctionLoader
-import io.rml.framework.core.model.{FormattedRMLMapping, RMLMapping, Uri}
+import io.rml.framework.core.model.Uri
 import io.rml.framework.flink.item.Item
 
-import scala.collection.mutable
-import scala.collection.mutable.{MutableList, Map => MutableMap}
-import scala.reflect.io.Path
+import scala.collection.mutable.{Map => MutableMap}
 
 object RMLEnvironment {
 
@@ -57,12 +51,7 @@ object RMLEnvironment {
   def getMappingFileBaseIRI(): Option[String] = {
     mappingFileBaseIRI
   }
-
-  def loadMappingFromFile(path: String): RMLMapping = {
-    val file = new File(path)
-    FormattedRMLMapping.fromRMLMapping(MappingReader().read(file).asInstanceOf[RMLMapping])
-  }
-
+  
   def executeMapping(): Unit = ???
 
   def executeTriplesMap(): Unit = ???

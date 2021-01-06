@@ -52,7 +52,7 @@ object TriplesMapExtractor {
 
   : TriplesMapExtractor = {
 
-    lazy val extractor = new StdTriplesMapExtractor()
+    lazy val extractor = StdTriplesMapExtractor
     extractor
   }
 

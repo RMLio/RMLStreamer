@@ -24,9 +24,8 @@
  **/
 package io.rml.framework
 
-import java.io.File
-
 import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.extractors.TriplesMapsCache
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.NopPostProcessor
 import io.rml.framework.util.TestUtil
@@ -35,11 +34,14 @@ import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
 import org.scalatest.{FunSuite, Matchers}
 
+import java.io.File
+
 
 class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
 
 
   private def executeTest(mappingFile: String): Unit = {
+    TriplesMapsCache.clear();
     RMLEnvironment.setGeneratorBaseIRI(Some("http://example.org/base/"))
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
@@ -58,7 +60,9 @@ class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
     //val testDir = new File(mappingFile).getParentFile.getAbsoluteFile
     val (expectedOutput, expectedOutputFormat) = TestUtil.getExpectedOutputs(testDir)
 
+
     val testOutcome = TestUtil.compareResults(s"StatementEngineTest: ${testDir}", result, expectedOutput, postProcessor.outputFormat, expectedOutputFormat)
+
     testOutcome match {
       case Left(e) => {
         Logger.logError(e)

@@ -25,10 +25,11 @@
 
 package io.rml.framework.engine.statement
 
+import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RDFVoc
 import io.rml.framework.flink.item.{Item, JoinedItem}
-import io.rml.framework.core.internal.Logging
 /**
   * Creates statements from triple maps.
   */
@@ -96,7 +97,7 @@ object StatementsAssembler {
 
   def assembleParentStatements(joinedTriplesMap: JoinedTriplesMap): List[Statement[JoinedItem]] = {
     val triples = new StatementsAssembler()
-      .assembleStatements(joinedTriplesMap.parentTriplesMap)
+      .assembleStatements(TriplesMapsCache.get(joinedTriplesMap.parentTriplesMap).get)
     triples.map(triple => ParentStatement(triple._1, triple._2, triple._3, triple._4))
   }
 

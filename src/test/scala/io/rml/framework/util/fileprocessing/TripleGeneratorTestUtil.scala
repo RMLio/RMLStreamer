@@ -24,16 +24,16 @@
   **/
 package io.rml.framework.util.fileprocessing
 
-import java.io.File
-
 import io.rml.framework.Main
-import io.rml.framework.core.extractors.MappingReader
+import io.rml.framework.core.extractors.{MappingReader, TriplesMapsCache}
 import io.rml.framework.core.model.{FormattedRMLMapping, RMLMapping}
 import io.rml.framework.core.util.{Format, NQuads}
 import io.rml.framework.engine.{NopPostProcessor, PostProcessor}
 import io.rml.framework.util.logging.Logger
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+
+import java.io.File
 
 /**
   * Test helper to get generated triples after processing the mapping file
@@ -66,6 +66,7 @@ object TripleGeneratorTestUtil extends TestFilesUtil[(List[String], Format)] {
     */
    def processFile(file: File): (List[String], Format) = {
      try {
+       TriplesMapsCache.clear();
        val mapping = MappingReader().read(file)
 
        val formattedMapping = FormattedRMLMapping.fromRMLMapping(mapping.asInstanceOf[RMLMapping])

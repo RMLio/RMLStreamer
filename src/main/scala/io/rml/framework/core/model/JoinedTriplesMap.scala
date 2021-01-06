@@ -29,7 +29,7 @@ import io.rml.framework.shared.RMLException
 
 abstract class JoinedTriplesMap(triplesMap: TriplesMap) extends TriplesMap {
 
-  private val parentTriplesMaps: List[TriplesMap] = triplesMap.predicateObjectMaps.flatMap(pom => {
+  private val parentTriplesMaps: List[String] = triplesMap.predicateObjectMaps.flatMap(pom => {
     pom.objectMaps.flatMap(om => {
       om.parentTriplesMap
     })
@@ -50,7 +50,7 @@ abstract class JoinedTriplesMap(triplesMap: TriplesMap) extends TriplesMap {
   if (joinConditions.exists(_ != joinConditions.head)) throw new RMLException(triplesMap.identifier +
     ": Can only create JoinedTripleMap from triple map with one general join condition.")
 
-  val parentTriplesMap: TriplesMap = parentTriplesMaps.head
+  val parentTriplesMap: String = parentTriplesMaps.head
   val joinCondition: Option[JoinCondition] = joinConditions.headOption
 
 }

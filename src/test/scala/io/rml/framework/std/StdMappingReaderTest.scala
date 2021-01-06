@@ -26,6 +26,7 @@
 package io.rml.framework.std
 
 import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.extractors.TriplesMapsCache
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.util.Util
 import org.scalatest.{BeforeAndAfter, FunSuite, Matchers}
@@ -36,6 +37,7 @@ class StdMappingReaderTest extends FunSuite with Matchers
                                             with BeforeAndAfter
                                             with Logging {
 
+  // TODO: There are no assetions in the tests??
 
   after {
     // clean up
@@ -49,6 +51,7 @@ class StdMappingReaderTest extends FunSuite with Matchers
    * │   └── student.csv
    */
   test("relative paths: scenario01"){
+    TriplesMapsCache.clear();
     val mappingFile = "relative_paths/scenario01/RMLTC0001a-CSV/mapping.ttl"
     // determine the base IRI of the mapping file
     RMLEnvironment.setMappingFileBaseIRI(Some((mappingFile)))
@@ -64,6 +67,7 @@ class StdMappingReaderTest extends FunSuite with Matchers
    * │       └── student.csv
    */
   test("relative paths: scenario02"){
+    TriplesMapsCache.clear();
     val mappingFile = "relative_paths/scenario02/RMLTC0001a-CSV/mapping.ttl"
     // determine the base IRI of the mapping file
     RMLEnvironment.setMappingFileBaseIRI(Some((mappingFile)))
@@ -79,6 +83,7 @@ class StdMappingReaderTest extends FunSuite with Matchers
    *         └── output.ttl
    */
   test("relative paths: scenario03"){
+    TriplesMapsCache.clear();
     val mappingFile = "relative_paths/scenario03/RMLTC0001a-CSV/mapping.ttl"
     // determine the base IRI of the mapping file
     RMLEnvironment.setMappingFileBaseIRI(Some((mappingFile)))
