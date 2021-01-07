@@ -26,22 +26,4 @@ import io.rml.framework.core.model.TriplesMap
   * THE SOFTWARE.
   *
   * */
-object TriplesMapsCache {
-  private val triplesMaps = scala.collection.mutable.Map[String, TriplesMap]();
-
-  def put(resource: String, triplesMap: TriplesMap): Unit = {
-    triplesMaps.put(resource, triplesMap);
-  }
-
-  def get(resource: String): Option[TriplesMap] = {
-    triplesMaps.get(resource)
-  }
-
-  def contains(resource: String): Boolean = {
-    triplesMaps.contains(resource)
-  }
-
-  def clear(): Unit = {
-    triplesMaps.clear();
-  }
-}
+object TriplesMapsCache extends scala.collection.mutable.HashMap[String, TriplesMap]
