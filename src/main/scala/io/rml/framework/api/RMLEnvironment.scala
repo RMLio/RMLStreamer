@@ -24,15 +24,7 @@
   **/
 package io.rml.framework.api
 
-import io.rml.framework.core.model.Uri
-import io.rml.framework.flink.item.Item
-
-import scala.collection.mutable.{Map => MutableMap}
-
 object RMLEnvironment {
-
-
-  private val sources: MutableMap[Uri, Iterable[Item]] = MutableMap()
   private var generatorBaseIRI: Option[String] = None
   private var mappingFileBaseIRI: Option[String] = None
 
@@ -51,24 +43,4 @@ object RMLEnvironment {
   def getMappingFileBaseIRI(): Option[String] = {
     mappingFileBaseIRI
   }
-  
-  def executeMapping(): Unit = ???
-
-  def executeTriplesMap(): Unit = ???
-
-
-  def registerSource(uri: Uri, iterable: Iterable[Item]): Unit = {
-    require(sources.isEmpty, "Processing of only one source supported in API mode.")
-    sources.put(uri, iterable)
-  }
-
-
-  def getSource(uri: Uri): Option[Iterable[Item]] = {
-    sources.get(uri)
-  }
-  
-  def reset(): Unit = {
-    sources.clear()
-  }
-
 }
