@@ -9,22 +9,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Function mapping.
 * Joins of data streams
-* Updated Flink from version 1.10.1 to 1.11.2
-* Updated Kafka from version 2.2.2 to 2.4.2
 
-
+## [2.0.1] -
 
 ### Changed
-* Updated Flink from version 1.10.0 to 1.10.1
+* Updated Flink from version 1.10.0 to 1.11.2
+* Updated Kafka version from version 2.2.2 to 2.4.1 (more versions supported using the universal connector)
 
 ### Fixed
-* Escape characters were not escaped in generated literals (Internal [issue #81](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/issues/81)).
-* Curly brackets were not escaped correctly (Internal [issue #65](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/issues/65)).
-
-## [1.2.3] - 2020-03-16
-
-### Changed
-* Updated documentation
+* Cyclic reference of parent triples maps leads to a stack overflow error (GitHub [issue #19](https://github.com/RMLio/RMLStreamer/issues/19), Internal [issue #108](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/issues/108))
+* In some cases not all triples maps were applied when joins (static-static and static-streams) are involved (fixed together with issue above).
 
 ## [2.0.0] - 2020-06-08
 
