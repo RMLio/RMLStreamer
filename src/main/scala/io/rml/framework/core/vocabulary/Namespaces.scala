@@ -51,14 +51,14 @@ object Namespaces {
     "doap" -> "http://usefulinc.com/ns/doap#",
 
     // Web of Things
-    "td" -> "https://www.w3.org/2019/wot/td#",
-    "hctl" -> "https://www.w3.org/2019/wot/hypermedia#",
-    "mqv" -> "http://www.example.org/mqtt-binding#",  // TODO: change once an officlial vocabulary is published
-    "wotsec" -> "https://www.w3.org/2019/wot/security#",
+    WoTVoc.ThingDescription.namespace._1 -> WoTVoc.ThingDescription.namespace._2,
+    WoTVoc.Hypermedia.namespace._1 -> WoTVoc.Hypermedia.namespace._2,
+    WoTVoc.WoTMQTT.namespace._1 -> WoTVoc.WoTMQTT.namespace._2,
+    WoTVoc.WotSecurity.namespace._1 -> WoTVoc.WotSecurity.namespace._2
     
     // HTTP
-    "http" -> "http://www.w3.org/2011/http#",
-    "htv" -> "http://www.w3.org/2011/http#"  // typically used in WoT documents.
+    //"http" -> "http://www.w3.org/2011/http#",
+    // TODO "htv" -> "http://www.w3.org/2011/http#"  // typically used in WoT documents.
   )
 
   /**

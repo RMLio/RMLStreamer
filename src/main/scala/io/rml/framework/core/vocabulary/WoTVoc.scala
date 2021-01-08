@@ -30,45 +30,63 @@ package io.rml.framework.core.vocabulary
   */
 object WoTVoc {
 
-  object Propertry {
-    ///////////////////////////////////////////////////////////////////////////
-    // TD (https://www.w3.org/2019/wot/td)
-    ///////////////////////////////////////////////////////////////////////////
-    val PROPERTYAFFORDANCE = Namespaces("td", "hasPropertyAffordance")
-    val FORM = Namespaces("td", "hasForm")
-    val TARGET = Namespaces("td", "hasTarget")
-    val CONTENTTYPE = Namespaces("td", "forContentType")
-    val SECURITYCONFIGURATION = Namespaces("td", "hasSecurityConfiguration")
+  ///////////////////////////////////////////////////////////////////////////
+  // TD (https://www.w3.org/2019/wot/td)
+  ///////////////////////////////////////////////////////////////////////////
+  object ThingDescription {
+    val namespace = ("td", "https://www.w3.org/2019/wot/td#")
 
-    ///////////////////////////////////////////////////////////////////////////
-    // HCTL -- Hypermedia Controls Vocabulary (https://www.w3.org/2019/wot/hypermedia)
-    ///////////////////////////////////////////////////////////////////////////
-    val OPERATIONTYPE = Namespaces("hctl", "hasOperationType")
+    object Property {
+      val HASPROPERTYAFFORDANCE = Namespaces("td", "hasPropertyAffordance")
+      val HASFORM = Namespaces("td", "hasForm")
+      val HASTARGET = Namespaces("td", "hasTarget")
+      val HASCONTENTTYPE = Namespaces("td", "forContentType")
+      val HASSECURITYCONFIGURATION = Namespaces("td", "hasSecurityConfiguration")
+    }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // MQV -- MQTT vocabulary.
-    // in the making so unofficial (https://www.w3.org/TR/2020/NOTE-wot-binding-templates-20200130/#mqtt-vocabulary)
-    ///////////////////////////////////////////////////////////////////////////
-    val CONTROLPACKETVALUE = Namespaces("mqv", "controlPacketValue")
-    val OPTIONS = Namespaces("mqv", "options")
-    val OPTIONNAME = Namespaces("mqv", "optionName")
-    val OPTIONVALUE = Namespaces("mqv", "optionValue")
-
-    ///////////////////////////////////////////////////////////////////////////
-    // WOTSEC (https://www.w3.org/2019/wot/security)
-    ///////////////////////////////////////////////////////////////////////////
-    val IN = Namespaces("wotsec", "in")
+    object Class {
+      val THING = Namespaces("td", "Thing")
+    }
   }
 
-  object Class {
-    ///////////////////////////////////////////////////////////////////////////
-    // TD
-    ///////////////////////////////////////////////////////////////////////////
-    val THING = Namespaces("td", "Thing")
+  ///////////////////////////////////////////////////////////////////////////
+  // MQV -- MQTT vocabulary.
+  // in the making so unofficial (https://www.w3.org/TR/2020/NOTE-wot-binding-templates-20200130/#mqtt-vocabulary)
+  ///////////////////////////////////////////////////////////////////////////
+  object WoTMQTT {
+    val namespace = ("mqv", "http://www.example.org/mqtt-binding#") // TODO: change once an officlial vocabulary is published
 
-    ///////////////////////////////////////////////////////////////////////////
-    // WOTSEC
-    ///////////////////////////////////////////////////////////////////////////
-    val BASICSECURITYSCHEME = Namespaces("wotsec", "BasicSecurityScheme")
+    object Property {
+      val CONTROLPACKETVALUE = Namespaces("mqv", "controlPacketValue")
+      val OPTIONS = Namespaces("mqv", "options")
+      val OPTIONNAME = Namespaces("mqv", "optionName")
+      val OPTIONVALUE = Namespaces("mqv", "optionValue")
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  // WOTSEC (https://www.w3.org/2019/wot/security)
+  ///////////////////////////////////////////////////////////////////////////
+  object WotSecurity {
+    val namespace = ("wotsec", "https://www.w3.org/2019/wot/security#")
+
+    object Property {
+      val IN = Namespaces("wotsec", "in")
+    }
+
+    object Class {
+      val BASICSECURITYSCHEME = Namespaces("wotsec", "BasicSecurityScheme")
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  // HCTL -- Hypermedia Controls Vocabulary (https://www.w3.org/2019/wot/hypermedia)
+  ///////////////////////////////////////////////////////////////////////////
+  object Hypermedia {
+    val namespace = ("hctl", "https://www.w3.org/2019/wot/hypermedia#")
+
+    object Property {
+      val OPERATIONTYPE = Namespaces("hctl", "hasOperationType")
+    }
   }
 }
