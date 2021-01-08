@@ -27,7 +27,7 @@ package io.rml.framework.core.vocabulary
   * HCTL -- Hypermedia Controls Vocabulary (https://www.w3.org/2019/wot/hypermedia)
   *
   **/
-object Hypermedia {
+object HypermediaVoc {
   val namespace = ("hctl", "https://www.w3.org/2019/wot/hypermedia#")
 
   object Property {

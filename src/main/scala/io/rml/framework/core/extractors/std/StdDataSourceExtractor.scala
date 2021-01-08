@@ -25,10 +25,11 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{DataSourceExtractor, ExtractorUtil}
+import io.rml.framework.core.extractors.DataSourceExtractor
+import io.rml.framework.core.extractors.ExtractorUtil.{extractSingleLiteralFromProperty, extractSingleResourceFromProperty}
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.RDFResource
-import io.rml.framework.core.vocabulary.{RDFVoc, RMLVoc}
+import io.rml.framework.core.vocabulary.{HypermediaVoc, RDFVoc, RMLVoc, WoTVoc}
 import io.rml.framework.shared.RMLException
 
 class StdDataSourceExtractor extends DataSourceExtractor {
@@ -68,58 +69,50 @@ class StdDataSourceExtractor extends DataSourceExtractor {
         case Uri(RMLVoc.Class.TCPSOCKETSTREAM) => extractTCPSocketStream(resource)
         case Uri(RMLVoc.Class.FILESTREAM) => extractFileStream(resource)
         case Uri(RMLVoc.Class.KAFKASTREAM) => extractKafkaStream(resource)
+        case Uri(WoTVoc.ThingDescription.Class.THING) => extractWoTSource(resource)
       }
       case literal: Literal => throw new RMLException(literal.value + ": type must be a resource.")
     }
   }
 
   private def extractFileStream(resource: RDFResource): StreamDataSource = {
-    val pathProperties = resource.listProperties(RMLVoc.Property.PATH)
-    require(pathProperties.length == 1, "exactly 1 path needed.")
-    val path = ExtractorUtil.matchLiteral(pathProperties.head)
-    FileStream(path.value)
+    val path = extractSingleLiteralFromProperty(resource, RMLVoc.Property.PATH)
+    FileStream(path)
   }
 
   private def extractKafkaStream(resource: RDFResource): StreamDataSource = {
-    val brokerProperties = resource.listProperties(RMLVoc.Property.BROKER)
-    require(brokerProperties.length == 1, "exactly 1 broker needed")
-    val groupIdProperties = resource.listProperties(RMLVoc.Property.GROUPID)
-    require(groupIdProperties.length == 1, "exactly 1 groupID needed")
-    val topicProperties = resource.listProperties(RMLVoc.Property.TOPIC)
-    require(topicProperties.length == 1, "exactly 1 topic needed")
-    val versionProperties = resource.listProperties(RMLVoc.Property.KAFKAVERSION)
-    require(versionProperties.length <= 1, "at most 1 kafka version needed")
+    val broker = extractSingleLiteralFromProperty(resource, RMLVoc.Property.BROKER)
+    val groupId = extractSingleLiteralFromProperty(resource, RMLVoc.Property.GROUPID)
+    val topic = extractSingleLiteralFromProperty(resource, RMLVoc.Property.TOPIC)
 
-
-    val broker = ExtractorUtil.matchLiteral(brokerProperties.head)
-    val groupId = ExtractorUtil.matchLiteral(groupIdProperties.head)
-    val topic = ExtractorUtil.matchLiteral(topicProperties.head)
-
-
-    //val kafkaVersion = Kafka010
-
-
-    KafkaStream(List(broker.value), groupId.value, topic.value/*, kafkaVersion*/)
+    KafkaStream(List(broker), groupId, topic)
   }
 
   private def extractTCPSocketStream(resource: RDFResource): StreamDataSource = {
-    val hostNameProperties = resource.listProperties(RMLVoc.Property.HOSTNAME)
-    require(hostNameProperties.length == 1, resource.uri.toString + ": exactly 1 hostname needed.")
-    val portProperties = resource.listProperties(RMLVoc.Property.PORT)
-    require(portProperties.length == 1, resource.uri.toString + ": exactly 1 port needed.")
-    val typeProperties = resource.listProperties(RMLVoc.Property.TYPE)
-    require(typeProperties.length == 1, resource.uri.toString + ": needs type.")
+    val hostName = extractSingleLiteralFromProperty(resource, RMLVoc.Property.HOSTNAME)
+    val port = extractSingleLiteralFromProperty(resource, RMLVoc.Property.PORT)
 
-    val hostName = hostNameProperties.head match {
-      case resource: RDFResource => throw new RMLException(resource.uri + ": hostname must be a literal.")
-      case literal: Literal => literal.value
-    }
-    val port = portProperties.head match {
-      case resource: RDFResource => throw new RMLException(resource.uri + ": port must be a literal.")
-      case literal: Literal => literal.value
-    }
-
-    val _type = ExtractorUtil.matchLiteral(typeProperties.head)
-    TCPSocketStream(hostName, port.toInt, _type.value)
+    val _type = extractSingleLiteralFromProperty(resource, RMLVoc.Property.TYPE)
+    TCPSocketStream(hostName, port.toInt, _type)
   }
+
+  private def extractWoTSource(resource: RDFResource): DataSource = {
+    // A WoT Thing contains (in our case) a PropertyAffordance, which contains a form describing how to access the real source
+
+    val propertyAffordance = extractSingleResourceFromProperty(resource, WoTVoc.ThingDescription.Property.HASPROPERTYAFFORDANCE);
+    val form = extractSingleResourceFromProperty(propertyAffordance, WoTVoc.ThingDescription.Property.HASFORM);
+
+    // extract info from form
+
+    // extract the hypermedia target (~uri)
+    val hypermediaTarget = extractSingleLiteralFromProperty(form, HypermediaVoc.Property.HASTARGET);
+
+    // extract the desired content type
+    val contentType = extractSingleLiteralFromProperty(form, HypermediaVoc.Property.FORCONTENTTYPE);
+
+
+    // TODO replace with real source
+    FileDataSource(Literal("/tmp/test"))
+  }
+
 }

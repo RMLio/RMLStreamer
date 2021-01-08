@@ -40,8 +40,7 @@ object DataSourceExtractor {
     * @return
     */
   def apply(): DataSourceExtractor = {
-    lazy val extractor = new StdDataSourceExtractor()
-    extractor
+    new StdDataSourceExtractor()
   }
 
 }

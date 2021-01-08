@@ -56,7 +56,7 @@ object Namespaces {
     WoTVoc.WotSecurity.namespace._1 -> WoTVoc.WotSecurity.namespace._2,
 
     // Hypermedia
-    Hypermedia.namespace._1 -> Hypermedia.namespace._2
+    HypermediaVoc.namespace._1 -> HypermediaVoc.namespace._2
     
     // HTTP
     //"http" -> "http://www.w3.org/2011/http#",

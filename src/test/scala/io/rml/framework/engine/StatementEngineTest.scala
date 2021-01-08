@@ -131,4 +131,13 @@ class StatementEngineTest extends FunSuite with Matchers {
     executeTest("csv-extensive-1/complete.rml.ttl")
   }
 
+  ///////////////////////////
+  // Web of Things tests
+  ///////////////////////////
+
+  test("wot-mqtt-logical-source") {
+    pending
+    executeTest("WoT/mqtt-logical-source/wot-mqtt.rml.ttl")
+  }
+
 }
