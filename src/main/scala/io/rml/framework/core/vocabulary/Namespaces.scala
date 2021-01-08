@@ -34,6 +34,7 @@ object Namespaces {
     "rdf" -> "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs" -> "http://www.w3.org/2000/01/rdf-schema#",
     "rr" -> "http://www.w3.org/ns/r2rml#",
+    "formats" -> "https://www.w3.org/ns/formats/",
     "ql" -> "http://semweb.mmlab.be/ns/ql#",
     "rml" -> "http://semweb.mmlab.be/ns/rml#",
     "rmls" -> "http://semweb.mmlab.be/ns/rmls#",
@@ -47,7 +48,17 @@ object Namespaces {
     "lib" -> "http://example.com/library#",
     "xsd" -> "http://www.w3.org/2001/XMLSchema#",
 
-    "doap" -> "http://usefulinc.com/ns/doap#"
+    "doap" -> "http://usefulinc.com/ns/doap#",
+
+    // Web of Things
+    "td" -> "https://www.w3.org/2019/wot/td#",
+    "hctl" -> "https://www.w3.org/2019/wot/hypermedia#",
+    "mqv" -> "http://www.example.org/mqtt-binding#",  // TODO: change once an officlial vocabulary is published
+    "wotsec" -> "https://www.w3.org/2019/wot/security#",
+    
+    // HTTP
+    "http" -> "http://www.w3.org/2011/http#",
+    "htv" -> "http://www.w3.org/2011/http#"  // typically used in WoT documents.
   )
 
   /**

@@ -81,6 +81,7 @@ object RMLVoc {
     val ITERATOR = Namespaces("rml", "iterator")
     val REFERENCEFORMULATION = Namespaces("rml", "referenceFormulation")
     val SOURCE = Namespaces("rml", "source")
+    val LOGICALTARGET = Namespaces("rml", "logicalTarget")
 
     ///////////////////////////////////////////////////////////////////////////
     // RMLS: TCP Source
