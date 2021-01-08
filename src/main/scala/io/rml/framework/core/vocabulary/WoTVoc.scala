@@ -37,11 +37,9 @@ object WoTVoc {
     val namespace = ("td", "https://www.w3.org/2019/wot/td#")
 
     object Property {
-      val HASPROPERTYAFFORDANCE = Namespaces("td", "hasPropertyAffordance")
-      val HASFORM = Namespaces("td", "hasForm")
-      val HASTARGET = Namespaces("td", "hasTarget")
-      val HASCONTENTTYPE = Namespaces("td", "forContentType")
-      val HASSECURITYCONFIGURATION = Namespaces("td", "hasSecurityConfiguration")
+      val HASPROPERTYAFFORDANCE = Namespaces(namespace._1, "hasPropertyAffordance")
+      val HASFORM = Namespaces(namespace._1, "hasForm")
+      val HASSECURITYCONFIGURATION = Namespaces(namespace._1, "hasSecurityConfiguration")
     }
 
     object Class {
@@ -57,10 +55,10 @@ object WoTVoc {
     val namespace = ("mqv", "http://www.example.org/mqtt-binding#") // TODO: change once an officlial vocabulary is published
 
     object Property {
-      val CONTROLPACKETVALUE = Namespaces("mqv", "controlPacketValue")
-      val OPTIONS = Namespaces("mqv", "options")
-      val OPTIONNAME = Namespaces("mqv", "optionName")
-      val OPTIONVALUE = Namespaces("mqv", "optionValue")
+      val CONTROLPACKETVALUE = Namespaces(namespace._1, "controlPacketValue")
+      val OPTIONS = Namespaces(namespace._1, "options")
+      val OPTIONNAME = Namespaces(namespace._1, "optionName")
+      val OPTIONVALUE = Namespaces(namespace._1, "optionValue")
     }
   }
 
@@ -71,22 +69,11 @@ object WoTVoc {
     val namespace = ("wotsec", "https://www.w3.org/2019/wot/security#")
 
     object Property {
-      val IN = Namespaces("wotsec", "in")
+      val IN = Namespaces(namespace._1, "in")
     }
 
     object Class {
-      val BASICSECURITYSCHEME = Namespaces("wotsec", "BasicSecurityScheme")
-    }
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  // HCTL -- Hypermedia Controls Vocabulary (https://www.w3.org/2019/wot/hypermedia)
-  ///////////////////////////////////////////////////////////////////////////
-  object Hypermedia {
-    val namespace = ("hctl", "https://www.w3.org/2019/wot/hypermedia#")
-
-    object Property {
-      val OPERATIONTYPE = Namespaces("hctl", "hasOperationType")
+      val BASICSECURITYSCHEME = Namespaces(namespace._1, "BasicSecurityScheme")
     }
   }
 }

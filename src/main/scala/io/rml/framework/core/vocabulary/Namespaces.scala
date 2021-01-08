@@ -52,9 +52,11 @@ object Namespaces {
 
     // Web of Things
     WoTVoc.ThingDescription.namespace._1 -> WoTVoc.ThingDescription.namespace._2,
-    WoTVoc.Hypermedia.namespace._1 -> WoTVoc.Hypermedia.namespace._2,
     WoTVoc.WoTMQTT.namespace._1 -> WoTVoc.WoTMQTT.namespace._2,
-    WoTVoc.WotSecurity.namespace._1 -> WoTVoc.WotSecurity.namespace._2
+    WoTVoc.WotSecurity.namespace._1 -> WoTVoc.WotSecurity.namespace._2,
+
+    // Hypermedia
+    Hypermedia.namespace._1 -> Hypermedia.namespace._2
     
     // HTTP
     //"http" -> "http://www.w3.org/2011/http#",
