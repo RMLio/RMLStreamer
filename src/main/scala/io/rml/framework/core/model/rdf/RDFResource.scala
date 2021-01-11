@@ -25,8 +25,8 @@
 
 package io.rml.framework.core.model.rdf
 
-import io.rml.framework.core.model.Uri
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.model.Uri
 
 /**
   * This trait represents a resource that is able to query an underlying RDF model.
@@ -46,6 +46,13 @@ trait RDFResource extends RDFNode with Logging {
 
 
   def getList: List[RDFNode]
+
+  /**
+    * Checks if there exists a predicate matching the <code>prefix</code> string.
+    * @param prefix The predicate to look for
+    * @return <code>true</code> if found, <code>false</code> if not found.
+    */
+  def hasPredicateWith(prefix: String): Boolean
 
   /**
     *

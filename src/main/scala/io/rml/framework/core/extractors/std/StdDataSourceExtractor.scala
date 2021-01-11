@@ -26,7 +26,7 @@
 package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.DataSourceExtractor
-import io.rml.framework.core.extractors.ExtractorUtil.{extractSingleLiteralFromProperty, extractSingleResourceFromProperty}
+import io.rml.framework.core.extractors.ExtractorUtil.{extractLiteralFromProperty, extractResourceFromProperty, extractSingleLiteralFromProperty, extractSingleResourceFromProperty}
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.vocabulary.{HypermediaVoc, RDFVoc, RMLVoc, WoTVoc}
@@ -110,8 +110,39 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     // extract the desired content type
     val contentType = extractSingleLiteralFromProperty(form, HypermediaVoc.Property.FORCONTENTTYPE);
 
+    // now check for soure type (MQTT, HTTP, ...)
+    val isMQTT = form.hasPredicateWith(WoTVoc.WoTMQTT.namespace._2);
+    if (isMQTT) {
+      return extractWoTMQTTSource(form, hypermediaTarget, contentType);
+    }
 
     // TODO replace with real source
+    FileDataSource(Literal("/tmp/test"))
+  }
+
+  private def extractWoTMQTTSource(form: RDFResource, hypermediaTarget: String, contentType: String): DataSource = {
+    val controlPacketValue = extractLiteralFromProperty(form, WoTVoc.WoTMQTT.Property.CONTROLPACKETVALUE, "SUBSCRIBE");
+
+    var qosOpt: Option[String] = None;
+    var dup: Boolean = false;
+    val mqttOptions = extractResourceFromProperty(form, WoTVoc.WoTMQTT.Property.OPTIONS);
+    if (mqttOptions.isDefined) {
+      // extract the actual values
+      val mqttOptionsResource = mqttOptions.get;
+      mqttOptionsResource.getList
+        .map(rdfNode => rdfNode.asInstanceOf[RDFResource])
+        .foreach(mqttOptionsResource => {
+          val optionName = extractSingleLiteralFromProperty(mqttOptionsResource, WoTVoc.WoTMQTT.Property.OPTIONNAME);
+          optionName match {
+            case "qos" => qosOpt = Some(extractSingleLiteralFromProperty(mqttOptionsResource, WoTVoc.WoTMQTT.Property.OPTIONVALUE));
+            case "dup" => dup = true;
+          };
+        });
+    }
+
+    // TODO make actual data source
+    logWarning("Here a MQTT data source will be created. hypermediaTarget: " + hypermediaTarget
+      + ", contentType: " + contentType + ", dup: " + dup + ", qusOpt: " + qosOpt)
     FileDataSource(Literal("/tmp/test"))
   }
 

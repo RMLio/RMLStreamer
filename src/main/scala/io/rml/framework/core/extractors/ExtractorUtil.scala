@@ -30,6 +30,18 @@ import io.rml.framework.shared.RMLException
 
 object ExtractorUtil {
 
+  def extractLiteralFromProperty(resource: RDFResource, property: String, defaultValue: String) = {
+    val properties = resource.listProperties(property);
+    if (properties.isEmpty) {
+      defaultValue;
+    } else {
+      properties.head match {
+        case literal: Literal => literal.value
+        case _ => defaultValue
+      }
+    }
+  }
+
   def extractSingleLiteralFromProperty(resource: RDFResource, property: String): String = {
     val properties = resource.listProperties(property);
     require(properties.length == 1, resource.uri.toString + ": exactly 1 " + property + " needed.");
@@ -45,6 +57,18 @@ object ExtractorUtil {
     properties.head match {
       case literal: Literal => throw new RMLException(resource.uri + ": " + property + " must be a resource.");
       case resource: RDFResource => resource
+    }
+  }
+
+  def extractResourceFromProperty(resource: RDFResource, property: String): Option[RDFResource] = {
+    val properties = resource.listProperties(property);
+    if (properties.isEmpty) {
+      None
+    } else {
+      properties.head match {
+        case literal: Literal => throw new RMLException(resource.uri + ": " + property + " must be a resource.");
+        case resource: RDFResource => Some(resource)
+      }
     }
   }
 

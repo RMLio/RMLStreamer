@@ -27,7 +27,7 @@ package io.rml.framework.core.model.rdf.jena
 
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFNode, RDFResource}
-import io.rml.framework.core.vocabulary.{RDFVoc, RMLVoc}
+import io.rml.framework.core.vocabulary.RDFVoc
 import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.apache.jena.rdf.model.{RDFList, Resource}
 
@@ -41,6 +41,13 @@ class JenaResource(val resource: Resource) extends RDFResource {
     val _uri = resource.getURI // this can be null if it's a blank node
     if (_uri == null) Uri(resource.getId.getLabelString) // use the internal id as Uri if it's a blank node
     else Uri(_uri)
+  }
+
+  override def hasPredicateWith(prefix: String): Boolean = {
+    resource
+      .listProperties().asScala
+      .map(_.getPredicate)
+      .exists(_.getNameSpace.equals(prefix))
   }
 
   override def listProperties(propertyUri: String): List[RDFNode] = {

@@ -1,0 +1,66 @@
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex: <http://example.com/> .
+@prefix schema: <http://schema.org/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix td: <https://www.w3.org/2019/wot/td#> .
+@prefix htv: <http://www.w3.org/2011/http#> .
+@prefix hctl: <https://www.w3.org/2019/wot/hypermedia#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix wotsec: <https://www.w3.org/2019/wot/security#> .
+@prefix mqv: <http://www.example.org/mqtt-binding#> .
+@base <http://example.com/rules/> .
+
+# API key in HTTP header
+<#WotMQTTSecurity> a wotsec:BasicSecurityScheme;
+  wotsec:in "body";
+.
+
+<#WoTWebAPI> a td:Thing;
+  td:hasPropertyAffordance [
+    td:hasForm [
+      # URL and content type
+      hctl:hasTarget "mqtt://localhost/topic";
+      hctl:forContentType "application/json";
+      # Read only
+      hctl:hasOperationType "readproperty" ;
+      # Set MQTT stuff
+      mqv:controlPacketValue "SUBSCRIBE";
+      mqv:options ([ mqv:optionName "qos"; mqv:optionValue "1" ] [ mqv:optionName "dup" ]);
+    ];
+  ];
+  td:hasSecurityConfiguration <#WotMQTTSecurity> ;
+.
+
+<#TriplesMap> a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source <#WoTWebAPI>;
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$.[*]";
+    rml:frequency [ a time:GeneralDateTimeDescription;
+        time:minute "5"^^xsd:integer;
+    ];
+  ];
+
+  rr:subjectMap [
+    rr:template "http://example.org/bigbelly/{id}"
+  ];
+
+  rr:predicateObjectMap [
+   rr:predicate ex:fillingLevel;
+   rr:objectMap [
+     rml:reference "fillingLevel.value";
+   ];
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate rdf:type;
+    rr:objectMap [
+      rr:constant ex:Trashcan;
+    ];
+  ];
+.
+
