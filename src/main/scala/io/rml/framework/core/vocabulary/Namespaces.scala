@@ -81,4 +81,8 @@ object Namespaces {
     */
   def apply(prefix: String, suffix: String): String = _namespaces(prefix) + suffix
 
+  def iterator(): Iterator[(String, String)] = {
+    _namespaces.seq.iterator
+  }
+
 }

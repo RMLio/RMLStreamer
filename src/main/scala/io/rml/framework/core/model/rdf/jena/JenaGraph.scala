@@ -25,18 +25,17 @@
 
 package io.rml.framework.core.model.rdf.jena
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, InputStream}
-import java.nio.charset.StandardCharsets
-
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFLiteral, RDFResource, RDFTriple}
 import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.util.{Format, JenaUtil, Util}
-import io.rml.framework.core.vocabulary.RDFVoc
+import io.rml.framework.core.vocabulary.{Namespaces, RDFVoc}
 import io.rml.framework.shared.{RMLException, ReadException}
 import org.apache.jena.rdf.model.{Model, ModelFactory, Statement}
 import org.apache.jena.riot.RDFDataMgr
 
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, InputStream}
+import java.nio.charset.StandardCharsets
 import scala.collection.JavaConverters._
 
 class JenaGraph(model: Model) extends RDFGraph with Logging {
@@ -117,7 +116,13 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
       case Some(iri) => iri
       case None => null
     }
-    model.removeAll()
+    model.removeAll();
+
+    // load known prefixes
+    Namespaces.iterator().toIterable.foreach(prefix2Uri => {
+       model.setNsPrefix(prefix2Uri._1, prefix2Uri._2);
+    });
+
     Util.tryWith(in) {
       in => model.read(in, bIri, JenaUtil.format(format))
     }
