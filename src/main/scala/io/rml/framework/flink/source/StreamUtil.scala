@@ -29,7 +29,7 @@ import io.rml.framework.core.model.TCPSocketStream
 import io.rml.framework.core.util.StreamerConfig
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
-import org.apache.flink.streaming.connectors.netty.example.TcpReceiverSource
+//import org.apache.flink.streaming.connectors.netty.example.TcpReceiverSource
 
 object StreamUtil {
 
@@ -45,7 +45,7 @@ object StreamUtil {
 
 
       case TCPSocketStream.TYPE.PULL =>     new DataStream[String](env.getJavaEnv.socketTextStream(tCPSocketStream.hostName, tCPSocketStream.port, delimiter))
-      case TCPSocketStream.TYPE.PUSH => env.addSource(new TcpReceiverSource(tCPSocketStream.port)).setParallelism(1) // to avoid library to setup multiple instances
+      //case TCPSocketStream.TYPE.PUSH => env.addSource(new TcpReceiverSource(tCPSocketStream.port)).setParallelism(1) // to avoid library to setup multiple instances
     }
   }
 
