@@ -44,11 +44,11 @@ cache:
 
 
 # Build merge requests using JDK12
-build:jdk12:
+build:jdk11:
   <<: *build
   image: maven:3-jdk-11
 
 # Test merge requests using JDK12
-test:jdk12:
+test:jdk11:
   <<: *test
   image: maven:3-jdk-11
