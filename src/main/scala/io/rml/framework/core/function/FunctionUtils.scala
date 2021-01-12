@@ -1,16 +1,15 @@
 package io.rml.framework.core.function
 
-import java.io.File
-import java.net.MalformedURLException
-import java.time.Instant
-
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.function.model.Parameter
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{Entity, Literal, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.{RDFVoc, XsdVoc}
 import io.rml.framework.shared.RMLException
 
+import java.io.File
+import java.net.MalformedURLException
+import java.time.Instant
 import scala.reflect.internal.util.ScalaClassLoader.URLClassLoader
 
 object FunctionUtils extends Logging {
@@ -61,17 +60,17 @@ object FunctionUtils extends Logging {
   def getTypeClass(uri: Uri): Class[_] = {
     uri match {
 
-      case Uri(RMLVoc.Type.XSD_POSITIVE_INTEGER) => classOf[Int]
-      case Uri(RMLVoc.Type.XSD_INTEGER) => classOf[Int]
-      case Uri(RMLVoc.Type.XSD_INT) => classOf[Int]
-      case Uri(RMLVoc.Type.XSD_STRING) => classOf[String]
-      case Uri(RMLVoc.Type.XSD_DOUBLE) => classOf[Double]
-      case Uri(RMLVoc.Type.XSD_LONG) => classOf[Long]
-      case Uri(RMLVoc.Type.XSD_DATETIME) => classOf[Instant]
-      case Uri(RMLVoc.Type.XSD_BOOLEAN) => classOf[Boolean]
-      case Uri(RMLVoc.Type.RDF_LIST) => classOf[List[_]]
-      case Uri(RMLVoc.Type.XSD_ANY) => classOf[Any]
-      case Uri(RMLVoc.Type.RDF_OBJECT) => classOf[Any]
+      case Uri(XsdVoc.Type.XSD_POSITIVE_INTEGER) => classOf[Int]
+      case Uri(XsdVoc.Type.XSD_INTEGER) => classOf[Int]
+      case Uri(XsdVoc.Type.XSD_INT) => classOf[Int]
+      case Uri(XsdVoc.Type.XSD_STRING) => classOf[String]
+      case Uri(XsdVoc.Type.XSD_DOUBLE) => classOf[Double]
+      case Uri(XsdVoc.Type.XSD_LONG) => classOf[Long]
+      case Uri(XsdVoc.Type.XSD_DATETIME) => classOf[Instant]
+      case Uri(XsdVoc.Type.XSD_BOOLEAN) => classOf[Boolean]
+      case Uri(RDFVoc.Type.RDF_LIST) => classOf[List[_]]
+      case Uri(XsdVoc.Type.XSD_ANY) => classOf[Any]
+      case Uri(RDFVoc.Type.RDF_OBJECT) => classOf[Any]
       case _ => throw new RMLException(s"Type $uri not supported for parameter")
     }
   }

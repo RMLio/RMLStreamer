@@ -27,7 +27,7 @@ package io.rml.framework.core.extractors.std
 import io.rml.framework.core.extractors.{FunctionMapExtractor, GraphMapExtractor}
 import io.rml.framework.core.model.rdf.{RDFNode, RDFResource}
 import io.rml.framework.core.model.{GraphMap, Literal, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.R2RMLVoc
 import io.rml.framework.shared.RMLException
 
 class StdGraphMapExtractor extends GraphMapExtractor {
@@ -40,8 +40,8 @@ class StdGraphMapExtractor extends GraphMapExtractor {
     *
     */
   override def extract(resource: RDFResource): Option[GraphMap] = {
-    val mapProperties = resource.listProperties(RMLVoc.Property.GRAPHMAP)
-    val shortcutProperties = resource.listProperties(RMLVoc.Property.GRAPH)
+    val mapProperties = resource.listProperties(R2RMLVoc.Property.GRAPHMAP)
+    val shortcutProperties = resource.listProperties(R2RMLVoc.Property.GRAPH)
     val amount = mapProperties.size + shortcutProperties.size
 
     amount match {
@@ -59,7 +59,7 @@ class StdGraphMapExtractor extends GraphMapExtractor {
 
   override def extractTermType(resource: RDFResource): Option[Uri] = {
     val result = super.extractTermType(resource)
-    if (result.isDefined) result else Some(Uri(RMLVoc.Class.IRI))
+    if (result.isDefined) result else Some(Uri(R2RMLVoc.Class.IRI))
   }
 
   def generalExtractGraph(node: RDFNode, extractFunc: RDFResource => Option[GraphMap]): Option[GraphMap] = {
@@ -69,7 +69,7 @@ class StdGraphMapExtractor extends GraphMapExtractor {
     }
 
     resource.uri match {
-      case Uri(RMLVoc.Property.DEFAULTGRAPH) => None
+      case Uri(R2RMLVoc.Property.DEFAULTGRAPH) => None
       case _ => extractFunc(resource)
     }
 

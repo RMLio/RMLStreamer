@@ -27,7 +27,7 @@ package io.rml.framework.engine.statement
 
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.R2RMLVoc
 import io.rml.framework.flink.item.Item
 
 /**
@@ -47,7 +47,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
       templateGenerator(termMap)
     } else if (termMap.hasReference) {
       referenceGenerator(termMap)
-    } else if (termMap.hasTermType && termMap.termType.get == Uri(RMLVoc.Class.BLANKNODE)) {
+    } else if (termMap.hasTermType && termMap.termType.get == Uri(R2RMLVoc.Class.BLANKNODE)) {
       blankNodeGenerator()
     } else {
       if (isWarnEnabled) logWarning(termMap.toString + ": no constant, template or reference present.")
@@ -68,8 +68,8 @@ abstract class TermMapGeneratorAssembler extends Logging {
     */
   private def constantGenerator(termMap: TermMap): Item => Option[Iterable[Entity]] = {
     termMap.termType.get.toString match {
-      case RMLVoc.Class.IRI => TermMapGenerators.constantUriGenerator(termMap.constant.get)
-      case RMLVoc.Class.LITERAL => TermMapGenerators.constantLiteralGenerator(termMap.constant.get, termMap.datatype, termMap.language)
+      case R2RMLVoc.Class.IRI => TermMapGenerators.constantUriGenerator(termMap.constant.get)
+      case R2RMLVoc.Class.LITERAL => TermMapGenerators.constantLiteralGenerator(termMap.constant.get, termMap.datatype, termMap.language)
     }
   }
 
@@ -80,9 +80,9 @@ abstract class TermMapGeneratorAssembler extends Logging {
     */
   private def templateGenerator(termMap: TermMap): Item => Option[Iterable[Entity]] = {
     termMap.termType.get.toString match {
-      case RMLVoc.Class.IRI => TermMapGenerators.templateUriGenerator(termMap)
-      case RMLVoc.Class.LITERAL => TermMapGenerators.templateLiteralGenerator(termMap)
-      case RMLVoc.Class.BLANKNODE => TermMapGenerators.templateBlankNodeGenerator(termMap)
+      case R2RMLVoc.Class.IRI => TermMapGenerators.templateUriGenerator(termMap)
+      case R2RMLVoc.Class.LITERAL => TermMapGenerators.templateLiteralGenerator(termMap)
+      case R2RMLVoc.Class.BLANKNODE => TermMapGenerators.templateBlankNodeGenerator(termMap)
     }
   }
 
@@ -93,8 +93,8 @@ abstract class TermMapGeneratorAssembler extends Logging {
     */
   private def referenceGenerator(termMap: TermMap): Item =>Option[Iterable[Entity]] = {
     termMap.termType.get.toString match {
-      case RMLVoc.Class.IRI => TermMapGenerators.referenceUriGenerator(termMap)
-      case RMLVoc.Class.LITERAL => TermMapGenerators.referenceLiteralGenerator(termMap)
+      case R2RMLVoc.Class.IRI => TermMapGenerators.referenceUriGenerator(termMap)
+      case R2RMLVoc.Class.LITERAL => TermMapGenerators.referenceLiteralGenerator(termMap)
     }
   }
 

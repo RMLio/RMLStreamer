@@ -27,7 +27,7 @@ package io.rml.framework.engine.statement
 
 import io.rml.framework.core.extractors.TriplesMapsCache
 import io.rml.framework.core.model.{Entity, Literal, ObjectMap, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.R2RMLVoc
 import io.rml.framework.flink.item.Item
 
 class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
@@ -43,7 +43,7 @@ class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
       assembledFunction.andThen(item => {
         if (item.isDefined) {
           termTypeString match {
-            case RMLVoc.Class.IRI => item.map(iter => iter.map(elem => Uri(elem.toString)))
+            case R2RMLVoc.Class.IRI => item.map(iter => iter.map(elem => Uri(elem.toString)))
             case _ => item.map(iter => iter.flatMap(elem => {
               Some(Literal(elem.identifier, objectMap.datatype, objectMap.language))
             }))

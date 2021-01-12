@@ -26,7 +26,7 @@
 package io.rml.framework.core.model
 
 import io.rml.framework.core.model.std.StdPredicateMap
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.R2RMLVoc
 
 /**
   * This trait represents a predicate-map.
@@ -50,5 +50,5 @@ object PredicateMap {
       constant,
       reference,
       template,
-      Some(Uri(RMLVoc.Class.IRI)))
+      Some(Uri(R2RMLVoc.Class.IRI)))
 }

@@ -1,15 +1,14 @@
 package io.rml.framework.core.function.model.std
 
-import java.lang.reflect.Method
-
 import io.rml.framework.core.function.model.Function
 import io.rml.framework.core.model.{Entity, Literal, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.FunVoc
 import io.rml.framework.flink.sink.FlinkRDFQuad
 
+import java.lang.reflect.Method
 import scala.util.Random
 
-case class StdRandomFunction(identifier:String = RMLVoc.Property.GREL_RANDOM) extends Function{
+case class StdRandomFunction(identifier:String = FunVoc.GREL.Property.GREL_RANDOM) extends Function{
   private val random = new Random()
 
   override def execute(arguments: Map[Uri, String]): Option[Iterable[Entity]] = {

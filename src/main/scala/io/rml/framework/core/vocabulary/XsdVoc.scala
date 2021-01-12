@@ -1,7 +1,9 @@
+package io.rml.framework.core.vocabulary
+
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2021 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -21,27 +23,22 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   * THE SOFTWARE.
   *
-  **/
+  * https://www.w3.org/2001/XMLSchema
+  * */
+object XsdVoc {
+  val namespace = ("xsd", "http://www.w3.org/2001/XMLSchema#");
 
-package io.rml.framework.core.vocabulary
+  object Type {
+    val XSD_STRING = namespace._2 + "string";
+    val XSD_INT = namespace._2 + "int";         // signed 32-bit integer
+    val XSD_INTEGER = namespace._2 + "integer"; // integer value
+    val XSD_DOUBLE = namespace._2 + "double";
+    val XSD_LONG = namespace._2 + "long";
+    val XSD_POSITIVE_INTEGER = namespace._2 + "positiveInteger";
+    val XSD_BOOLEAN = namespace._2 + "boolean";
+    val XSD_DATETIME = namespace._2 + "dateTime";
 
-/**
-  * Contains the constants of the RML vocabulary.
-  * https://rml.io/specs/rml/
-  */
-object RMLVoc {
-  val namespace = ("rml", "http://semweb.mmlab.be/ns/rml#");
-  
-  object Property {
-
-    ///////////////////////////////////////////////////////////////////////////
-    // RML
-    ///////////////////////////////////////////////////////////////////////////
-    val REFERENCE = namespace._2 + "reference";
-    val LOGICALSOURCE = namespace._2 + "logicalSource";
-    val ITERATOR = namespace._2 + "iterator";
-    val REFERENCEFORMULATION = namespace._2 + "referenceFormulation";
-    val SOURCE = namespace._2 + "source";
-    val LOGICALTARGET = namespace._2 + "logicalTarget";
+    val XSD_ANY  = namespace._2 + "any";
   }
+
 }

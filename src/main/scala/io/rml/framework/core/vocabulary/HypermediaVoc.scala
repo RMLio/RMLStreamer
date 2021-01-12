@@ -31,9 +31,9 @@ object HypermediaVoc {
   val namespace = ("hctl", "https://www.w3.org/2019/wot/hypermedia#")
 
   object Property {
-    val FORCONTENTTYPE = Namespaces(namespace._1, "forContentType")
-    val HASTARGET = Namespaces(namespace._1, "hasTarget")
-    val HASOPERATIONTYPE = Namespaces(namespace._1, "hasOperationType")
+    val FORCONTENTTYPE = namespace._2 + "forContentType";
+    val HASTARGET = namespace._2 + "hasTarget";
+    val HASOPERATIONTYPE = namespace._2 + "hasOperationType";
   }
 
 }

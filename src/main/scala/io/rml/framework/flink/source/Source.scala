@@ -25,7 +25,7 @@
 package io.rml.framework.flink.source
 
 import io.rml.framework.core.model.{FileDataSource, LogicalSource, StreamDataSource}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.QueryVoc
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 
@@ -37,9 +37,9 @@ trait Source
 object Source {
 
   val DEFAULT_ITERATOR_MAP: Map[String, String] =  Map(
-    RMLVoc.Class.JSONPATH -> "$",
-    RMLVoc.Class.CSV -> "",
-    RMLVoc.Class.XPATH -> "/*"
+    QueryVoc.Class.JSONPATH -> "$",
+    QueryVoc.Class.CSV -> "",
+    QueryVoc.Class.XPATH -> "/*"
   )
 
   val DEFAULT_ITERATOR_SET: Set[String] = DEFAULT_ITERATOR_MAP.values.toSet

@@ -26,15 +26,15 @@
 package io.rml.framework.core.vocabulary
 
 object RDFVoc {
+  val namespace = ("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 
   object Property {
-
-    val TYPE = Namespaces("rdf", "type")
-
+    val TYPE = namespace._2 + "type";
   }
 
-  object Class {
-
+  object Type {
+    val RDF_OBJECT = namespace._2 + "object";
+    val RDF_LIST = namespace._2 + "List";
   }
 
 }

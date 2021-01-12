@@ -29,7 +29,7 @@ import io.rml.framework.core.extractors.JoinConditionExtractor
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.model.{JoinCondition, Literal}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.R2RMLVoc
 import io.rml.framework.shared.RMLException
 
 class StdJoinConditionExtractor extends JoinConditionExtractor with Logging {
@@ -54,7 +54,7 @@ class StdJoinConditionExtractor extends JoinConditionExtractor with Logging {
 
   private def extractParent(resource: RDFResource): Option[Literal] = {
 
-    val property = RMLVoc.Property.PARENT
+    val property = R2RMLVoc.Property.PARENT
     val properties = resource.listProperties(property)
 
     if (properties.size != 1)
@@ -68,7 +68,7 @@ class StdJoinConditionExtractor extends JoinConditionExtractor with Logging {
   }
 
   private def extractChild(resource: RDFResource): Option[Literal] = {
-    val property = RMLVoc.Property.CHILD
+    val property = R2RMLVoc.Property.CHILD
     val properties = resource.listProperties(property)
 
     if (properties.size != 1)

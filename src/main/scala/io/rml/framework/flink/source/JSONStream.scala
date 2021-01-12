@@ -26,7 +26,7 @@ package io.rml.framework.flink.source
 
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.QueryVoc
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.json.JSONItem
 import org.apache.flink.api.common.serialization.SimpleStringSchema
@@ -36,7 +36,7 @@ import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironm
 case class JSONStream(val stream: DataStream[Iterable[Item]]) extends Stream
 
 object JSONStream extends Logging {
-  val DEFAULT_PATH_OPTION: String = Source.DEFAULT_ITERATOR_MAP(RMLVoc.Class.JSONPATH)
+  val DEFAULT_PATH_OPTION: String = Source.DEFAULT_ITERATOR_MAP(QueryVoc.Class.JSONPATH)
 
   def apply(source: StreamDataSource, jsonPaths: List[String])(implicit env: StreamExecutionEnvironment): Stream = {
 

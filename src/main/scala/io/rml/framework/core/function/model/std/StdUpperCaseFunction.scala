@@ -1,15 +1,15 @@
 package io.rml.framework.core.function.model.std
 
-import java.lang.reflect.Method
-
 import io.rml.framework.core.function.model.Function
 import io.rml.framework.core.model.{Entity, Literal, Uri}
-import io.rml.framework.core.vocabulary.{Namespaces, RMLVoc}
+import io.rml.framework.core.vocabulary.FunVoc
 import io.rml.framework.flink.sink.FlinkRDFQuad
 
-case class StdUpperCaseFunction(identifier: String = RMLVoc.Property.GREL_UPPERCASE) extends Function {
+import java.lang.reflect.Method
+
+case class StdUpperCaseFunction(identifier: String = FunVoc.GREL.Property.GREL_UPPERCASE) extends Function {
   override def execute(arguments: Map[Uri, String]): Option[Iterable[Entity]] = {
-    val parameter = arguments.get(Uri(Namespaces("grel", "valueParameter")))
+    val parameter = arguments.get(Uri(FunVoc.GREL.Property.GREL_VALUEPARAMETER));
 
     parameter.map(string => List(Literal(string)))
   }

@@ -25,7 +25,7 @@
 package io.rml.framework.core.model.std
 
 import io.rml.framework.core.model._
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.R2RMLVoc
 
 case class StdGraphMap(identifier: String,
                        override val functionMap:List[FunctionMap],
@@ -33,6 +33,6 @@ case class StdGraphMap(identifier: String,
                        reference: Option[Literal],
                        template: Option[Literal]) extends GraphMap {
 
-  override def termType: Option[Uri] = Some(Uri(RMLVoc.Class.IRI))
+  override def termType: Option[Uri] = Some(Uri(R2RMLVoc.Class.IRI))
 
 }

@@ -27,7 +27,7 @@ package io.rml.framework.engine.statement
 
 import io.rml.framework.core.function.FunctionUtils
 import io.rml.framework.core.model.{TermMap, TermNode, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.R2RMLVoc
 import io.rml.framework.flink.item.Item
 import io.rml.framework.shared.TermTypeException
 
@@ -58,7 +58,7 @@ class SubjectGeneratorAssembler extends TermMapGeneratorAssembler {
        * Maybe move this check to subject map extractor for early checking during the reading process?
        */
       termMap.termType.get.toString match {
-        case RMLVoc.Class.LITERAL => throw new TermTypeException("Subject cannot be of type Literal!")
+        case R2RMLVoc.Class.LITERAL => throw new TermTypeException("Subject cannot be of type Literal!")
         case _ =>
 
       }

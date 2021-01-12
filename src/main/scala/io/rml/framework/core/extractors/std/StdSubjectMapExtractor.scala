@@ -29,7 +29,7 @@ import io.rml.framework.core.extractors.{FunctionMapExtractor, GraphMapExtractor
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.model.{Literal, SubjectMap, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.R2RMLVoc
 import io.rml.framework.shared.RMLException
 
 /**
@@ -50,7 +50,7 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
 
     logDebug(node.uri + ": Extracting subject map.")
 
-    val property = RMLVoc.Property.SUBJECTMAP
+    val property = R2RMLVoc.Property.SUBJECTMAP
     val subjectMapResources = node.listProperties(property)
 
     if (subjectMapResources.size != 1)
@@ -100,9 +100,9 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
     val result = super.extractTermType(resource)
 
     result match{
-      case Some(Uri(RMLVoc.Class.LITERAL)) => throw new RMLException("Subject cannot be literal type")
+      case Some(Uri(R2RMLVoc.Class.LITERAL)) => throw new RMLException("Subject cannot be literal type")
       case Some(e) => Some(e)
-      case _ => Some(Uri(RMLVoc.Class.IRI))
+      case _ => Some(Uri(R2RMLVoc.Class.IRI))
     }
   }
 
@@ -115,7 +115,7 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
     */
   @throws(classOf[RMLException])
   private def extractClass(resource: RDFResource): List[Uri] = {
-    val property = RMLVoc.Property.CLASS
+    val property = R2RMLVoc.Property.CLASS
     val classResources = resource.listProperties(property)
     classResources.map {
       case resource: RDFResource => resource.uri

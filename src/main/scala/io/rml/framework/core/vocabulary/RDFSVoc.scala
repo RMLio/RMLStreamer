@@ -1,7 +1,9 @@
+package io.rml.framework.core.vocabulary
+
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2021 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -21,27 +23,9 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   * THE SOFTWARE.
   *
-  **/
-
-package io.rml.framework.core.vocabulary
-
-/**
-  * Contains the constants of the RML vocabulary.
-  * https://rml.io/specs/rml/
-  */
-object RMLVoc {
-  val namespace = ("rml", "http://semweb.mmlab.be/ns/rml#");
-  
-  object Property {
-
-    ///////////////////////////////////////////////////////////////////////////
-    // RML
-    ///////////////////////////////////////////////////////////////////////////
-    val REFERENCE = namespace._2 + "reference";
-    val LOGICALSOURCE = namespace._2 + "logicalSource";
-    val ITERATOR = namespace._2 + "iterator";
-    val REFERENCEFORMULATION = namespace._2 + "referenceFormulation";
-    val SOURCE = namespace._2 + "source";
-    val LOGICALTARGET = namespace._2 + "logicalTarget";
-  }
+  * RDF Schema vocabulary
+  * http://www.w3.org/2000/01/rdf-schema
+  * */
+object RDFSVoc {
+  val namespace = ("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
 }

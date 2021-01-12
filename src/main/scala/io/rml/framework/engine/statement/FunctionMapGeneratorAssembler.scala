@@ -24,15 +24,12 @@
  **/
 package io.rml.framework.engine.statement
 
-import java.io.File
-
-import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.{FunctionLoader, ReflectionUtils}
-import io.rml.framework.core.function.model.{DynamicFunction, Function}
+import io.rml.framework.core.function.FunctionLoader
+import io.rml.framework.core.function.model.Function
 import io.rml.framework.core.model._
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.FunVoc
 import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.sink.{FlinkRDFNode, FlinkRDFQuad}
+import io.rml.framework.flink.sink.FlinkRDFQuad
 import io.rml.framework.flink.source.EmptyItem
 import io.rml.framework.shared.RMLException
 
@@ -62,9 +59,9 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
     this.logDebug("parseFunction (assembledPom)")
     val placeHolder: List[FlinkRDFQuad] = generateFunctionTriples(new EmptyItem(), assembledPom)
 
-    val executeProperties = placeHolder.filter( quad => quad.predicate.value == Uri(RMLVoc.Property.EXECUTES))
+    val executeProperties = placeHolder.filter( quad => quad.predicate.value == Uri(FunVoc.FnO.Property.EXECUTES))
     if(executeProperties.isEmpty)
-      throw new RMLException(s"Couldn't find ${RMLVoc.Property.EXECUTES} property." +
+      throw new RMLException(s"Couldn't find ${FunVoc.FnO.Property.EXECUTES} property." +
         s"Is the namespace correct? (e.g. HTTP vs. HTTPS)")
 
     val functionName = Uri(
@@ -91,7 +88,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
   private def createAssemblerFunction(function: Function, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Item => Option[Iterable[Entity]] = {
     (item: Item) => {
       val triples: List[FlinkRDFQuad] = generateFunctionTriples(item, assembledPom)
-      val paramTriples = triples.filter(triple => triple.predicate.uri != Uri(RMLVoc.Property.EXECUTES))
+      val paramTriples = triples.filter(triple => triple.predicate.uri != Uri(FunVoc.FnO.Property.EXECUTES))
 
 
 

@@ -29,7 +29,7 @@ import io.rml.framework.core.extractors.{TriplesMapsCache, _}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFResource}
 import io.rml.framework.core.model.{TriplesMap, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.{R2RMLVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
 
 /**
@@ -52,11 +52,11 @@ object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
    */
   private def isTriplesMap(resource : RDFResource) : Boolean = {
     val logicalSourceProperty = RMLVoc.Property.LOGICALSOURCE
-    val subjectMapProperty = RMLVoc.Property.SUBJECTMAP
-    val subjectConstantProperty = RMLVoc.Property.SUBJECT
+    val subjectMapProperty = R2RMLVoc.Property.SUBJECTMAP
+    val subjectConstantProperty = R2RMLVoc.Property.SUBJECT
 
     // trivial case
-    val isTriplesMap = resource.getType.equals(Some(Uri(RMLVoc.Class.TRIPLESMAP)))
+    val isTriplesMap = resource.getType.equals(Some(Uri(R2RMLVoc.Class.TRIPLESMAP)))
 
     // property requirements for a triplesmap
     val hasExactlyOneLogicalSource = resource.listProperties(logicalSourceProperty).length==1

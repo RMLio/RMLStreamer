@@ -24,16 +24,16 @@
   **/
 package io.rml.framework.flink.source
 
-import java.nio.file.Paths
-
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{LogicalSource, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.QueryVoc
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.csv.CSVHeader
 import io.rml.framework.flink.util.DefaultCSVConfig
 import org.apache.commons.csv.CSVFormat
 import org.apache.flink.api.scala._
+
+import java.nio.file.Paths
 
 sealed abstract class FileDataSet extends Source {
   def dataset: DataSet[Item]
@@ -51,9 +51,9 @@ object FileDataSet extends Logging {
 
   def apply(logicalSource: LogicalSource)(implicit env: ExecutionEnvironment): FileDataSet = {
     logicalSource.referenceFormulation match {
-      case Uri(RMLVoc.Class.CSV) => createCSVDataSet(logicalSource.source.uri.toString)
-      case Uri(RMLVoc.Class.XPATH) => createXMLWithXPathDataSet(logicalSource.source.uri.toString, logicalSource.iterators.head)
-      case Uri(RMLVoc.Class.JSONPATH) => createJSONWithJSONPathDataSet(logicalSource.source.uri.toString, logicalSource.iterators.head)
+      case Uri(QueryVoc.Class.CSV) => createCSVDataSet(logicalSource.source.uri.toString)
+      case Uri(QueryVoc.Class.XPATH) => createXMLWithXPathDataSet(logicalSource.source.uri.toString, logicalSource.iterators.head)
+      case Uri(QueryVoc.Class.JSONPATH) => createJSONWithJSONPathDataSet(logicalSource.source.uri.toString, logicalSource.iterators.head)
     }
 
   }
