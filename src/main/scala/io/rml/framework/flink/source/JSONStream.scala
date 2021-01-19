@@ -25,7 +25,7 @@
 package io.rml.framework.flink.source
 
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
+import io.rml.framework.core.model.{FileStream, KafkaStream, MQTTStream, StreamDataSource, TCPSocketStream}
 import io.rml.framework.core.vocabulary.QueryVoc
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.json.JSONItem
@@ -44,6 +44,7 @@ object JSONStream extends Logging {
       case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, jsonPaths)
       case fileStream: FileStream => fromFileStream(fileStream.path, jsonPaths)
       case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, jsonPaths)
+      case mqttStream : MQTTStream => fromMQTTStream(mqttStream, jsonPaths)
     }
   }
 
@@ -74,6 +75,18 @@ object JSONStream extends Logging {
       .map { item =>
         JSONItem.fromStringOptionableList(item, jsonPaths)
       }
+    JSONStream(stream)
+  }
+
+  def fromMQTTStream(mqttStream : MQTTStream, jsonPaths : List[String])(implicit env: StreamExecutionEnvironment):JSONStream = {
+
+    val source = new RichMQTTSource(mqttStream.properties)
+    val parallelStream = StreamUtil.paralleliseOverSlots(env.addSource(source))
+    val stream: DataStream[Iterable[Item]] = parallelStream
+      .map { item =>
+        JSONItem.fromStringOptionableList(item, jsonPaths)
+      }
+
     JSONStream(stream)
   }
 }

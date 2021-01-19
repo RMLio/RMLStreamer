@@ -32,6 +32,8 @@ import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.vocabulary._
 import io.rml.framework.shared.RMLException
 
+import java.util.Properties
+
 class StdDataSourceExtractor extends DataSourceExtractor {
 
   /**
@@ -114,17 +116,16 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     val isMQTT = form.hasPredicateWith(WoTVoc.WoTMQTT.namespace._2);
     if (isMQTT) {
       return extractWoTMQTTSource(form, hypermediaTarget, contentType);
+    } else {
+      throw new RMLException("Unknown Web of Things source defined.")
     }
-
-    // TODO replace with real source
-    FileDataSource(Literal("/tmp/test"))
   }
 
   private def extractWoTMQTTSource(form: RDFResource, hypermediaTarget: String, contentType: String): DataSource = {
     val controlPacketValue = extractLiteralFromProperty(form, WoTVoc.WoTMQTT.Property.CONTROLPACKETVALUE, "SUBSCRIBE");
 
     var qosOpt: Option[String] = None;
-    var dup: Boolean = false;
+    var dup: String = "false";
     val mqttOptions = extractResourceFromProperty(form, WoTVoc.WoTMQTT.Property.OPTIONS);
     if (mqttOptions.isDefined) {
       // extract the actual values
@@ -135,15 +136,22 @@ class StdDataSourceExtractor extends DataSourceExtractor {
           val optionName = extractSingleLiteralFromProperty(mqttOptionsResource, WoTVoc.WoTMQTT.Property.OPTIONNAME);
           optionName match {
             case "qos" => qosOpt = Some(extractSingleLiteralFromProperty(mqttOptionsResource, WoTVoc.WoTMQTT.Property.OPTIONVALUE));
-            case "dup" => dup = true;
+            case "dup" => dup = "true";
           };
         });
     }
 
-    // TODO make actual data source
-    logWarning("Here a MQTT data source will be created. hypermediaTarget: " + hypermediaTarget
-      + ", contentType: " + contentType + ", dup: " + dup + ", qusOpt: " + qosOpt)
-    FileDataSource(Literal("/tmp/test"))
+    logDebug("MQTT data source defined in mapping file. hypermediaTarget: " + hypermediaTarget
+      + ", contentType: " + contentType + ", dup: " + dup + ", qosOpt: " + qosOpt);
+    val mqttProperties = new Properties;
+    mqttProperties.put("hypermediaTarget", hypermediaTarget);
+    mqttProperties.put("contentType", contentType);
+    mqttProperties.put("controlPacketValue", controlPacketValue);
+    if (qosOpt.isDefined) {
+      mqttProperties.put("qos", qosOpt.get);
+    }
+    mqttProperties.put("dup", dup); // Java 8 can't handle Scala Boolean objects in a Properties object.
+    MQTTStream(mqttProperties)
   }
 
 }

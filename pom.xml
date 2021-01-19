@@ -140,7 +140,12 @@ SOFTWARE.
 <!--                </exclusion>-->
 <!--            </exclusions>-->
 <!--        </dependency>-->
-        
+
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>5.10.0</version>
+        </dependency>
         <dependency>
             <groupId>com.ximpleware</groupId>
             <artifactId>vtd-xml</artifactId>
@@ -289,7 +294,12 @@ SOFTWARE.
             <type>pom</type>
             <scope>runtime</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+
     </dependencies>
 
     <!-- This profile helps to make things run out of the box in IntelliJ -->
