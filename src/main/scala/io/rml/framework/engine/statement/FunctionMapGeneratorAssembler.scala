@@ -24,15 +24,12 @@
  **/
 package io.rml.framework.engine.statement
 
-import java.io.File
-
-import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.function.{FunctionLoader, ReflectionUtils}
-import io.rml.framework.core.function.model.{DynamicFunction, Function}
+import io.rml.framework.core.function.FunctionLoader
+import io.rml.framework.core.function.model.Function
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.sink.{FlinkRDFNode, FlinkRDFQuad}
+import io.rml.framework.flink.sink.FlinkRDFQuad
 import io.rml.framework.flink.source.EmptyItem
 import io.rml.framework.shared.RMLException
 
@@ -57,7 +54,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
   }
 
   private def parseFunction(assembledPom:
-                            List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Function = {
+                            List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Option[Function] = {
 
     this.logDebug("parseFunction (assembledPom)")
     val placeHolder: List[FlinkRDFQuad] = generateFunctionTriples(new EmptyItem(), assembledPom)
@@ -74,10 +71,13 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
       .value
       .toString)
     
-    val loadedFunctionOption = FunctionLoader().createFunction(functionName)
-    loadedFunctionOption.getOrElse{
-      // complain about function that isn't present
-      throw new RMLException("Can't load function..")
+
+    val functionLoaderOption = FunctionLoader();
+
+    if (functionLoaderOption.isDefined) {
+      functionLoaderOption.get.createFunction(functionName);
+    } else {
+      None
     }
   }
 
@@ -88,14 +88,17 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
    * @param assembledPom List of predicate object generator functions
    * @return anon function taking in [[Item]] and returns entities using the function
    */
-  private def createAssemblerFunction(function: Function, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Item => Option[Iterable[Entity]] = {
+  private def createAssemblerFunction(function: Option[Function], assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Item => Option[Iterable[Entity]] = {
     (item: Item) => {
       val triples: List[FlinkRDFQuad] = generateFunctionTriples(item, assembledPom)
       val paramTriples = triples.filter(triple => triple.predicate.uri != Uri(RMLVoc.Property.EXECUTES))
 
 
-
-      function.execute(paramTriples)
+      if (function.isDefined) {
+        function.get.execute(paramTriples)
+      } else {
+        None
+      }
     }
   }
 
