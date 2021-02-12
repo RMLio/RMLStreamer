@@ -205,12 +205,94 @@ object Main extends Logging {
   }
 
 
-  def createStreamTMWithPTMPipeline(streamTriplesMaps: List[JoinedTriplesMap] )
+  def createStreamTMWithPTMPipeline(triplesMaps: List[JoinedTriplesMap] )
                                    (implicit env: ExecutionEnvironment,
                                     senv: StreamExecutionEnvironment,
-                                    postProcessor: PostProcessor): Unit ={
+                                    postProcessor: PostProcessor): DataStream[String] ={
+
+    val datasets = triplesMaps.map(tm => {
+
+      // create the mapping engine with loaded statements from every joined triple map
+      val engine = StatementEngine.fromJoinedTriplesMap(tm)
+
+      val childDataStream =
+      // Create a Source from the childs logical source
+        Source(tm.logicalSource).asInstanceOf[io.rml.framework.flink.source.Stream]
+          .stream
+          // filter out all items that do not contain the childs join condition
+          .filter(iterItems => {
+            if (tm.joinCondition.isDefined) {
+              iterItems.exists( _.refer(tm.joinCondition.get.child.toString).isDefined)
+            } else true // if there are no join conditions all items can pass
+            // filter out all empty items (some iterators can emit empty items)
+          }).filter(iterItems => {
+          iterItems.nonEmpty
+        })
 
 
+      val parentTriplesMap = TriplesMapsCache(tm.parentTriplesMap);
+      val parentDataset =
+      // Create a Source from the parents logical source
+        Source(parentTriplesMap.logicalSource).asInstanceOf[io.rml.framework.flink.source.Stream]
+          .stream
+
+          // filter out all items that do not contain the parents join condition
+          .filter(iterItems => {
+            if (tm.joinCondition.isDefined) {
+              iterItems.exists( _.refer(tm.joinCondition.get.child.toString).isDefined)
+            } else true // if there are no join conditions all items can pass
+
+            // filter out all empty items
+          }).filter(iterItems => {
+          iterItems.nonEmpty
+        })
+
+      // if there are join conditions defined join the child dataset and the parent dataset
+      if (tm.joinCondition.isDefined) {
+
+        // create the joined dataset
+        val joined: JoinDataSet[Item, Item] =
+          childDataset.join(parentDataset)
+            .where(item => {
+              item.refer(tm.joinCondition.get.child.toString).get.head
+            }) // empty fields are already filtered
+            .equalTo(item => {
+              item.refer(tm.joinCondition.get.parent.toString).get.head
+            }) // empty fields are already filtered
+
+        joined.name("Join child and parent.")
+
+          // combine the joined item into a JoinedItem
+          .map(items => {
+            val joined = JoinedItem(items._1, items._2)
+            joined
+          })
+
+          // process the JoinedItems in an engine
+          .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items")
+
+          // format the list of triples as strings
+          .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
+          .name("Convert triples to strings")
+
+      } else { // if there are no join conditions a cross join will be executed
+
+        // create a crossed data set
+        val crossed = childDataset.cross(parentDataset)
+
+        crossed.map(items =>
+          JoinedItem(items._1, items._2)
+        ) // create a JoinedItem from the crossed items
+          .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items") // process the joined items
+          .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None) // format the triples
+          .name("Convert joined triples to strings")
+      }
+
+
+    })
+
+    // union all datasets into one dataset
+    unionStreams(datasets)
 
   }
 
