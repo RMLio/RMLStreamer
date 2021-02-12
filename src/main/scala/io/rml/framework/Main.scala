@@ -133,7 +133,7 @@ object Main extends Logging {
       } else {
         // create a flink stream from the formatted mapping
         logInfo("Datastream Job found.")
-        createStreamFromFormattedMapping(formattedMapping)
+        createDataStreamFromFormattedMapping(formattedMapping)
       }
 
       // write to a socket if the parameter is given
@@ -168,25 +168,70 @@ object Main extends Logging {
   }
 
 
+  def createDataStreamFromFormattedMapping(formattedMapping: FormattedRMLMapping)
+                                       (implicit env: ExecutionEnvironment,
+                                        senv: StreamExecutionEnvironment,
+                                        postProcessor: PostProcessor): DataStream[String] = {
+
+    this.logDebug("createDataSetFromFormattedMapping(...)")
+    require(!postProcessor.isInstanceOf[AtMostOneProcessor], "Bulk output and JSON-LD output are not supported in the static version")
+
+    /**
+     * check if the mapping has standard triple maps and triple maps with joined triple maps
+     * Joined triple maps are created from triple maps that contain parent triple maps. The triple maps are split per
+     * parent triple map with unique join conditions. Joined triple maps will contain only one join condition.
+     * This makes it easier for setting up pipelines that need the joining of two sources.
+     */
+    if (formattedMapping.standardStreamTriplesMaps.nonEmpty && formattedMapping.joinedStreamTriplesMaps.nonEmpty) {
+
+      // create a pipeline from the standard triple maps
+      val standardTMDataset = createStandardStreamPipeline(formattedMapping.standardStreamTriplesMaps)
+
+      // create a pipeline from the triple maps that contain parent triple maps
+     // val tmWithPTMDataSet = createStreamTMWithPTMPipeline(formattedMapping.joinedStaticTriplesMaps)
+
+      // combine the two previous pipeline into one
+      //standardTMDataset.union(tmWithPTMDataSet)
+      standardTMDataset
+      // check if the formatted mapping only contains triple maps
+    } else if (formattedMapping.standardStreamTriplesMaps.nonEmpty) {
+
+      // create a standard pipeline
+      createStandardStreamPipeline(formattedMapping.standardStreamTriplesMaps)
+    } else{
+
+      createStandardStreamPipeline(formattedMapping.standardStreamTriplesMaps)
+    }
+  }
+
+
+  def createStreamTMWithPTMPipeline(streamTriplesMaps: List[JoinedTriplesMap] )
+                                   (implicit env: ExecutionEnvironment,
+                                    senv: StreamExecutionEnvironment,
+                                    postProcessor: PostProcessor): Unit ={
+
+
+
+  }
+
   /**
     * Utility method for creating a Flink DataStream[String] from a formatted mapping.
     * //TODO currently this does not support any kind of joins
     *
-    * @param formattedMapping The mapping file
+    * @param streamTriplesMaps A list of StreamTriplesMap
     * @param env              The execution environment needs to be given implicitly
     * @param senv             The execution environment needs to be given implicitly
     * @return
     */
-  def createStreamFromFormattedMapping(formattedMapping: FormattedRMLMapping)
+  def createStandardStreamPipeline(streamTriplesMaps: List[StreamTriplesMap] )
                                       (implicit env: ExecutionEnvironment,
                                        senv: StreamExecutionEnvironment,
                                        postProcessor: PostProcessor): DataStream[String] = {
 
     // to create a Flink Data Stream there must be triple maps that contain streamed logical sources
-    require(formattedMapping.containsStreamTriplesMaps())
-    val triplesMaps = formattedMapping.standardStreamTriplesMaps ++ formattedMapping.joinedSteamTriplesMaps
+    val triplesMaps =  streamTriplesMaps
 
-    // group triple maps by logical source
+    // group triple maps by logical sourceformattedMapping: FormattedRMLMapping
     val grouped = triplesMaps.groupBy(triplesMap => triplesMap.logicalSource.semanticIdentifier)
 
     // create a map with as key a Source and as value an Engine with loaded statements
@@ -250,7 +295,7 @@ object Main extends Logging {
     require(formattedMapping.containsStreamTriplesMaps() && formattedMapping.containsDatasetTriplesMaps() && formattedMapping.containsParentTriplesMaps)
 
     val tm2Stream = mutable.HashMap.empty[TriplesMap, DataStream[Iterable[Item]]]
-   (formattedMapping.standardStreamTriplesMaps ++ formattedMapping.joinedSteamTriplesMaps)
+   (formattedMapping.standardStreamTriplesMaps ++ formattedMapping.joinedStreamTriplesMaps)
      // group all mappings by logical source
       .groupBy(_.logicalSource.semanticIdentifier)
       .map(entry => {
@@ -300,6 +345,7 @@ object Main extends Logging {
 
         val parentTmId = joinedStreamTm.parentTriplesMap
         val joinParentSource = joinedStreamTm.joinCondition.get.parent.identifier
+
         stream
           .flatMap(_.iterator)
           .map(childItem => {
@@ -351,7 +397,7 @@ object Main extends Logging {
     // map: (parent triples map identiefier, name of the variable to join on, the value of it) => generated subject string
     var parentTriplesMapId2JoinParentSource2JoinParentValue2ParentItem = mutable.HashMap.empty[(String, String, String), Item]
 
-    formattedMapping.joinedSteamTriplesMaps.foreach(joinedTm => {
+    formattedMapping.joinedStreamTriplesMaps.foreach(joinedTm => {
       // identify the parent triples map
       val parentTm = TriplesMapsCache.get(joinedTm.parentTriplesMap).get;
 
@@ -431,7 +477,8 @@ object Main extends Logging {
 
   }
 
-  /**
+
+    /**
     * Creates a pipeline from standard triple maps.
     *
     * @param standardTriplesMaps Triple maps which are standard.

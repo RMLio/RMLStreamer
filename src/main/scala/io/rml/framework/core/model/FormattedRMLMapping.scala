@@ -64,7 +64,7 @@ trait FormattedRMLMapping extends RMLMapping {
     *
     * @return
     */
-  def joinedSteamTriplesMaps: List[JoinedTriplesMap]
+  def joinedStreamTriplesMaps: List[JoinedTriplesMap]
 
 }
 
@@ -74,9 +74,9 @@ case class StdFormattedRMLMapping(triplesMaps: List[TriplesMap],
                                   identifier: String,
                                   containsParentTriplesMaps: Boolean,
                                   joinedStaticTriplesMaps: List[JoinedTriplesMap],
-                                  joinedSteamTriplesMaps: List[JoinedTriplesMap]) extends FormattedRMLMapping() {
+                                  joinedStreamTriplesMaps: List[JoinedTriplesMap]) extends FormattedRMLMapping() {
 
-  def containsStreamTriplesMaps(): Boolean = standardStreamTriplesMaps.nonEmpty || joinedSteamTriplesMaps.nonEmpty
+  def containsStreamTriplesMaps(): Boolean = standardStreamTriplesMaps.nonEmpty || joinedStreamTriplesMaps.nonEmpty
 
   def containsDatasetTriplesMaps(): Boolean = standardStaticTriplesMaps.nonEmpty || joinedStaticTriplesMaps.nonEmpty
 
