@@ -48,6 +48,7 @@ import org.apache.flink.streaming.api.scala.{DataStream, OutputTag, StreamExecut
 import org.apache.flink.util.Collector
 import java.util.Properties
 
+import io.rml.framework.core.windows.WindowAssignerFactory
 import org.apache.flink.api.java.functions.KeySelector
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows
 import org.apache.flink.streaming.api.windowing.time.Time
@@ -270,7 +271,7 @@ object Main extends Logging {
                 .flatten(o => o.get)
                 .head
             )
-            .window(TumblingEventTimeWindows.of(Time.milliseconds(2)))
+            .window(WindowAssignerFactory.getWindowAssigner())
 
 
         joined.apply((firstIterItems, secondIterItems) => {
@@ -293,7 +294,7 @@ object Main extends Logging {
         val crossed = childDataStream.join(parentDataStream)
           .where( _ => key)
           .equalTo( _ => key)
-          .window(TumblingEventTimeWindows.of(Time.milliseconds(2)))
+          .window(WindowAssignerFactory.getWindowAssigner())
 
         crossed.apply((firstIterItems, secondIterItems) => {
           // mini cross join for all iteritems
