@@ -1,4 +1,4 @@
-package io.rml.framework.core.windows
+package io.rml.framework.engine.windows
 
 import org.apache.flink.streaming.api.windowing.assigners.{TumblingEventTimeWindows, WindowAssigner}
 import org.apache.flink.streaming.api.windowing.time.Time

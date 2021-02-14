@@ -48,7 +48,7 @@ import org.apache.flink.streaming.api.scala.{DataStream, OutputTag, StreamExecut
 import org.apache.flink.util.Collector
 import java.util.Properties
 
-import io.rml.framework.core.windows.WindowAssignerFactory
+import io.rml.framework.engine.windows.WindowAssignerFactory
 import org.apache.flink.api.java.functions.KeySelector
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows
 import org.apache.flink.streaming.api.windowing.time.Time
