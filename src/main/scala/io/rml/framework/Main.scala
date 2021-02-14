@@ -176,8 +176,7 @@ object Main extends Logging {
                                            senv: StreamExecutionEnvironment,
                                            postProcessor: PostProcessor): DataStream[String] = {
 
-    this.logDebug("createDataSetFromFormattedMapping(...)")
-    require(!postProcessor.isInstanceOf[AtMostOneProcessor], "Bulk output and JSON-LD output are not supported in the static version")
+    this.logDebug("createDataStreamFromFormattedMapping(...)")
 
     /**
      * check if the mapping has standard triple maps and triple maps with joined triple maps
@@ -188,14 +187,14 @@ object Main extends Logging {
     if (formattedMapping.standardStreamTriplesMaps.nonEmpty && formattedMapping.joinedStreamTriplesMaps.nonEmpty) {
 
       // create a pipeline from the standard triple maps
-      val standardTMDataset = createStandardStreamPipeline(formattedMapping.standardStreamTriplesMaps)
+      val standardTMDataStream = createStandardStreamPipeline(formattedMapping.standardStreamTriplesMaps)
 
       // create a pipeline from the triple maps that contain parent triple maps
-      // val tmWithPTMDataSet = createStreamTMWithPTMPipeline(formattedMapping.joinedStaticTriplesMaps)
+       val tmWithPTMDataStream= createStreamTMWithPTMPipeline(formattedMapping.joinedStaticTriplesMaps)
 
       // combine the two previous pipeline into one
-      //standardTMDataset.union(tmWithPTMDataSet)
-      standardTMDataset
+      standardTMDataStream.union(tmWithPTMDataStream)
+
       // check if the formatted mapping only contains triple maps
     } else if (formattedMapping.standardStreamTriplesMaps.nonEmpty) {
 
@@ -203,7 +202,7 @@ object Main extends Logging {
       createStandardStreamPipeline(formattedMapping.standardStreamTriplesMaps)
     } else {
 
-      createStandardStreamPipeline(formattedMapping.standardStreamTriplesMaps)
+      createStreamTMWithPTMPipeline(formattedMapping.joinedStreamTriplesMaps)
     }
   }
 
@@ -257,6 +256,9 @@ object Main extends Logging {
           childDataStream
             .join(parentDataStream)
             .where(iterItems =>
+              //Key selector assigns the iterItems if one of the item in the iterables satisfy the join condition
+              //This is due to the possibility of one raw input generating multiple items by the RML
+              //reference formulation iterators
               iterItems
                 .map(item => item.refer(tm.joinCondition.get.child.toString))
                 .flatten(o => o.get)
