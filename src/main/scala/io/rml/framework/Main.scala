@@ -48,6 +48,7 @@ import org.apache.flink.streaming.api.scala.{DataStream, OutputTag, StreamExecut
 import org.apache.flink.util.Collector
 import java.util.Properties
 
+import io.rml.framework.engine.composers.{CrossJoin, StreamJoinComposer}
 import io.rml.framework.engine.windows.WindowAssignerFactory
 import org.apache.flink.api.java.functions.KeySelector
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows
@@ -242,7 +243,7 @@ object Main extends Logging {
           // filter out all items that do not contain the parents join condition
           .filter(iterItems => {
             if (tm.joinCondition.isDefined) {
-              iterItems.exists(_.refer(tm.joinCondition.get.child.toString).isDefined)
+              iterItems.exists(_.refer(tm.joinCondition.get.parent.toString).isDefined)
             } else true // if there are no join conditions all items can pass
 
             // filter out all empty items
@@ -250,61 +251,27 @@ object Main extends Logging {
           iterItems.nonEmpty
         })
 
+
+      //TODO: Be able to choose a specific stream join composer to compose the streaming pipeline
+      var composer = StreamJoinComposer(childDataStream, parentDataStream, tm)
       // if there are join conditions defined join the child dataset and the parent dataset
       if (tm.joinCondition.isDefined) {
 
-        val joined =
-          childDataStream
-            .join(parentDataStream)
-            .where(iterItems =>
-              //Key selector assigns the iterItems if one of the item in the iterables satisfy the join condition
-              //This is due to the possibility of one raw input generating multiple items by the RML
-              //reference formulation iterators
-              iterItems
-                .map(item => item.refer(tm.joinCondition.get.child.toString))
-                .flatten(o => o.get)
-                .head
-            )
-            .equalTo(iterItems =>
-              iterItems
-                .map(item => item.refer(tm.joinCondition.get.child.toString))
-                .flatten(o => o.get)
-                .head
-            )
-            .window(WindowAssignerFactory.getWindowAssigner())
+        val joined = composer.composeStreamJoin()
 
-
-        joined.apply((firstIterItems, secondIterItems) => {
-          firstIterItems.flatMap( item1 => secondIterItems.map( item2 => JoinedItem(item1, item2)))
-        })
-          .flatMap(joined => joined)
 
           // process the JoinedItems in an engine
-          .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items")
-
+          joined.map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items")
           // format the list of triples as strings
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
           .name("Convert triples to strings")
 
-      } else { // if there are no join conditions a cross join will be executed
-        // add pseudo key for all incoming elements
-        val key = tm.logicalSource.semanticIdentifier
-        // create a cross join data stream where all items are joined
-        // on a default fixed key
-        val crossed = childDataStream.join(parentDataStream)
-          .where( _ => key)
-          .equalTo( _ => key)
-          .window(WindowAssignerFactory.getWindowAssigner())
-
-        crossed.apply((firstIterItems, secondIterItems) => {
-          // mini cross join for all iteritems
-         firstIterItems.flatMap( item1 => secondIterItems.map( item2 => JoinedItem(item1, item2)))
-        })
-          .flatMap(joined => joined)
+      } else {
+        composer = StreamJoinComposer(childDataStream, parentDataStream, tm, CrossJoin)
+        val crossed =  composer.composeStreamJoin()
 
           // process the JoinedItems in an engine
-          .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items")
-
+          crossed.map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items")
           // format the list of triples as strings
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
           .name("Convert triples to strings")
