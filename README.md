@@ -15,9 +15,9 @@ If you want to deploy it yourself, read on.
 
 ### Installing Flink
 RMLStreamer runs its jobs on Flink clusters.
-More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.10/getting-started/tutorials/local_setup.html).
+More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.11/try-flink/local_installation.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
-Please note that this version works with Flink 1.11.2 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.11.2/flink-1.11.2-bin-scala_2.11.tgz).
+Please note that this version works with Flink 1.11.3 with Scala 2.11 support, which can be downloaded [here](https://archive.apache.org/dist/flink/flink-1.11.3/flink-1.11.3-bin-scala_2.11.tgz).
 
 ### Building RMLStreamer
 

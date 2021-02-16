@@ -28,7 +28,7 @@ object FnOEnvironment extends Logging{
   }
 
   def intializeFunctionLoader() = {
-    this.functionLoader = Some(FunctionLoader.apply(getFunctionDescriptionFilePaths(), getFunctionMappingFilePaths()))
+    this.functionLoader = FunctionLoader.apply(getFunctionDescriptionFilePaths(), getFunctionMappingFilePaths())
     this.functionLoader
   }
   def getFunctionLoader: Option[FunctionLoader] = {
@@ -63,8 +63,13 @@ object FnOEnvironment extends Logging{
     defaultFunctionDescriptionFilePaths.foreach(strPath=> {
       try
         {
-          val p = Path.string2path(Util.getFile(strPath).getAbsolutePath)
-          FnOEnvironment.addFunctionDescriptionFilePath(p)
+          val file = Util.getFile(strPath);
+          if (file.exists()) {
+            val p = Path.string2path(file.getAbsolutePath)
+            FnOEnvironment.addFunctionDescriptionFilePath(p)
+          } else {
+            logWarning(s"Can't add function description file to RMLEnvironment ( $strPath ). This will result in errors when using functions!");
+          }
         }
       catch {
         case e : Exception => logWarning(s"Can't add function description file to RMLEnvironment ( $strPath ). This will result in errors when using functions! Exception: ${e.getMessage}")
@@ -74,8 +79,13 @@ object FnOEnvironment extends Logging{
     // adding default function description file paths to the RMLEnvironment
     defaultFunctionMappingFilePaths.foreach(strPath=> {
       try {
-        val p = Path.string2path(Util.getFile(strPath).getAbsolutePath)
-        FnOEnvironment.addFunctionMappingFilePaths(p)
+        val file = Util.getFile(strPath);
+        if (file.exists()) {
+          val p = Path.string2path(file.getAbsolutePath)
+          FnOEnvironment.addFunctionMappingFilePaths(p)
+        } else {
+          logWarning(s"Can't add function mapping file to RMLEnvironment ( $strPath ). This will result in errors when using functions!");
+        }
       }catch {
         case e : Exception => logWarning(s"Can't add function mapping file to RMLEnvironment ( $strPath ). This will result in errors when using functions! Exception: ${e.getMessage}")
       }

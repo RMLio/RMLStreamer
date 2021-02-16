@@ -54,7 +54,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
   }
 
   private def parseFunction(assembledPom:
-                            List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Function = {
+                            List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Option[Function] = {
 
     this.logDebug("parseFunction (assembledPom)")
     val placeHolder: List[FlinkRDFQuad] = generateFunctionTriples(new EmptyItem(), assembledPom)
@@ -71,10 +71,13 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
       .value
       .toString)
     
-    val loadedFunctionOption = FunctionLoader().createFunction(functionName)
-    loadedFunctionOption.getOrElse{
-      // complain about function that isn't present
-      throw new RMLException("Can't load function..")
+
+    val functionLoaderOption = FunctionLoader();
+
+    if (functionLoaderOption.isDefined) {
+      functionLoaderOption.get.createFunction(functionName);
+    } else {
+      None
     }
   }
 
@@ -85,14 +88,17 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
    * @param assembledPom List of predicate object generator functions
    * @return anon function taking in [[Item]] and returns entities using the function
    */
-  private def createAssemblerFunction(function: Function, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Item => Option[Iterable[Entity]] = {
+  private def createAssemblerFunction(function: Option[Function], assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Item => Option[Iterable[Entity]] = {
     (item: Item) => {
       val triples: List[FlinkRDFQuad] = generateFunctionTriples(item, assembledPom)
       val paramTriples = triples.filter(triple => triple.predicate.uri != Uri(FunVoc.FnO.Property.EXECUTES))
 
 
-
-      function.execute(paramTriples)
+      if (function.isDefined) {
+        function.get.execute(paramTriples)
+      } else {
+        None
+      }
     }
   }
 
