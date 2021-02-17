@@ -49,10 +49,6 @@ import org.apache.flink.util.Collector
 import java.util.Properties
 
 import io.rml.framework.engine.composers.{CrossJoin, StreamJoinComposer}
-import io.rml.framework.engine.windows.WindowAssignerFactory
-import org.apache.flink.api.java.functions.KeySelector
-import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows
-import org.apache.flink.streaming.api.windowing.time.Time
 
 import scala.collection.{immutable, mutable}
 
