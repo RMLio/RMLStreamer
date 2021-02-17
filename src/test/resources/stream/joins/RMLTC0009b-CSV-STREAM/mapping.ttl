@@ -33,6 +33,8 @@
     rr:objectMap [ 
       a rr:RefObjectMap ;
       rr:parentTriplesMap <TriplesMap2>;
+      rmls:joinConfig <JoinConfigMap>;
+      rmls:windowType  rmls:Tumbling;
       rr:joinCondition [
         rr:child "Sport" ;
         rr:parent "ID" ;
@@ -40,6 +42,9 @@
     ];
     rr:graph <http://example.com/graph/practise> ;
   ] .
+
+ <JoinConfigMap> a rmls:JoinConfigMap;
+        rmls:joinType rmls:CrossJoin.
 
 <TriplesMap2>
   a rr:TriplesMap;
