@@ -188,7 +188,7 @@ object Main extends Logging {
       val standardTMDataStream = createStandardStreamPipeline(formattedMapping.standardStreamTriplesMaps)
 
       // create a pipeline from the triple maps that contain parent triple maps
-       val tmWithPTMDataStream= createStreamTMWithPTMPipeline(formattedMapping.joinedStaticTriplesMaps)
+       val tmWithPTMDataStream= createStreamTMWithPTMPipeline(formattedMapping.joinedStreamTriplesMaps)
 
       // combine the two previous pipeline into one
       standardTMDataStream.union(tmWithPTMDataStream)
