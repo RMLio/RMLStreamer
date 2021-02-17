@@ -24,13 +24,13 @@ class TumblingStreamJoinComposer[T <: Iterable[Item], U <: Iterable[Item]](R: Da
         //This is due to the possibility of one raw input generating multiple items by the RML
         //reference formulation iterators
         iterItems
-          .map(item => item.refer(tm.joinCondition.get.toString))
+          .map(item => item.refer(tm.joinCondition.get.child.toString))
           .flatten(o => o.get)
           .head
       )
       .equalTo(iterItems =>
         iterItems
-          .map(item => item.refer(tm.joinCondition.get.toString))
+          .map(item => item.refer(tm.joinCondition.get.parent.toString))
           .flatten(o => o.get)
           .head
       )
