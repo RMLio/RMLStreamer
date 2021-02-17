@@ -2,7 +2,6 @@ package io.rml.framework.engine.composers
 
 import io.rml.framework.core.model.JoinedTriplesMap
 import io.rml.framework.engine.PostProcessor
-import io.rml.framework.engine.windows.WindowAssignerFactory
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment, createTypeInformation}
@@ -35,7 +34,7 @@ class TumblingStreamJoinComposer[T <: Iterable[Item], U <: Iterable[Item]](R: Da
           .flatten(o => o.get)
           .head
       )
-      .window(WindowAssignerFactory.getWindowAssigner())
+      .window(this.windowAssigner)
 
 
     joined.apply((firstIterItems, secondIterItems) => {

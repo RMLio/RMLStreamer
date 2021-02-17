@@ -2,7 +2,6 @@ package io.rml.framework.engine.composers
 
 import io.rml.framework.core.model.JoinedTriplesMap
 import io.rml.framework.engine.PostProcessor
-import io.rml.framework.engine.windows.WindowAssignerFactory
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment, createTypeInformation}
@@ -21,7 +20,7 @@ class CrossJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]]
     val crossed = R.join(S)
       .where(_ => key)
       .equalTo(_ => key)
-      .window(WindowAssignerFactory.getWindowAssigner())
+      .window(this.windowAssigner)
 
     crossed.apply((firstIterItems, secondIterItems) => {
       // mini cross join for all iteritems

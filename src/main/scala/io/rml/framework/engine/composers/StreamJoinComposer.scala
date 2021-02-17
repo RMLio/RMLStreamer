@@ -13,7 +13,10 @@ abstract class StreamJoinComposer[T <: Iterable[Item],U <: Iterable[Item], V, W 
 (R:DataStream[T],
  S:DataStream[U],
  tm: JoinedTriplesMap,
- windowAssigner: WindowAssigner[Object,W] =  TumblingEventTimeWindows.of(Time.milliseconds(20))) {
+ val windowAssigner: WindowAssigner[Object,W] =  TumblingEventTimeWindows.of(Time.milliseconds(20))) {
+
+
+
      def composeStreamJoin()(implicit env: ExecutionEnvironment,
                                      senv: StreamExecutionEnvironment,
                                      postProcessor: PostProcessor):DataStream[V]
