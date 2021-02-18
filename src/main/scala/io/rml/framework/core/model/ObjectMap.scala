@@ -26,6 +26,7 @@
 package io.rml.framework.core.model
 
 import io.rml.framework.core.model.std.StdObjectMap
+import io.rml.framework.engine.windows.WindowType
 
 /**
   * This trait represents an object-map.
@@ -53,6 +54,8 @@ object ObjectMap {
             termType: Option[Uri] = None,
             datatype: Option[Uri] = None,
             language: Option[Literal] = None,
+            windowType: Option[WindowType] = None,
+            joinConfig: Option[String] = None,
             parentTriplesMap: Option[String] = None,
             joinCondition: Option[JoinCondition] = None): ObjectMap =
 
