@@ -20,6 +20,7 @@ class StdJoinConfigMapExtractorTest extends  StaticTestSpec{
     assert(joinedStreamTriplesMap.head.joinConfigMap.isDefined, "Join config map should be defined.")
     assert(joinedStreamTriplesMap.head.joinCondition.isDefined, "Join conditions should be defined.")
 
+
   }
 
 }
