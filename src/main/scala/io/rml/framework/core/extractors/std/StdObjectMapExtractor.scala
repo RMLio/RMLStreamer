@@ -105,7 +105,10 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     val functionMap = FunctionMapExtractor().extract(resource)
     val joinConfigMap = extractJoinConfigMap(resource)
     val windowType = extractWindowType(resource)
-    ObjectMap(resource.uri.toString, functionMap, constant, reference, template, termType, datatype, language, windowType, joinConfigMap, parentTriplesMap, joinCondition)
+    ObjectMap(resource.uri.toString,
+      functionMap, constant, reference, template,
+      termType, datatype, language, windowType,
+      joinConfigMap, parentTriplesMap, joinCondition)
   }
 
   def extractDatatype(resource: RDFResource): Option[Uri] = {

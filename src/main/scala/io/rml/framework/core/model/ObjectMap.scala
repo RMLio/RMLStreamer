@@ -38,7 +38,7 @@ import io.rml.framework.engine.windows.WindowType
 trait ObjectMap extends TermMap {
 
   def joinCondition: Option[JoinCondition]
-
+  def joinConfigMap: Option[String]
   def parentTriplesMap: Option[String]
 
 }
@@ -55,7 +55,7 @@ object ObjectMap {
             datatype: Option[Uri] = None,
             language: Option[Literal] = None,
             windowType: Option[WindowType] = None,
-            joinConfig: Option[String] = None,
+            joinConfigMap: Option[String] = None,
             parentTriplesMap: Option[String] = None,
             joinCondition: Option[JoinCondition] = None): ObjectMap =
 
@@ -68,5 +68,6 @@ object ObjectMap {
       datatype,
       language,
       parentTriplesMap,
-      joinCondition)
+      joinCondition,
+      joinConfigMap )
 }
