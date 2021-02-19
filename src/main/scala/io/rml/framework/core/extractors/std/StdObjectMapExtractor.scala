@@ -25,7 +25,7 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{FunctionMapExtractor, JoinConditionExtractor, ObjectMapExtractor}
+import io.rml.framework.core.extractors.{FunctionMapExtractor, JoinConditionExtractor, JoinConfigMapCache, JoinConfigMapExtractor, ObjectMapExtractor}
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.util.Util
@@ -199,6 +199,9 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     if (properties.size > 1)
       throw new RMLException(resource.uri + ": invalid amount of join config maps.")
     if (properties.isEmpty) return None
+
+    val configMapOption = JoinConfigMapExtractor().extract(resource)
+    configMapOption.foreach(configMap => JoinConfigMapCache.put(configMap.identifier, configMap))
 
     properties.head match {
       case resource: RDFResource => Some(resource.toString)

@@ -1,17 +1,18 @@
 package io.rml.framework.core.model
 
+import io.rml.framework.core.model.std.StdJoinConfigMap
 import io.rml.framework.engine.composers.JoinType
 import io.rml.framework.engine.windows.WindowType
 
-trait JoinConfigMap {
+trait JoinConfigMap extends TermMap {
    def joinType:JoinType
-   def windowType: WindowType
+   def windowType: Option[WindowType]
 }
 
 object JoinConfigMap {
 
-  def apply(joinType:JoinType, windowType: WindowType):JoinConfigMap => {
-    StdConfigMap(joinType, windowType)
+  def apply(identifier:String, joinType:JoinType, windowType: Option[WindowType]):JoinConfigMap = {
+    StdJoinConfigMap(identifier, joinType, windowType)
   }
 }
 
