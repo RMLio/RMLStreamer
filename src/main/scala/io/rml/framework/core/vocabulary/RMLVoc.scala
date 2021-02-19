@@ -203,6 +203,7 @@ object RMLVoc {
     val JOIN_CONFIG_MAP = Namespaces("rmls", "JoinConfigMap")
     val CROSS_JOIN_TYPE = Namespaces("rmls", "CrossJoin")
     val TUMBLING_JOIN_TYPE =  Namespaces("rmls", "TumblingJoin")
+    val VC_TW_JOIN_TYPE = Namespaces("rmls", "VCTWindowJoin")
     ///////////////////////////////////////////////////////////////////////////
     // RMLS Window types
     ///////////////////////////////////////////////////////////////////////////
