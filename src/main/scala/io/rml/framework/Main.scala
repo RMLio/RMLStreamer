@@ -27,7 +27,7 @@ package io.rml.framework
 
 
 import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.{JoinConfigMapCache, TriplesMapsCache}
 import io.rml.framework.core.function.flink.{FnOEnvironmentLoader, FnOEnvironmentStreamLoader, RichItemIdentityFunction, RichStreamItemIdentityFunction}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
@@ -247,31 +247,18 @@ object Main extends Logging {
           iterItems.nonEmpty
         })
 
-
       //TODO: Be able to choose a specific stream join composer to compose the streaming pipeline
-      var composer = StreamJoinComposer(childDataStream, parentDataStream, tm)
+      val joinConfigMap = JoinConfigMapCache.getOrElse(tm.joinConfigMap.get, JoinConfigMap(tm.joinCondition))
+      val composer = StreamJoinComposer(childDataStream, parentDataStream, tm, joinConfigMap)
       // if there are join conditions defined join the child dataset and the parent dataset
-      if (tm.joinCondition.isDefined) {
+      val joined = composer.composeStreamJoin()
+        // process the JoinedItems in an engine
+        joined.map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items")
+        // format the list of triples as strings
+        .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
+        .name("Convert triples to strings")
 
-        val joined = composer.composeStreamJoin()
 
-
-          // process the JoinedItems in an engine
-          joined.map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items")
-          // format the list of triples as strings
-          .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
-          .name("Convert triples to strings")
-
-      } else {
-        composer = StreamJoinComposer(childDataStream, parentDataStream, tm, CrossJoin)
-        val crossed =  composer.composeStreamJoin()
-
-          // process the JoinedItems in an engine
-          crossed.map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items")
-          // format the list of triples as strings
-          .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
-          .name("Convert triples to strings")
-      }
 
 
     })

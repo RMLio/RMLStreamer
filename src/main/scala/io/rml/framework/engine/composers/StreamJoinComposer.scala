@@ -1,6 +1,6 @@
 package io.rml.framework.engine.composers
 
-import io.rml.framework.core.model.{JoinedTriplesMap, TriplesMap}
+import io.rml.framework.core.model.{JoinConfigMap, JoinedTriplesMap, TriplesMap}
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import org.apache.flink.api.scala.ExecutionEnvironment
@@ -28,12 +28,14 @@ abstract class StreamJoinComposer[T <: Iterable[Item],U <: Iterable[Item], V, W 
 object StreamJoinComposer {
   //Default stream join composer
   def apply[T <: Iterable[Item], U <: Iterable[Item]]
-  (stream:DataStream[T], stream2: DataStream[U], tm: JoinedTriplesMap, joinType: JoinType = TumblingJoin )
+  (stream:DataStream[T], stream2: DataStream[U], tm: JoinedTriplesMap, joinConfigMap: JoinConfigMap )
   (implicit env: ExecutionEnvironment,
    senv: StreamExecutionEnvironment,
    postProcessor: PostProcessor):
   StreamJoinComposer[T, U, JoinedItem, TimeWindow] ={
 
+
+    val joinType = joinConfigMap.joinType
 
     joinType match  {
       case TumblingJoin =>  new TumblingStreamJoinComposer[T, U](stream, stream2, tm)
