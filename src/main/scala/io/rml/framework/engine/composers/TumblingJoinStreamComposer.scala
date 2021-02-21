@@ -7,16 +7,16 @@ import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment, createTypeInformation}
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 
-class TumblingJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]](R: DataStream[T], S: DataStream[U], tm: JoinedTriplesMap) extends
+class TumblingJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]](childStream: DataStream[T], parentStream: DataStream[U], tm: JoinedTriplesMap) extends
   StreamJoinComposer
-    [T, U, JoinedItem, TimeWindow](R, S, tm) {
+    [T, U, JoinedItem, TimeWindow](childStream, parentStream, tm) {
 
 
   override def composeStreamJoin()(implicit env: ExecutionEnvironment,
                                    senv: StreamExecutionEnvironment,
                                    postProcessor: PostProcessor): DataStream[JoinedItem] = {
-    val childDataStream = R
-    val parentDataStream = S
+    val childDataStream = childStream
+    val parentDataStream = parentStream
     val joined = childDataStream
       .join(parentDataStream)
       .where(iterItems =>

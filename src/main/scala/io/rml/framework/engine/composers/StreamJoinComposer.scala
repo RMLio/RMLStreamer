@@ -10,10 +10,10 @@ import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.streaming.api.windowing.windows.{TimeWindow, Window}
 
 abstract class StreamJoinComposer[T <: Iterable[Item],U <: Iterable[Item], V, W <: Window]
-(R:DataStream[T],
- S:DataStream[U],
+(childStream:DataStream[T],
+ parentStream:DataStream[U],
  tm: JoinedTriplesMap,
- val windowAssigner: WindowAssigner[Object,W] =  TumblingEventTimeWindows.of(Time.milliseconds(20))) {
+ val windowAssigner: WindowAssigner[Object,TimeWindow] =  TumblingEventTimeWindows.of(Time.milliseconds(20))) {
 
 
 
