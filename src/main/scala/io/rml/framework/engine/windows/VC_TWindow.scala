@@ -4,6 +4,7 @@ import io.rml.framework.flink.item.{Item, JoinedItem}
 import org.apache.flink.api.common.state.{MapState, MapStateDescriptor, ValueState, ValueStateDescriptor}
 import org.apache.flink.api.common.time.Time
 import org.apache.flink.streaming.api.functions.co.KeyedCoProcessFunction
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 import org.apache.flink.util.Collector
 
 import scala.collection.JavaConversions.iterableAsScalaIterable
@@ -16,7 +17,7 @@ import scala.collection.JavaConversions.iterableAsScalaIterable
  * @tparam T subtypes of Iterable[Item]
  * @tparam U subtypes of Iterable[Item]
  */
-class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val updateCycle: Time = Time.seconds(10)) extends KeyedCoProcessFunction[String, T, U, JoinedItem] {
+class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 1.5, val windowSize: Time = Time.seconds(2), val updateCycle: Time = Time.seconds(10)) extends KeyedCoProcessFunction[String, T, U, JoinedItem] {
 
 
   //Holds the map state of incoming child tuples that are still alive in the window
@@ -29,23 +30,56 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val updateCycle: Time
     new MapStateDescriptor[Long, Iterable[Item]]("VC_TWJoinParent", classOf[Long], classOf[Iterable[Item]])
   )
 
-
+  //Holds the timestamp when the window was last updated
   lazy val lastCheckup: ValueState[Time] = getRuntimeContext.getState(
     new ValueStateDescriptor[Time]("lastCheckup", classOf[Time])
   )
 
+  //Size of the window usd by VC_TWindow to join the incoming tuples
+  lazy val windowTimeSlice: ValueState[TimeWindow] = getRuntimeContext.getState(
+    new ValueStateDescriptor[TimeWindow]("timeSlice", classOf[TimeWindow])
+  )
 
-  lazy val checkUpFired: ValueState[Boolean] = getRuntimeContext.getState(
+  //Pseudo max limit of the hash buckets in the child map state
+  lazy val pseudoChildLimit: ValueState[Long] = getRuntimeContext.getState(
+    new ValueStateDescriptor[Long]("childLimit", classOf[Long])
+  )
+
+  //Pseudo max limit of the hash buckets in the parent map state
+  lazy val pseudoParentLimit: ValueState[Long] = getRuntimeContext.getState(
+    new ValueStateDescriptor[Long]("parentLimit", classOf[Long])
+  )
+
+
+  //Dynamic periodic update cycle which changes based on the velocity of the tuples
+  lazy val dynamicUpdateCycle: ValueState[Time] = getRuntimeContext.getState(
+    new ValueStateDescriptor[Time]("dynamicUpdateCycle", classOf[Time])
+  )
+
+  //Boolean flag to check if the window has been updated.
+  lazy val isWindowUpdated: ValueState[Boolean] = getRuntimeContext.getState(
     new ValueStateDescriptor[Boolean]("isWindowUpdated", classOf[Boolean])
   )
+
+
+  override def processElement1(child: T, context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context, collector: Collector[JoinedItem]): Unit = {
+    crossJoin(child, isChild = true, context.timestamp(), childMapState, parentMapState)
+    fireWindowUpdateCallback(context)
+  }
+
+  override def processElement2(parent: U, context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context, collector: Collector[JoinedItem]): Unit = {
+
+    crossJoin(parent, isChild = false, context.timestamp(), parentMapState, childMapState)
+    fireWindowUpdateCallback(context)
+  }
 
   private def crossJoin(elementIter: Iterable[Item], isChild: Boolean, timeStamp: Long, thisMapState: MapState[Long, Iterable[Item]], thatMapState: MapState[Long, Iterable[Item]]):
   Iterable[JoinedItem] = {
     thisMapState.put(timeStamp, elementIter)
 
     thatMapState.values()
-      .flatMap(thatElement =>
-        thatElement.flatMap(item1 =>
+      .flatMap(thatElementIter =>
+        thatElementIter.flatMap(item1 =>
           elementIter.map(item2 =>
             if (isChild)
               JoinedItem(item2, item1)
@@ -57,31 +91,72 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val updateCycle: Time
 
 
   }
+
+  /**
+   * Fires the onTimer(..) method with a delay based on the dynamic update cycle.
+   *
+   * @param context
+   */
   private def fireWindowUpdateCallback(context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context): Unit = {
-    if (!checkUpFired.value()) {
-      context.timerService.registerEventTimeTimer(lastCheckup.value().toMilliseconds + updateCycle.toMilliseconds)
-      checkUpFired.update(true)
+    if (!isWindowUpdated.value()) {
+      context.timerService.registerEventTimeTimer(lastCheckup.value().toMilliseconds + dynamicUpdateCycle.value().toMilliseconds)
     }
+    isWindowUpdated.update(true)
   }
 
-  override def processElement1(child: T, context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context, collector: Collector[JoinedItem]): Unit = {
-
-    crossJoin(child, isChild = true, context.timestamp(), childMapState, parentMapState)
-    fireWindowUpdateCallback(context)
-  }
-
-
-
-
-  override def processElement2(parent: U, context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context, collector: Collector[JoinedItem]): Unit = {
-
-    crossJoin(parent, isChild = false, context.timestamp(), parentMapState, childMapState)
-    fireWindowUpdateCallback(context)
-  }
-
-  //Cyclic update callback to update window sizes
+  /**
+   * Cyclic update of window size by dynamically adjusting the size according to the velocity of the
+   * incoming tuples.
+   *
+   * @param timestamp timestamp of the callback based on either event time (watermark has passed) or processing time (system wall clock)
+   * @param ctx
+   * @param out
+   */
   override def onTimer(timestamp: Long, ctx: KeyedCoProcessFunction[String, T, U, JoinedItem]#OnTimerContext, out: Collector[JoinedItem]): Unit = {
 
+    val start = TimeWindow.getWindowStartWithOffset(timestamp, 0L, windowSize.toMilliseconds)
+    windowTimeSlice.update(new TimeWindow(start, start + windowSize.toMilliseconds))
+    val (join_entropy, childRatio, parentRatio) = calculateJoinCost()
+
+    //Adjust pseudo limit based on the calculated ratios
+    pseudoChildLimit.update((pseudoChildLimit.value() * childRatio).toLong)
+    pseudoParentLimit.update((pseudoParentLimit.value() * parentRatio).toLong)
+
+    val currentDynamicUpdateCycle = dynamicUpdateCycle.value()
+    if (join_entropy > epsilon && join_entropy > 0){
+      dynamicUpdateCycle.update(Time.milliseconds( currentDynamicUpdateCycle.toMilliseconds/2))
+    }else{
+      dynamicUpdateCycle.update(Time.milliseconds(currentDynamicUpdateCycle.toMilliseconds*2))
+    }
+
+    lastCheckup.update(Time.milliseconds(timestamp))
+    cleanUpWindow()
   }
+
+
+  private def cleanUpWindow(): Unit = {
+    childMapState.clear()
+    parentMapState.clear()
+  }
+
+  private def calculateJoinCost(): (Double, Double, Double) = {
+
+
+
+    val childElementsProcessed: Double = childMapState.values().size
+    val parentElementsProcessed: Double = parentMapState.values().size
+    val childStreamN: Double = pseudoChildLimit.value()
+    val parentStreamN: Double = pseudoParentLimit.value()
+
+    val childRatio = childElementsProcessed/childStreamN
+    val parentRatio = parentElementsProcessed/parentStreamN
+
+    (childRatio + parentRatio, childRatio, parentRatio)
+
+  }
+
+
+
+
 
 }
