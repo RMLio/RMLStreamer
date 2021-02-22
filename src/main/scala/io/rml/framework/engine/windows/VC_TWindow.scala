@@ -63,13 +63,16 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
 
 
   override def processElement1(child: T, context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context, collector: Collector[JoinedItem]): Unit = {
-    crossJoin(child, isChild = true, context.timestamp(), childMapState, parentMapState)
+    val joinedItems = crossJoin(child, isChild = true, context.timestamp(), childMapState, parentMapState)
+
+    joinedItems.foreach(collector.collect)
     fireWindowUpdateCallback(context)
   }
 
   override def processElement2(parent: U, context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context, collector: Collector[JoinedItem]): Unit = {
 
-    crossJoin(parent, isChild = false, context.timestamp(), parentMapState, childMapState)
+    val joinedItems = crossJoin(parent, isChild = false, context.timestamp(), parentMapState, childMapState)
+    joinedItems.foreach(collector.collect)
     fireWindowUpdateCallback(context)
   }
 
