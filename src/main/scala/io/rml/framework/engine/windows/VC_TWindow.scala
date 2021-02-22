@@ -3,6 +3,7 @@ package io.rml.framework.engine.windows
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import org.apache.flink.api.common.state.{MapState, MapStateDescriptor, ValueState, ValueStateDescriptor}
 import org.apache.flink.api.common.time.Time
+import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.functions.co.KeyedCoProcessFunction
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 import org.apache.flink.util.Collector
@@ -17,7 +18,11 @@ import scala.collection.JavaConversions.iterableAsScalaIterable
  * @tparam T subtypes of Iterable[Item]
  * @tparam U subtypes of Iterable[Item]
  */
-class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 1.5, val windowSize: Time = Time.seconds(2), val updateCycle: Time = Time.seconds(10)) extends KeyedCoProcessFunction[String, T, U, JoinedItem] {
+class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 1.5,
+                                                          val defaultBucketSize:Long = 1000L,
+                                                           val windowSize: Time = Time.seconds(2),
+                                                           val updateCycle: Time = Time.seconds(10))
+  extends KeyedCoProcessFunction[String, T, U, JoinedItem] {
 
 
   //Holds the map state of incoming child tuples that are still alive in the window
@@ -36,6 +41,7 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
   )
 
   //Size of the window usd by VC_TWindow to join the incoming tuples
+  //TODO: is this necessary?
   lazy val windowTimeSlice: ValueState[TimeWindow] = getRuntimeContext.getState(
     new ValueStateDescriptor[TimeWindow]("timeSlice", classOf[TimeWindow])
   )
@@ -56,11 +62,21 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
     new ValueStateDescriptor[Time]("dynamicUpdateCycle", classOf[Time])
   )
 
-  //Boolean flag to check if the window has been updated.
-  lazy val isWindowUpdated: ValueState[Boolean] = getRuntimeContext.getState(
-    new ValueStateDescriptor[Boolean]("isWindowUpdated", classOf[Boolean])
+  //Boolean flag to check if the callback has been fired.
+  lazy val isCallBackFired: ValueState[Boolean] = getRuntimeContext.getState(
+    new ValueStateDescriptor[Boolean]("isCallBackFired", classOf[Boolean])
   )
 
+
+  override def open(parameters: Configuration): Unit = {
+    super.open(parameters)
+    isCallBackFired.update(false)
+    lastCheckup.update(Time.milliseconds(-10L))
+    dynamicUpdateCycle.update(updateCycle)
+    pseudoParentLimit.update(defaultBucketSize)
+    pseudoChildLimit.update(defaultBucketSize)
+
+  }
 
   override def processElement1(child: T, context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context, collector: Collector[JoinedItem]): Unit = {
     val joinedItems = crossJoin(child, isChild = true, context.timestamp(), childMapState, parentMapState)
@@ -101,10 +117,14 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
    * @param context
    */
   private def fireWindowUpdateCallback(context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context): Unit = {
-    if (!isWindowUpdated.value()) {
+    if(lastCheckup.value().getSize < 0L){
+      lastCheckup.update(Time.milliseconds(context.timestamp()))
+    }
+
+    if (!isCallBackFired.value()) {
       context.timerService.registerEventTimeTimer(lastCheckup.value().toMilliseconds + dynamicUpdateCycle.value().toMilliseconds)
     }
-    isWindowUpdated.update(true)
+    isCallBackFired.update(true)
   }
 
   /**
@@ -140,8 +160,15 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
   private def cleanUpWindow(): Unit = {
     childMapState.clear()
     parentMapState.clear()
+
+    isCallBackFired.update(false)
   }
 
+
+  /**
+   * Calculates the join entropy based on the paper VC-TWJoin: A Stream Join Algorithm Based onVariable Update Cycle Time Window
+   * @return
+   */
   private def calculateJoinCost(): (Double, Double, Double) = {
 
 
