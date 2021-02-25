@@ -25,7 +25,7 @@
 package io.rml.framework
 
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.engine.PostProcessor
+import io.rml.framework.engine.{NopPostProcessor, PostProcessor}
 import io.rml.framework.util.TestUtil
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
 import io.rml.framework.util.logging.Logger
@@ -46,43 +46,58 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with
   //  without causing compilation failures.
   //  This is useful, for example, if you only want to check the tests that should pass.
 
-  val failing : Array[String] = Array(
+  val invalidMappingFile : Array[String] = Array(
     "rml-testcases-invalid-mapping-file"
-    //"rml-testcases-negative"
   )
   val passing : Array[Tuple2[String,String]] =Array(
     ("bugs","noopt"),
     ("rml-testcases","noopt"),
     ("fno-testcases", "noopt")
   )
+
+  val negative : Array[String] = Array(
+    "rml-testcases-negative"
+  )
+
   val temp : Array[Tuple2[String,String]] = Array(
     ("rml-testcases/temp","noopt")
   )
 
+  ///////////////////////
+  // passing test cases
+  ///////////////////////
 
-
-  "Valid mapping file" should behave like validMappingFile("rml-testcases")
-
-  "Valid mapping output generation" should "match the output from output.ttl" in {
-
-
-
-
-    passing.foreach(test =>  {
-      RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
-
-      implicit val postProcessor: PostProcessor= TestUtil.pickPostProcessor(test._2)
-      ExpectedOutputTestUtil.test(test._1, checkGeneratedOutput)
-    })
-    //checkGeneratedOutput(OutputTestHelper.getFile("example2-object").toString)
+  passing.foreach { test =>
+    test._1 should behave like validMappingFile(test._1)
   }
 
-  failing foreach  {
-    el  =>
+  "Valid mapping output generation" should "match the output from output.ttl" in {
+    passing.foreach(test =>  {
+      RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
+      implicit val postProcessor: PostProcessor= TestUtil.pickPostProcessor(test._2)
+      ExpectedOutputTestUtil.test(test._1, true, checkGeneratedOutput)
+    })
+  }
 
+  ////////////////////////////////////////////
+  // test cases where mapping file is invalid
+  ////////////////////////////////////////////
+
+  invalidMappingFile foreach  {
+    el  =>
       s"Reading invalid mapping files in $el" should behave like invalidMappingFile(el)
   }
 
+  ////////////////////////////////////////////////////////////////////
+  // negative test cases: valid mapping but something else goes wrong
+  ////////////////////////////////////////////////////////////////////
+
+  negative.foreach { test =>
+    test should behave like validMappingFile(test)
+    RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
+    implicit val postProcessor: PostProcessor= new NopPostProcessor
+    ExpectedOutputTestUtil.test(test, false, checkGeneratedOutput)
+  }
 
   /**
     * Check for thrown TermTypeException when reading invalid term typed subjects.
@@ -113,18 +128,34 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with
     *
     * @param testFolderPath
     */
-  def checkGeneratedOutput(testFolderPath: String)(implicit postProcessor: PostProcessor): Unit = {
+  def checkGeneratedOutput(testFolderPath: String, shouldPass: Boolean)(implicit postProcessor: PostProcessor): Unit = {
     Logger.logInfo("checkGeneratedOutput(%s)".format(testFolderPath))
     val (expectedOutput, expectedOutputFormat) = ExpectedOutputTestUtil.processFilesInTestFolder(testFolderPath).head
     val tester = TripleGeneratorTestUtil(postProcessor)
-    var (generatedOutput, generatedOutputFormat) = tester.processFilesInTestFolder(testFolderPath).head
-    val outcome = TestUtil.compareResults(testFolderPath, generatedOutput, expectedOutput, generatedOutputFormat, expectedOutputFormat)
-    outcome match {
-      case Left(e) => {
-        fail(e)
-        System.exit(1)
+    try {
+      var (generatedOutput, generatedOutputFormat) = tester.processFilesInTestFolder(testFolderPath).head
+      val outcome = TestUtil.compareResults(testFolderPath, generatedOutput, expectedOutput, generatedOutputFormat, expectedOutputFormat)
+      outcome match {
+        case Left(e) => {
+          if (shouldPass) {
+            fail(e)
+            System.exit(1)
+          }
+        }
+        case Right(e) => {
+          if (!shouldPass) {
+            fail(e)
+            System.exit(1)
+          }
+        }
       }
-      case Right(e) => // just go on :)
+    } catch {
+      case e => {
+        if (shouldPass) {
+          fail(e);
+          System.exit(1)
+        }
+      }
     }
   }
 
