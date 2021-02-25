@@ -8,7 +8,7 @@
 
 <#FromToMaps> a rr:TriplesMap;
 rml:logicalSource [ 
-	rml:source "example1/example1.xml";
+	rml:source "example1.xml";
         rml:referenceFormulation ql:XPath;
 	rml:iterator "/notes/note";
 ];
@@ -47,7 +47,7 @@ rr:subjectMap [
         
 <#DateTime>
     rml:logicalSource [ 
-	rml:source "example1/example1.xml";
+	rml:source "example1.xml";
 	rml:iterator "/notes/note";
 	rml:referenceFormulation ql:XPath;
 	];

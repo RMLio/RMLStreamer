@@ -25,7 +25,7 @@
 
 :map_person_0 rml:logicalSource :source_0.
 :source_0 a rml:LogicalSource;
-    rml:source "sandbox/function_related/condition-function-on-po/data.json";
+    rml:source "data.json";
     rml:iterator "$.persons[*]";
     rml:referenceFormulation ql:JSONPath.
 :map_person_0 a rr:TriplesMap;

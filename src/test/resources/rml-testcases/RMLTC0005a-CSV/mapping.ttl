@@ -9,7 +9,7 @@
 <TriplesMap1> a rr:TriplesMap;
     
   rml:logicalSource [ 
-    rml:source "rml-testcases/RMLTC0005a-CSV/ious.csv";
+    rml:source "ious.csv";
     rml:referenceFormulation ql:CSV
   ];
 

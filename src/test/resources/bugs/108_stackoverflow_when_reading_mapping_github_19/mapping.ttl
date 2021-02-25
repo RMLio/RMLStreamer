@@ -15,7 +15,7 @@
 @prefix edtf: <http://id.loc.gov/datatypes/edtf> .
 @prefix meemoo: <http://data.meemoo.be/ns/> .
 
-map:FragmentMetadata rml:source "bugs/108_stackoverflow_when_reading_mapping_github_19/head.csv";
+map:FragmentMetadata rml:source "head.csv";
     rml:referenceFormulation ql:CSV.
 
 map:Fragment a rr:TriplesMap;

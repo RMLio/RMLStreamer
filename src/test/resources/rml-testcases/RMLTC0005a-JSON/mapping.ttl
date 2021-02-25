@@ -9,7 +9,7 @@
 <TriplesMap1> a rr:TriplesMap;
     
   rml:logicalSource [ 
-    rml:source "rml-testcases/RMLTC0005a-JSON/ious.json";
+    rml:source "ious.json";
     rml:referenceFormulation ql:JSONPath;
     rml:iterator "$.persons[*]"
   ];

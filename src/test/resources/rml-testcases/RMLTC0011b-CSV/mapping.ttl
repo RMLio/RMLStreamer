@@ -11,7 +11,7 @@
   a rr:TriplesMap;
     
   rml:logicalSource [ 
-    rml:source "rml-testcases/RMLTC0011b-CSV/student.csv";
+    rml:source "student.csv";
     rml:referenceFormulation ql:CSV 
   ];
 
@@ -37,7 +37,7 @@
   a rr:TriplesMap;
     
   rml:logicalSource [ 
-    rml:source "rml-testcases/RMLTC0011b-CSV/sport.csv";
+    rml:source "sport.csv";
     rml:referenceFormulation ql:CSV 
   ];
 
@@ -63,7 +63,7 @@
   a rr:TriplesMap;
     
   rml:logicalSource [ 
-    rml:source "rml-testcases/RMLTC0011b-CSV/student_sport.csv";
+    rml:source "student_sport.csv";
     rml:referenceFormulation ql:CSV 
   ];
 

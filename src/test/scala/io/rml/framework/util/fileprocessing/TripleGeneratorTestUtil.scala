@@ -25,9 +25,8 @@
 package io.rml.framework.util.fileprocessing
 
 import io.rml.framework.Main
-import io.rml.framework.core.extractors.{MappingReader, TriplesMapsCache}
-import io.rml.framework.core.model.{FormattedRMLMapping, RMLMapping}
-import io.rml.framework.core.util.{Format, NQuads}
+import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.util.{Format, NQuads, Util}
 import io.rml.framework.engine.{NopPostProcessor, PostProcessor}
 import io.rml.framework.util.logging.Logger
 import org.apache.flink.api.scala.ExecutionEnvironment
@@ -67,9 +66,8 @@ object TripleGeneratorTestUtil extends TestFilesUtil[(List[String], Format)] {
    def processFile(file: File): (List[String], Format) = {
      try {
        TriplesMapsCache.clear();
-       val mapping = MappingReader().read(file)
 
-       val formattedMapping = FormattedRMLMapping.fromRMLMapping(mapping.asInstanceOf[RMLMapping])
+       val formattedMapping = Util.readMappingFile(file.getCanonicalPath)
        val dataSet = Main.createDataSetFromFormattedMapping(formattedMapping).collect
 
        // we assume quads, since we don't use a post processor

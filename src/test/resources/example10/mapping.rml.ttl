@@ -10,7 +10,7 @@
 
 <#PersonMapping>
     rml:logicalSource [
-      rml:source "example10/persons.json";
+      rml:source "persons.json";
       rml:referenceFormulation ql:JSONPath;
       rml:iterator "$.persons[*]"
     ];
