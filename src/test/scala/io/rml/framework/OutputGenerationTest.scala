@@ -47,7 +47,8 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with
   //  This is useful, for example, if you only want to check the tests that should pass.
 
   val failing : Array[String] = Array(
-    "negative_test_cases"
+    "rml-testcases-invalid-mapping-file"
+    //"rml-testcases-negative"
   )
   val passing : Array[Tuple2[String,String]] =Array(
     ("bugs","noopt"),

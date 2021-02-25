@@ -7,7 +7,7 @@
 
 <TriplesMap> a rr:TriplesMap;
   rml:logicalSource [
-    rml:source "bugs/36/input.json";
+    rml:source "input.json";
     rml:referenceFormulation ql:JSONPath;
     rml:iterator "$.people[*]"
   ];

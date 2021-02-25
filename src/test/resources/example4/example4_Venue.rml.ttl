@@ -17,7 +17,7 @@
 
 <#VenueMapping>
     rml:logicalSource [
-      rml:source "example4/Venue4.json";
+      rml:source "Venue4.json";
       rml:referenceFormulation ql:JSONPath;
       rml:iterator "$[*]";
     ];

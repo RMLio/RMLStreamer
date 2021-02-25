@@ -18,7 +18,7 @@
 
   :map_anomaly_0 rml:logicalSource :source_0.
   :source_0 a rml:LogicalSource;
-      rml:source "bugs/58_no_triples_when_no_id/input.json";
+      rml:source "input.json";
       rml:iterator "$";
       rml:referenceFormulation ql:JSONPath.
   :map_anomaly_0 a rr:TriplesMap;
@@ -110,7 +110,7 @@
       rr:termType rr:IRI.
   :map_stimulus_0 rml:logicalSource :source_1.
   :source_1 a rml:LogicalSource;
-      rml:source "bugs/58_no_triples_when_no_id/input.json";
+      rml:source "input.json";
       rml:iterator "$.anomaly.parts[*]";
       rml:referenceFormulation ql:JSONPath.
   :map_stimulus_0 a rr:TriplesMap;
@@ -156,7 +156,7 @@
       rr:termType rr:IRI.
   :map_observation_from_0 rml:logicalSource :source_2.
   :source_2 a rml:LogicalSource;
-      rml:source "bugs/58_no_triples_when_no_id/input.json";
+      rml:source "input.json";
       rml:iterator "$.anomaly.parts[*]";
       rml:referenceFormulation ql:JSONPath.
   :map_observation_from_0 a rr:TriplesMap;
@@ -176,7 +176,7 @@
       rr:datatype <http://www.w3.org/2001/XMLSchema#dateTime>.
   :map_observation_to_0 rml:logicalSource :source_3.
   :source_3 a rml:LogicalSource;
-      rml:source "bugs/58_no_triples_when_no_id/input.json";
+      rml:source "input.json";
       rml:iterator "$.anomaly.parts[*]";
       rml:referenceFormulation ql:JSONPath.
   :map_observation_to_0 a rr:TriplesMap;
@@ -196,7 +196,7 @@
       rr:datatype <http://www.w3.org/2001/XMLSchema#dateTime>.
   :map_procedure_0 rml:logicalSource :source_4.
   :source_4 a rml:LogicalSource;
-      rml:source "bugs/58_no_triples_when_no_id/input.json";
+      rml:source "input.json";
       rml:iterator "$";
       rml:referenceFormulation ql:JSONPath.
   :map_procedure_0 a rr:TriplesMap;
@@ -224,7 +224,7 @@
       rr:termType rr:IRI.
   :map_procedure_bn_0 rml:logicalSource :source_5.
   :source_5 a rml:LogicalSource;
-      rml:source "bugs/58_no_triples_when_no_id/input.json";
+      rml:source "input.json";
       rml:iterator "$";
       rml:referenceFormulation ql:JSONPath.
   :map_procedure_bn_0 a rr:TriplesMap;
@@ -243,7 +243,7 @@
       rr:termType rr:Literal.
   :map_sensor_property_0 rml:logicalSource :source_6.
   :source_6 a rml:LogicalSource;
-      rml:source "bugs/58_no_triples_when_no_id/input.json";
+      rml:source "input.json";
       rml:iterator "$.anomaly.parts[*]";
       rml:referenceFormulation ql:JSONPath.
   :map_sensor_property_0 a rr:TriplesMap;

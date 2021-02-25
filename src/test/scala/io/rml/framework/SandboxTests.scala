@@ -61,7 +61,7 @@ class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
     val (expectedOutput, expectedOutputFormat) = TestUtil.getExpectedOutputs(testDir)
 
 
-    val testOutcome = TestUtil.compareResults(s"StatementEngineTest: ${testDir}", result, expectedOutput, postProcessor.outputFormat, expectedOutputFormat)
+    val testOutcome = TestUtil.compareResults(s"SandboxTests: ${testDir}", result, expectedOutput, postProcessor.outputFormat, expectedOutputFormat)
 
     testOutcome match {
       case Left(e) => {

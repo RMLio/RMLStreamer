@@ -83,9 +83,6 @@ object Main extends Logging {
     // determine the base IRI of the RDF to generate
     RMLEnvironment.setGeneratorBaseIRI(config.baseIRI)
 
-    // determine the base IRI of the mapping file
-    RMLEnvironment.setMappingFileBaseIRI(Some((config.mappingFilePath)))
-
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.
     // Triple maps are also organized in categories (does it contain streams, does it contain joins, ... )
     val formattedMapping = Util.readMappingFile(config.mappingFilePath)

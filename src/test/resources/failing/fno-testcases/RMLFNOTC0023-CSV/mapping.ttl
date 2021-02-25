@@ -19,7 +19,7 @@ map:map_person_0
 
 map:source_0
     a                        rml:LogicalSource ;
-    rml:source               "failing/fno-testcases/RMLFNOTC0023-CSV/student.csv" ;
+    rml:source               "student.csv" ;
     rml:referenceFormulation ql:CSV .
 
 map:s_0

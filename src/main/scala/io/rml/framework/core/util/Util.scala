@@ -24,6 +24,7 @@
   **/
 package io.rml.framework.core.util
 
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{FormattedRMLMapping, Literal, Node, RMLMapping}
@@ -190,9 +191,9 @@ object Util extends Logging{
     * @return
     */
   def readMappingFile(path: String): FormattedRMLMapping = {
-    val mappingFile = getFile(path)
-
-    val mapping = MappingReader().read(mappingFile).asInstanceOf[RMLMapping]
+    val mappingFile = getFile(path);
+    RMLEnvironment.setMappingFileBaseIRI(Some(mappingFile.getCanonicalPath))
+    val mapping = MappingReader().read(mappingFile).asInstanceOf[RMLMapping];
     FormattedRMLMapping.fromRMLMapping(mapping)
   }
 
@@ -227,7 +228,7 @@ object Util extends Logging{
           Try(getFileRelativeToUserDir(path)) match {
             case Success(file) =>  Some(file)
             case Failure(exception) => {
-              logWarning(s"can't find file $path relative to user dir")
+              logWarning(s"can't find file $path relative to working dir")
               None
             }
           }
@@ -245,10 +246,13 @@ object Util extends Logging{
   def resolveFileRelativeToSourceFileParent(sourcePathString: String, other : String) = {
     val sourcePath = Paths.get(sourcePathString)
 
-    sourcePath
-      .getParent
-      .resolve(other)
-      .toFile
+    val resolved = if (sourcePath.toFile.isDirectory) {
+      sourcePath.resolve(other)
+    } else {
+      sourcePath.resolveSibling(other)
+    };
+
+    resolved.toFile
       .getCanonicalFile
   }
 
