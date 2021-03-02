@@ -7,12 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-* Function mapping.
 * Joins of data streams
 
 ## [2.0.1] -
 
 ### Added
+* Support for functions using the [Function Ontology](https://fno.io/)
 * Web of Things source (MQTT)
 
 ### Changed
