@@ -52,12 +52,22 @@ SOFTWARE.
         <license.licenseName>mit</license.licenseName>
     </properties>
 
-    <!--repositories>
+
+
+    <repositories>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <id>bintray</id>
+            <url>https://jcenter.bintray.com</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
-    </repositories-->
+    </repositories>
+
+
 
     <!--
 
@@ -279,6 +289,15 @@ SOFTWARE.
             <version>2.12.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- embeddable MQTT broker -->
+        <dependency>
+            <groupId>io.moquette</groupId>
+            <artifactId>moquette-broker</artifactId>
+            <version>0.13</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- explicitly add a standard logging framework, as Flink does not have
             a hard dependency on one specific framework by default -->
         <dependency>
