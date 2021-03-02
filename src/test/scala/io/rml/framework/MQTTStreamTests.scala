@@ -24,15 +24,17 @@
   * */
 package io.rml.framework
 
+import io.moquette.broker.Server
 import io.rml.framework.util.server.TestData
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 
+import java.util.Properties
 import scala.concurrent.ExecutionContextExecutor
 
 object MQTTStreamTestsConfiguration {
   val VIRTUAL_HOST = "/"
-  val HOSTNAME_BROKER = "mosquittobroker"
+  val HOSTNAME_BROKER = "localhost"
   val PORT = 1883
   val PROTOCOL = "tcp"
   val TOPIC_NAME = "topic"
@@ -42,11 +44,20 @@ object MQTTStreamTestsConfiguration {
 }
 
 class MQTTStreamTests extends StreamTestSync {
-
   var producer: MqttAsyncClient = _
+  var broker: Server = _
 
   override def setup(): Unit = {
+    setupBroker()
     setupProducer()
+  }
+
+  private def setupBroker() = {
+    val mqttProps = new Properties
+    mqttProps.put("port", MQTTStreamTestsConfiguration.PORT.toString);
+    mqttProps.put("host", MQTTStreamTestsConfiguration.HOSTNAME_BROKER);
+    broker = new Server();
+    broker.startServer(mqttProps);
   }
 
   private def setupProducer() = {
@@ -75,7 +86,8 @@ class MQTTStreamTests extends StreamTestSync {
   }
 
   override protected def teardown(): Unit = {
-    logInfo("Tearingdown MQTT Stream tests")
+    logInfo("Tearing down MQTT Stream tests")
+    broker.stopServer();
   }
 
   override protected def writeData(input: List[TestData])(implicit executor: ExecutionContextExecutor): Unit = {

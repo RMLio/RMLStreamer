@@ -39,9 +39,6 @@ cache:
 # This will also run tests.
 .test: &test
   stage: test
-  services:
-    - name: eclipse-mosquitto:latest
-      alias: mosquittobroker
   script:
     - 'mvn $MAVEN_CLI_OPTS test'
 

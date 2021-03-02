@@ -26,7 +26,7 @@
   td:hasPropertyAffordance [
     td:hasForm [
       # URL and content type
-      hctl:hasTarget "mqtt://mosquittobroker:1883/topic";
+      hctl:hasTarget "mqtt://localhost:1883/topic";
       hctl:forContentType "application/json";
       # Read only
       hctl:hasOperationType "readproperty" ;
