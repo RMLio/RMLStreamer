@@ -91,9 +91,9 @@ Usage: RMLStreamer [toFile|toKafka|toTCPSocket] [options]
   --checkpoint-interval <time (ms)>
                            If given, Flink's checkpointing is enabled with the given interval. If not given, checkpointing is disabled.
 Command: toFile [options]
-Write output to file
-  -o, --output-path <output file>
-                           The path to an output file.
+Write output to file. 
+Note: when the mapping consists only of stream triple maps, a StreamingFileSink is used. This sink will write the output to a part file at every checkpoint.  -o, --output-path <output file>
+                           The path to an output file. Note: when a StreamingFileSink is used (the mapping consists only of stream triple maps), this path specifies a directory and optionally an extension.Part files will be written to the given directory and the given extension will be used for each part file.
 Command: toKafka [options]
 Write output to a Kafka topic
   -b, --broker-list <host:port>[,<host:port>]...
