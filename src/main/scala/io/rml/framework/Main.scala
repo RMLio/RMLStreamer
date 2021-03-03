@@ -162,7 +162,7 @@ object Main extends Logging {
         val path = parts(0)
         val suffix =
           if (parts.length > 1) {
-            "." ++ parts(parts.length - 1)
+            "." ++ parts.slice(1, parts.length).mkString(".")
           } else {
             if (config.postProcessor.equals(PostProcessorOption.JsonLD)) ".json" else ".nq"
           }
