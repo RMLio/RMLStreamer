@@ -61,7 +61,7 @@ abstract class StreamTriplesMap(triplesMap: TriplesMap) extends TriplesMap {
     *
     * @return
     */
-  override def graphMap = ???
+  override def graphMap = triplesMap.graphMap
 
 }
 
