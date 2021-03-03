@@ -106,6 +106,10 @@ object Main extends Logging {
 
     if (config.checkpointInterval.isDefined) {
       senv.enableCheckpointing(config.checkpointInterval.get, CheckpointingMode.AT_LEAST_ONCE); // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
+
+      // in order for the StreamingFileSink to work correctly, checkpointing needs to be enabled
+    } else if (config.outputSink.equals(OutputSinkOption.File) && formattedMapping.containsStreamTriplesMaps()) {
+      senv.enableCheckpointing(30000, CheckpointingMode.AT_LEAST_ONCE);
     }
 
     if (formattedMapping.containsDatasetTriplesMaps() && !formattedMapping.containsStreamTriplesMaps()) {
@@ -160,7 +164,7 @@ object Main extends Logging {
           .withRollingPolicy(OnCheckpointRollingPolicy.build())
           .withOutputFileConfig(OutputFileConfig
             .builder()
-            .withPartSuffix(if (config.postProcessor == PostProcessorOption.JsonLD) ".json" else ".nq")
+            .withPartSuffix(if (config.postProcessor.equals(PostProcessorOption.JsonLD)) ".json" else ".nq")
             .build())
           .build()
         stream.addSink(sink).name("Streaming file sink")
