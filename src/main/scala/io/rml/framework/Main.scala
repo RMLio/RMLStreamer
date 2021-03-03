@@ -164,7 +164,7 @@ object Main extends Logging {
           if (parts.length > 1) {
             "." ++ parts(parts.length - 1)
           } else {
-            if (config.postProcessor.equals(PostProcessorOption.JsonLD)) ".json" else ".huh"
+            if (config.postProcessor.equals(PostProcessorOption.JsonLD)) ".json" else ".nq"
           }
         val sink: StreamingFileSink[String] = StreamingFileSink
           .forRowFormat(new Path(path), new SimpleStringEncoder[String]("UTF-8"))
