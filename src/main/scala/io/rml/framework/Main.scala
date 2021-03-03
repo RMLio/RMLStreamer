@@ -158,13 +158,21 @@ object Main extends Logging {
       }
       // write to a file if the parameter is given
       else if (config.outputSink.equals(OutputSinkOption.File)) {
+        val parts = config.outputPath.get.split('.')
+        val path = parts(0)
+        val suffix =
+          if (parts.length > 1) {
+            "." ++ parts(parts.length - 1)
+          } else {
+            if (config.postProcessor.equals(PostProcessorOption.JsonLD)) ".json" else ".huh"
+          }
         val sink: StreamingFileSink[String] = StreamingFileSink
-          .forRowFormat(new Path(config.outputPath.get), new SimpleStringEncoder[String]("UTF-8"))
+          .forRowFormat(new Path(path), new SimpleStringEncoder[String]("UTF-8"))
           .withBucketAssigner(new BasePathBucketAssigner[String])
           .withRollingPolicy(OnCheckpointRollingPolicy.build())
           .withOutputFileConfig(OutputFileConfig
             .builder()
-            .withPartSuffix(if (config.postProcessor.equals(PostProcessorOption.JsonLD)) ".json" else ".nq")
+            .withPartSuffix(suffix)
             .build())
           .build()
         stream.addSink(sink).name("Streaming file sink")
