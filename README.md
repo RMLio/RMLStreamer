@@ -89,7 +89,7 @@ Usage: RMLStreamer [toFile|toKafka|toTCPSocket] [options]
   --json-ld                Write the output as JSON-LD instead of N-Quads. An object contains all RDF generated from one input record. Note: this is slower than using the default N-Quads format.
   --bulk                   Write all triples generated from one input record at once.
   --checkpoint-interval <time (ms)>
-                           If given, Flink's checkpointing is enabled with the given interval. If not given, checkpointing is disabled.
+                           If given, Flink's checkpointing is enabled with the given interval. If not given, checkpointing is enabled when writing to a file (this is required to use the flink StreamingFileSink). Otherwise, checkpointing is disabled.
 Command: toFile [options]
 Write output to file. 
 Note: when the mapping consists only of stream triple maps, a StreamingFileSink is used. This sink will write the output to a part file at every checkpoint.
