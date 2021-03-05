@@ -110,7 +110,7 @@ object ParameterUtil {
     opt[Unit]("bulk")
       .optional()
       .action((_, config) => config.copy(postProcessor = PostProcessorOption.Bulk))
-      .text("Write all triples generated from one input record at once.")
+      .text("Write all triples generated from one input record at once, instead of writing triples the moment they are generated.")
 
     opt[Long]("checkpoint-interval").valueName("<time (ms)>")
         .optional()
