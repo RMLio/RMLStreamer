@@ -92,6 +92,8 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
     fireWindowUpdateCallback(context)
   }
 
+  //TODO: Move this join function out of this class, such that the window can be provided with a 
+  //higher order function to be executed on the incoming elements. 
   private def crossJoin(elementIter: Iterable[Item], isChild: Boolean, timeStamp: Long, thisMapState: MapState[Long, Iterable[Item]], thatMapState: MapState[Long, Iterable[Item]]):
   Iterable[JoinedItem] = {
     thisMapState.put(timeStamp, elementIter)
