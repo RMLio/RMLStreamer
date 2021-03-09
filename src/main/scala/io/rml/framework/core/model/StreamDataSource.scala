@@ -25,25 +25,4 @@
 
 package io.rml.framework.core.model
 
-import io.rml.framework.core.vocabulary.QueryVoc
-import io.rml.framework.flink.source.{CSVStream, JSONStream, Stream, XMLStream}
-import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
-
-
 trait StreamDataSource extends DataSource
-
-object StreamDataSource {
-
-
-  def fromLogicalSource(logicalSource: LogicalSource)(implicit env: StreamExecutionEnvironment): Stream = {
-
-    logicalSource.source match {
-      case source: StreamDataSource =>
-        logicalSource.referenceFormulation match {
-          case Uri(QueryVoc.Class.CSV) => CSVStream(source)
-          case Uri(QueryVoc.Class.XPATH) => XMLStream(source, logicalSource.iterators.distinct)
-          case Uri(QueryVoc.Class.JSONPATH) => JSONStream(source, logicalSource.iterators.distinct)
-        }
-    }
-  }
-}

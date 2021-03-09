@@ -1,7 +1,9 @@
+package io.rml.framework.core.model
+
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2021 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +23,10 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   * THE SOFTWARE.
   *
-  **/
+  * */
+trait DataStore extends Node {
+  def uri:ExplicitNode
 
-package io.rml.framework.core.model
+  override def identifier: String = this.uri.toString
 
-/**
-  *
-  * Info: ...
-  *
-  * Marker trait for Data sources.
-  * The value representing the location/identity of the data source can only be
-  * of type literal or uri.
-  *
-  *
-  */
-trait DataSource extends DataStore
+}

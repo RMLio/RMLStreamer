@@ -24,7 +24,7 @@
   **/
 package io.rml.framework.flink.source
 
-import io.rml.framework.core.model.{FileDataSource, LogicalSource, StreamDataSource}
+import io.rml.framework.core.model.{FileDataSource, LogicalSource, StreamDataSource, Uri}
 import io.rml.framework.core.vocabulary.QueryVoc
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
@@ -47,7 +47,16 @@ object Source {
   def apply(logicalSource: LogicalSource)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment): Source = {
     logicalSource.source match {
       case fs: FileDataSource => FileDataSet(logicalSource)
-      case ss: StreamDataSource => StreamDataSource.fromLogicalSource(logicalSource)
+      case ss: StreamDataSource => {
+        logicalSource.source match {
+          case source: StreamDataSource =>
+            logicalSource.referenceFormulation match {
+              case Uri(QueryVoc.Class.CSV) => CSVStream(source)
+              case Uri(QueryVoc.Class.XPATH) => XMLStream(source, logicalSource.iterators.distinct)
+              case Uri(QueryVoc.Class.JSONPATH) => JSONStream(source, logicalSource.iterators.distinct)
+            }
+        }
+      }
     }
   }
 
