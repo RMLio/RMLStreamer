@@ -7,13 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-* Function mapping.
 * Joins of data streams
 
 ## [2.0.1] -
 
+### Added
+* Support for functions using the [Function Ontology](https://fno.io/)
+
 ### Changed
-* Updated Flink from version 1.10.0 to 1.11.2
+* Updated Flink from version 1.10.0 to 1.11.3
 * Updated Kafka version from version 2.2.2 to 2.4.1 (more versions supported using the universal connector)
 
 ### Removed
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 * Cyclic reference of parent triples maps leads to a stack overflow error (GitHub [issue #19](https://github.com/RMLio/RMLStreamer/issues/19), Internal [issue #108](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/issues/108))
 * In some cases not all triples maps were applied when joins (static-static and static-streams) are involved (fixed together with issue above).
+* Writing to file when input streams are involved is now possible (See GitHub [issue #8](https://github.com/RMLio/RMLStreamer/issues/8), internal [issue #107](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/issues/107)).
 
 ## [2.0.0] - 2020-06-08
 

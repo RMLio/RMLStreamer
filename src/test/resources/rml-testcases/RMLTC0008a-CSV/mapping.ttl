@@ -11,7 +11,7 @@
   a rr:TriplesMap;
 
   rml:logicalSource [
-    rml:source "rml-testcases/RMLTC0008a-CSV/student.csv";
+    rml:source "student.csv";
     rml:referenceFormulation ql:CSV
   ];
 

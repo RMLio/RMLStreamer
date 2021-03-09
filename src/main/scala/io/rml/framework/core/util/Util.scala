@@ -24,17 +24,17 @@
   **/
 package io.rml.framework.core.util
 
-import java.io.{ByteArrayInputStream, File, FileInputStream, FileNotFoundException, InputStream}
+import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.extractors.MappingReader
+import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.model.{FormattedRMLMapping, Literal, Node, RMLMapping}
+import io.rml.framework.shared.ReadException
+
+import java.io._
 import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
 import java.util.regex.Pattern
-
-import io.rml.framework.core.extractors.MappingReader
-import io.rml.framework.core.model.{FormattedRMLMapping, Literal, Node, RMLMapping}
-import io.rml.framework.shared.ReadException
-import io.rml.framework.core.internal.Logging
-
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
@@ -191,9 +191,9 @@ object Util extends Logging{
     * @return
     */
   def readMappingFile(path: String): FormattedRMLMapping = {
-    val mappingFile = getFile(path)
-
-    val mapping = MappingReader().read(mappingFile).asInstanceOf[RMLMapping]
+    val mappingFile = getFile(path);
+    RMLEnvironment.setMappingFileBaseIRI(Some(mappingFile.getCanonicalPath))
+    val mapping = MappingReader().read(mappingFile).asInstanceOf[RMLMapping];
     FormattedRMLMapping.fromRMLMapping(mapping)
   }
 
@@ -223,12 +223,12 @@ object Util extends Logging{
       val out = Try(getFileUsingClassLoader(path)) match {
         case Success(file) => Some(file)
         case Failure(exception) => {
-          logError("can't find file use class loader")
+          logWarning(s"can't find file $path using class loader")
           // Try to find the file relative to the user directory
           Try(getFileRelativeToUserDir(path)) match {
             case Success(file) =>  Some(file)
             case Failure(exception) => {
-              logError(s"can't find file relative to user dir")
+              logWarning(s"can't find file $path relative to working dir")
               None
             }
           }
@@ -246,10 +246,13 @@ object Util extends Logging{
   def resolveFileRelativeToSourceFileParent(sourcePathString: String, other : String) = {
     val sourcePath = Paths.get(sourcePathString)
 
-    sourcePath
-      .getParent
-      .resolve(other)
-      .toFile
+    val resolved = if (sourcePath.toFile.isDirectory) {
+      sourcePath.resolve(other)
+    } else {
+      sourcePath.resolveSibling(other)
+    };
+
+    resolved.toFile
       .getCanonicalFile
   }
 

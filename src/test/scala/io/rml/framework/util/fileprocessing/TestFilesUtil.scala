@@ -24,12 +24,11 @@
   **/
 package io.rml.framework.util.fileprocessing
 
-import java.io.File
-import java.nio.file.Path
-
 import io.rml.framework.core.util.Util
 import io.rml.framework.util.logging.Logger
 
+import java.io.File
+import java.nio.file.Path
 import scala.util.Sorting
 
 /**
@@ -72,11 +71,11 @@ trait TestFilesUtil[R] {
     * @param rootDir
     * @param checkFunc
     */
-  def test(rootDir: String, checkFunc: String => Unit): Unit = {
+  def test(rootDir: String, shouldPass: Boolean, checkFunc: (String, Boolean) => Unit): Unit = {
     var checkedTestCases = Array("")
     for (pathString <- getTestCaseFolders(rootDir).map(_.toString).sorted) {
 
-      checkFunc(pathString)
+      checkFunc(pathString, shouldPass)
       val testCase = new File(pathString).getName
       Logger.logSuccess("Passed processing: " + testCase)
       Logger.lineBreak()

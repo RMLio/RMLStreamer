@@ -1,7 +1,5 @@
 package io.rml.framework.core.function
 
-import java.io.{File, IOException}
-
 import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
 import io.rml.framework.core.function.model.{Function, FunctionMetaData, Parameter}
 import io.rml.framework.core.function.std.StdFunctionLoader
@@ -10,6 +8,7 @@ import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFNode}
 import io.rml.framework.core.util.Turtle
 
+import java.io.{File, IOException}
 import scala.collection.mutable.{Map => MutableMap}
 import scala.reflect.io.Path
 
@@ -101,7 +100,7 @@ object FunctionLoader extends Logging{
    */
   def apply(functionDescriptionPaths : List[Path] = FnOEnvironment.getFunctionDescriptionFilePaths(),
             functionMappingPaths : List[Path] = FnOEnvironment.getFunctionMappingFilePaths()
-           ): FunctionLoader = {
+           ): Option[FunctionLoader] = {
       if(singletonFunctionLoader.isEmpty) {
 
         // The functionDescriptionsGraph is populated by iterating over the filepaths of the function description files.
@@ -127,16 +126,13 @@ object FunctionLoader extends Logging{
           // now parse the mappings
           functionMappingPaths.foreach(fmp=>singletonFunctionLoader.get.parseFunctionMapping(new File(fmp.path)))
 
+        } else {
+          logWarning("No function graph found. Continuing without loading functions.")
+          None
         }
-        else
-          throw new Exception("Function description graph is none...")
       }
-      singletonFunctionLoader.get
+      singletonFunctionLoader
     }
-
-
-
-
 }
 
 

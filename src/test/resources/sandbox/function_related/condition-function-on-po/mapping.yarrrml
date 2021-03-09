@@ -6,7 +6,7 @@ prefixes:
 mappings:
   person:
     sources:
-      - ['sandbox/function_related/condition-function-on-po/data.json~jsonpath', '$.persons[*]']
+      - ['data.json~jsonpath', '$.persons[*]']
     s: http://example.com/$(firstname)
     po:
       - [a, foaf:Person]
