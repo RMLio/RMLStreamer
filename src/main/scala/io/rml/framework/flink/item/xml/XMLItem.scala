@@ -113,7 +113,7 @@ object XMLItem extends Logging {
   // Since this is being used in other working parts of the code, it won't be refactored for now 20/7/18
   def fromString(xml: String, namespaces: Map[String, String] = Map(), xpath:String): XMLItem = {
     val documentBuilderFactory = DocumentBuilderFactory.newInstance()
-    documentBuilderFactory.setNamespaceAware(true)
+    documentBuilderFactory.setNamespaceAware(false)
     val documentBuilder = documentBuilderFactory.newDocumentBuilder()
 
     val document: Document = documentBuilder.parse(IOUtils.toInputStream(xml, StandardCharsets.UTF_8))

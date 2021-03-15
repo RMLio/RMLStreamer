@@ -32,6 +32,7 @@ import io.rml.framework.flink.item.xml.XMLItem
 import javax.xml.parsers.DocumentBuilderFactory
 import org.slf4j.LoggerFactory
 
+import java.nio.charset.StandardCharsets
 import scala.collection.mutable
 
 /**
@@ -44,11 +45,8 @@ import scala.collection.mutable
   */
 class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String, String], xPath: String) extends Iterator[Option[Item]] with Logging {
 
-  private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
-  documentBuilderFactory.setNamespaceAware(true)
-  private val documentBuilder = documentBuilderFactory.newDocumentBuilder()
-
   private val LOG = LoggerFactory.getLogger(XMLIterator.getClass)
+  private val xmlBuffer = vn.getXML
 
   // flag for indicating if the iterator has to stop or not
   var finished = false
@@ -76,130 +74,36 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
     // evaluate until the first match
     val node = ap.evalXPath()
 
+    val fragment = vn.getElementFragment
+    val fragmentOffset = fragment(0);
+    val fragmentLength = fragment(1).toInt
+
     if (isDebugEnabled) logDebug("Node = " + node)
 
     // if node != -1: there is a match
     if (node != -1) {
-
       if (isDebugEnabled) logDebug("RAW STRING?: " + vn.toString(node))
 
-      // get the element string
-      val element = vn.toString(node)
-      val ap2 = new AutoPilotHuge(vn)
-      ap2.selectXPath("@*")
+      val fragmentBytes = new Array[Byte](fragmentLength)
 
-      val attributesMap = new mutable.HashMap[String, String]()
-      var i = ap2.evalXPath()
-
-      while (i != -1) {
-
-        val attributeKey = vn.toString(i)
-        val attributeValue = vn.toString(i + 1)
-        attributesMap.put(attributeKey, attributeValue)
-        i = ap2.evalXPath()
-
+      // XMLMemMappedBuffer does not yet support the more efficient getBytes() method
+      // the byteAt() method is supported, so bytes have to be copied inefficiently using the byteAt() method
+      var fragmentByteIndex = 0
+      while (fragmentByteIndex < fragmentLength) {
+        fragmentBytes(fragmentByteIndex) = xmlBuffer.byteAt(fragmentOffset + fragmentByteIndex)
+        fragmentByteIndex += 1
       }
 
-      val document = documentBuilder.newDocument()
-
-      // check for namespaces
-      val firstElement = if (element.contains(':')) {
-        val regex = "(.*):".r
-        val matches = regex.findAllIn(element).matchData map {
-          m => m.group(1)
-        }
-        val namespaceKey = matches.toList.head
-        val namespace = namespaces.get(namespaceKey).orNull
-        document.createElementNS(namespace, element)
-      } else document.createElement(element)
-
-      attributesMap.foreach(entry => {
-        firstElement.setAttribute(entry._1, entry._2)
-      })
-
-      document.appendChild(firstElement)
-
-      // map to hold attributes and values of element
-      val map = new mutable.HashMap[String, String]()
-
-      // navigate to the first child
-      if (vn.toElement(VTDNav.FIRST_CHILD)) {
-        // if first child has a direct value, add to map
-        // if not, skip this one
-        val node = vn.toString(vn.getCurrentIndex)
-        if (vn.getText != -1) {
-          val attribute = vn.toString(vn.getText - 1)
-          val value = vn.toString(vn.getText)
-          map.put(attribute, value)
-          //document.createElement(attribute)
-          val element = if (node.contains(':')) {
-            val regex = "(.*):".r
-            val matches = regex.findAllIn(node).matchData map {
-              m => m.group(1)
-            }
-            val namespaceKey = matches.toList.head
-            val namespace = namespaces.get(namespaceKey).orNull
-            document.createElementNS(namespace, node)
-          } else document.createElement(node)
-
-          element.appendChild(document.createTextNode(value))
-          firstElement.appendChild(element)
-        }
-
-        // navigate to the siblings of the first child, if there are:
-        // add the attribute and value to the map
-        while (vn.toElement(VTDNav.NEXT_SIBLING)) {
-          val node = vn.toString(vn.getCurrentIndex)
-          if (vn.getText != -1) {
-            // if current sibling has a direct value, add to map
-            // if not, skip this one
-            val value = vn.toString(vn.getText)
-            val attribute = vn.toString(vn.getText - 1)
-            val element = if (node.contains(':')) {
-              val regex = "(.*):".r
-              val matches = regex.findAllIn(node).matchData map {
-                m => m.group(1)
-              }
-              val namespaceKey = matches.toList.head
-              val namespace = namespaces.get(namespaceKey).orNull
-              document.createElementNS(namespace, node)
-            }
-            else document.createElement(node)
-            element.appendChild(document.createTextNode(value))
-            firstElement.appendChild(element)
-          }
-
-        }
-
-        // navigate back to the parent
-        vn.toElement(VTDNav.PARENT)
-
+      val encoding = vn.getEncoding match {
+        case VTDNavHuge.FORMAT_ASCII => StandardCharsets.US_ASCII
+        case VTDNavHuge.FORMAT_ISO_8859_1 => StandardCharsets.ISO_8859_1
+        case VTDNavHuge.FORMAT_UTF8 => StandardCharsets.UTF_8
+        case VTDNavHuge.FORMAT_UTF_16BE => StandardCharsets.UTF_16BE
+        case VTDNavHuge.FORMAT_UTF_16LE => StandardCharsets.UTF_16LE
+        case _ => StandardCharsets.UTF_8
       }
 
-
-      // return the item
-      //Some(item)
-      import java.io.StringWriter
-
-      import javax.xml.transform.dom.DOMSource
-      import javax.xml.transform.stream.StreamResult
-      import javax.xml.transform.{OutputKeys, TransformerFactory}
-      val xmlString = try {
-        val sw = new StringWriter
-        val tf = TransformerFactory.newInstance
-        val transformer = tf.newTransformer
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no")
-        transformer.setOutputProperty(OutputKeys.METHOD, "xml")
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes")
-        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8")
-        transformer.transform(new DOMSource(document), new StreamResult(sw))
-        sw.toString
-      } catch {
-        case ex: Exception =>
-          throw new RuntimeException("Error converting to String", ex)
-      }
-
-      val result = Some(XMLItem.fromString(xmlString, namespaces, xPath))
+      val result = Some(XMLItem.fromString(new String(fragmentBytes, encoding), namespaces, xPath))
       result
     } else {
       if (isDebugEnabled) logDebug("No match found => done.")
