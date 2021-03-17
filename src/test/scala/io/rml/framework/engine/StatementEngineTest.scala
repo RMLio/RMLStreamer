@@ -122,7 +122,7 @@ class StatementEngineTest extends FunSuite with Matchers {
     executeTest("example6/example.rml.ttl")
   }
 
-  test("example8") {
+  ignore("example8") {
     executeTest("example8/simergy.rml.ttl")
   }
 
