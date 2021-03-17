@@ -98,7 +98,8 @@ object TermMapGenerators {
         iter <- Engine.processReference(termMap.reference.get, item)
 
       } yield for {
-        value <- iter
+        // empty strings should not generate triples
+        value <- iter if value != ""
         lit = Literal(value, termMap.datatype, termMap.language)
 
       } yield lit
