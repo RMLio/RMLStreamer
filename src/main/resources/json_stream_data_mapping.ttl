@@ -23,7 +23,6 @@
         rml:source [
             rdf:type rmls:TCPSocketStream ;
             rmls:hostName "localhost";
-            rmls:type "PULL"; 
             rmls:port "5005"
         ];
         rml:referenceFormulation ql:JSONPath;

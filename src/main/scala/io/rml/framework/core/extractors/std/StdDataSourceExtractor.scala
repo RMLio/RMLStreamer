@@ -107,8 +107,6 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     require(hostNameProperties.length == 1, resource.uri.toString + ": exactly 1 hostname needed.")
     val portProperties = resource.listProperties(RMLVoc.Property.PORT)
     require(portProperties.length == 1, resource.uri.toString + ": exactly 1 port needed.")
-    val typeProperties = resource.listProperties(RMLVoc.Property.TYPE)
-    require(typeProperties.length == 1, resource.uri.toString + ": needs type.")
 
     val hostName = hostNameProperties.head match {
       case resource: RDFResource => throw new RMLException(resource.uri + ": hostname must be a literal.")
@@ -119,7 +117,6 @@ class StdDataSourceExtractor extends DataSourceExtractor {
       case literal: Literal => literal.value
     }
 
-    val _type = ExtractorUtil.matchLiteral(typeProperties.head)
-    TCPSocketStream(hostName, port.toInt, _type.value)
+    TCPSocketStream(hostName, port.toInt)
   }
 }

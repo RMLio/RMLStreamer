@@ -89,7 +89,6 @@ object RMLVoc {
     val HOSTNAME = Namespaces("rmls", "hostName")
     val PORT = Namespaces("rmls", "port")
     val PATH = Namespaces("rmls", "path")
-    val TYPE = Namespaces("rmls", "type")
 
     ///////////////////////////////////////////////////////////////////////////
     // RMLS: Kafka Source

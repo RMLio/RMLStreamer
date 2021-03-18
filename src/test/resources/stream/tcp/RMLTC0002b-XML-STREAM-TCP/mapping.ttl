@@ -12,7 +12,7 @@
 <TriplesMap1> a rr:TriplesMap;
     
   rml:logicalSource [
-    rml:source [            rdf:type rmls:TCPSocketStream ;            rmls:hostName "localhost" ;            rmls:port "9999" ;            rmls:type "PULL"        ];
+    rml:source [            rdf:type rmls:TCPSocketStream ;            rmls:hostName "localhost" ;            rmls:port "9999"        ];
     rml:referenceFormulation ql:XPath;
     rml:iterator "/students/student"
   ];

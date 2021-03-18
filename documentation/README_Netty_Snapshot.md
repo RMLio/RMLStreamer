@@ -1,4 +1,5 @@
 # README: Using JitPack
+(kept for reference only, not applicable anymore for RMLStreamer)
 
 ### Using JitPack to get unpublished Maven Dependencies from a GitHub/GitLab repository
 
