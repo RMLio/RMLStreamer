@@ -22,8 +22,7 @@
               rml:source [
                  rdf:type rmls:TCPSocketStream ; 
                  rmls:hostName "localhost" ;
-                 rmls:port "9999" ;            
-                 rmls:type "PULL"        
+                 rmls:port "9999"
               ];
                   rml:referenceFormulation ql:CSV
             ];

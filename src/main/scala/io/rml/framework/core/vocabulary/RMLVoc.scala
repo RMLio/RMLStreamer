@@ -31,7 +31,7 @@ package io.rml.framework.core.vocabulary
   */
 object RMLVoc {
   val namespace = ("rml", "http://semweb.mmlab.be/ns/rml#");
-  
+
   object Property {
 
     ///////////////////////////////////////////////////////////////////////////

@@ -93,9 +93,7 @@ class StdDataSourceExtractor extends DataSourceExtractor {
   private def extractTCPSocketStream(resource: RDFResource): StreamDataSource = {
     val hostName = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.HOSTNAME)
     val port = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.PORT)
-
-    val _type = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.TYPE)
-    TCPSocketStream(hostName, port.toInt, _type)
+    TCPSocketStream(hostName, port.toInt)
   }
 
   private def extractWoTSource(resource: RDFResource): DataSource = {
@@ -140,7 +138,6 @@ class StdDataSourceExtractor extends DataSourceExtractor {
           };
         });
     }
-
     logDebug("MQTT data source defined in mapping file. hypermediaTarget: " + hypermediaTarget
       + ", contentType: " + contentType + ", dup: " + dup + ", qosOpt: " + qosOpt);
     val mqttProperties = new Properties;
@@ -153,5 +150,4 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     mqttProperties.put("dup", dup); // Java 8 can't handle Scala Boolean objects in a Properties object.
     MQTTStream(mqttProperties)
   }
-
 }

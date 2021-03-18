@@ -22,7 +22,7 @@ Please note that this version works with Flink 1.11.3 with Scala 2.11 support, w
 ### Building RMLStreamer
 
 In order to build a jar file that can be deployed on a Flink cluster, you need:
-- a Java JDK >= 11 and <= 13
+- a Java JDK >= 11 and <= 13 (We develop and test on JDK 11)
 - Apache Maven 3 or higher
 
 Clone or download and then build the code in this repository:
@@ -46,7 +46,7 @@ The resulting `RMLStreamer-<version>.jar`, found in the `target` folder, can be 
 ### Executing RML Mappings
 
 Here we give examples for running RMLStreamer from the command line. We use `FLINK_BIN` to denote the Flink CLI tool,
-usually found in the `bin` directory of the Flink installation. E.g. `/home/myuser/flink-1.11.2/bin/flink`.
+usually found in the `bin` directory of the Flink installation. E.g. `/home/myuser/flink-1.11.3/bin/flink`.
 For Windows a `flink.bat` script is provided.
 
 The general usage is:
@@ -121,7 +121,6 @@ An example of how to define the generation of an RDF stream from a stream in an 
         rml:source [
             rdf:type rmls:TCPSocketStream ;
             rmls:hostName "localhost";
-            rmls:type "PULL" ;
             rmls:port "5005"
         ];
         rml:referenceFormulation ql:JSONPath;
@@ -193,38 +192,6 @@ See also https://stackoverflow.com/questions/38639019/flink-kafka-consumer-group
 
 The only option for spreading load is to use multiple topics, and assign one RMLStreamer job to one topic.
 
-##### Generating a stream from a file (to be implemented)
-```
-<#TripleMap>
-
-    a rr:TriplesMap;
-    rml:logicalSource [
-        rml:source [
-            rdf:type rmls:FileStream;
-            rmls:path "/home/wmaroy/github/rml-framework/akka-pipeline/src/main/resources/io/rml/framework/data/books.json"
-        ];
-        rml:referenceFormulation ql:JSONPath;
-        rml:iterator "$.store.books[*]"
-    ];
-
-    rr:subjectMap [
-        rr:template "{$.id}" ;
-        rr:termType rr:IRI;
-        rr:class skos:Concept
-    ];
-
-    rr:predicateObjectMap [
-            rr:predicateMap [
-                rr:constant dcterms:title;
-                rr:termType rr:IRI
-            ];
-            rr:objectMap [
-                rml:reference "$.id";
-                rr:termType rr:Literal
-            ]
-        ].
-```
-
 ##### Generating a stream from a dataset
 
 ```
@@ -272,17 +239,6 @@ The following are the classes/terms currently used:
 
 
 * **rmls:port** specifies a port number for the stream mapper to connect to. 
-
-
-* **rmls:type** specifies how a streamer will act: 
-    * **"PULL"**:  
-      The stream mapper will act as a client.  
-      It will create a socket and connect to the specified port at the given host name.  
-      **rmls:port** and **rmls:hostName** needs to be specified.  
-    * **"PUSH"**:  
-      The stream mapper will act as a server and will start listening at the given port.  
-      If the given port is taken, the mapper will keep opening subsequent ports until a free port is found.    
-      Only **rmls:port** needs to be specified here.  
     
 Example of a valid json logical source map using all possible terms: 
 
@@ -292,7 +248,6 @@ rml:logicalSource [
         rml:source [
             rdf:type rmls:TCPSocketStream ;
             rmls:hostName "localhost";
-            rmls:type "PULL" ;
             rmls:port "5005"
         ];
         rml:referenceFormulation ql:JSONPath;
