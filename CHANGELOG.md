@@ -6,17 +6,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-
+                       
+* Support for stream partitioning in windows
 * Joins of data streams
 
-## [2.0.1] -
+## [2.1.0] - 2020-03-18
 
 ### Added
-* Support for functions using the [Function Ontology](https://fno.io/)
+* Support for functions on a per-record basis using the [Function Ontology](https://fno.io/).
 
 ### Changed
 * Updated Flink from version 1.10.0 to 1.11.3
-* Updated Kafka version from version 2.2.2 to 2.4.1 (more versions supported using the universal connector)
+* Updated Kafka from version 2.2.2 to 2.4.1 (more versions supported using the universal connector)
+* Updated VTD-XML from version 2.11 to 2.13.4
 
 ### Removed
 * Drop support for Java 8, only Java 11 supported.
@@ -26,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Cyclic reference of parent triples maps leads to a stack overflow error (GitHub [issue #19](https://github.com/RMLio/RMLStreamer/issues/19), Internal [issue #108](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/issues/108))
 * In some cases not all triples maps were applied when joins (static-static and static-streams) are involved (fixed together with issue above).
 * Writing to file when input streams are involved is now possible (See GitHub [issue #8](https://github.com/RMLio/RMLStreamer/issues/8), internal [issue #107](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/issues/107)).
+* XML/XPath handling was erroneous (See GitHub [issue #24](https://github.com/RMLio/RMLStreamer/issues/24), internal [issue #124](https://github.com/RMLio/RMLStreamer/issues/24)).
 
 ## [2.0.0] - 2020-06-08
 
@@ -120,3 +123,4 @@ can be set with the program argument `--baseIRI`.
 [1.2.2]: https://github.com/RMLio/RMLStreamer/compare/v1.2.1...v1.2.2  
 [1.2.3]: https://github.com/RMLio/RMLStreamer/compare/v1.2.2...v1.2.3
 [2.0.0]: https://github.com/RMLio/RMLStreamer/compare/v1.2.3...v2.0.0  
+[2.1.0]: https://github.com/RMLio/RMLStreamer/compare/v2.0.0...v2.1.0  
