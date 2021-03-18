@@ -122,7 +122,8 @@ class StatementEngineTest extends FunSuite with Matchers {
     executeTest("example6/example.rml.ttl")
   }
 
-  ignore("example8") {
+  test("example8") {
+    pending // TODO: while an empty value should produce triples, the *function* applied on them doen't filter them out. Check if function is correct.
     executeTest("example8/simergy.rml.ttl")
   }
 
