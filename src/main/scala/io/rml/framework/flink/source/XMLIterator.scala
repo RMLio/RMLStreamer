@@ -24,16 +24,13 @@
   **/
 package io.rml.framework.flink.source
 
-import com.ximpleware.VTDNav
 import com.ximpleware.extended.{AutoPilotHuge, VTDNavHuge}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.xml.XMLItem
-import javax.xml.parsers.DocumentBuilderFactory
 import org.slf4j.LoggerFactory
 
-import java.nio.charset.StandardCharsets
-import scala.collection.mutable
+import java.nio.charset.{Charset, StandardCharsets}
 
 /**
   * Custom iterator that is a wrapper around the VTD-XML library for parsing XML
@@ -100,6 +97,30 @@ class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String,
         case VTDNavHuge.FORMAT_UTF8 => StandardCharsets.UTF_8
         case VTDNavHuge.FORMAT_UTF_16BE => StandardCharsets.UTF_16BE
         case VTDNavHuge.FORMAT_UTF_16LE => StandardCharsets.UTF_16LE
+        case VTDNavHuge.FORMAT_ISO_8859_2 => Charset.forName("ISO-8859-2")
+        case VTDNavHuge.FORMAT_ISO_8859_3 => Charset.forName("ISO-8859-3")
+        case VTDNavHuge.FORMAT_ISO_8859_4 => Charset.forName("ISO-8859-4")
+        case VTDNavHuge.FORMAT_ISO_8859_5 => Charset.forName("ISO-8859-5")
+        case VTDNavHuge.FORMAT_ISO_8859_6 => Charset.forName("ISO-8859-6")
+        case VTDNavHuge.FORMAT_ISO_8859_7 => Charset.forName("ISO-8859-7")
+        case VTDNavHuge.FORMAT_ISO_8859_8 => Charset.forName("ISO-8859-8")
+        case VTDNavHuge.FORMAT_ISO_8859_9 => Charset.forName("ISO-8859-9")
+        case VTDNavHuge.FORMAT_ISO_8859_10 => Charset.forName("ISO-8859-10")
+        case VTDNavHuge.FORMAT_ISO_8859_11 => Charset.forName("ISO-8859-11")
+        case VTDNavHuge.FORMAT_ISO_8859_12 => Charset.forName("ISO-8859-12")
+        case VTDNavHuge.FORMAT_ISO_8859_13 => Charset.forName("ISO-8859-13")
+        case VTDNavHuge.FORMAT_ISO_8859_14 => Charset.forName("ISO-8859-14")
+        case VTDNavHuge.FORMAT_ISO_8859_15 => Charset.forName("ISO-8859-15")
+        case VTDNavHuge.FORMAT_ISO_8859_16 => Charset.forName("ISO-8859-16")
+        case VTDNavHuge.FORMAT_WIN_1250 => Charset.forName("windows-1250")
+        case VTDNavHuge.FORMAT_WIN_1251 => Charset.forName("windows-1251")
+        case VTDNavHuge.FORMAT_WIN_1252 => Charset.forName("windows-1252")
+        case VTDNavHuge.FORMAT_WIN_1253 => Charset.forName("windows-1253")
+        case VTDNavHuge.FORMAT_WIN_1254 => Charset.forName("windows-1254")
+        case VTDNavHuge.FORMAT_WIN_1255 => Charset.forName("windows-1255")
+        case VTDNavHuge.FORMAT_WIN_1256 => Charset.forName("windows-1256")
+        case VTDNavHuge.FORMAT_WIN_1257 => Charset.forName("windows-1257")
+        case VTDNavHuge.FORMAT_WIN_1258 => Charset.forName("windows-1258")
         case _ => StandardCharsets.UTF_8
       }
 
