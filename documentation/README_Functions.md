@@ -186,5 +186,6 @@ to load and bind every function as specified in the testcase's `mapping.ttl`.
 
 
 # Remarks
-- When the RMLStreamer is unable to find a function description or function mapping, bind method parameters to values, it will be logged as an error to the console.
+- When the RMLStreamer is unable to find a function description or function mapping, bind method parameters to values, it will be logged as an error to the console
+  and the function will not be applied.
  
