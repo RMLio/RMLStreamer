@@ -25,9 +25,6 @@
 
 package io.rml.framework.util
 
-import java.io.File
-import java.nio.file.Paths
-
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.util.{Format, JenaUtil, NQuads}
 import io.rml.framework.engine.{BulkPostProcessor, JsonLDProcessor, NopPostProcessor, PostProcessor}
@@ -35,6 +32,9 @@ import io.rml.framework.util.fileprocessing.ExpectedOutputTestUtil
 import io.rml.framework.util.logging.Logger
 import org.apache.commons.io.FileUtils
 import org.apache.jena.rdf.model.Model
+
+import java.io.File
+import java.nio.file.Paths
 
 object TestProperties {
   def getTempDir(test: String): File = {
@@ -94,13 +94,7 @@ object TestUtil extends Logging {
   }
 
   private def compareSets(generatedOutput: String, expectedOutput: String, generatedOutputFormat: Format, expectedOutputFormat: Option[Format]): Boolean = {
-    val expOutForm = expectedOutputFormat match {
-      case Some(format) => format
-      case None => {
-        logWarning("Could not detect the format of the expected output. Assuming N-QUADS")
-        NQuads
-      }
-    }
+    val expOutForm = expectedOutputFormat.getOrElse(NQuads);
     val generatedModels: List[(Model, String)] = quadsToModels(generatedOutput, generatedOutputFormat)
     val expectedModels: List[(Model, String)] = quadsToModels(expectedOutput, expOutForm)
     if (generatedModels.length != expectedModels.length) {

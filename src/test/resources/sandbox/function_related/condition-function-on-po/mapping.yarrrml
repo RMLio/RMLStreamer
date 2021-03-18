@@ -1,0 +1,24 @@
+prefixes:
+  ex: "http://example.com/"
+  idlab-fn: http://example.com/idlab/function/
+  grel: http://users.ugent.be/~bjdmeest/function/grel.ttl#
+
+mappings:
+  person:
+    sources:
+      - ['data.json~jsonpath', '$.persons[*]']
+    s: http://example.com/$(firstname)
+    po:
+      - [a, foaf:Person]
+      - predicates: foaf:firstName
+        objects:
+          - function: grel:toUpperCase
+            parameters:
+              - parameter: grel:valueParameter
+                value: $(firstname)
+        condition:
+          function: idlab-fn:stringContainsOtherString
+          parameters:
+            - [idlab-fn:str, $(firstname)]
+            - [idlab-fn:otherStr, "J"]
+            - [idlab-fn:delimiter, ""]

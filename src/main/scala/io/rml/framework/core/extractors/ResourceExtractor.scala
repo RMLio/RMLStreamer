@@ -25,6 +25,6 @@
 
 package io.rml.framework.core.extractors
 
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.RDFResource
-
-trait ResourceExtractor[T] extends Extractor[RDFResource, T]
+trait ResourceExtractor[T] extends Extractor[RDFResource, T] with Logging

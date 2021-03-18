@@ -33,9 +33,9 @@ trait LogicalSourceExtractor extends ResourceExtractor[LogicalSource]
 object LogicalSourceExtractor {
 
 
-  def apply(dataSourceExtractor: DataSourceExtractor = DataSourceExtractor())
+  def apply()
   : LogicalSourceExtractor = {
-    lazy val extractor = new StdLogicalSourceExtractor(dataSourceExtractor)
+    lazy val extractor = new StdLogicalSourceExtractor(DataSourceExtractor())
     extractor
   }
 }

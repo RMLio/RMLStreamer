@@ -27,4 +27,4 @@ package io.rml.framework.core.extractors
 
 import io.rml.framework.core.model.rdf.RDFGraph
 
-trait GraphExtractor[T] extends Extractor[RDFGraph, T]
+trait GraphExtractor[+T] extends Extractor[RDFGraph, T]

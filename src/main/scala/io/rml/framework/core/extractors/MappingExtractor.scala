@@ -26,10 +26,10 @@
 package io.rml.framework.core.extractors
 
 import io.rml.framework.core.extractors.std.StdMappingExtractor
-import io.rml.framework.core.model.RMLMapping
+import io.rml.framework.core.model.{Graph, RMLMapping}
 
-trait MappingExtractor extends GraphExtractor[RMLMapping]
+trait MappingExtractor [+T<: Graph]extends GraphExtractor[T]
 
 object MappingExtractor {
-  def apply(): MappingExtractor = new StdMappingExtractor()
+  def apply(): MappingExtractor[RMLMapping] = new StdMappingExtractor()
 }

@@ -1,0 +1,125 @@
+@prefix cc:      <http://creativecommons.org/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+@prefix fno:     <https://w3id.org/function/ontology#> .
+@prefix fnoi:    <https://w3id.org/function/vocabulary/implementation#> .
+@prefix fnom:    <https://w3id.org/function/vocabulary/mapping#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix grel:    <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
+@prefix grelm:   <http://fno.io/grel/rmlmapping#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix void:    <http://rdfs.org/ns/void#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix idlab-fn: <http://example.com/idlab/function/> .
+grelm:void
+    a                 void:DatasetDescription ;
+    dcterms:title     "A VoID Description of the IDLab Fno Java Mapping Descriptions Dataset" ;
+    dcterms:creator   <https://ben.de-meester.org/#me> ;
+    foaf:primaryTopic grelm:dataset ;
+.
+
+<https://ben.de-meester.org/#me>
+    rdf:type  foaf:Person ;
+    foaf:mbox "mailto:Ben.DeMeester@UGent.be" ;
+    foaf:name "Ben De Meester"@en .
+
+grelm:dataset
+    a                    void:Dataset ;
+    foaf:homepage        <https://github.com/OpenRefine/OpenRefine/wiki/General-Refine-Expression-Language> ;
+    foaf:homepage        <https://fno.io> ;
+    dcterms:title        "IDLab Fno Java Mapping Descriptions"@en ;
+    dcterms:description  "The FnO Java mapping descriptions of the IDLab functions" ;
+    dcterms:contributor  <https://ben.de-meester.org/#me> ;
+    dcterms:modified     "2020-06-16"^^xsd:date ;
+    cc:license           <http://creativecommons.org/license/by/3.0/> ;
+    dcterms:issued       "2020-06-16"^^xsd:date ;
+    dcterms:rights       "Copyright © Ghent University – imec – IDLab"@en ;
+    dcterms:subject      <http://dbpedia.org/resource/Function_(mathematics)> ;
+    dcterms:subject      <http://dbpedia.org/resource/Function_model> ;
+    void:feature         <http://www.w3.org/ns/formats/Turtle> ;
+    void:exampleResource grelm:boolean_and ;
+    void:vocabulary      <https://w3id.org/function/ontology#>, <https://w3id.org/function/vocabulary/implementation#>,
+                         <https://w3id.org/function/vocabulary/mapping#> .
+
+# Contents:
+# - Parameters (per java) param_{var} with predicate p_{type}_{var}
+# - Outputs (per java) output_{type} with predicate o_{type}
+# - Problems (per java) prob_{var}
+#   - Functions (per java)
+
+################################
+####    IMPLEMENTATIONS
+################################
+grelm:IDLabFunctions
+    a                  fnoi:JavaClass ;
+    doap:download-page "IDLabFunctions.jar" ;
+    fnoi:class-name    "io.fno.idlab.IDLabFunctions" .
+
+################################
+####    MAPPINGS
+################################
+
+#UPPERCASERURL
+grelm:uppercaseURLMapping
+    a                    fno:Mapping ;
+    fno:function         idlab-fn:toUpperCaseURL;
+    fno:implementation   grelm:IDLabFunctions ;
+    fno:parameterMapping [ ] ;
+    fno:returnMapping    [ ] ;
+    fno:methodMapping    [ a                fnom:StringMethodMapping ;
+                           fnom:method-name "toUpperCaseURL" ] ;
+.
+
+grelm:trueConditionMapping
+    a                    fno:Mapping ;
+    fno:function         idlab-fn:trueCondition;
+    fno:implementation   grelm:IDLabFunctions ;
+    fno:parameterMapping [ ] ;
+    fno:returnMapping    [ ] ;
+    fno:methodMapping    [ a                fnom:StringMethodMapping ;
+                           fnom:method-name "trueCondition" ] ;
+.
+
+
+grelm:equalMapping
+    a                    fno:Mapping ;
+    fno:function         idlab-fn:equal;
+    fno:implementation   grelm:IDLabFunctions ;
+    fno:parameterMapping [ ] ;
+    fno:returnMapping    [ ] ;
+    fno:methodMapping    [ a                fnom:StringMethodMapping ;
+                           fnom:method-name "equal" ] ;
+.
+
+
+grelm:notEqualMapping
+    a                    fno:Mapping ;
+    fno:function         idlab-fn:notEqual;
+    fno:implementation   grelm:IDLabFunctions ;
+    fno:parameterMapping [ ] ;
+    fno:returnMapping    [ ] ;
+    fno:methodMapping    [ a                fnom:StringMethodMapping ;
+                           fnom:method-name "notEqual" ] ;
+.
+
+grelm:stringContainsOtherStringMapping
+    a                    fno:Mapping ;
+    fno:function         idlab-fn:stringContainsOtherString;
+    fno:implementation   grelm:IDLabFunctions ;
+    fno:parameterMapping [ ] ;
+    fno:returnMapping    [ ] ;
+    fno:methodMapping    [ a                fnom:StringMethodMapping ;
+                           fnom:method-name "stringContainsOtherString" ] ;
+.
+
+grelm:randomMapping
+    a                    fno:Mapping ;
+    fno:function         idlab-fn:random;
+    fno:implementation   grelm:IDLabFunctions ;
+    fno:parameterMapping [ ] ;
+    fno:returnMapping    [ ] ;
+    fno:methodMapping    [ a                fnom:StringMethodMapping ;
+                           fnom:method-name "random" ] ;
+.
+

@@ -25,16 +25,18 @@
 
 package io.rml.framework.engine.statement
 
+import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RDFVoc
 import io.rml.framework.flink.item.{Item, JoinedItem}
-
 /**
   * Creates statements from triple maps.
   */
 class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectGeneratorAssembler(),
                           predicateObjectAssembler: PredicateObjectGeneratorAssembler = PredicateObjectGeneratorAssembler(),
-                          graphAssembler: GraphGeneratorAssembler = GraphGeneratorAssembler()) {
+                          graphAssembler: GraphGeneratorAssembler = GraphGeneratorAssembler())
+extends Logging{
 
   /**
     * Creates statements from a triple map.
@@ -43,6 +45,7 @@ class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectG
     * @return
     */
   def assembleStatements(triplesMap: TriplesMap): List[(Item => Option[Iterable[TermNode]], Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
+    this.logDebug("assembleStatements(triplesmaps)")
     val subjectGraphGenerator = graphAssembler.assemble(triplesMap.subjectMap.graphMap)
 
 
@@ -56,7 +59,8 @@ class StatementsAssembler(subjectAssembler: SubjectGeneratorAssembler = SubjectG
     })
     // create the statements
     predicateObjects.map(predicateObject => {
-      (subjectGenerator, predicateObject._1, predicateObject._2, subjectGraphGenerator)
+      val graphGenerator = if(triplesMap.subjectMap.graphMap.isDefined) subjectGraphGenerator else predicateObject._3
+      (subjectGenerator, predicateObject._1, predicateObject._2, graphGenerator)
     }) ++ classMappings // add class mappings
 
   }
@@ -93,7 +97,7 @@ object StatementsAssembler {
 
   def assembleParentStatements(joinedTriplesMap: JoinedTriplesMap): List[Statement[JoinedItem]] = {
     val triples = new StatementsAssembler()
-      .assembleStatements(joinedTriplesMap.parentTriplesMap)
+      .assembleStatements(TriplesMapsCache.get(joinedTriplesMap.parentTriplesMap).get)
     triples.map(triple => ParentStatement(triple._1, triple._2, triple._3, triple._4))
   }
 

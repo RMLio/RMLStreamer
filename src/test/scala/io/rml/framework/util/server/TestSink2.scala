@@ -49,7 +49,7 @@ class TestSink2 extends SinkFunction[String] {
 
   override def invoke(value: String, context: SinkFunction.Context[_]): Unit = {
     Logger.logInfo(s"TestSink2: got value [${value}]")
-    if (!value.trim.isEmpty) {
+    if (value.trim.nonEmpty) {
       triples = value :: triples
     }
   }

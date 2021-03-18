@@ -57,17 +57,7 @@ object RMLMapping {
     * @return
     */
   def apply(triplesMaps: List[TriplesMap], identifier: String): RMLMapping = {
-    // separating triple maps that contain parent triple maps
-    val tmWithParentTriplesMaps = triplesMaps.filter(tm => tm.containsParentTriplesMap)
-    val parentTriplesMaps = tmWithParentTriplesMaps.flatMap(tm =>
-      tm.predicateObjectMaps.flatMap(pm =>
-        pm.objectMaps.flatMap(om => om.parentTriplesMap)))
-    val transformedPTM = parentTriplesMaps.map(ParentTriplesMap(_))
-
-    // filter out all triple maps that are not parent triple maps themselves
-    val nonPTMTriplesMaps = triplesMaps.filter(tm => !transformedPTM.contains(ParentTriplesMap(tm)))
-
-    StdRMLMapping(nonPTMTriplesMaps, identifier)
+    StdRMLMapping(triplesMaps, identifier)
   }
 
 }

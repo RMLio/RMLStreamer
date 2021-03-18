@@ -42,22 +42,13 @@ cache:
   script:
     - 'mvn $MAVEN_CLI_OPTS test'
 
-# Build merge requests using JDK8
-build:jdk8:
-  <<: *build
-  image: maven:3-jdk-8
-
-# Test merge requests using JDK8
-test:jdk8:
-  <<: *test
-  image: maven:3-jdk-8
 
 # Build merge requests using JDK12
-build:jdk12:
+build:jdk11:
   <<: *build
-  image: maven:3-jdk-12
+  image: maven:3-jdk-11
 
 # Test merge requests using JDK12
-test:jdk12:
+test:jdk11:
   <<: *test
-  image: maven:3-jdk-12
+  image: maven:3-jdk-11

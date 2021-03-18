@@ -25,13 +25,13 @@
 
 package io.rml.framework.core.util
 
-import java.io.ByteArrayOutputStream
-import java.nio.charset.StandardCharsets
-
+import io.rml.framework.core.model.rdf.{RDFNode, RDFResource}
 import org.apache.jena.query.{Dataset, DatasetFactory}
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.riot.{Lang, RDFFormat, RDFParser}
 
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
 import scala.collection.mutable
 
 
@@ -44,6 +44,14 @@ object JenaUtil {
       case JSON_LD => "JSON-LD"
       case NQuads => "N-QUADS"
     }
+  }
+
+  def parseListNodes(rdf: RDFResource, property:String): List[(RDFNode, Int)] = {
+    rdf.listProperties(property)
+      .head
+      .asInstanceOf[RDFResource]
+      .getList
+      .zipWithIndex
   }
 
   def toRDFFormat(format: Format): RDFFormat = {

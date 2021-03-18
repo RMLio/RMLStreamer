@@ -24,39 +24,106 @@
  **/
 package io.rml.framework.engine.statement
 
-import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.function.FunctionLoader
+import io.rml.framework.core.function.model.Function
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.sink.FlinkRDFQuad
+import io.rml.framework.flink.source.EmptyItem
+import io.rml.framework.shared.RMLException
 
 case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
+
 
   override def assemble(termMap: TermMap): (Item) => Option[Iterable[Entity]] = {
     require(termMap.isInstanceOf[FunctionMap], "Wrong TermMap instance.")
 
     val functionMap = termMap.asInstanceOf[FunctionMap]
-    val functionEngine = StatementEngine.fromTriplesMaps(List(functionMap.functionValue))
-    (item: Item) => {
-      val triples: List[FlinkRDFQuad] = functionEngine.process(item)
-      val parameters: Map[Uri, String] = triples.filter(triple => triple.predicate.uri != Uri(RMLVoc.Property.EXECUTES))
-        .map(triple => {
-          val parameterName = triple.predicate.uri
-          val parameterValue = triple.`object`.value.toString
-          parameterName -> parameterValue
-        })
-        .toMap
+    val pomAssembler = PredicateObjectGeneratorAssembler()
 
-      val name: Uri = Uri(triples.filter(triple => triple.predicate.uri == Uri(RMLVoc.Property.EXECUTES))
-        .head.`object`.value
-        .toString)
+    val assembledPom = functionMap.functionValue.sortBy(_.identifier) // sortBy required for retaining correct parameter ordering
+      .flatMap(pomAssembler.assemble)
+      .map {
+        case (predicateGen, objGen, _) => (predicateGen, objGen)
+      }
 
-      require(RMLEnvironment.hasTransformationRegistered(name), "Transformation " + name + " is not registered.")
-      RMLEnvironment.getTransformation(name).get.execute(Parameters(parameters))
+    val function = parseFunction(assembledPom)
 
-      //TODO: PLACEHOLDER REMOVE THIS WHEN FUNCTION MAP IS IMPLEMENTED !!!!!
-      None  // <---- REMOVE THIS!!!!!!!!!!!!
+    createAssemblerFunction(function, assembledPom)
+  }
+
+  private def parseFunction(assembledPom:
+                            List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Option[Function] = {
+
+    this.logDebug("parseFunction (assembledPom)")
+    val placeHolder: List[FlinkRDFQuad] = generateFunctionTriples(new EmptyItem(), assembledPom)
+
+    val executeProperties = placeHolder.filter( quad => quad.predicate.value == Uri(RMLVoc.Property.EXECUTES))
+    if(executeProperties.isEmpty)
+      throw new RMLException(s"Couldn't find ${RMLVoc.Property.EXECUTES} property." +
+        s"Is the namespace correct? (e.g. HTTP vs. HTTPS)")
+
+    val functionName = Uri(
+      executeProperties
+      .head
+      .`object`
+      .value
+      .toString)
+    
+
+    val functionLoaderOption = FunctionLoader();
+
+    if (functionLoaderOption.isDefined) {
+      functionLoaderOption.get.createFunction(functionName);
+    } else {
+      None
     }
+  }
+
+  /**
+   * Generates an assembler function which takes in [[Item]] and generate
+   * entities using the function specified by the function map
+   *
+   * @param assembledPom List of predicate object generator functions
+   * @return anon function taking in [[Item]] and returns entities using the function
+   */
+  private def createAssemblerFunction(function: Option[Function], assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Item => Option[Iterable[Entity]] = {
+    (item: Item) => {
+      val triples: List[FlinkRDFQuad] = generateFunctionTriples(item, assembledPom)
+      val paramTriples = triples.filter(triple => triple.predicate.uri != Uri(RMLVoc.Property.EXECUTES))
+
+
+      if (function.isDefined) {
+        function.get.execute(paramTriples)
+      } else {
+        None
+      }
+    }
+  }
+
+  /**
+   * Generate triples from which the the function can be derived from
+   * and applied to the the item
+   *
+   * @param item
+   * @return
+   */
+  private def generateFunctionTriples(item: Item, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): List[FlinkRDFQuad] = {
+
+    val result = for{
+      (predicateGen, objGen) <- assembledPom
+      predicateIter <- predicateGen(item)
+      objIter <- objGen(item)
+    } yield for {
+      predicate <- predicateIter
+      obj <- objIter
+      quad <-  Statement.generateQuad(Blank(), predicate, obj)
+    } yield quad
+
+
+    result.flatten
+
   }
 
 }

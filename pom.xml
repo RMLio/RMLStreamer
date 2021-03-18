@@ -28,7 +28,7 @@ SOFTWARE.
 
     <groupId>io.rml</groupId>
     <artifactId>RMLStreamer</artifactId>
-    <version>2.0.0-RELEASE</version>
+    <version>2.1.0-RELEASE</version>
     <packaging>jar</packaging>
 
     <name>RMLStreamer</name>
@@ -36,10 +36,11 @@ SOFTWARE.
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <flink.version>1.10.0</flink.version>
+        <flink.version>1.11.3</flink.version>
         <slf4j.version>1.7.26</slf4j.version>
-        <log4j.version>2.13.1</log4j.version>
+        <log4j.version>2.13.3</log4j.version>
         <jena.version>3.11.0</jena.version>
+        <kafka.version>2.4.1</kafka.version>
 
         <scala.binary.version>2.11</scala.binary.version>
         <java.version>1.8</java.version>
@@ -51,29 +52,6 @@ SOFTWARE.
         <license.licenseName>mit</license.licenseName>
     </properties>
 
-    <!--
-
-        Execute "mvn clean package -Pbuild-jar"
-        to build a jar file out of this project!
-
-        How to use the Flink Quickstart pom:
-
-        a) Adding new dependencies:
-            You can add dependencies to the list below.
-            Please check if the maven-shade-plugin below is filtering out your dependency
-            and remove the exclude from there.
-
-        b) Build a jar for running on the cluster:
-            There are two options for creating a jar from this project
-
-            b.1) "mvn clean package" -> this will create a fat jar which contains all
-                    dependencies necessary for running the jar created by this pom in a cluster.
-                    The "maven-shade-plugin" excludes everything that is provided on a running Flink cluster.
-
-            b.2) "mvn clean package -Pbuild-jar" -> This will also create a fat-jar, but with much
-                    nicer dependency exclusion handling. This approach is preferred and leads to
-                    much cleaner jar files.
-    -->
 
     <dependencies>
 
@@ -113,30 +91,9 @@ SOFTWARE.
         </dependency>
 
         <dependency>
-            <groupId>org.apache.bahir</groupId>
-            <artifactId>flink-connector-netty_${scala.binary.version}</artifactId>
-            <version>1.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.flink</groupId>
-                    <artifactId>flink-streaming-scala_${scala.binary.version}</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
-                    <groupId>org.apache.flink</groupId>
-                </exclusion>
-                <!-- provided by Flink -->
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
-        <dependency>
             <groupId>com.ximpleware</groupId>
             <artifactId>vtd-xml</artifactId>
-            <version>2.11</version>
+            <version>2.13.4</version>
         </dependency>
 
         <dependency>
@@ -184,17 +141,11 @@ SOFTWARE.
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.java-websocket</groupId>
-            <artifactId>Java-WebSocket</artifactId>
-            <version>1.3.6</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.8.2</version>
+            <version>${log4j.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.scalatest/scalatest_2.10 -->
@@ -246,15 +197,17 @@ SOFTWARE.
             <version>${flink.version}</version>
         </dependency>
 
+
+
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka_${scala.binary.version}</artifactId>
-            <version>2.2.2</version>
+            <version>${kafka.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <artifactId>log4j</artifactId>
-                    <groupId>log4j</groupId>
+                    <groupId>org.apache.logging.log4j</groupId>
                 </exclusion>
                 <!-- provided by Jena -->
                 <exclusion>
@@ -319,6 +272,12 @@ SOFTWARE.
                     <version>${flink.version}</version>
                     <scope>compile</scope>
                 </dependency>
+                <!-- Enables the Apache Flink Web UI DashBoard [https://stackoverflow.com/a/47000955/1728848] -->
+                <dependency>
+                    <groupId>org.apache.flink</groupId>
+                    <artifactId>flink-runtime-web_2.11</artifactId>
+                    <version>${flink.version}</version>
+                </dependency>
             </dependencies>
         </profile>
     </profiles>
@@ -369,8 +328,8 @@ SOFTWARE.
                                 to use the transformer to include those files in the fat-jar.
                                 -->
                                 <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+                                </transformer>
                                 <!--  This will add a Main-Class entry to the manifest file -->
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">

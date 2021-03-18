@@ -48,18 +48,11 @@ object TriplesMapExtractor {
     * @param predicateObjectMapExtractor Extractor for predicate object maps.
     * @return
     */
-  def apply(logicalSourceExtractor: LogicalSourceExtractor = LogicalSourceExtractor(),
-            subjectMapExtractor: SubjectMapExtractor = SubjectMapExtractor(),
-            predicateObjectMapExtractor: PredicateObjectMapExtractor =
-            PredicateObjectMapExtractor(), graphMapExtractor: GraphMapExtractor = GraphMapExtractor())
+  def apply()
 
   : TriplesMapExtractor = {
 
-    lazy val extractor = new StdTriplesMapExtractor(
-      logicalSourceExtractor,
-      subjectMapExtractor,
-      graphMapExtractor,
-      predicateObjectMapExtractor)
+    lazy val extractor = StdTriplesMapExtractor
     extractor
   }
 

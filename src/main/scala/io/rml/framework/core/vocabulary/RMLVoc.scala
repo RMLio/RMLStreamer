@@ -30,6 +30,22 @@ package io.rml.framework.core.vocabulary
   */
 object RMLVoc {
 
+  object Type {
+    val XSD_STRING = Namespaces("xsd", "string")
+    val XSD_INT = Namespaces("xsd", "int")         // signed 32-bit integer
+    val XSD_INTEGER = Namespaces("xsd", "integer") // integer value
+    val XSD_DOUBLE = Namespaces("xsd", "double")
+    val XSD_LONG = Namespaces("xsd", "long")
+    val RDF_LIST = Namespaces("rdf", "List")
+    val XSD_POSITIVE_INTEGER = Namespaces("xsd", "positiveInteger")
+    val XSD_BOOLEAN = Namespaces("xsd", "boolean")
+    val XSD_DATETIME = Namespaces("xsd", "dateTime")
+
+    val XSD_ANY  = Namespaces("xsd", "any")
+    val RDF_OBJECT = Namespaces("rdf", "object")
+
+  }
+
   object Property {
 
     ///////////////////////////////////////////////////////////////////////////
@@ -42,6 +58,7 @@ object RMLVoc {
     val OBJECTMAP = Namespaces("rr", "objectMap")
     val TRIPLESMAP = Namespaces("rr", "triplesMap")
     val SUBJECTMAP = Namespaces("rr", "subjectMap")
+    val SUBJECT = Namespaces("rr", "subject")
     val CONSTANT = Namespaces("rr", "constant")
     val TEMPLATE = Namespaces("rr", "template")
     val TERMTYPE = Namespaces("rr", "termType")
@@ -72,7 +89,6 @@ object RMLVoc {
     val HOSTNAME = Namespaces("rmls", "hostName")
     val PORT = Namespaces("rmls", "port")
     val PATH = Namespaces("rmls", "path")
-    val TYPE = Namespaces("rmls", "type")
 
     ///////////////////////////////////////////////////////////////////////////
     // RMLS: Kafka Source
@@ -82,6 +98,13 @@ object RMLVoc {
     val GROUPID = Namespaces("rmls", "groupId")
     val TOPIC = Namespaces("rmls", "topic")
     val KAFKAVERSION= Namespaces("rmls", "kafkaVersion")
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // GREL
+    ///////////////////////////////////////////////////////////////////////////
+    val GREL_RANDOM = Namespaces("grel", "random")
+    val GREL_UPPERCASE = Namespaces("grel", "toUpperCase")
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -95,6 +118,48 @@ object RMLVoc {
     ///////////////////////////////////////////////////////////////////////////
 
     val EXECUTES = Namespaces("fno", "executes")
+    val FNO_SOLVES = Namespaces("fno", "solves")
+    val FNO_IMPLEMENTS = Namespaces("fno", "implements")
+    val FNO_PREDICATE = Namespaces("fno", "predicate")
+    val FNO_EXPECTS = Namespaces("fno", "expects")
+    val FNO_RETURNS = Namespaces("fno", "returns")
+    val FNO_TYPE = Namespaces("fno", "type")
+
+    val FNO_IMPLEMENTATION = Namespaces("fno", "implementation")
+
+    val FNO_FUNCTION = Namespaces("fno", "function")
+
+    val FNO_METHOD_MAPPING = Namespaces("fno", "methodMapping")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // LIB
+    ///////////////////////////////////////////////////////////////////////////
+
+    val LIB_PROVIDED_BY = Namespaces("lib", "providedBy")
+    val LIB_CLASS = Namespaces("lib", "class")
+    val LIB_METHOD = Namespaces("lib", "method")
+    val LIB_LOCAL_LIBRARY = Namespaces("lib", "localLibrary")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // FNOM(apping)
+    ///////////////////////////////////////////////////////////////////////////
+
+    val FNOM_METHOD_NAME = Namespaces("fnom", "method-name")
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // FNOI
+    ///////////////////////////////////////////////////////////////////////////
+    val FNOI_CLASS_NAME = Namespaces("fnoi", "class-name")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // DOAP
+    ///////////////////////////////////////////////////////////////////////////
+
+    val DOAP_DOWNLOAD_PAGE = Namespaces("doap", "download-page")
+
+
 
   }
 
@@ -131,6 +196,31 @@ object RMLVoc {
     ///////////////////////////////////////////////////////////////////////////
 
     val FUNCTIONTERMMAP = Namespaces("fnml", "FunctionTermMap")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // FNO
+    ///////////////////////////////////////////////////////////////////////////
+    val FNO_FUNCTION = Namespaces("fno", "Function")
+    val FNO_PARAMETER = Namespaces("fno", "Parameter")
+    val FNO_EXECUTION = Namespaces("fno", "Execution")
+    val FNO_OUTPUT = Namespaces("fno", "Output")
+    val FNO_ALGORITHM = Namespaces("fno", "Algorithm")
+    val FNO_PROBLEM = Namespaces("fno", "Problem")
+
+    val FNO_MAPPING = Namespaces("fno", "Mapping")
+    val FNO_METHOD_MAPPING = Namespaces("fno", "MethodMapping")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // FNOI
+    ///////////////////////////////////////////////////////////////////////////
+
+    val FNOI_JAVA_CLASS = Namespaces("fnoi", "JavaClass")
+
+    ///////////////////////////////////////////////////////////////////////////
+    // FNOM(apping)
+    ///////////////////////////////////////////////////////////////////////////
+
+    val FNOM_STRING_METHOD_MAPPING = Namespaces("fnom", "StringMethodMapping")
 
   }
 

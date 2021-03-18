@@ -38,7 +38,7 @@ trait ObjectMap extends TermMap {
 
   def joinCondition: Option[JoinCondition]
 
-  def parentTriplesMap: Option[TriplesMap]
+  def parentTriplesMap: Option[String]
 
 }
 
@@ -46,16 +46,18 @@ case class JoinCondition(child: Literal, parent: Literal) // TODO: make this a t
 
 object ObjectMap {
   def apply(identifier: String,
+            functionMap: List[FunctionMap] = List(),
             constant: Option[Entity] = None,
             reference: Option[Literal] = None,
             template: Option[Literal] = None,
             termType: Option[Uri] = None,
             datatype: Option[Uri] = None,
             language: Option[Literal] = None,
-            parentTriplesMap: Option[TriplesMap] = None,
+            parentTriplesMap: Option[String] = None,
             joinCondition: Option[JoinCondition] = None): ObjectMap =
 
     StdObjectMap(identifier,
+      functionMap,
       constant,
       reference,
       template,

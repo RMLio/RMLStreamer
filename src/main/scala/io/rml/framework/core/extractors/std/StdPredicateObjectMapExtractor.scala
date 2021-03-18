@@ -35,12 +35,7 @@ import io.rml.framework.shared.RMLException
 /**
   * Extractor for predicate object maps.
   */
-class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtractor,
-                                     objectMapExtractor: ObjectMapExtractor,
-                                     functionMapExtractor: FunctionMapExtractor,
-                                     graphMapExtractor: GraphMapExtractor)
-
-  extends PredicateObjectMapExtractor with Logging {
+class StdPredicateObjectMapExtractor extends PredicateObjectMapExtractor with Logging {
 
   /**
     * Extracts predicate object maps from a resource.
@@ -73,11 +68,17 @@ class StdPredicateObjectMapExtractor(predicateMapExtractor: PredicateMapExtracto
     * @return
     */
   private def extractPredicateObjectMap(resource: RDFResource): PredicateObjectMap = {
-    val objectMaps = objectMapExtractor.extract(resource)
-    val functionMaps = functionMapExtractor.extract(resource)
-    val predicateMaps = predicateMapExtractor.extract(resource)
-    val graphMap = graphMapExtractor.extract(resource)
-    PredicateObjectMap(resource.uri.toString, objectMaps, functionMaps, predicateMaps, graphMap)
+    this.logDebug("extractPredicateObjectMap : extracting object maps")
+    val objectMaps = ObjectMapExtractor().extract(resource)
+    
+    this.logDebug("extractPredicateObjectMap : extracting predicate maps")
+    val predicateMaps = PredicateMapExtractor().extract(resource)
+
+    this.logDebug("extractPredicateObjectMap : extracting graph map")
+    val graphMap = GraphMapExtractor().extract(resource)
+
+    this.logDebug("extractPredicateObjectMap : returning resulting PredicateObjectMap")
+    PredicateObjectMap(resource.uri.toString, objectMaps, predicateMaps, graphMap)
   }
 
 }

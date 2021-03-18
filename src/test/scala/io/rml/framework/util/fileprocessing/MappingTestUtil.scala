@@ -24,10 +24,11 @@
   **/
 package io.rml.framework.util.fileprocessing
 
-import java.io.File
-
-import io.rml.framework.core.extractors.MappingReader
+import io.rml.framework.core.extractors.TriplesMapsCache
 import io.rml.framework.core.model.FormattedRMLMapping
+import io.rml.framework.core.util.Util
+
+import java.io.File
 
 /**
   * Test helper to read the mapping file and generate a FormattedRMLMapping
@@ -37,8 +38,10 @@ object MappingTestUtil extends FileProcessingUtil[FormattedRMLMapping] {
 
 
   override def processFile(file: File): FormattedRMLMapping = {
-    val mapping = MappingReader().read(file)
-    FormattedRMLMapping.fromRMLMapping(mapping)
+    TriplesMapsCache.clear();
+    Util.readMappingFile(file.getCanonicalPath)
+    //val mapping = MappingReader().read(file)
+    //FormattedRMLMapping.fromRMLMapping(mapping.asInstanceOf[RMLMapping])
   }
 
   override def candidateFiles: List[String] = List("mapping.ttl", "mapping.rml.ttl", "example.rml.ttl")

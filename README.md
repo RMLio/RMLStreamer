@@ -5,6 +5,8 @@ The RMLStreamer generates [RDF](https://www.w3.org/2001/sw/wiki/RDF) from files 
 using [RML](http://rml.io/). The difference with other RML implementations is that it can handle
 *big* input files and *continuous data streams*, like sensor data.
 
+Documentation regarding the use of (custom) functions can be found [here](documentation/README_Functions.md).
+
 ### Quick start
 
 If you want to get the RMLStreamer up and running within 5 minutes using Docker, check out [docker/README.md](docker/README.md)
@@ -13,15 +15,15 @@ If you want to deploy it yourself, read on.
 
 ### Installing Flink
 RMLStreamer runs its jobs on Flink clusters.
-More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.10/getting-started/tutorials/local_setup.html).
+More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.11/try-flink/local_installation.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
-Please note that this version works with Flink 1.10.0 with Scala 2.11 support, which can be downloaded [here](https://www.apache.org/dyn/closer.lua/flink/flink-1.10.0/).
+Please note that this version works with Flink 1.11.3 with Scala 2.11 support, which can be downloaded [here](https://archive.apache.org/dist/flink/flink-1.11.3/flink-1.11.3-bin-scala_2.11.tgz).
 
 ### Building RMLStreamer
 
 In order to build a jar file that can be deployed on a Flink cluster, you need:
-- a Java JDK 8 or higher
-- Apache Maven 3 or higher 
+- a Java JDK >= 11 and <= 13 (We develop and test on JDK 11)
+- Apache Maven 3 or higher
 
 Clone or download and then build the code in this repository:
 
@@ -44,7 +46,7 @@ The resulting `RMLStreamer-<version>.jar`, found in the `target` folder, can be 
 ### Executing RML Mappings
 
 Here we give examples for running RMLStreamer from the command line. We use `FLINK_BIN` to denote the Flink CLI tool,
-usually found in the `bin` directory of the Flink installation. E.g. `/home/myuser/flink-1.10.0/bin/flink`.
+usually found in the `bin` directory of the Flink installation. E.g. `/home/myuser/flink-1.11.3/bin/flink`.
 For Windows a `flink.bat` script is provided.
 
 The general usage is:
@@ -74,7 +76,7 @@ $FLINK_BIN run <path to RMLStreamer jar> toKafka --broker-list <host:port> --top
 #### Complete RMLStreamer usage:
 
 ```
-Usage: RMLStreamer [toFile|toKafka|toTCPSocket] [options]
+Usage: RMLStreamer [toFile|toKafka|toTCPSocket|noOutput] [options]
 
   -j, --job-name <job name>
                            The name to assign to the job on the Flink cluster. Put some semantics in here ;)
@@ -85,13 +87,14 @@ Usage: RMLStreamer [toFile|toKafka|toTCPSocket] [options]
   -m, --mapping-file <RML mapping file>
                            REQUIRED. The path to an RML mapping file. The path must be accessible on the Flink cluster.
   --json-ld                Write the output as JSON-LD instead of N-Quads. An object contains all RDF generated from one input record. Note: this is slower than using the default N-Quads format.
-  --bulk                   Write all triples generated from one input record at once.
+  --bulk                   Write all triples generated from one input record at once, instead of writing triples the moment they are generated.
   --checkpoint-interval <time (ms)>
-                           If given, Flink's checkpointing is enabled with the given interval. If not given, checkpointing is disabled.
+                           If given, Flink's checkpointing is enabled with the given interval. If not given, checkpointing is enabled when writing to a file (this is required to use the flink StreamingFileSink). Otherwise, checkpointing is disabled.
 Command: toFile [options]
-Write output to file
+Write output to file 
+Note: when the mapping consists only of stream triple maps, a StreamingFileSink is used. This sink will write the output to a part file at every checkpoint.
   -o, --output-path <output file>
-                           The path to an output file.
+                           The path to an output file. Note: when a StreamingFileSink is used (the mapping consists only of stream triple maps), this path specifies a directory and optionally an extension. Part files will be written to the given directory and the given extension will be used for each part file.
 Command: toKafka [options]
 Write output to a Kafka topic
   -b, --broker-list <host:port>[,<host:port>]...
@@ -118,7 +121,6 @@ An example of how to define the generation of an RDF stream from a stream in an 
         rml:source [
             rdf:type rmls:TCPSocketStream ;
             rmls:hostName "localhost";
-            rmls:type "PULL" ;
             rmls:port "5005"
         ];
         rml:referenceFormulation ql:JSONPath;
@@ -168,7 +170,7 @@ An example of how to define the generation of an RDF stream from a stream in an 
     rml:logicalSource [
         rml:source [
             rdf:type rmls:KafkaStream ;
-            rmls:broker "broker" ;
+            rmls:broker "localhost:9092" ;
             rmls:groupId "groupId";
             rmls:topic "topic";
         ];
@@ -189,38 +191,6 @@ are assigned a certain partition, resulting in duplicate output.
 See also https://stackoverflow.com/questions/38639019/flink-kafka-consumer-groupid-not-working .
 
 The only option for spreading load is to use multiple topics, and assign one RMLStreamer job to one topic.
-
-##### Generating a stream from a file (to be implemented)
-```
-<#TripleMap>
-
-    a rr:TriplesMap;
-    rml:logicalSource [
-        rml:source [
-            rdf:type rmls:FileStream;
-            rmls:path "/home/wmaroy/github/rml-framework/akka-pipeline/src/main/resources/io/rml/framework/data/books.json"
-        ];
-        rml:referenceFormulation ql:JSONPath;
-        rml:iterator "$.store.books[*]"
-    ];
-
-    rr:subjectMap [
-        rr:template "{$.id}" ;
-        rr:termType rr:IRI;
-        rr:class skos:Concept
-    ];
-
-    rr:predicateObjectMap [
-            rr:predicateMap [
-                rr:constant dcterms:title;
-                rr:termType rr:IRI
-            ];
-            rr:objectMap [
-                rml:reference "$.id";
-                rr:termType rr:Literal
-            ]
-        ].
-```
 
 ##### Generating a stream from a dataset
 
@@ -269,17 +239,6 @@ The following are the classes/terms currently used:
 
 
 * **rmls:port** specifies a port number for the stream mapper to connect to. 
-
-
-* **rmls:type** specifies how a streamer will act: 
-    * **"PULL"**:  
-      The stream mapper will act as a client.  
-      It will create a socket and connect to the specified port at the given host name.  
-      **rmls:port** and **rmls:hostName** needs to be specified.  
-    * **"PUSH"**:  
-      The stream mapper will act as a server and will start listening at the given port.  
-      If the given port is taken, the mapper will keep opening subsequent ports until a free port is found.    
-      Only **rmls:port** needs to be specified here.  
     
 Example of a valid json logical source map using all possible terms: 
 
@@ -289,7 +248,6 @@ rml:logicalSource [
         rml:source [
             rdf:type rmls:TCPSocketStream ;
             rmls:hostName "localhost";
-            rmls:type "PULL" ;
             rmls:port "5005"
         ];
         rml:referenceFormulation ql:JSONPath;

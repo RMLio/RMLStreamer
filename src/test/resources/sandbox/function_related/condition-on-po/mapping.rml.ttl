@@ -1,0 +1,84 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#>.
+@prefix fno: <https://w3id.org/function/ontology#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#>.
+@prefix ql: <http://semweb.mmlab.be/ns/ql#>.
+@prefix : <http://mapping.example.com/>.
+@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#>.
+@prefix idlab-fn: <http://example.com/idlab/function/>.
+
+:map_person_0 rml:logicalSource :source_0.
+:source_0 a rml:LogicalSource;
+    rml:source "test.csv";
+    rml:referenceFormulation ql:CSV.
+:map_person_0 a rr:TriplesMap;
+    rdfs:label "person".
+
+:s_0 a rr:SubjectMap.
+:map_person_0 rr:subjectMap :s_0.
+:s_0 rr:template "http://example.org/{firstname}".
+
+:pom_0 a rr:PredicateObjectMap.
+:map_person_0 rr:predicateObjectMap :pom_0.
+
+:pm_0 a rr:PredicateMap.
+:pom_0 rr:predicateMap :pm_0.
+:pm_0 rr:constant <http://xmlns.com/foaf/0.1/firstName>.
+:pom_0 rr:objectMap :om_0.
+
+
+
+:om_0 a fnml:FunctionTermMap;
+    rr:termType rr:Literal;
+    fnml:functionValue :fn_0.
+:fn_0 rml:logicalSource :source_0;
+    rr:predicateObjectMap :pomexec_0.
+:pomexec_0 rr:predicateMap :pmexec_0.
+:pmexec_0 rr:constant fno:executes.
+:pomexec_0 rr:objectMap :omexec_0.
+:omexec_0 rr:constant "http://example.com/idlab/function/trueCondition";
+    rr:termType rr:IRI.
+:fn_0 rr:predicateObjectMap :pom_1.
+:pom_1 a rr:PredicateObjectMap;
+    rr:predicateMap :pm_1.
+:pm_1 a rr:PredicateMap;
+    rr:constant idlab-fn:strBoolean.
+:pom_1 rr:objectMap :om_1.
+:om_1 a rr:ObjectMap;
+    fnml:functionValue :fn_1.
+:fn_1 rml:logicalSource :source_0;
+    rr:predicateObjectMap :pomexec_1.
+:pomexec_1 rr:predicateMap :pmexec_1.
+:pmexec_1 rr:constant fno:executes.
+:pomexec_1 rr:objectMap :omexec_1.
+:omexec_1 rr:constant "http://example.com/idlab/function/equal";
+    rr:termType rr:IRI.
+:fn_1 rr:predicateObjectMap :pom_2.
+:pom_2 a rr:PredicateObjectMap;
+    rr:predicateMap :pm_2.
+:pm_2 a rr:PredicateMap;
+    rr:constant grel:valueParameter.
+:pom_2 rr:objectMap :om_2.
+:om_2 a rr:ObjectMap;
+    rml:reference "firstname";
+    rr:termType rr:Literal.
+:fn_1 rr:predicateObjectMap :pom_3.
+:pom_3 a rr:PredicateObjectMap;
+    rr:predicateMap :pm_3.
+:pm_3 a rr:PredicateMap;
+    rr:constant grel:valueParameter2.
+:pom_3 rr:objectMap :om_3.
+:om_3 a rr:ObjectMap;
+    rr:constant "test";
+    rr:termType rr:Literal.
+:fn_0 rr:predicateObjectMap :pom_4.
+:pom_4 a rr:PredicateObjectMap;
+    rr:predicateMap :pm_4.
+:pm_4 a rr:PredicateMap;
+    rr:constant idlab-fn:str.
+:pom_4 rr:objectMap :om_4.
+:om_4 a rr:ObjectMap;
+    rml:reference "firstname";
+    rr:termType rr:Literal.

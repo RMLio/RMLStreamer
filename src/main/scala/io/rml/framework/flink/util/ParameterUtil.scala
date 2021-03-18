@@ -78,7 +78,7 @@ object ParameterUtil {
   val parser = new scopt.OptionParser[ParameterConfig]("RMLStreamer") {
     override def showUsageOnError = true
 
-    head("RMLStreamer", "2.0.0")
+    head("RMLStreamer", "2.1.0")
 
     opt[String]('j', "job-name").valueName("<job name>")
       .optional()
@@ -110,21 +110,27 @@ object ParameterUtil {
     opt[Unit]("bulk")
       .optional()
       .action((_, config) => config.copy(postProcessor = PostProcessorOption.Bulk))
-      .text("Write all triples generated from one input record at once.")
+      .text("Write all triples generated from one input record at once, instead of writing triples the moment they are generated.")
 
     opt[Long]("checkpoint-interval").valueName("<time (ms)>")
         .optional()
         .action((value, config) => config.copy(checkpointInterval = Some(value)))
-        .text("If given, Flink's checkpointing is enabled with the given interval. If not given, checkpointing is disabled.")
+        .text("If given, Flink's checkpointing is enabled with the given interval. " +
+          "If not given, checkpointing is enabled when writing to a file (this is required to use the flink StreamingFileSink). " +
+          "Otherwise, checkpointing is disabled.")
 
     // options specifically for writing output to file
     cmd("toFile")
-      .text("Write output to file")
+      .text("Write output to file \n" +
+        "Note: when the mapping consists only of stream triple maps, a StreamingFileSink is used. " +
+        "This sink will write the output to a part file at every checkpoint.")
       .action((_, config) => config.copy(outputSink = OutputSinkOption.File))
       .children(
         opt[String]('o', "output-path").valueName("<output file>").required()
           .action((value, config) => config.copy(outputPath = Some(value)))
-          .text("The path to an output file.")
+          .text("The path to an output file. " +
+            "Note: when a StreamingFileSink is used (the mapping consists only of stream triple maps), this path specifies a directory and optionally an extension. " +
+            "Part files will be written to the given directory and the given extension will be used for each part file.")
       )
 
     // options specifically for writing output to a Kafka topic

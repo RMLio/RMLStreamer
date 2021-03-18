@@ -10,7 +10,7 @@
 <#SimModelMapping>
   rml:logicalSource
   [
-    rml:source "example8/simergy.xml" ;
+    rml:source "simergy.xml" ;
     rml:iterator "/SimModel/simmodel:SimAppLibraryDefault_AppLibraryDefault_GlobalLibrary";
     rml:referenceFormulation ql:XPath ;
   ];

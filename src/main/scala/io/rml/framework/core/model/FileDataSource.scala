@@ -25,11 +25,14 @@
 
 package io.rml.framework.core.model
 
-import java.io.File
-
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.std.StdFileDataSource
+import io.rml.framework.core.util.Util
 import io.rml.framework.shared.RMLException
+
+import java.io.File
+import scala.util.{Failure, Success, Try}
 
 /**
   *
@@ -49,15 +52,23 @@ object FileDataSource extends Logging {
     */
   def apply(uri: ExplicitNode): DataSource = {
     val file = new File(uri.toString)
-    if (file.isAbsolute) {
-      logDebug(Uri(file.getAbsolutePath).uri)
-      StdFileDataSource(Uri(file.getAbsolutePath))
-    } else {
-      val url = ClassLoader.getSystemResource(uri.toString)
-      if (url == null) throw new RMLException(uri.toString + " can't be found.")
-      val file_2 = new File(url.toURI)
-      StdFileDataSource(Uri(file_2.getAbsolutePath))
+    Try(Util.resolveFileRelativeToSourceFileParent(RMLEnvironment.getMappingFileBaseIRI().get, file.getPath)) match {
+      case Success(resolvedFile) => {
+        StdFileDataSource(Uri(resolvedFile.getAbsolutePath))
+      }
+      case Failure(exception) => {
+        if (file.isAbsolute) {
+          logDebug(Uri(file.getAbsolutePath).uri)
+          StdFileDataSource(Uri(file.getAbsolutePath))
+        } else {
+          val url = ClassLoader.getSystemResource(uri.toString)
+          if (url == null) throw new RMLException(uri.toString + " can't be found.")
+          val file_2 = new File(url.toURI)
+          StdFileDataSource(Uri(file_2.getAbsolutePath))
+        }
+      }
     }
+
   }
 
 }

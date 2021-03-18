@@ -31,7 +31,7 @@ import io.rml.framework.core.model.PredicateMap
 trait PredicateMapExtractor extends TermMapExtractor[List[PredicateMap]]
 
 object PredicateMapExtractor {
-  def apply(): PredicateMapExtractor = new StdPredicateMapExtractor()
+  def apply(): PredicateMapExtractor  = new StdPredicateMapExtractor()
 }
 
 

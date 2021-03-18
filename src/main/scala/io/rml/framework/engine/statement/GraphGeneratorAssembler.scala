@@ -38,8 +38,16 @@ class GraphGeneratorAssembler extends TermMapGeneratorAssembler {
 
 
   override def assemble(termMap: TermMap): Item => Option[Iterable[Uri]] =
+    if (termMap.hasFunctionMap) {
+      val assembled = FunctionMapGeneratorAssembler().assemble(termMap.functionMap.head)
 
+
+      assembled.andThen(result => {
+        result.map(iter => iter.map(elem => Uri(elem.toString)))
+      })
+    } else {
     super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[Uri]]]
+    }
 
 
 }

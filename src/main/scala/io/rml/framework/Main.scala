@@ -26,9 +26,9 @@ package io.rml.framework
   **/
 
 
-import java.util.Properties
-
-import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
+import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.function.flink.{FnOEnvironmentLoader, FnOEnvironmentStreamLoader, RichItemIdentityFunction, RichStreamItemIdentityFunction}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model._
 import io.rml.framework.core.util.{StreamerConfig, Util}
@@ -39,14 +39,19 @@ import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
 import io.rml.framework.flink.util.ParameterUtil
 import io.rml.framework.flink.util.ParameterUtil.{OutputSinkOption, PostProcessorOption}
-import org.apache.flink.api.common.serialization.SimpleStringSchema
+import org.apache.flink.api.common.serialization.{SimpleStringEncoder, SimpleStringSchema}
 import org.apache.flink.api.scala._
 import org.apache.flink.core.fs.FileSystem.WriteMode
+import org.apache.flink.core.fs.Path
 import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.streaming.api.functions.ProcessFunction
+import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.BasePathBucketAssigner
+import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy
+import org.apache.flink.streaming.api.functions.sink.filesystem.{OutputFileConfig, StreamingFileSink}
 import org.apache.flink.streaming.api.scala.{DataStream, OutputTag, StreamExecutionEnvironment}
 import org.apache.flink.util.Collector
 
+import java.util.Properties
 import scala.collection.{immutable, mutable}
 
 /**
@@ -82,19 +87,29 @@ object Main extends Logging {
     // determine the base IRI of the RDF to generate
     RMLEnvironment.setGeneratorBaseIRI(config.baseIRI)
 
-    // determine the base IRI of the mapping file
-    RMLEnvironment.setMappingFileBaseIRI(Some((config.mappingFilePath)))
-
     // Read mapping file and format these, a formatted mapping is a rml mapping that is reorganized optimally.
     // Triple maps are also organized in categories (does it contain streams, does it contain joins, ... )
     val formattedMapping = Util.readMappingFile(config.mappingFilePath)
+
+
+    // Default function config
+    // TODO: support adding variable function related files using CLI arguments
+    FnOEnvironment.loadDefaultConfiguration()
+    FnOEnvironment.intializeFunctionLoader()
+
+
 
     // set up execution environments, Flink needs these to know how to operate (local, cluster mode, ...)
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
+
     if (config.checkpointInterval.isDefined) {
       senv.enableCheckpointing(config.checkpointInterval.get, CheckpointingMode.AT_LEAST_ONCE); // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
+
+      // in order for the StreamingFileSink to work correctly, checkpointing needs to be enabled
+    } else if (config.outputSink.equals(OutputSinkOption.File) && formattedMapping.containsStreamTriplesMaps()) {
+      senv.enableCheckpointing(30000, CheckpointingMode.AT_LEAST_ONCE);
     }
 
     if (formattedMapping.containsDatasetTriplesMaps() && !formattedMapping.containsStreamTriplesMaps()) {
@@ -143,7 +158,24 @@ object Main extends Logging {
       }
       // write to a file if the parameter is given
       else if (config.outputSink.equals(OutputSinkOption.File)) {
-        stream.writeAsText(config.outputPath.get, WriteMode.OVERWRITE)
+        val parts = config.outputPath.get.split('.')
+        val path = parts(0)
+        val suffix =
+          if (parts.length > 1) {
+            "." ++ parts.slice(1, parts.length).mkString(".")
+          } else {
+            if (config.postProcessor.equals(PostProcessorOption.JsonLD)) ".json" else ".nq"
+          }
+        val sink: StreamingFileSink[String] = StreamingFileSink
+          .forRowFormat(new Path(path), new SimpleStringEncoder[String]("UTF-8"))
+          .withBucketAssigner(new BasePathBucketAssigner[String])
+          .withRollingPolicy(OnCheckpointRollingPolicy.build())
+          .withOutputFileConfig(OutputFileConfig
+            .builder()
+            .withPartSuffix(suffix)
+            .build())
+          .build()
+        stream.addSink(sink).name("Streaming file sink")
       }
       // discard output if the parameter is given
       else if (config.outputSink.equals(OutputSinkOption.None)) {
@@ -193,6 +225,17 @@ object Main extends Logging {
       }
     })
 
+    val preProcessingFunction =
+      if(FnOEnvironment.getFunctionLoader.isDefined){
+        val functionLoaderOption = FnOEnvironment.getFunctionLoader
+        val jarSources = functionLoaderOption.get.getSources
+        val classNames = functionLoaderOption.get.getClassNames
+        new FnOEnvironmentStreamLoader(jarSources , classNames)
+      }else {
+        logInfo("FunctionLoader in RMLEnvironment is NOT DEFINED")
+        new RichStreamItemIdentityFunction()
+      }
+
     // This is the collection of all data streams that are created by the current mapping
     val processedStreams: immutable.Iterable[DataStream[String]] =
       sourceEngineMap.map(entry => {
@@ -201,6 +244,8 @@ object Main extends Logging {
         // link the different steps in each pipeline
         source.stream // this will generate a stream of items
           // process every item by a processor with a loaded engine
+
+          .map(preProcessingFunction)
           .map(new StdStreamProcessor(engine))
           .name("Execute mapping statements on items")
 
@@ -222,7 +267,7 @@ object Main extends Logging {
 
   }
 
-  def createMixedPipelineFromFormattedMapping(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[String] = {
+  private def createMixedPipelineFromFormattedMapping(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[String] = {
     // we assume a streaming child triples map and a static parent triples map
     require(formattedMapping.containsStreamTriplesMaps() && formattedMapping.containsDatasetTriplesMaps() && formattedMapping.containsParentTriplesMaps)
 
@@ -275,7 +320,7 @@ object Main extends Logging {
         val joinedStreamTm = triplesMap.asInstanceOf[JoinedTriplesMap]
         val engine = StatementEngine.fromJoinedTriplesMap(joinedStreamTm)
 
-        val parentTmId = joinedStreamTm.parentTriplesMap.identifier
+        val parentTmId = joinedStreamTm.parentTriplesMap
         val joinParentSource = joinedStreamTm.joinCondition.get.parent.identifier
         stream
           .flatMap(_.iterator)
@@ -323,20 +368,20 @@ object Main extends Logging {
     unionStreams(processedDataStreams)
   }
 
-  def getStaticParentSourceItems(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor)
+  private def getStaticParentSourceItems(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor)
   : Map[(String, String, String), Item] = {
     // map: (parent triples map identiefier, name of the variable to join on, the value of it) => generated subject string
     var parentTriplesMapId2JoinParentSource2JoinParentValue2ParentItem = mutable.HashMap.empty[(String, String, String), Item]
 
     formattedMapping.joinedSteamTriplesMaps.foreach(joinedTm => {
       // identify the parent triples map
-      val parentTm = joinedTm.parentTriplesMap
+      val parentTm = TriplesMapsCache.get(joinedTm.parentTriplesMap).get;
 
       // find the parent source of the join condition
       val joinParentSource = joinedTm.joinCondition.get.parent.identifier
 
       // get the subjects from the static logical source
-      val parentDataset = Source(joinedTm.parentTriplesMap.logicalSource).asInstanceOf[FileDataSet].dataset
+      val parentDataset = Source(parentTm.logicalSource).asInstanceOf[FileDataSet].dataset
 
       parentDataset
         // only keep items where the parent source of the join condition is defined
@@ -374,6 +419,7 @@ object Main extends Logging {
                                         senv: StreamExecutionEnvironment,
                                         postProcessor: PostProcessor): DataSet[String] = {
 
+    this.logDebug("createDataSetFromFormattedMapping(...)")
     require(!postProcessor.isInstanceOf[AtMostOneProcessor], "Bulk output and JSON-LD output are not supported in the static version")
 
     /**
@@ -419,7 +465,7 @@ object Main extends Logging {
                                              (implicit env: ExecutionEnvironment,
                                               senv: StreamExecutionEnvironment,
                                               postProcessor: PostProcessor): DataSet[String] = {
-
+    this.logDebug("createStandardTriplesMapPipeline(standard triples maps..)")
     // group triple maps by logical sources
     val grouped = standardTriplesMaps.groupBy(triplesMap => triplesMap.logicalSource)
 
@@ -435,6 +481,17 @@ object Main extends Logging {
       }
     })
 
+    val preProcessingFunction =
+    if(FnOEnvironment.getFunctionLoader.isDefined){
+      val functionLoaderOption = FnOEnvironment.getFunctionLoader
+      val jarSources = functionLoaderOption.get.getSources
+      val classNames = functionLoaderOption.get.getClassNames
+      new FnOEnvironmentLoader(jarSources , classNames)
+    }else {
+      logInfo("FunctionLoader in RMLEnvironment is NOT DEFINED")
+      new RichItemIdentityFunction()
+    }
+
     // This is the collection of all data streams that are created by the current mapping
     val processedDataSets: immutable.Iterable[DataSet[String]] =
       sourceEngineMap.map(entry => {
@@ -444,6 +501,7 @@ object Main extends Logging {
         source.dataset // this will generate a dataset of items
 
           // process every item by a processor with a loaded engine
+            .map(preProcessingFunction)
           .map(new StdStaticProcessor(engine))
           .name("Execute mapping statements on items")
 
@@ -488,9 +546,10 @@ object Main extends Logging {
         })
 
 
+      val parentTriplesMap = TriplesMapsCache.get(tm.parentTriplesMap).get;
       val parentDataset =
       // Create a Source from the parents logical source
-        Source(tm.parentTriplesMap.logicalSource).asInstanceOf[FileDataSet]
+        Source(parentTriplesMap.logicalSource).asInstanceOf[FileDataSet]
           .dataset
 
           // filter out all items that do not contain the parents join condition
@@ -537,7 +596,9 @@ object Main extends Logging {
         // create a crossed data set
         val crossed = childDataset.cross(parentDataset)
 
-        crossed.map(items => JoinedItem(items._1, items._2)) // create a JoinedItem from the crossed items
+        crossed.map(items =>
+          JoinedItem(items._1, items._2)
+        ) // create a JoinedItem from the crossed items
           .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items") // process the joined items
           .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None) // format the triples
           .name("Convert joined triples to strings")
@@ -580,6 +641,8 @@ object Main extends Logging {
       streams.tail.foldLeft(head)((a, b) => a.union(b))
     } else head
   }
+
+
 
 
 }

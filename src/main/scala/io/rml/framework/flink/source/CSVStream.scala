@@ -25,8 +25,6 @@
 
 package io.rml.framework.flink.source
 
-import java.nio.file.Paths
-
 import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
 import io.rml.framework.flink.item.Item
 import io.rml.framework.flink.item.csv.{CSVHeader, CSVItem}
@@ -37,9 +35,11 @@ import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.table.api.Table
-import org.apache.flink.table.api.scala.StreamTableEnvironment
+import org.apache.flink.table.api.bridge.scala.StreamTableEnvironment
 import org.apache.flink.table.descriptors.FileSystem
 import org.apache.flink.types.Row
+
+import java.nio.file.Paths
 
 case class CSVStream(stream: DataStream[Iterable[Item]] ) extends Stream
 
