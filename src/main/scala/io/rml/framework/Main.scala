@@ -39,11 +39,15 @@ import io.rml.framework.flink.item.{Item, JoinedItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
 import io.rml.framework.flink.util.ParameterUtil
 import io.rml.framework.flink.util.ParameterUtil.{OutputSinkOption, PostProcessorOption}
-import org.apache.flink.api.common.serialization.SimpleStringSchema
+import org.apache.flink.api.common.serialization.{SimpleStringEncoder, SimpleStringSchema}
 import org.apache.flink.api.scala._
 import org.apache.flink.core.fs.FileSystem.WriteMode
+import org.apache.flink.core.fs.Path
 import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.streaming.api.functions.ProcessFunction
+import org.apache.flink.streaming.api.functions.sink.filesystem.{OutputFileConfig, StreamingFileSink}
+import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.BasePathBucketAssigner
+import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.{OnCheckpointRollingPolicy}
 import org.apache.flink.streaming.api.scala.{DataStream, OutputTag, StreamExecutionEnvironment}
 import org.apache.flink.util.Collector
 
@@ -102,6 +106,10 @@ object Main extends Logging {
 
     if (config.checkpointInterval.isDefined) {
       senv.enableCheckpointing(config.checkpointInterval.get, CheckpointingMode.AT_LEAST_ONCE); // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
+
+      // in order for the StreamingFileSink to work correctly, checkpointing needs to be enabled
+    } else if (config.outputSink.equals(OutputSinkOption.File) && formattedMapping.containsStreamTriplesMaps()) {
+      senv.enableCheckpointing(30000, CheckpointingMode.AT_LEAST_ONCE);
     }
 
     if (formattedMapping.containsDatasetTriplesMaps() && !formattedMapping.containsStreamTriplesMaps()) {
@@ -150,7 +158,24 @@ object Main extends Logging {
       }
       // write to a file if the parameter is given
       else if (config.outputSink.equals(OutputSinkOption.File)) {
-        stream.writeAsText(config.outputPath.get, WriteMode.OVERWRITE)
+        val parts = config.outputPath.get.split('.')
+        val path = parts(0)
+        val suffix =
+          if (parts.length > 1) {
+            "." ++ parts.slice(1, parts.length).mkString(".")
+          } else {
+            if (config.postProcessor.equals(PostProcessorOption.JsonLD)) ".json" else ".nq"
+          }
+        val sink: StreamingFileSink[String] = StreamingFileSink
+          .forRowFormat(new Path(path), new SimpleStringEncoder[String]("UTF-8"))
+          .withBucketAssigner(new BasePathBucketAssigner[String])
+          .withRollingPolicy(OnCheckpointRollingPolicy.build())
+          .withOutputFileConfig(OutputFileConfig
+            .builder()
+            .withPartSuffix(suffix)
+            .build())
+          .build()
+        stream.addSink(sink).name("Streaming file sink")
       }
       // discard output if the parameter is given
       else if (config.outputSink.equals(OutputSinkOption.None)) {
