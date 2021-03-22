@@ -30,7 +30,7 @@ import com.jayway.jsonpath.JsonPath
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.QueryVoc
 import org.jsfr.json.provider.JacksonProvider
 import org.jsfr.json.{JacksonParser, JsonSurfer}
 
@@ -71,7 +71,7 @@ class JSONItem(map: java.util.Map[String, Object], val tag: String) extends Item
 object JSONItem extends Logging {
 
   private val surfer = new JsonSurfer(JacksonParser.INSTANCE, JacksonProvider.INSTANCE)
-  private val DEFAULT_PATH_OPTION: String = DEFAULT_ITERATOR_MAP(RMLVoc.Class.JSONPATH)
+  private val DEFAULT_PATH_OPTION: String = DEFAULT_ITERATOR_MAP(QueryVoc.Class.JSONPATH)
 
   def fromStringOptionableList(json: String, jsonPaths: List[String]): List[Item] = {
     val result: List[Item] = jsonPaths

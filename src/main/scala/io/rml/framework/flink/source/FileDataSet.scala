@@ -28,6 +28,7 @@ import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.item.csv.CSVHeader
 import io.rml.framework.core.model.{LogicalSource, Uri}
+import io.rml.framework.core.util.DefaultCSVConfig
 import io.rml.framework.core.vocabulary.QueryVoc
 import org.apache.commons.csv.CSVFormat
 import org.apache.flink.api.scala._

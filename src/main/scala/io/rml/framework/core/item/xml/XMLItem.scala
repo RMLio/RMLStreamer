@@ -30,7 +30,7 @@ import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
 import io.rml.framework.core.util.XMLNamespace
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.QueryVoc
 import org.apache.commons.io.IOUtils
 import org.w3c.dom.{Document, NodeList}
 
@@ -83,7 +83,7 @@ class XMLItem(xml: Document, namespaces: Map[String, String], val tag: String) e
 }
 
 object XMLItem extends Logging {
-  private val DEFAULT_PATH_OPTION: String = DEFAULT_ITERATOR_MAP(RMLVoc.Class.XPATH)
+  private val DEFAULT_PATH_OPTION: String = DEFAULT_ITERATOR_MAP(QueryVoc.Class.XPATH)
 
   def getNSpacesFromString(xml: String): Map[String, String] = {
     val inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))

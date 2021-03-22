@@ -28,7 +28,7 @@ import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{FormattedRMLMapping, Literal, Node, RMLMapping}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.QueryVoc
 import io.rml.framework.shared.ReadException
 
 import java.io._
@@ -49,9 +49,9 @@ object Util extends Logging{
   private val baseDirectiveCapture = "@base <([^<>]*)>.*".r
 
   val DEFAULT_ITERATOR_MAP: Map[String, String] =  Map(
-    RMLVoc.Class.JSONPATH -> "$",
-    RMLVoc.Class.CSV -> "",
-    RMLVoc.Class.XPATH -> "/*"
+    QueryVoc.Class.JSONPATH -> "$",
+    QueryVoc.Class.CSV -> "",
+    QueryVoc.Class.XPATH -> "/*"
   )
 
   val DEFAULT_ITERATOR_SET: Set[String] = DEFAULT_ITERATOR_MAP.values.toSet

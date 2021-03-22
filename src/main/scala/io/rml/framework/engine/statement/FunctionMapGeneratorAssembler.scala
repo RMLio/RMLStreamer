@@ -30,7 +30,6 @@ import io.rml.framework.core.item.{EmptyItem, Item}
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.SerializableRDFQuad
 import io.rml.framework.core.vocabulary.FunVoc
-import io.rml.framework.flink.source.EmptyItem
 import io.rml.framework.shared.RMLException
 
 case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {

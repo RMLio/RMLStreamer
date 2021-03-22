@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.item.json.JSONItem
 import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.QueryVoc
 import org.apache.flink.api.common.io.{GenericInputFormat, NonParallelInput}
 import org.apache.flink.core.io.GenericInputSplit
 import org.jsfr.json.compiler.JsonPathCompiler
@@ -43,7 +43,7 @@ class JSONInputFormat(path: String, jsonPath: String) extends GenericInputFormat
 
   private var iterator: util.Iterator[Object] = _
   private var inputStream: InputStream = _
-  private val DEFAULT_PATH_OPTION: String = DEFAULT_ITERATOR_MAP(RMLVoc.Class.JSONPATH)
+  private val DEFAULT_PATH_OPTION: String = DEFAULT_ITERATOR_MAP(QueryVoc.Class.JSONPATH)
 
   override def open(inputSplit: GenericInputSplit): Unit = {
     super.open(inputSplit)
