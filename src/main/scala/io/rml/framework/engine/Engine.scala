@@ -25,13 +25,12 @@
 
 package io.rml.framework.engine
 
-import java.util.regex.Pattern
-
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.item.Item
+import io.rml.framework.core.model.rdf.SerializableRDFQuad
 import io.rml.framework.core.model.{Literal, Uri}
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.sink.FlinkRDFQuad
 
+import java.util.regex.Pattern
 import scala.collection.mutable
 
 /**
@@ -39,7 +38,7 @@ import scala.collection.mutable
   */
 trait Engine[T] extends Serializable {
 
-  def process(item: T): List[FlinkRDFQuad]
+  def process(item: T): List[SerializableRDFQuad]
 
 }
 
@@ -113,7 +112,7 @@ object Engine extends Logging {
     * @return
     */
   def processReference(reference: Literal, item: Item): Option[List[String]] = {
-    item.refer(reference.toString)
+    item.refer(reference.value)
   }
 
   /**

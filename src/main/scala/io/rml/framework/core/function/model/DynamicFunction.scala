@@ -1,12 +1,12 @@
 package io.rml.framework.core.function.model
 
+import io.rml.framework.api.FnOEnvironment
+import io.rml.framework.core.function.{FunctionUtils, ReflectionUtils}
+import io.rml.framework.core.model.rdf.SerializableRDFQuad
+import io.rml.framework.core.model.{Entity, Literal, Uri}
+
 import java.io.{File, IOException, ObjectInputStream, ObjectOutputStream}
 import java.lang.reflect.Method
-
-import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
-import io.rml.framework.core.function.{FunctionUtils, ReflectionUtils}
-import io.rml.framework.core.model.{Entity, Literal, Uri}
-import io.rml.framework.flink.sink.FlinkRDFQuad
 
 
 /**
@@ -50,7 +50,7 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
     optMethod
   }
 
-  override def execute(paramTriples: List[FlinkRDFQuad]): Option[Iterable[Entity]] = {
+  override def execute(paramTriples: List[SerializableRDFQuad]): Option[Iterable[Entity]] = {
     // if a group (key: uri) results in a list with 1 element, extract that single element
     // otherwise, when a group has a list with more than 1 element, keep it as a list
     val argResourcesGroupedByUri = paramTriples.groupBy(_.predicate).map {
@@ -65,10 +65,10 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
 
     val argObjectsGroupedByUri = argResourcesGroupedByUri.map {
       pair => {
-        if (pair._2.isInstanceOf[Iterable[FlinkRDFQuad]]) {
-          pair._1 -> pair._2.asInstanceOf[Iterable[FlinkRDFQuad]].map(x => x.`object`.value.toString)
+        if (pair._2.isInstanceOf[Iterable[SerializableRDFQuad]]) {
+          pair._1 -> pair._2.asInstanceOf[Iterable[SerializableRDFQuad]].map(x => x.`object`.value.value)
         } else {
-          pair._1 -> pair._2.asInstanceOf[FlinkRDFQuad].`object`.value.toString
+          pair._1 -> pair._2.asInstanceOf[SerializableRDFQuad].`object`.value.value
         }
 
       }
@@ -92,10 +92,14 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
 
       try {
         val output = method.invoke(null, castParameterValues: _*)
-        val result = metaData.outputParam.flatMap(elem => elem.getValue(output)) map (elem => Literal(elem.toString))
+        val result = metaData.outputParam
+          .flatMap(elem => elem.getValue(output))
+          .map (elem => {
+            Literal(elem.toString)
+          })
         Some(result)
       } catch {
-        case e: Exception => {
+        case e: Throwable => {
           logError(s"The following exception occurred when invoking the method ${method.getName}: ${e.getMessage}." +
             s"\nThe result will be set to None.")
           None
@@ -121,7 +125,7 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
   override def execute(arguments: Map[Uri, String]): Option[Iterable[Entity]] = {
     val inputParams = metaData.inputParam
     // casted to List[AnyRef] since method.invoke(...) only accepts reference type but not primitive type of Scala
-    val paramsOrdered = arguments.groupBy(_._1.uri).map(_._2.asInstanceOf[AnyRef]).toList
+    val paramsOrdered = arguments.groupBy(_._1.value).map(_._2.asInstanceOf[AnyRef]).toList
 
     val outputParams = metaData.outputParam
 

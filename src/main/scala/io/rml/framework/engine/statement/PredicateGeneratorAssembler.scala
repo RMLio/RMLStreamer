@@ -26,8 +26,8 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.function.FunctionUtils
-import io.rml.framework.core.model.{Literal, TermMap, Uri}
-import io.rml.framework.flink.item.Item
+import io.rml.framework.core.item.Item
+import io.rml.framework.core.model.{TermMap, Uri}
 
 class PredicateGeneratorAssembler extends TermMapGeneratorAssembler {
 
@@ -41,7 +41,7 @@ class PredicateGeneratorAssembler extends TermMapGeneratorAssembler {
         if(item.isDefined) {
           item.map(iter => iter.flatMap(elem => {
             val castedResult = FunctionUtils.typeCastDataType(elem, termMap.datatype)
-            castedResult.map(v => Uri(v.toString))
+            castedResult.map(v => Uri(v.value))
           }))
         }else {
           None

@@ -22,8 +22,21 @@
   * THE SOFTWARE.
   *
   **/
-package io.rml.framework.flink.item
+package io.rml.framework.core.item
 
-case class JoinedItems(items: List[Item]) {
-  def apply(index: Int): Item = items(index)
+import org.apache.jena.graph.BlankNodeId
+
+/**
+  * Represents a data item.
+  */
+trait Item extends Serializable {
+
+  def refer(reference: String): Option[List[String]]
+
+  // TODO check if valid!!
+  @transient lazy val blankNodeId: BlankNodeId = BlankNodeId.create()
+
+
+  def tag: String
+
 }

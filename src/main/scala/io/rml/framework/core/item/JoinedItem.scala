@@ -22,50 +22,12 @@
   * THE SOFTWARE.
   *
   **/
+package io.rml.framework.core.item
 
-package io.rml.framework.flink.item.csv
-
-import java.io.{IOException, StringReader}
-import java.nio.file.Path
-
-import org.apache.commons.csv.CSVFormat
-
-import scala.collection.JavaConverters._
-import scala.io.Source
-
-object CSVHeader {
-
-  def apply(path: Path, csvFormat: CSVFormat): Option[Array[String]] = {
-    val src = Source.fromFile(path.toString)
-    val line = src.getLines.take(1).next()
-
-    src.close
-    getCSVHeaders(line, csvFormat)
+case class JoinedItem(child: Item, parent: Item) extends  Item {
+  override def refer(reference: String): Option[List[String]] = {
+    throw new IllegalAccessError("Joined item cannot call refer!")
   }
 
-  def apply(csvData: String, csvFormat: CSVFormat, isBatch: Boolean = false): Option[Array[String]] = {
-    if (isBatch) {
-      val firstLine = csvData.split(csvFormat.getDelimiter)
-
-      if (firstLine.isEmpty) None else getCSVHeaders(firstLine(0), csvFormat)
-    } else {
-      getCSVHeaders(csvData, csvFormat)
-
-    }
-  }
-
-  private def getCSVHeaders(csvLine: String, csvFormat: CSVFormat): Option[Array[String]] = {
-    try {
-      val reader = new StringReader(csvLine)
-      val parser = csvFormat
-        .parse(reader)
-      Some(parser.getRecords.get(0).iterator().asScala.toArray)
-    } catch {
-      case e: IOException => None
-      case e: IndexOutOfBoundsException => None
-    }
-
-  }
+  override def tag: String = ""
 }
-
-

@@ -23,18 +23,18 @@
   *
   **/
 
-package io.rml.framework.flink.item.json
-
-import java.util
+package io.rml.framework.core.item.json
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jayway.jsonpath.JsonPath
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.source.JSONStream
+import io.rml.framework.core.item.Item
+import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
+import io.rml.framework.core.vocabulary.RMLVoc
 import org.jsfr.json.provider.JacksonProvider
 import org.jsfr.json.{JacksonParser, JsonSurfer}
 
+import java.util
 import scala.collection.JavaConversions._
 import scala.util.control.NonFatal
 
@@ -71,8 +71,7 @@ class JSONItem(map: java.util.Map[String, Object], val tag: String) extends Item
 object JSONItem extends Logging {
 
   private val surfer = new JsonSurfer(JacksonParser.INSTANCE, JacksonProvider.INSTANCE)
-
-
+  private val DEFAULT_PATH_OPTION: String = DEFAULT_ITERATOR_MAP(RMLVoc.Class.JSONPATH)
 
   def fromStringOptionableList(json: String, jsonPaths: List[String]): List[Item] = {
     val result: List[Item] = jsonPaths
@@ -81,7 +80,7 @@ object JSONItem extends Logging {
         jsonPath => {
           try {
             val tag = jsonPath match {
-              case JSONStream.DEFAULT_PATH_OPTION => ""
+              case DEFAULT_PATH_OPTION => ""
               case _ => jsonPath
             }
             val collection = surfer.collectAll(json, jsonPath)

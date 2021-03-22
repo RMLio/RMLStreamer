@@ -24,8 +24,8 @@
   **/
 package io.rml.framework.flink.source
 
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.item.csv.CSVItem
+import io.rml.framework.core.item.csv.CSVItem
+import io.rml.framework.core.item.{EmptyItem, Item}
 import org.apache.commons.csv.{CSVFormat, CSVParser, CSVRecord}
 import org.apache.flink.api.common.io.GenericCsvInputFormat
 import org.apache.flink.core.fs.Path

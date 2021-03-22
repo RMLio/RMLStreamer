@@ -24,9 +24,8 @@
   **/
 package io.rml.framework.engine.statement
 
+import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.{GraphMap, TermMap, Uri}
-import io.rml.framework.core.util.Util
-import io.rml.framework.flink.item.Item
 
 class GraphGeneratorAssembler extends TermMapGeneratorAssembler {
 
@@ -44,7 +43,7 @@ class GraphGeneratorAssembler extends TermMapGeneratorAssembler {
 
 
       assembled.andThen(result => {
-        result.map(iter => iter.map(elem => Uri(elem.toString)))
+        result.map(iter => iter.map(elem => Uri(elem.value)))
       })
     } else {
     super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[Uri]]]

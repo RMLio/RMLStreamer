@@ -23,25 +23,23 @@
   *
   **/
 
-package io.rml.framework.flink.item.xml
-
-import java.io.{ByteArrayInputStream, InputStreamReader}
-import java.nio.charset.StandardCharsets
+package io.rml.framework.core.item.xml
 
 import com.ximpleware.extended.{AutoPilotHuge, VTDGenHuge, XMLBuffer}
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.item.xml.XMLItem.documentToString
-import io.rml.framework.flink.source.{XMLIterator, XMLStream}
-import io.rml.framework.flink.util.XMLNamespace
-import javax.xml.namespace.NamespaceContext
-import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.xpath.{XPathConstants, XPathFactory}
+import io.rml.framework.core.item.Item
+import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
+import io.rml.framework.core.util.XMLNamespace
+import io.rml.framework.core.vocabulary.RMLVoc
 import org.apache.commons.io.IOUtils
 import org.w3c.dom.{Document, NodeList}
 
+import java.io.{ByteArrayInputStream, InputStreamReader}
+import java.nio.charset.StandardCharsets
+import javax.xml.namespace.NamespaceContext
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.xpath.{XPathConstants, XPathFactory}
 import scala.util.control.NonFatal
-//import scala.xml.{PrettyPrinter, XML}
 
 class XMLItem(xml: Document, namespaces: Map[String, String], val tag: String) extends Item {
 
@@ -80,12 +78,12 @@ class XMLItem(xml: Document, namespaces: Map[String, String], val tag: String) e
     } else None
   }
 
-  override def toString: String = documentToString(xml)
+  override def toString: String = XMLItem.documentToString(xml)
 
 }
 
 object XMLItem extends Logging {
-
+  private val DEFAULT_PATH_OPTION: String = DEFAULT_ITERATOR_MAP(RMLVoc.Class.XPATH)
 
   def getNSpacesFromString(xml: String): Map[String, String] = {
     val inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))
@@ -118,7 +116,7 @@ object XMLItem extends Logging {
     document = documentBuilder.parse(IOUtils.toInputStream(documentToString(document), StandardCharsets.UTF_8))
 
     val tag = xpath match {
-      case XMLStream.DEFAULT_PATH_OPTION => ""
+      case DEFAULT_PATH_OPTION => ""
       case _ => xpath
     }
 
@@ -170,7 +168,6 @@ object XMLItem extends Logging {
 
   def documentToString(document: Document) : String = {
     import java.io.StringWriter
-
     import javax.xml.transform.dom.DOMSource
     import javax.xml.transform.stream.StreamResult
     import javax.xml.transform.{OutputKeys, TransformerFactory}

@@ -62,7 +62,6 @@ class StatementEngineTest extends FunSuite with Matchers {
     testOutcome match {
       case Left(e) => {
         Logger.logError(e)
-        System.exit(1)
         fail(e)
       }
       case Right(e) => {
@@ -77,7 +76,6 @@ class StatementEngineTest extends FunSuite with Matchers {
    * 13:24:26.959 [main] ERROR be.ugent.rml.cli.Main               .main(315) - Expected ':', found '/' [line 1]
    */
   test("example10") {
-    pending
     executeTest("example10/mapping.rml.ttl")
   }
 

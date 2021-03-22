@@ -1,13 +1,12 @@
-package io.rml.framework.core.function.flink
-
-import java.net.URLClassLoader
+package io.rml.framework.flink.function
 
 import io.rml.framework.Main.logError
 import io.rml.framework.api.FnOEnvironment
-import io.rml.framework.flink.item.Item
+import io.rml.framework.core.item.Item
 import org.apache.flink.api.common.functions.RichMapFunction
 import org.apache.flink.configuration.Configuration
 
+import java.net.URLClassLoader
 import scala.util.{Failure, Success, Try}
 
 /**

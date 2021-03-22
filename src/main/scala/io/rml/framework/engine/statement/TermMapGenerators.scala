@@ -27,10 +27,10 @@ package io.rml.framework.engine.statement
 
 
 import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.item.Item
 import io.rml.framework.core.model._
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.Engine
-import io.rml.framework.flink.item.Item
 
 /**
   *
@@ -40,14 +40,14 @@ object TermMapGenerators {
   def constantUriGenerator(constant: Entity): Item => Option[Iterable[Uri]] = {
     // return a function that just returns the constant
     (item: Item) => {
-      Some(List(Uri(constant.toString)))
+      Some(List(Uri(constant.value)))
     }
   }
 
   def constantLiteralGenerator(constant: Entity, datatype: Option[Uri] = None, language: Option[Literal]): Item => Option[Iterable[Literal]] = {
     // return a function that just returns the constant
     item: Item => {
-      Some(List(Literal(constant.toString, datatype, language)))
+      Some(List(Literal(constant.value, datatype, language)))
     }
 
   }

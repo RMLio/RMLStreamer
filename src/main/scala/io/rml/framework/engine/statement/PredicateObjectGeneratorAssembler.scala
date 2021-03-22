@@ -26,8 +26,8 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.{Entity, PredicateObjectMap, Uri}
-import io.rml.framework.flink.item.Item
 class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGeneratorAssembler,
                                         objectGeneratorAssembler: ObjectGeneratorAssembler,
                                         graphGeneratorAssembler: GraphGeneratorAssembler) extends Logging{

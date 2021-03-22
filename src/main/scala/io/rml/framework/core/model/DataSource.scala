@@ -39,5 +39,5 @@ trait DataSource extends Node{
 
   def uri:ExplicitNode
 
-  override def identifier: String = this.uri.toString
+  override def identifier: String = this.uri.identifier
 }

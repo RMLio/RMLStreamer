@@ -24,13 +24,13 @@
   **/
 package io.rml.framework.engine
 
+import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.model.rdf.SerializableRDFQuad
+import io.rml.framework.core.util._
+import org.apache.jena.riot.{Lang, RDFDataMgr}
+
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
-
-import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.util._
-import io.rml.framework.flink.sink.FlinkRDFQuad
-import org.apache.jena.riot.{Lang, RDFDataMgr}
 
 
 
@@ -40,7 +40,7 @@ import org.apache.jena.riot.{Lang, RDFDataMgr}
   */
 trait PostProcessor extends Serializable{
 
-  def process(quadStrings: Iterable[FlinkRDFQuad]): List[String]
+  def process(quadStrings: Iterable[SerializableRDFQuad]): List[String]
 
   def outputFormat: Format
 }
@@ -52,7 +52,7 @@ trait AtMostOneProcessor extends PostProcessor  // TODO: define exact semantics 
   * Does nothing, returns the input list of strings
   */
 class NopPostProcessor extends PostProcessor {
-  override def process(quadStrings: Iterable[FlinkRDFQuad]): List[String] = {
+  override def process(quadStrings: Iterable[SerializableRDFQuad]): List[String] = {
     quadStrings.map(_.toString).toList
   }
 
@@ -65,7 +65,7 @@ class NopPostProcessor extends PostProcessor {
   * string.
   */
 class BulkPostProcessor extends AtMostOneProcessor {
-  override def process(quadStrings: Iterable[FlinkRDFQuad]): List[String] = {
+  override def process(quadStrings: Iterable[SerializableRDFQuad]): List[String] = {
     List(quadStrings.mkString("\n"))
   }
 
@@ -81,7 +81,7 @@ class JsonLDProcessor() extends AtMostOneProcessor {
 
   override def outputFormat: Format = JSON_LD
 
-  override def process(quadStrings: Iterable[FlinkRDFQuad]): List[String] = {
+  override def process(quadStrings: Iterable[SerializableRDFQuad]): List[String] = {
     if (quadStrings.isEmpty || quadStrings.mkString.isEmpty) {
       return List()
     }

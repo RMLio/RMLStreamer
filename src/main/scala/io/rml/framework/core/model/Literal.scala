@@ -54,7 +54,18 @@ trait Literal extends Entity  with ExplicitNode{
     *
     * @return
     */
-  override def toString: String = value
+  override def toString: String = {
+    val base = '"' + value + '"'
+    if (`type`.isDefined) {
+      if (language.isDefined) base + "^^<" + `type`.get.toString + ">@" + language.get.toString
+      else base + "^^<" + `type`.get.toString + ">"
+    } else {
+      if (language.isDefined) {
+        base + "@" + language.get.value
+      }
+      else base
+    }
+  }
 
   override def identifier: String = value
 

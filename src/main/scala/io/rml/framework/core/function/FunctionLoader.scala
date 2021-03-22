@@ -31,7 +31,7 @@ abstract class FunctionLoader extends Logging {
    * @return  function (if successful)
    */
   def createFunction(uri: Uri): Option[Function] = {
-    logDebug(s"createFunction: ${uri.uri}")
+    logDebug(s"createFunction: ${uri.value}")
 
     val optFunctionMetaData = functionMap.get(uri)
 
@@ -42,7 +42,7 @@ abstract class FunctionLoader extends Logging {
     } else {
       // when the function uri is not present in the function map, complain.
       val availableFunctionURIs = functionMap.keys.map(u=>u.toString)
-      throw new IOException(s"The function with URI ${uri.toString} can not be found.\n" +
+      throw new IOException(s"The function with URI ${uri.value} can not be found.\n" +
         s"The available function URIs are: " + availableFunctionURIs)
     }
   }
@@ -124,7 +124,9 @@ object FunctionLoader extends Logging{
         if(functionDescriptionsGraph.isDefined) {
           singletonFunctionLoader = Some(StdFunctionLoader(functionDescriptionsGraph.get))
           // now parse the mappings
-          functionMappingPaths.foreach(fmp=>singletonFunctionLoader.get.parseFunctionMapping(new File(fmp.path)))
+          functionMappingPaths.foreach(fmp => {
+            singletonFunctionLoader.get.parseFunctionMapping(new File(fmp.path))
+          })
 
         } else {
           logWarning("No function graph found. Continuing without loading functions.")

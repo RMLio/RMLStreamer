@@ -24,8 +24,8 @@
   **/
 package io.rml.framework.engine
 
+import io.rml.framework.core.item.Item
 import io.rml.framework.engine.statement.StatementEngine
-import io.rml.framework.flink.item.Item
 import org.apache.flink.api.common.functions.RichMapFunction
 
 /**

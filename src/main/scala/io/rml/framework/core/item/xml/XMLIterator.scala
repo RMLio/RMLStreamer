@@ -22,12 +22,11 @@
   * THE SOFTWARE.
   *
   **/
-package io.rml.framework.flink.source
+package io.rml.framework.core.item.xml
 
 import com.ximpleware.extended.{AutoPilotHuge, VTDNavHuge}
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.item.xml.XMLItem
+import io.rml.framework.core.item.Item
 import org.slf4j.LoggerFactory
 
 import java.nio.charset.{Charset, StandardCharsets}
@@ -39,6 +38,8 @@ import java.nio.charset.{Charset, StandardCharsets}
   *
   * @param ap
   * @param vn
+  *
+  * TODO: move to other package
   */
 class XMLIterator(val ap: AutoPilotHuge, vn: VTDNavHuge, namespaces: Map[String, String], xPath: String) extends Iterator[Option[Item]] with Logging {
 
