@@ -26,11 +26,10 @@ package io.rml.framework.engine.statement
 
 import io.rml.framework.core.function.FunctionLoader
 import io.rml.framework.core.function.model.Function
+import io.rml.framework.core.item.{EmptyItem, Item}
 import io.rml.framework.core.model._
+import io.rml.framework.core.model.rdf.SerializableRDFQuad
 import io.rml.framework.core.vocabulary.FunVoc
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.sink.FlinkRDFQuad
-import io.rml.framework.flink.source.EmptyItem
 import io.rml.framework.shared.RMLException
 
 case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
@@ -57,7 +56,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
                             List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Option[Function] = {
 
     this.logDebug("parseFunction (assembledPom)")
-    val placeHolder: List[FlinkRDFQuad] = generateFunctionTriples(new EmptyItem(), assembledPom)
+    val placeHolder: List[SerializableRDFQuad] = generateFunctionTriples(new EmptyItem(), assembledPom)
 
     val executeProperties = placeHolder.filter( quad => quad.predicate.value == Uri(FunVoc.FnO.Property.EXECUTES))
     if(executeProperties.isEmpty)
@@ -69,7 +68,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
       .head
       .`object`
       .value
-      .toString)
+      .value)
     
 
     val functionLoaderOption = FunctionLoader();
@@ -90,7 +89,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
    */
   private def createAssemblerFunction(function: Option[Function], assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Item => Option[Iterable[Entity]] = {
     (item: Item) => {
-      val triples: List[FlinkRDFQuad] = generateFunctionTriples(item, assembledPom)
+      val triples: List[SerializableRDFQuad] = generateFunctionTriples(item, assembledPom)
       val paramTriples = triples.filter(triple => triple.predicate.uri != Uri(FunVoc.FnO.Property.EXECUTES))
 
 
@@ -109,7 +108,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
    * @param item
    * @return
    */
-  private def generateFunctionTriples(item: Item, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): List[FlinkRDFQuad] = {
+  private def generateFunctionTriples(item: Item, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): List[SerializableRDFQuad] = {
 
     val result = for{
       (predicateGen, objGen) <- assembledPom

@@ -22,7 +22,7 @@
   * THE SOFTWARE.
   *
   **/
-package io.rml.framework.flink.util
+package io.rml.framework.core.util
 
 import java.io.{File, FileInputStream, InputStreamReader}
 

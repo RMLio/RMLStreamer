@@ -37,7 +37,12 @@ trait RDFResource extends RDFNode with Logging {
 
   def uri: Uri
 
-  override def toString: String = uri.toString
+  def value = uri.value
+
+  override def toString: String = {
+    val base = "<" + uri.toString + ">"
+    base
+  }
 
   override def identifier: String = uri.toString
 

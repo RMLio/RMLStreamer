@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<products>
+  <product>
+    <id>1</id>
+    <Property Name="1">
+      <String>1</String>
+    </Property>
+  </product>
+</products>

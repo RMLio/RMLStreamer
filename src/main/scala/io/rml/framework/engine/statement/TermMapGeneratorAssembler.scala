@@ -26,9 +26,9 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.item.Item
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.R2RMLVoc
-import io.rml.framework.flink.item.Item
 
 /**
   *

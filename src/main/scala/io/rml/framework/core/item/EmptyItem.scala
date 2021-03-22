@@ -1,7 +1,9 @@
+package io.rml.framework.core.item
+
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2021 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +23,9 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   * THE SOFTWARE.
   *
-  **/
-package io.rml.framework.flink.util
+  * */
+class EmptyItem() extends Item {
+  override def refer(reference: String): Option[List[String]] = None
 
-sealed abstract class CSVConfig(val delimiter: Char = ',', val quoteCharacter: Char = '"', val recordDelimiter: String = "\n")
-
-case class DefaultCSVConfig() extends CSVConfig
-
-case class CustomCSVConfig(override val delimiter: Char, override val quoteCharacter: Char,
-                           override val recordDelimiter: String ) extends CSVConfig(delimiter, quoteCharacter, recordDelimiter)
+  override def tag = ""
+}

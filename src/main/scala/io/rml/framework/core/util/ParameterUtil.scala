@@ -1,7 +1,7 @@
-package io.rml.framework.flink.util
+package io.rml.framework.core.util
 
-import io.rml.framework.flink.util.ParameterUtil.OutputSinkOption.OutputSinkOption
-import io.rml.framework.flink.util.ParameterUtil.PostProcessorOption.PostProcessorOption
+import io.rml.framework.core.util.ParameterUtil.OutputSinkOption.OutputSinkOption
+import io.rml.framework.core.util.ParameterUtil.PostProcessorOption.PostProcessorOption
 
 /**
   * MIT License
@@ -78,7 +78,7 @@ object ParameterUtil {
   val parser = new scopt.OptionParser[ParameterConfig]("RMLStreamer") {
     override def showUsageOnError = true
 
-    head("RMLStreamer", "2.0.1-SNAPSHOT")
+    head("RMLStreamer", "2.1.0-SNAPSHOT")
 
     opt[String]('j', "job-name").valueName("<job name>")
       .optional()

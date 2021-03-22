@@ -189,9 +189,9 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
   private var _uri: Uri = _
 
   private def extractStatementFromTriple(triple: RDFTriple): Statement = {
-    val subject = model.createResource(triple.subject.uri.toString)
-    val predicate = model.createProperty(triple.predicate.uri.toString)
-    val _object = model.createResource(triple.`object`.toString)
+    val subject = model.createResource(triple.subject.uri.value)
+    val predicate = model.createProperty(triple.predicate.uri.value)
+    val _object = model.createResource(triple.`object`.value)
     model.createStatement(subject, predicate, _object)
   }
 
@@ -204,6 +204,7 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
     }
   }
 
+  override def value: String = ???  // this doesn't make much sense. 
 }
 
 object JenaGraph {

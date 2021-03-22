@@ -94,7 +94,7 @@ class StdPredicateMapExtractor() extends PredicateMapExtractor {
     val reference = extractReference(resource)
     val functionMap = FunctionMapExtractor().extract(resource)
 
-    PredicateMap(resource.uri.toString, functionMap, constant, reference, template, termType)
+    PredicateMap(resource.uri.value, functionMap, constant, reference, template, termType)
   }
 
 }

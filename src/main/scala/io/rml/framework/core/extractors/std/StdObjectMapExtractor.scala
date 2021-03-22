@@ -102,7 +102,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     val language = extractLanguage(resource)
     val datatype = extractDatatype(resource)
     val functionMap = FunctionMapExtractor().extract(resource)
-    ObjectMap(resource.uri.toString, functionMap, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition)
+    ObjectMap(resource.uri.identifier, functionMap, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition)
   }
 
   def extractDatatype(resource: RDFResource): Option[Uri] = {
@@ -163,7 +163,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
       case literal: Literal => Some(literal)
       case resource: RDFResource => throw new RMLException(resource.uri + ": invalid language type.")
     }
-    val tag = languageLiteral.get.toString
+    val tag = languageLiteral.get.value
 
     if (!Util.isValidrrLanguage(tag))
       throw new RMLException(s"Language tag '$tag' does not conform to BCP 47 standards")
@@ -182,7 +182,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     if (properties.isEmpty) return None
 
     properties.head match {
-      case resource: RDFResource => Some(resource.toString)
+      case resource: RDFResource => Some(resource.value)
       case literal: Literal =>
         throw new RMLException(literal.toString + ": invalid parent triple map.")
     }

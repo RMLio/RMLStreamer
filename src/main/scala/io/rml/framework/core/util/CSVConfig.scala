@@ -22,21 +22,11 @@
   * THE SOFTWARE.
   *
   **/
-package io.rml.framework.flink.item
+package io.rml.framework.core.util
 
-import org.apache.jena.graph.BlankNodeId
+sealed abstract class CSVConfig(val delimiter: Char = ',', val quoteCharacter: Char = '"', val recordDelimiter: String = "\n")
 
-/**
-  * Represents a data item.
-  */
-trait Item extends Serializable {
+case class DefaultCSVConfig() extends CSVConfig
 
-  def refer(reference: String): Option[List[String]]
-
-  // TODO check if valid!!
-  @transient lazy val blankNodeId: BlankNodeId = BlankNodeId.create()
-
-
-  def tag: String
-
-}
+case class CustomCSVConfig(override val delimiter: Char, override val quoteCharacter: Char,
+                           override val recordDelimiter: String ) extends CSVConfig(delimiter, quoteCharacter, recordDelimiter)

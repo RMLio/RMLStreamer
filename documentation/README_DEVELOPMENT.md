@@ -2,7 +2,7 @@
 
 ## Prerequisites
 * Git
-* Java JDK >= 11
+* Java JDK 11
 * Maven 3
 * IntelliJ (Eclipse should work too, but consult Flink documentation for set-up)
 

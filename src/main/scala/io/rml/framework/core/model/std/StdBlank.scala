@@ -29,5 +29,10 @@ import io.rml.framework.core.model.Blank
 
 case class StdBlank(id: String = "_") extends Blank {
   override def identifier: String = id
-  override def toString: String = id
+
+  override def value: String = id
+
+  override def toString: String = {
+    "_:" + id
+  }
 }

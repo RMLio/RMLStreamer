@@ -23,24 +23,23 @@
   *
   **/
 
-package io.rml.framework.flink.item.xml
-
-import java.io.{ByteArrayInputStream, InputStreamReader}
-import java.nio.charset.StandardCharsets
+package io.rml.framework.core.item.xml
 
 import com.ximpleware.extended.{AutoPilotHuge, VTDGenHuge, XMLBuffer}
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.source.{XMLIterator, XMLStream}
-import io.rml.framework.flink.util.XMLNamespace
-import javax.xml.namespace.NamespaceContext
-import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.xpath.{XPathConstants, XPathFactory}
+import io.rml.framework.core.item.Item
+import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
+import io.rml.framework.core.util.XMLNamespace
+import io.rml.framework.core.vocabulary.QueryVoc
 import org.apache.commons.io.IOUtils
 import org.w3c.dom.{Document, NodeList}
 
+import java.io.{ByteArrayInputStream, InputStreamReader}
+import java.nio.charset.StandardCharsets
+import javax.xml.namespace.NamespaceContext
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.xpath.{XPathConstants, XPathFactory}
 import scala.util.control.NonFatal
-//import scala.xml.{PrettyPrinter, XML}
 
 class XMLItem(xml: Document, namespaces: Map[String, String], val tag: String) extends Item {
 
@@ -79,25 +78,12 @@ class XMLItem(xml: Document, namespaces: Map[String, String], val tag: String) e
     } else None
   }
 
-  override def toString: String = {
-    import java.io.StringWriter
-
-    import javax.xml.transform.dom.DOMSource
-    import javax.xml.transform.stream.StreamResult
-    import javax.xml.transform.{OutputKeys, TransformerFactory}
-    val tf = TransformerFactory.newInstance
-    val transformer = tf.newTransformer
-    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
-    val writer = new StringWriter
-    transformer.transform(new DOMSource(xml), new StreamResult(writer))
-    val output = writer.getBuffer.toString.replaceAll("\n|\r", "")
-    output
-  }
+  override def toString: String = XMLItem.documentToString(xml)
 
 }
 
 object XMLItem extends Logging {
-
+  private val DEFAULT_PATH_OPTION: String = DEFAULT_ITERATOR_MAP(QueryVoc.Class.XPATH)
 
   def getNSpacesFromString(xml: String): Map[String, String] = {
     val inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))
@@ -113,13 +99,24 @@ object XMLItem extends Logging {
   // Since this is being used in other working parts of the code, it won't be refactored for now 20/7/18
   def fromString(xml: String, namespaces: Map[String, String] = Map(), xpath:String): XMLItem = {
     val documentBuilderFactory = DocumentBuilderFactory.newInstance()
-    documentBuilderFactory.setNamespaceAware(true)
-    val documentBuilder = documentBuilderFactory.newDocumentBuilder()
+    documentBuilderFactory.setNamespaceAware(false)
+    var documentBuilder = documentBuilderFactory.newDocumentBuilder()
+    var document: Document = documentBuilder.parse(IOUtils.toInputStream(xml, StandardCharsets.UTF_8))
 
-    val document: Document = documentBuilder.parse(IOUtils.toInputStream(xml, StandardCharsets.UTF_8))
+    // add namespaces to root element
+    val documentRoot = document.getDocumentElement
+    for ((namespacePrefix, namespaceURI) <- namespaces) {
+      documentRoot.setAttributeNS("http://www.w3.org/2000/xmlns/", s"xmlns:$namespacePrefix", namespaceURI)
+    }
+
+    // parse document again, now namespace aware
+    // this is a workaround since there does not seem to be a straightforward way to pass namespaces to the parser
+    documentBuilderFactory.setNamespaceAware(true)
+    documentBuilder = documentBuilderFactory.newDocumentBuilder()
+    document = documentBuilder.parse(IOUtils.toInputStream(documentToString(document), StandardCharsets.UTF_8))
 
     val tag = xpath match {
-      case XMLStream.DEFAULT_PATH_OPTION => ""
+      case DEFAULT_PATH_OPTION => ""
       case _ => xpath
     }
 
@@ -156,7 +153,7 @@ object XMLItem extends Logging {
           Some(result)
 
         } catch {
-          case NonFatal(e) => logError(s"Error while parsing XML:\n${xml}", e); None
+          case NonFatal(e) => logError(s"Error while parsing XML:\n$xml", e); None
         }
       }
         .flatten
@@ -169,4 +166,17 @@ object XMLItem extends Logging {
     }
   }
 
+  def documentToString(document: Document) : String = {
+    import java.io.StringWriter
+    import javax.xml.transform.dom.DOMSource
+    import javax.xml.transform.stream.StreamResult
+    import javax.xml.transform.{OutputKeys, TransformerFactory}
+    val tf = TransformerFactory.newInstance
+    val transformer = tf.newTransformer
+    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
+    val writer = new StringWriter
+    transformer.transform(new DOMSource(document), new StreamResult(writer))
+    val output = writer.getBuffer.toString.replaceAll("[\n\r]", "")
+    output
+  }
 }

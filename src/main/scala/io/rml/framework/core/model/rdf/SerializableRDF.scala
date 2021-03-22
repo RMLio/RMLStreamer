@@ -22,7 +22,7 @@
   * THE SOFTWARE.
   *
   **/
-package io.rml.framework.flink.sink
+package io.rml.framework.core.model.rdf
 
 import io.rml.framework.core.model._
 
@@ -31,17 +31,17 @@ import io.rml.framework.core.model._
   *
   * @param value
   */
-abstract class FlinkRDFNode(val value: Entity) extends Serializable
+abstract class SerializableRDFNode(val value: Entity) extends Serializable
 
-abstract class FlinkRDFTermNode(val termNode: TermNode) extends FlinkRDFNode(termNode)
+abstract class SerializableRDFTermNode(val termNode: TermNode) extends SerializableRDFNode(termNode)
 
-case class FlinkRDFBlank(blank: Blank) extends FlinkRDFTermNode(blank) {
+case class SerializableRDFBlank(blank: Blank) extends SerializableRDFTermNode(blank) {
   override def toString: String = {
-    "_:" + blank.toString
+    blank.toString
   }
 }
 
-case class FlinkRDFResource(uri: Uri) extends FlinkRDFTermNode(uri) {
+case class SerializableRDFResource(uri: Uri) extends SerializableRDFTermNode(uri) {
 
   override def toString: String = {
     val base = "<" + uri.toString + ">"
@@ -49,25 +49,16 @@ case class FlinkRDFResource(uri: Uri) extends FlinkRDFTermNode(uri) {
   }
 }
 
-case class FlinkRDFLiteral(literal: Literal) extends FlinkRDFNode(literal) {
-  override def toString: String = {
-    val base = '"' + literal.toString + '"'
-    if (literal.`type`.isDefined) {
-      if (literal.language.isDefined) base + "^^<" + literal.`type`.get.toString + ">@" + literal.language.get.toString
-      else base + "^^<" + literal.`type`.get.toString + ">"
-    } else {
-      if (literal.language.isDefined) base + "@" + literal.language.get.toString
-      else base
-    }
-  }
+case class FlinkRDFLiteral(literal: Literal) extends SerializableRDFNode(literal) {
+  override def toString: String = literal.toString
 }
 
 
 
-case class FlinkRDFQuad(subject: FlinkRDFTermNode,
-                        predicate: FlinkRDFResource,
-                        `object`: FlinkRDFNode,
-                        graph: Option[FlinkRDFResource] = None)
+case class SerializableRDFQuad(subject: SerializableRDFTermNode,
+                               predicate: SerializableRDFResource,
+                               `object`: SerializableRDFNode,
+                               graph: Option[SerializableRDFResource] = None)
   extends  Serializable {
 
   override def toString: String = {
