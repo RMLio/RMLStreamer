@@ -24,7 +24,7 @@
   **/
 package io.rml.framework.flink.source
 
-import io.rml.framework.flink.item.Item
+import io.rml.framework.core.item.Item
 import org.apache.flink.streaming.api.scala.DataStream
 
 abstract class Stream extends Source {

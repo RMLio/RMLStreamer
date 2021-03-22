@@ -24,10 +24,10 @@
   **/
 package io.rml.framework.flink.source
 
+import io.rml.framework.core.item.Item
+import io.rml.framework.core.item.xml.XMLItem
 import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
-import io.rml.framework.core.vocabulary.RMLVoc
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.item.xml.XMLItem
+import io.rml.framework.flink.connector.kafka.UniversalKafkaConnectorFactory
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.functions.source.SourceFunction
@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory
 case class XMLStream(stream: DataStream[Iterable[Item]]) extends Stream
 
 object XMLStream {
-  val DEFAULT_PATH_OPTION: String = Source.DEFAULT_ITERATOR_MAP(RMLVoc.Class.XPATH)
 
   def apply(source: StreamDataSource, xpaths: List[String])(implicit env: StreamExecutionEnvironment): Stream = {
 
@@ -65,7 +64,7 @@ object XMLStream {
 
   def fromKafkaStream(kafkaStream: KafkaStream, xpaths: List[String])(implicit env: StreamExecutionEnvironment): XMLStream = {
     val properties = kafkaStream.getProperties
-    val consumer = kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
+    val consumer = UniversalKafkaConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
     val stream: DataStream[Iterable[Item]] = StreamUtil.paralleliseOverSlots(env.addSource(consumer))
       .map(item => {
         XMLItem.fromStringOptionable(item, xpaths)

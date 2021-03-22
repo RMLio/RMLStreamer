@@ -110,7 +110,7 @@ object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
     * @return
     */
   def extractTriplesMapProperties(resource: RDFResource): Option[TriplesMap] = {
-    val resourceStr = resource.toString;
+    val resourceStr = resource.value;
     // errors can occur during extraction of sub structures
     if (TriplesMapsCache.contains(resourceStr)) {
       TriplesMapsCache.get(resourceStr)
@@ -121,7 +121,7 @@ object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
         val triplesMap = TriplesMap(PredicateObjectMapExtractor().extract(resource),
           LogicalSourceExtractor().extract(resource),
           SubjectMapExtractor().extract(resource),
-          resource.uri.toString,
+          resource.uri.value,
           GraphMapExtractor().extract(resource)
         )
         val t = TriplesMapsCache.put(resourceStr, triplesMap);

@@ -31,5 +31,6 @@ case class StdUri(uri: String) extends Uri {
 
   override def toString: String = uri
 
+  override def value: String = uri
 }
 

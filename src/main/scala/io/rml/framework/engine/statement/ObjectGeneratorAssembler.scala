@@ -26,9 +26,9 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.{Entity, Literal, ObjectMap, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
-import io.rml.framework.flink.item.Item
 
 class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
 

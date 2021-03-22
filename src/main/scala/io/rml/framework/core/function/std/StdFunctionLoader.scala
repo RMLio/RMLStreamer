@@ -2,8 +2,8 @@ package io.rml.framework.core.function.std
 
 import io.rml.framework.core.function.model.{FunctionMetaData, Parameter}
 import io.rml.framework.core.function.{FunctionLoader, FunctionUtils}
-import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFNode, RDFResource}
+import io.rml.framework.core.model.{Literal, Uri}
 import io.rml.framework.core.util.Util
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.{FnOException, RMLException}
@@ -31,7 +31,8 @@ case class StdFunctionLoader private (functionDescriptionTriplesGraph : RDFGraph
         val functionUri = map.listProperties(RMLVoc.Property.FNO_FUNCTION).head.asInstanceOf[RDFResource].uri
 
         val methodMappingResource = map.listProperties(RMLVoc.Property.FNO_METHOD_MAPPING).head.asInstanceOf[RDFResource]
-        val methodName = methodMappingResource.listProperties(RMLVoc.Property.FNOM_METHOD_NAME).head.toString
+        val methodNode = methodMappingResource.listProperties(RMLVoc.Property.FNOM_METHOD_NAME).head.asInstanceOf[Literal]
+        val methodName = methodNode.value
         val implementationResource = map.listProperties(RMLVoc.Property.FNO_IMPLEMENTATION).head.asInstanceOf[RDFResource]
 
         val className = Util.getLiteral(implementationResource.listProperties(RMLVoc.Property.FNOI_CLASS_NAME).head)
@@ -87,8 +88,8 @@ case class StdFunctionLoader private (functionDescriptionTriplesGraph : RDFGraph
     if(paramUri.isEmpty)
       throw new FnOException(s"Parameter Uri not defined for parameter resource: ${inputResource.uri}")
 
-
-    val typeClass = FunctionUtils.getTypeClass(Uri(paramType.get.toString))
-    Parameter(typeClass, Uri(paramUri.get.toString), pos)
+    val paramTypeResource = paramType.get.asInstanceOf[RDFResource]
+    val typeClass = FunctionUtils.getTypeClass(paramTypeResource.uri)
+    Parameter(typeClass, Uri(paramUri.get.identifier), pos)
   }
 }

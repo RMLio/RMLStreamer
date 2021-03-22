@@ -25,18 +25,18 @@
 
 package io.rml.framework.core.model
 
-import java.net.URLEncoder
-
 import io.rml.framework.core.model.std.StdUri
+
+import java.net.URLEncoder
 
 /**
   * This trait represents a Uri.
   */
 trait Uri extends TermNode with ExplicitNode{
 
-  def uri : String
+  //def uri : String
 
-  override def identifier: String = this.uri
+  override def identifier: String = this.value
 }
 
 
@@ -48,7 +48,7 @@ object Uri {
     * @return
     */
   def apply(uri: String): Uri = {
-    if (uri != null) StdUri(uri) else Uri("")
+    if (uri != null) StdUri(uri) else StdUri("")
   }
 
   def unapply(arg: Uri): Option[String] = Some(arg.toString)

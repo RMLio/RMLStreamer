@@ -23,11 +23,48 @@
   *
   **/
 
-package io.rml.framework.core.model.rdf
+package io.rml.framework.core.item.csv
 
-/**
-  * Created by wmaroy on 22.08.17.
-  */
-trait RDFQuad extends RDFTriple {
+import org.apache.commons.csv.CSVFormat
 
+import java.io.{IOException, StringReader}
+import java.nio.file.Path
+import scala.collection.JavaConverters._
+import scala.io.Source
+
+object CSVHeader {
+
+  def apply(path: Path, csvFormat: CSVFormat): Option[Array[String]] = {
+    val src = Source.fromFile(path.toString)
+    val line = src.getLines.take(1).next()
+
+    src.close
+    getCSVHeaders(line, csvFormat)
+  }
+
+  def apply(csvData: String, csvFormat: CSVFormat, isBatch: Boolean = false): Option[Array[String]] = {
+    if (isBatch) {
+      val firstLine = csvData.split(csvFormat.getDelimiter)
+
+      if (firstLine.isEmpty) None else getCSVHeaders(firstLine(0), csvFormat)
+    } else {
+      getCSVHeaders(csvData, csvFormat)
+
+    }
+  }
+
+  private def getCSVHeaders(csvLine: String, csvFormat: CSVFormat): Option[Array[String]] = {
+    try {
+      val reader = new StringReader(csvLine)
+      val parser = csvFormat
+        .parse(reader)
+      Some(parser.getRecords.get(0).iterator().asScala.toArray)
+    } catch {
+      case e: IOException => None
+      case e: IndexOutOfBoundsException => None
+    }
+
+  }
 }
+
+

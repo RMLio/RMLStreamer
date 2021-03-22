@@ -78,7 +78,7 @@ class StdPredicateObjectMapExtractor extends PredicateObjectMapExtractor with Lo
     val graphMap = GraphMapExtractor().extract(resource)
 
     this.logDebug("extractPredicateObjectMap : returning resulting PredicateObjectMap")
-    PredicateObjectMap(resource.uri.toString, objectMaps, predicateMaps, graphMap)
+    PredicateObjectMap(resource.uri.value, objectMaps, predicateMaps, graphMap)
   }
 
 }

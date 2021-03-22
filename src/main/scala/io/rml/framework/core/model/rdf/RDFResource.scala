@@ -25,8 +25,8 @@
 
 package io.rml.framework.core.model.rdf
 
-import io.rml.framework.core.model.Uri
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.model.Uri
 
 /**
   * This trait represents a resource that is able to query an underlying RDF model.
@@ -37,7 +37,12 @@ trait RDFResource extends RDFNode with Logging {
 
   def uri: Uri
 
-  override def toString: String = uri.toString
+  def value = uri.value
+
+  override def toString: String = {
+    val base = "<" + uri.toString + ">"
+    base
+  }
 
   override def identifier: String = uri.toString
 

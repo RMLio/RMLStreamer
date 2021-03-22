@@ -26,9 +26,9 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.function.FunctionUtils
+import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.{TermMap, TermNode, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
-import io.rml.framework.flink.item.Item
 import io.rml.framework.shared.TermTypeException
 
 
@@ -43,7 +43,7 @@ class SubjectGeneratorAssembler extends TermMapGeneratorAssembler {
         if(item.isDefined) {
           item.map(iter => iter.flatMap(elem => {
             val castedResult = FunctionUtils.typeCastDataType(elem, termMap.datatype)
-            castedResult.map(v => Uri(v.toString))
+            castedResult.map(v => Uri(v.value))
           }))
         }else {
           None

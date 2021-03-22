@@ -28,26 +28,25 @@ package io.rml.framework
 
 import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
 import io.rml.framework.core.extractors.TriplesMapsCache
-import io.rml.framework.core.function.flink.{FnOEnvironmentLoader, FnOEnvironmentStreamLoader, RichItemIdentityFunction, RichStreamItemIdentityFunction}
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.item.{EmptyItem, Item, JoinedItem}
 import io.rml.framework.core.model._
-import io.rml.framework.core.util.{StreamerConfig, Util}
+import io.rml.framework.core.util.ParameterUtil.{OutputSinkOption, PostProcessorOption}
+import io.rml.framework.core.util.{ParameterUtil, StreamerConfig, Util}
 import io.rml.framework.engine._
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{RMLPartitioner, UniversalKafkaConnectorFactory}
-import io.rml.framework.flink.item.{Item, JoinedItem}
-import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
-import io.rml.framework.flink.util.ParameterUtil
-import io.rml.framework.flink.util.ParameterUtil.{OutputSinkOption, PostProcessorOption}
+import io.rml.framework.flink.function.{FnOEnvironmentLoader, FnOEnvironmentStreamLoader, RichItemIdentityFunction, RichStreamItemIdentityFunction}
+import io.rml.framework.flink.source.{FileDataSet, Source}
 import org.apache.flink.api.common.serialization.{SimpleStringEncoder, SimpleStringSchema}
 import org.apache.flink.api.scala._
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.core.fs.Path
 import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.streaming.api.functions.ProcessFunction
-import org.apache.flink.streaming.api.functions.sink.filesystem.{OutputFileConfig, StreamingFileSink}
 import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.BasePathBucketAssigner
-import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.{OnCheckpointRollingPolicy}
+import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy
+import org.apache.flink.streaming.api.functions.sink.filesystem.{OutputFileConfig, StreamingFileSink}
 import org.apache.flink.streaming.api.scala.{DataStream, OutputTag, StreamExecutionEnvironment}
 import org.apache.flink.util.Collector
 
@@ -537,7 +536,7 @@ object Main extends Logging {
           // filter out all items that do not contain the childs join condition
           .filter(item => {
           if (tm.joinCondition.isDefined) {
-            item.refer(tm.joinCondition.get.child.toString).isDefined
+            item.refer(tm.joinCondition.get.child.value).isDefined
           } else true // if there are no join conditions all items can pass
 
           // filter out all empty items (some iterators can emit empty items)
@@ -555,7 +554,7 @@ object Main extends Logging {
           // filter out all items that do not contain the parents join condition
           .filter(item => {
             if (tm.joinCondition.isDefined) {
-              item.refer(tm.joinCondition.get.parent.toString).isDefined
+              item.refer(tm.joinCondition.get.parent.value).isDefined
             } else true // if there are no join conditions all items can pass
 
           // filter out all empty items
@@ -570,10 +569,10 @@ object Main extends Logging {
         val joined: JoinDataSet[Item, Item] =
           childDataset.join(parentDataset)
             .where(item => {
-              item.refer(tm.joinCondition.get.child.toString).get.head
+              item.refer(tm.joinCondition.get.child.value).get.head
             }) // empty fields are already filtered
             .equalTo(item => {
-            item.refer(tm.joinCondition.get.parent.toString).get.head
+            item.refer(tm.joinCondition.get.parent.value).get.head
           }) // empty fields are already filtered
 
         joined.name("Join child and parent.")

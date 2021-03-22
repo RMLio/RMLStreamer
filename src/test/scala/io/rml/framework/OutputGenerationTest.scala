@@ -150,7 +150,7 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with
         }
       }
     } catch {
-      case e => {
+      case e: Throwable => {
         if (shouldPass) {
           fail(e);
           System.exit(1)

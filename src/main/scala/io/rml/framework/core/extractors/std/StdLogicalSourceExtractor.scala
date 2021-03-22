@@ -29,8 +29,8 @@ import io.rml.framework.core.extractors.{DataSourceExtractor, LogicalSourceExtra
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.model.{DataSource, Literal, LogicalSource, Uri}
+import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
 import io.rml.framework.core.vocabulary.RMLVoc
-import io.rml.framework.flink.source.Source.DEFAULT_ITERATOR_MAP
 import io.rml.framework.shared.RMLException
 
 /**
@@ -103,7 +103,7 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
 
     if (properties.size > 1) throw new RMLException(resource.uri + ": invalid amount of iterators.")
     if (properties.isEmpty) {
-      return DEFAULT_ITERATOR_MAP(referenceFormulation.uri)
+      return DEFAULT_ITERATOR_MAP(referenceFormulation.value)
     }
 
     properties.head match {

@@ -88,6 +88,7 @@ object TestUtil extends Logging {
       case anyException: Throwable => {
         val message = s"Testcase ${testCase} FAILED: ${anyException.getMessage}"
         logError(message)
+        anyException.printStackTrace()
         Left(message)
       }
     }

@@ -1,7 +1,7 @@
-package io.rml.framework.flink.util
+package io.rml.framework.core.util
 
-import io.rml.framework.flink.util.ParameterUtil.OutputSinkOption.OutputSinkOption
-import io.rml.framework.flink.util.ParameterUtil.PostProcessorOption.PostProcessorOption
+import io.rml.framework.core.util.ParameterUtil.OutputSinkOption.OutputSinkOption
+import io.rml.framework.core.util.ParameterUtil.PostProcessorOption.PostProcessorOption
 
 /**
   * MIT License

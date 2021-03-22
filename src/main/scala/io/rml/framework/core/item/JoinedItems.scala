@@ -22,12 +22,8 @@
   * THE SOFTWARE.
   *
   **/
-package io.rml.framework.flink.item
+package io.rml.framework.core.item
 
-case class JoinedItem(child: Item, parent: Item) extends  Item {
-  override def refer(reference: String): Option[List[String]] = {
-    throw new IllegalAccessError("Joined item cannot call refer!")
-  }
-
-  override def tag: String = ""
+case class JoinedItems(items: List[Item]) {
+  def apply(index: Int): Item = items(index)
 }

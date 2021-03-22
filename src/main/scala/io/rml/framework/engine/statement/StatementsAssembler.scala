@@ -27,9 +27,9 @@ package io.rml.framework.engine.statement
 
 import io.rml.framework.core.extractors.TriplesMapsCache
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.item.{Item, JoinedItem}
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RDFVoc
-import io.rml.framework.flink.item.{Item, JoinedItem}
 /**
   * Creates statements from triple maps.
   */

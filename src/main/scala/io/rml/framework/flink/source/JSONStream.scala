@@ -25,10 +25,10 @@
 package io.rml.framework.flink.source
 
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.item.Item
+import io.rml.framework.core.item.json.JSONItem
 import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
-import io.rml.framework.core.vocabulary.RMLVoc
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.item.json.JSONItem
+import io.rml.framework.flink.connector.kafka.UniversalKafkaConnectorFactory
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
@@ -36,7 +36,6 @@ import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironm
 case class JSONStream(val stream: DataStream[Iterable[Item]]) extends Stream
 
 object JSONStream extends Logging {
-  val DEFAULT_PATH_OPTION: String = Source.DEFAULT_ITERATOR_MAP(RMLVoc.Class.JSONPATH)
 
   def apply(source: StreamDataSource, jsonPaths: List[String])(implicit env: StreamExecutionEnvironment): Stream = {
 
@@ -66,7 +65,7 @@ object JSONStream extends Logging {
 
   def fromKafkaStream(kafkaStream: KafkaStream, jsonPaths: List[String])(implicit env: StreamExecutionEnvironment): JSONStream = {
     val properties = kafkaStream.getProperties
-    val consumer = kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
+    val consumer = UniversalKafkaConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
 
     logDebug(consumer.getProducedType.toString)
     val parallelStream = StreamUtil.paralleliseOverSlots(env.addSource(consumer))

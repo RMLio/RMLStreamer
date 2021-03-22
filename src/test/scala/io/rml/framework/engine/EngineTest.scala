@@ -25,8 +25,8 @@
 
 package io.rml.framework.engine
 
+import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.Literal
-import io.rml.framework.flink.item.Item
 import org.scalatest.{FunSuite, Matchers}
 
 class EngineTest extends FunSuite with Matchers {

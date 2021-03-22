@@ -25,8 +25,9 @@
 package io.rml.framework.flink.source
 
 import com.ximpleware.extended.{AutoPilotHuge, VTDGenHuge}
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.util.XMLNamespace
+import io.rml.framework.core.item.xml.XMLIterator
+import io.rml.framework.core.item.{EmptyItem, Item}
+import io.rml.framework.core.util.XMLNamespace
 import io.rml.framework.shared.RMLException
 import org.apache.flink.api.common.io.{GenericInputFormat, NonParallelInput}
 import org.apache.flink.core.io.GenericInputSplit
@@ -73,7 +74,4 @@ class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Ite
 
 }
 
-class EmptyItem() extends Item {
-  override def refer(reference: String): Option[List[String]] = None
-  override def tag = ""
-}
+

@@ -32,5 +32,5 @@ import io.rml.framework.core.model.Node
   * of querying an underlying RDF model.
   */
 trait RDFNode extends Node {
-
+  def value: String
 }

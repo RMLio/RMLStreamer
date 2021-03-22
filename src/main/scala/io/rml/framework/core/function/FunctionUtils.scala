@@ -1,9 +1,5 @@
 package io.rml.framework.core.function
 
-import java.io.File
-import java.net.MalformedURLException
-import java.time.Instant
-
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.function.model.Parameter
 import io.rml.framework.core.internal.Logging
@@ -11,6 +7,9 @@ import io.rml.framework.core.model.{Entity, Literal, Uri}
 import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.RMLException
 
+import java.io.File
+import java.net.MalformedURLException
+import java.time.Instant
 import scala.reflect.internal.util.ScalaClassLoader.URLClassLoader
 
 object FunctionUtils extends Logging {
@@ -72,7 +71,7 @@ object FunctionUtils extends Logging {
       case Uri(RMLVoc.Type.RDF_LIST) => classOf[List[_]]
       case Uri(RMLVoc.Type.XSD_ANY) => classOf[Any]
       case Uri(RMLVoc.Type.RDF_OBJECT) => classOf[Any]
-      case _ => throw new RMLException(s"Type $uri not supported for parameter")
+      case _ => throw new RMLException(s"Type ${uri.value} not supported for parameter")
     }
   }
 

@@ -28,4 +28,6 @@ package io.rml.framework.core.model
 /**
   *  RML entity representing the uri, blank or literal nodes.
   */
-trait Entity extends Node
+trait Entity extends Node {
+  def value: String
+}

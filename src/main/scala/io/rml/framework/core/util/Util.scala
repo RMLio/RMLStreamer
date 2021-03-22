@@ -28,6 +28,7 @@ import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.{FormattedRMLMapping, Literal, Node, RMLMapping}
+import io.rml.framework.core.vocabulary.RMLVoc
 import io.rml.framework.shared.ReadException
 
 import java.io._
@@ -46,6 +47,14 @@ object Util extends Logging{
   private val regexPatternLanguageTag = Pattern.compile("^((?:(en-GB-oed|i-ami|i-bnn|i-default|i-enochian|i-hak|i-klingon|i-lux|i-mingo|i-navajo|i-pwn|i-tao|i-tay|i-tsu|sgn-BE-FR|sgn-BE-NL|sgn-CH-DE)|(art-lojban|cel-gaulish|no-bok|no-nyn|zh-guoyu|zh-hakka|zh-min|zh-min-nan|zh-xiang))|((?:([A-Za-z]{2,3}(-(?:[A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4})(-(?:[A-Za-z]{4}))?(-(?:[A-Za-z]{2}|[0-9]{3}))?(-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-(?:[0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(?:x(-[A-Za-z0-9]{1,8})+))?)|(?:x(-[A-Za-z0-9]{1,8})+))$")
 
   private val baseDirectiveCapture = "@base <([^<>]*)>.*".r
+
+  val DEFAULT_ITERATOR_MAP: Map[String, String] =  Map(
+    RMLVoc.Class.JSONPATH -> "$",
+    RMLVoc.Class.CSV -> "",
+    RMLVoc.Class.XPATH -> "/*"
+  )
+
+  val DEFAULT_ITERATOR_SET: Set[String] = DEFAULT_ITERATOR_MAP.values.toSet
 
   def getLiteral(node: Node):Option[Literal]= {
     node match{
@@ -150,7 +159,7 @@ object Util extends Logging{
 
 
   def isRootIteratorTag(tag: String): Boolean = {
-    io.rml.framework.flink.source.Source.DEFAULT_ITERATOR_SET.contains(tag)
+    DEFAULT_ITERATOR_SET.contains(tag)
   }
 
   // auto-close resources, seems to be missing in Scala

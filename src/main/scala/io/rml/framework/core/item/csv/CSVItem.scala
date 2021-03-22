@@ -23,15 +23,13 @@
   *
   **/
 
-package io.rml.framework.flink.item.csv
-
-import java.io.{IOException, StringReader}
+package io.rml.framework.core.item.csv
 
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.source.EmptyItem
+import io.rml.framework.core.item.{EmptyItem, Item}
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
 
+import java.io.{IOException, StringReader}
 import scala.collection.JavaConverters._
 
 /**

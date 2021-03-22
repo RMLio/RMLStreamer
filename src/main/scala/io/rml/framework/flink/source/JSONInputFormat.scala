@@ -24,23 +24,26 @@
   **/
 package io.rml.framework.flink.source
 
-import java.io.{FileInputStream, InputStream}
-import java.util
-
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.item.json.JSONItem
+import io.rml.framework.core.item.Item
+import io.rml.framework.core.item.json.JSONItem
+import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
+import io.rml.framework.core.vocabulary.RMLVoc
 import org.apache.flink.api.common.io.{GenericInputFormat, NonParallelInput}
 import org.apache.flink.core.io.GenericInputSplit
 import org.jsfr.json.compiler.JsonPathCompiler
 import org.jsfr.json.provider.JacksonProvider
 import org.jsfr.json.{JacksonParser, JsonSurfer}
 
+import java.io.{FileInputStream, InputStream}
+import java.util
+
 class JSONInputFormat(path: String, jsonPath: String) extends GenericInputFormat[Item] with NonParallelInput {
 
   private var iterator: util.Iterator[Object] = _
   private var inputStream: InputStream = _
+  private val DEFAULT_PATH_OPTION: String = DEFAULT_ITERATOR_MAP(RMLVoc.Class.JSONPATH)
 
   override def open(inputSplit: GenericInputSplit): Unit = {
     super.open(inputSplit)
@@ -58,7 +61,7 @@ class JSONInputFormat(path: String, jsonPath: String) extends GenericInputFormat
     val mapper = new ObjectMapper()
     val map = mapper.convertValue(asInstanceOf, classOf[java.util.Map[String, Object]])
     val tag = jsonPath match {
-      case JSONStream.DEFAULT_PATH_OPTION => ""
+      case DEFAULT_PATH_OPTION => ""
       case _ => jsonPath
     }
     new JSONItem(map, tag)
