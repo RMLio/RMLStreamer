@@ -27,6 +27,6 @@ package io.rml.framework.core.model
 trait DataStore extends Node {
   def uri:ExplicitNode
 
-  override def identifier: String = this.uri.toString
+  override def identifier: String = this.uri.identifier
 
 }
