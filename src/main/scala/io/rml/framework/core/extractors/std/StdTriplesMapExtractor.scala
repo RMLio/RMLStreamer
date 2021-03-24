@@ -122,7 +122,8 @@ object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
           LogicalSourceExtractor().extract(resource),
           SubjectMapExtractor().extract(resource),
           resource.uri.value,
-          GraphMapExtractor().extract(resource)
+          GraphMapExtractor().extract(resource),
+          LogicalTargetExtractor().extract(resource)
         )
         val t = TriplesMapsCache.put(resourceStr, triplesMap);
         Some(triplesMap)

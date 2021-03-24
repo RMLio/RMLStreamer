@@ -1,7 +1,14 @@
+package io.rml.framework.core.extractors.std
+
+import io.rml.framework.core.extractors.LogicalTargetExtractor
+import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.model.LogicalTarget
+import io.rml.framework.core.model.rdf.RDFResource
+
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2021 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -21,54 +28,16 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   * THE SOFTWARE.
   *
-  **/
-package io.rml.framework.core.model
-
-import io.rml.framework.core.model.std.StdStreamTriplesMap
-
-abstract class StreamTriplesMap(triplesMap: TriplesMap) extends TriplesMap {
-
-  require(triplesMap.logicalSource.source.isInstanceOf[StreamDataSource], "Source must be a stream.")
-  //require(!triplesMap.containsParentTriplesMap, "No parent triple maps allowed.")
-
+  * */
+class StdLogicalTargetExtractor extends LogicalTargetExtractor with Logging {
   /**
+    * Extract.
     *
+    * @param node Node to extract from.
     * @return
     */
-  override def predicateObjectMaps = triplesMap.predicateObjectMaps
-
-  /**
-    *
-    * @return
-    */
-  override def logicalSource = triplesMap.logicalSource
-
-  /**
-    *
-    * @return
-    */
-  override def subjectMap = triplesMap.subjectMap
-
-  /**
-    *
-    * @return
-    */
-  override def containsParentTriplesMap = triplesMap.containsParentTriplesMap
-
-  override def identifier(): String = triplesMap.identifier
-
-  /**
-    *
-    * @return
-    */
-  override def graphMap = triplesMap.graphMap
-
-  override def logicalTarget: Option[LogicalTarget] = triplesMap.logicalTarget
-
-}
-
-object StreamTriplesMap {
-  def fromTriplesMap(triplesMap: TriplesMap): StdStreamTriplesMap = {
-    StdStreamTriplesMap(triplesMap)
+  override def extract(node: RDFResource): Option[LogicalTarget] = {
+    None
+    // TODO here comes the real code
   }
 }

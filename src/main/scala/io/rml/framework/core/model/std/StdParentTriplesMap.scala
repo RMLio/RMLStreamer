@@ -24,7 +24,7 @@
   **/
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{ParentTriplesMap, TriplesMap}
+import io.rml.framework.core.model.{LogicalTarget, ParentTriplesMap, TriplesMap}
 
 case class StdParentTriplesMap(triplesMap: TriplesMap) extends ParentTriplesMap {
   /**
@@ -59,4 +59,6 @@ case class StdParentTriplesMap(triplesMap: TriplesMap) extends ParentTriplesMap 
     * @return
     */
   override def graphMap = ???
+
+  override def logicalTarget: Option[LogicalTarget] = triplesMap.logicalTarget
 }

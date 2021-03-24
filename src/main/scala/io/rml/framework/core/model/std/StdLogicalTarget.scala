@@ -1,7 +1,11 @@
+package io.rml.framework.core.model.std
+
+import io.rml.framework.core.model.{DataSink, LogicalTarget, Uri}
+
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2021 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -21,43 +25,7 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   * THE SOFTWARE.
   *
-  **/
-package io.rml.framework.core.model.std
-
-import io.rml.framework.core.model.{JoinedTriplesMap, LogicalTarget, TriplesMap}
-
-case class StdJoinedTriplesMap(triplesMap: TriplesMap) extends JoinedTriplesMap(triplesMap) {
-  /**
-    *
-    * @return
-    */
-  override def predicateObjectMaps = triplesMap.predicateObjectMaps
-
-  /**
-    *
-    * @return
-    */
-  override def logicalSource = triplesMap.logicalSource
-
-  /**
-    *
-    * @return
-    */
-  override def subjectMap = triplesMap.subjectMap
-
-  /**
-    *
-    * @return
-    */
-  override def containsParentTriplesMap = triplesMap.containsParentTriplesMap
-
-  override def identifier: String = triplesMap.identifier
-
-  /**
-    *
-    * @return
-    */
-  override def graphMap = ???
-
-  override def logicalTarget: Option[LogicalTarget] = triplesMap.logicalTarget
-}
+  * */
+case class StdLogicalTarget(target: DataSink,
+                            serialization: Option[Uri],
+                            compression: Option[Uri]) extends LogicalTarget

@@ -139,7 +139,7 @@ object FormattedRMLMapping {
     })
     // every new pom will have exactly one parent triple map, create a JoinedTriplesMap from these poms
     newPoms.map(pom => {
-      JoinedTriplesMap(TriplesMap(List(pom), triplesMap.logicalSource, triplesMap.subjectMap, triplesMap.identifier))
+      JoinedTriplesMap(TriplesMap(List(pom), triplesMap.logicalSource, triplesMap.subjectMap, triplesMap.identifier, triplesMap.graphMap, triplesMap.logicalTarget))
     }).toList
 
   }
@@ -160,7 +160,7 @@ object FormattedRMLMapping {
           PredicateObjectMap(item._1.identifier, List(item._2), item._1.predicateMaps,item._1.graphMap)
         })
       })
-    TriplesMap(newPoms.toList, triplesMap.logicalSource, triplesMap.subjectMap, triplesMap.identifier)
+    TriplesMap(newPoms.toList, triplesMap.logicalSource, triplesMap.subjectMap, triplesMap.identifier, triplesMap.graphMap, triplesMap.logicalTarget)
   }
 
 }

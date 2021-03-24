@@ -1,7 +1,12 @@
+package io.rml.framework.core.extractors
+
+import io.rml.framework.core.extractors.std.StdLogicalTargetExtractor
+import io.rml.framework.core.model.LogicalTarget
+
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2021 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -21,43 +26,14 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   * THE SOFTWARE.
   *
-  **/
-package io.rml.framework.core.model.std
+  * */
+trait LogicalTargetExtractor extends ResourceExtractor[Option[LogicalTarget]]
 
-import io.rml.framework.core.model.{JoinedTriplesMap, LogicalTarget, TriplesMap}
+object LogicalTargetExtractor {
 
-case class StdJoinedTriplesMap(triplesMap: TriplesMap) extends JoinedTriplesMap(triplesMap) {
-  /**
-    *
-    * @return
-    */
-  override def predicateObjectMaps = triplesMap.predicateObjectMaps
+  def apply(): LogicalTargetExtractor = {
+    lazy val extractor = new StdLogicalTargetExtractor
+    extractor
+  }
 
-  /**
-    *
-    * @return
-    */
-  override def logicalSource = triplesMap.logicalSource
-
-  /**
-    *
-    * @return
-    */
-  override def subjectMap = triplesMap.subjectMap
-
-  /**
-    *
-    * @return
-    */
-  override def containsParentTriplesMap = triplesMap.containsParentTriplesMap
-
-  override def identifier: String = triplesMap.identifier
-
-  /**
-    *
-    * @return
-    */
-  override def graphMap = ???
-
-  override def logicalTarget: Option[LogicalTarget] = triplesMap.logicalTarget
 }

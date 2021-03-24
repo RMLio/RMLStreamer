@@ -1,5 +1,9 @@
 package io.rml.framework.core.model
 
+import io.rml.framework.core.model.std.StdLogicalTarget
+
+import java.util.Objects
+
 /**
   * MIT License
   *
@@ -28,4 +32,24 @@ trait LogicalTarget extends Node {
 
   def target: DataSink
 
+  def serialization: Option[Uri]
+
+  def compression: Option[Uri]
+
+  override def identifier: String = {
+    val serHash = if (serialization.isDefined) serialization.get.identifier else ""
+    val compHash = if (compression.isDefined) compression.get.identifier else ""
+    Objects.hash(target.identifier, serHash, compHash).toHexString
+  }
+
+}
+
+object LogicalTarget {
+  def apply(
+           target: DataSink,
+           serialization: Option[Uri],
+           compression: Option[Uri]
+           ): LogicalTarget = {
+    StdLogicalTarget(target, serialization, compression)
+  }
 }
