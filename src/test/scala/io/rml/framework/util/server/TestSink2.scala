@@ -47,7 +47,7 @@ object TestSink2 extends SinkFunction[String] {
 class TestSink2 extends SinkFunction[String] {
   import TestSink2._
 
-  override def invoke(value: String, context: SinkFunction.Context): Unit = {
+  override def invoke(value: String, context: SinkFunction.Context[_]): Unit = {
     Logger.logInfo(s"TestSink2: got value [${value}]")
     if (value.trim.nonEmpty) {
       triples = value :: triples
