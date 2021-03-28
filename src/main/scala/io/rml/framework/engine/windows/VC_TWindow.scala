@@ -168,7 +168,7 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
 
 
   /**
-   * Calculates the join entropy based on the paper VC-TWJoin: A Stream Join Algorithm Based onVariable Update Cycle Time Window
+   * Calculates the join entropy based on the paper VC-TWJoin: A Stream Join Algorithm Based on Variable Update Cycle Time Window
    * @return
    */
   private def calculateJoinCost(): (Double, Double, Double) = {
@@ -180,8 +180,8 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
     val childStreamN: Double = pseudoChildLimit.value()
     val parentStreamN: Double = pseudoParentLimit.value()
 
-    val childRatio = childElementsProcessed/childStreamN
-    val parentRatio = parentElementsProcessed/parentStreamN
+    val childRatio = childElementsProcessed/childStreamN  + 1
+    val parentRatio = parentElementsProcessed/parentStreamN + 1
 
     (childRatio + parentRatio, childRatio, parentRatio)
 
