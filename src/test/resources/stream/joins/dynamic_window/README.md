@@ -5,7 +5,7 @@ The window will adapt its size depending on the incoming stream rate.
 The metric used to adapt the window size, is adapted from 
 the paper about VC-TWJoin, and it is as follows for each stream: 
 
-N_tuples/ N_hashlimit 
+N_tuples/ N_hashlimit  {metric}
 
 Where *N_tuples* is the number of tuples currently in the window of the stream 
 at the time of checking. 
@@ -14,7 +14,7 @@ at the time of checking.
 
 The metric is also used to adjust the pseudo bucket limit as follows: 
 ```
-Next bucket limit =  Current bucket limit * (1 + ratio) 
+Next bucket limit =  Current bucket limit * (1 + metric) 
 ```
 
 
