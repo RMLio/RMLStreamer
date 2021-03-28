@@ -26,7 +26,7 @@ else:
      interval *= 2
 ```
 
-Therefore, if the window gets filled very fast, the check interval will be shorter 
+Therefore, if the window gets filled very fast, the check interval will become shorter 
 to process and clear out the windows' contents as frequently as possible. 
 Otherwise, the interval will be made longer, since the stream rate is low and more 
 tuples need to be collected before reasonable joins/stateful operations could be 
