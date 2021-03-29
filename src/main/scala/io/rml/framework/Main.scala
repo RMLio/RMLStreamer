@@ -52,6 +52,7 @@ import org.apache.flink.util.Collector
 
 import java.util.Properties
 import scala.collection.{immutable, mutable}
+import io.rml.framework.flink.sink.RichMQTTSink
 
 /**
   *
@@ -175,6 +176,10 @@ object Main extends Logging {
             .build())
           .build()
         stream.addSink(sink).name("Streaming file sink")
+      }
+      else if (config.outputSink.equals(OutputSinkOption.MQTT)) {
+        val sink = new RichMQTTSink(config.broker.get, config.topic.get)
+        stream.addSink(sink)
       }
       // discard output if the parameter is given
       else if (config.outputSink.equals(OutputSinkOption.None)) {
