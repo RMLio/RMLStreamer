@@ -34,6 +34,7 @@ import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.channel.{ChannelFuture, ChannelHandlerContext, ChannelInboundHandlerAdapter, ChannelInitializer}
 import io.netty.util.{CharsetUtil, ReferenceCountUtil}
+import io.rml.framework.api.FnOEnvironment
 import io.rml.framework.util.logging.Logger
 import io.rml.framework.util.server.TestData
 
@@ -78,7 +79,9 @@ class TCPStreamTestSync extends StreamTestSync {
 
   }
 
-  override def beforeTestCase(): Unit = {}
+  override def beforeTestCase(): Unit = {
+    FnOEnvironment.loadedClassesMap.clear()
+  }
 
   override def afterTestCase(): Unit = {}
 
