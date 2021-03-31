@@ -24,7 +24,7 @@
   **/
 package io.rml.framework
 
-import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
 import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.util.{StreamerConfig, Util}
@@ -73,7 +73,9 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   }
 
   // Things to do before running one test case
-  protected def beforeTestCase(): Unit
+  protected def beforeTestCase(): Unit = {
+    FnOEnvironment.loadedClassesMap.clear()
+  }
 
   // Things to do after running one test case
   protected def afterTestCase(): Unit
