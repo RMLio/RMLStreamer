@@ -27,7 +27,6 @@ package io.rml.framework
 import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
-
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.buffer.ByteBuf
 import io.netty.channel.nio.NioEventLoopGroup
@@ -76,8 +75,6 @@ class TCPStreamTestSyncFnO extends StreamTestSync {
     serverChannel = serverBootstrap.bind.sync
 
   }
-
-  override def beforeTestCase(): Unit = {}
 
   override def afterTestCase(): Unit = {}
 

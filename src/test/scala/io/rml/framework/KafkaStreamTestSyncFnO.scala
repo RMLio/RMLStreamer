@@ -77,7 +77,7 @@ class KafkaStreamTestSyncFnO extends StreamTestSync{
   }
 
 
-  override def beforeTestCase(): Unit = {
+//  override def beforeTestCase(): Unit = {
     // topics seem to be created automatically...
 
     /*logInfo("Creating Kafka input topic...")
@@ -89,7 +89,7 @@ class KafkaStreamTestSyncFnO extends StreamTestSync{
     createTopicsResult.all().get()  // wait for completion of creating topics
     Thread.sleep(2000)
     logInfo("Creating Kafka input topic done.") */
-  }
+//  }
 
   override def afterTestCase(): Unit = {
     logInfo("Deleting Kafka input topic(s)...")
