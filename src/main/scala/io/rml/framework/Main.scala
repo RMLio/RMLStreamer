@@ -244,7 +244,10 @@ object Main extends Logging {
           // filter out all items that do not contain the childs join condition
           .filter(iterItems => {
             if (tm.joinCondition.isDefined) {
-              iterItems.exists(_.refer(tm.joinCondition.get.child.toString).isDefined)
+              val child_attributes = tm.joinCondition.get.child
+              child_attributes.map( lit =>
+              iterItems.exists(_.refer(lit.value).isDefined)
+              ).nonEmpty
             } else true // if there are no join conditions all items can pass
             // filter out all empty items (some iterators can emit empty items)
           }).filter(iterItems => {
@@ -261,7 +264,10 @@ object Main extends Logging {
           // filter out all items that do not contain the parents join condition
           .filter(iterItems => {
             if (tm.joinCondition.isDefined) {
-              iterItems.exists(_.refer(tm.joinCondition.get.parent.toString).isDefined)
+              val parent_attributes = tm.joinCondition.get.parent
+
+              parent_attributes.map( lit =>
+              iterItems.exists(_.refer(lit.value).isDefined)).nonEmpty
             } else true // if there are no join conditions all items can pass
 
             // filter out all empty items
@@ -420,12 +426,12 @@ object Main extends Logging {
         val engine = StatementEngine.fromJoinedTriplesMap(joinedStreamTm)
 
         val parentTmId = joinedStreamTm.parentTriplesMap
-        val joinParentSource = joinedStreamTm.joinCondition.get.parent.identifier
+        val joinParentSource = joinedStreamTm.joinCondition.get.parent.head.identifier
 
         stream
           .flatMap(_.iterator)
           .map(childItem => {
-            val childRef = childItem.refer(joinedStreamTm.joinCondition.get.child.identifier).get.head
+            val childRef = childItem.refer(joinedStreamTm.joinCondition.get.child.head.identifier).get.head
             // for every child ref from the streaming data, we look up the subject item from the static data (saved before in a map)
             val parentItem = parentTriplesMapId2JoinParentSource2JoinParentValue2ParentItem.getOrElse((parentTmId, joinParentSource, childRef), null)
             if (parentItem != null) {
@@ -478,7 +484,7 @@ object Main extends Logging {
       val parentTm = TriplesMapsCache.get(joinedTm.parentTriplesMap).get;
 
       // find the parent source of the join condition
-      val joinParentSource = joinedTm.joinCondition.get.parent.identifier
+      val joinParentSource = joinedTm.joinCondition.get.parent.head.identifier
 
       // get the subjects from the static logical source
       val parentDataset = Source(parentTm.logicalSource).asInstanceOf[FileDataSet].dataset
@@ -637,8 +643,11 @@ object Main extends Logging {
 
           // filter out all items that do not contain the childs join condition
           .filter(item => {
-            if (tm.joinCondition.isDefined) {
-              item.refer(tm.joinCondition.get.child.toString).isDefined
+              if (tm.joinCondition.isDefined) {
+                val child_attributes = tm.joinCondition.get.child
+
+                child_attributes.flatMap( lit =>
+                  item.refer(lit.value)).nonEmpty
             } else true // if there are no join conditions all items can pass
 
             // filter out all empty items (some iterators can emit empty items)
@@ -656,7 +665,10 @@ object Main extends Logging {
           // filter out all items that do not contain the parents join condition
           .filter(item => {
             if (tm.joinCondition.isDefined) {
-              item.refer(tm.joinCondition.get.parent.toString).isDefined
+              val parent_attributes = tm.joinCondition.get.parent
+
+              parent_attributes.flatMap( lit =>
+                item.refer(lit.value)).nonEmpty
             } else true // if there are no join conditions all items can pass
 
             // filter out all empty items
@@ -671,10 +683,14 @@ object Main extends Logging {
         val joined: JoinDataSet[Item, Item] =
           childDataset.join(parentDataset)
             .where(item => {
-              item.refer(tm.joinCondition.get.child.toString).get.head
+              println("KLSDJFMLKJEFISLMDKJFLSKJDFMLSJDF")
+              println(tm.joinCondition.get.child)
+              println(item.refer(tm.joinCondition.get.child.head.toString))
+
+              item.refer(tm.joinCondition.get.child.head.value).get.head
             }) // empty fields are already filtered
             .equalTo(item => {
-              item.refer(tm.joinCondition.get.parent.toString).get.head
+              item.refer(tm.joinCondition.get.parent.head.value).get.head
             }) // empty fields are already filtered
 
         joined.name("Join child and parent.")

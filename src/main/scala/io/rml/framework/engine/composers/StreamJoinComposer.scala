@@ -38,9 +38,10 @@ object StreamJoinComposer {
     val joinType = joinConfigMap.joinType
 
     joinType match  {
-      case TumblingJoin =>  new TumblingJoinStreamComposer[T, U](stream, stream2, tm)
-      case CrossJoin => new CrossJoinStreamComposer[T, U](stream, stream2, tm)
-      case _ => new TumblingJoinStreamComposer[T,U](stream, stream2, tm)
+      case VC_TWindowJoin => new VC_TWJoinStreamComposer(stream, stream2, tm)
+      case TumblingJoin =>  new TumblingJoinStreamComposer(stream, stream2, tm)
+      case CrossJoin => new CrossJoinStreamComposer(stream, stream2, tm)
+      case _ => new TumblingJoinStreamComposer(stream, stream2, tm)
     }
 
   }

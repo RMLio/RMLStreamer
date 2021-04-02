@@ -43,7 +43,7 @@ trait ObjectMap extends TermMap {
 
 }
 
-case class JoinCondition(child: Literal, parent: Literal) // TODO: make this a trait?
+case class JoinCondition(child: List[Literal], parent: List[Literal]) // TODO: make this a trait?
 
 object ObjectMap {
   def apply(identifier: String,
