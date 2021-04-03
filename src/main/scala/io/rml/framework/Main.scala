@@ -276,7 +276,7 @@ object Main extends Logging {
         })
 
       //TODO: Be able to choose a specific stream join composer to compose the streaming pipeline
-      val joinConfigMap = JoinConfigMapCache.getOrElse(tm.joinConfigMap.get, JoinConfigMap(tm.joinCondition))
+      val joinConfigMap = JoinConfigMapCache.getOrElse(tm.joinConfigMap.get, JoinConfigMap(None))
       val composer = StreamJoinComposer(childDataStream, parentDataStream, tm, joinConfigMap)
       // if there are join conditions defined join the child dataset and the parent dataset
       val joined = composer.composeStreamJoin()

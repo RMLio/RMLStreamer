@@ -63,7 +63,7 @@ class StdJoinConditionExtractor extends JoinConditionExtractor with Logging {
   }
   private def extractAttributes(literal: Literal): List[Literal] = {
     val attributes = literal.value
-    attributes.split(",").map(attr =>  Literal(attr)).toList
+    attributes.split(",").map(attr =>  Literal(attr.trim())).toList
   }
   private def extractParent(resource: RDFResource): List[Literal] = {
 

@@ -50,7 +50,7 @@ _:kafka_source  a rmls:KafkaStream ;
   ] .
 
  <JoinConfigMap> a rmls:JoinConfigMap;
-        rmls:joinType rmls:CrossJoin.
+        rmls:joinType rmls:VCTWindowJoin.
 
 <TriplesMap2>
   a rr:TriplesMap;

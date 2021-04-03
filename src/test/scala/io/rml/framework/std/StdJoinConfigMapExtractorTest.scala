@@ -21,6 +21,10 @@ class StdJoinConfigMapExtractorTest extends  StaticTestSpec{
     assert(joinedStreamTriplesMap.size == 1, "Exactly one joined triple map must be detected.")
     assert(joinedStreamTriplesMap.head.joinConfigMap.isDefined, "Join config map should be defined.")
     assert(joinedStreamTriplesMap.head.joinCondition.isDefined, "Join conditions should be defined.")
+
+    val configMapKey = joinedStreamTriplesMap.head.joinConfigMap.get
+    val configMapObject = JoinConfigMapCache(configMapKey)
+    println(configMapObject.joinType)
   }
 
   it should "have cached the generated join config map" in {
