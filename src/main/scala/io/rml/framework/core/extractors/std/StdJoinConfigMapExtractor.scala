@@ -9,7 +9,7 @@ import io.rml.framework.engine.composers.JoinType
 import io.rml.framework.engine.windows.WindowType
 import io.rml.framework.shared.RMLException
 
-case class StdJoinConfigMapExtractor() extends JoinConfigMapExtractor with Logging {
+case class StdJoinConfigMapExtractor(windowType: Option[WindowType]) extends JoinConfigMapExtractor with Logging {
 
   /**
    * Extract.
@@ -36,13 +36,12 @@ case class StdJoinConfigMapExtractor() extends JoinConfigMapExtractor with Loggi
 
 
     val join_type = extractPropertiesEqualOne(resource, RMLVoc.Property.JOIN_TYPE).flatMap(node => JoinType.fromUri(node.toString))
-    val window_type = extractPropertiesEqualOne(resource, RMLVoc.Property.WINDOW_TYPE).flatMap(node => WindowType.fromUri(node.toString))
 
     if (join_type.isEmpty) {
       None
     } else {
 
-      Some(JoinConfigMap(resource.uri.toString, join_type.get, window_type))
+      Some(JoinConfigMap(resource.uri.toString, join_type.get, this.windowType))
     }
 
   }
@@ -57,5 +56,4 @@ case class StdJoinConfigMapExtractor() extends JoinConfigMapExtractor with Loggi
 
     properties.headOption
   }
-
 }

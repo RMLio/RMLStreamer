@@ -103,8 +103,8 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     val language = extractLanguage(resource)
     val datatype = extractDatatype(resource)
     val functionMap = FunctionMapExtractor().extract(resource)
-    val joinConfigMap = extractJoinConfigMap(resource)
     val windowType = extractWindowType(resource)
+    val joinConfigMap = extractJoinConfigMap(resource, windowType)
     ObjectMap(resource.uri.toString,
       functionMap, constant, reference, template,
       termType, datatype, language, windowType,
@@ -195,7 +195,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     languageLiteral
   }
 
-  private def extractJoinConfigMap(resource: RDFResource): Option[String] = {
+  private def extractJoinConfigMap(resource: RDFResource, windowType: Option[WindowType]): Option[String] = {
     val property = RMLVoc.Property.JOIN_CONFIG
     val properties = resource.listProperties(property)
 
@@ -203,7 +203,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
       throw new RMLException(resource.uri + ": invalid amount of join config maps.")
     if (properties.isEmpty) return None
 
-    val configMapOption = JoinConfigMapExtractor().extract(resource)
+    val configMapOption = JoinConfigMapExtractor(windowType).extract(resource)
     configMapOption.foreach(configMap => JoinConfigMapCache.put(configMap.identifier, configMap))
 
     properties.head match {
