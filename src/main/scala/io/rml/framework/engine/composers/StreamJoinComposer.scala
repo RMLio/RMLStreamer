@@ -13,11 +13,17 @@ abstract class StreamJoinComposer[T <: Iterable[Item],U <: Iterable[Item], V, W 
 (childStream:DataStream[T],
  parentStream:DataStream[U],
  tm: JoinedTriplesMap,
- val windowAssigner: WindowAssigner[Object,TimeWindow] =  TumblingEventTimeWindows.of(Time.milliseconds(20))) {
+ var windowAssigner: WindowAssigner[Object,TimeWindow] =  TumblingEventTimeWindows.of(Time.milliseconds(20))) {
 
 
 
-     def composeStreamJoin()(implicit env: ExecutionEnvironment,
+  def keySelectorWithJoinCondition (joinCondition: List[String]): Iterable[Item] => String = {
+      (iterItems:Iterable[Item]) => {
+        val e = joinCondition.flatMap( key => iterItems.flatMap( item =>  item.refer(key)).flatten)
+        e.mkString(",")
+      }
+    }
+  def composeStreamJoin()(implicit env: ExecutionEnvironment,
                                      senv: StreamExecutionEnvironment,
                                      postProcessor: PostProcessor):DataStream[V]
 }

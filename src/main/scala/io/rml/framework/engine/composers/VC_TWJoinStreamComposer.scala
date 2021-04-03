@@ -13,20 +13,11 @@ class VC_TWJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]](childStr
     [T, U, JoinedItem, TimeWindow](childStream, parentStream, tm) {
 
   override def composeStreamJoin()(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[JoinedItem] = {
-    val keySelectorWithJoinCondition = {
-      (joinCondition: String) => {
-        (iterItems:Iterable[Item]) =>
-          iterItems
-            .map(item => item.refer(joinCondition))
-            .flatten(o => o.get)
-            .head
-      }
-    }
 
     val joinCondition = tm.joinCondition.get
 
     childStream.connect(parentStream)
-      .keyBy(keySelectorWithJoinCondition(joinCondition.child.toString), keySelectorWithJoinCondition(joinCondition.parent.toString))
+      .keyBy(keySelectorWithJoinCondition(joinCondition.child.map(_.value)), keySelectorWithJoinCondition(joinCondition.parent.map(_.value)))
       .process[String, JoinedItem](new VC_TWindow())
   }
 }

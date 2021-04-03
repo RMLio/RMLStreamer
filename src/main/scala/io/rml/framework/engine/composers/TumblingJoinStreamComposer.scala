@@ -19,21 +19,8 @@ class TumblingJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]](child
     val parentDataStream = parentStream
     val joined = childDataStream
       .join(parentDataStream)
-      .where(iterItems =>
-        //Key selector assigns the iterItems if one of the item in the iterables satisfy the join condition
-        //This is due to the possibility of one raw input generating multiple items by the RML
-        //reference formulation iterators
-        iterItems
-          .map(item => item.refer(tm.joinCondition.get.child.toString))
-          .flatten(o => o.get)
-          .head
-      )
-      .equalTo(iterItems =>
-        iterItems
-          .map(item => item.refer(tm.joinCondition.get.parent.toString))
-          .flatten(o => o.get)
-          .head
-      )
+      .where( keySelectorWithJoinCondition(tm.joinCondition.get.child.map(_.value)))
+      .equalTo( keySelectorWithJoinCondition(tm.joinCondition.get.parent.map(_.value)))
       .window(this.windowAssigner)
 
 
