@@ -25,6 +25,7 @@ class StdJoinConfigMapExtractorTest extends  StaticTestSpec{
     val configMapKey = joinedStreamTriplesMap.head.joinConfigMap.get
     val configMapObject = JoinConfigMapCache(configMapKey)
     println(configMapObject.joinType)
+    println(configMapObject.windowType)
   }
 
   it should "have cached the generated join config map" in {
