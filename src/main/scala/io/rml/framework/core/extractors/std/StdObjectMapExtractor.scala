@@ -139,7 +139,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
       case _ => None
     }
 
-    windowTypeProperty.flatMap( WindowType.fromString)
+    windowTypeProperty.flatMap( WindowType.fromUri)
 
   }
   override def extractTermType(resource: RDFResource): Option[Uri] = {
