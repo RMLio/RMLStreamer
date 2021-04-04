@@ -1,44 +1,38 @@
 package io.rml.framework.engine.windows
 
 import io.rml.framework.flink.item.{Item, JoinedItem}
-import org.apache.flink.api.common.state.{MapState, MapStateDescriptor, ValueState, ValueStateDescriptor}
+import org.apache.flink.api.common.state.{ListState, ListStateDescriptor, ValueState, ValueStateDescriptor}
 import org.apache.flink.api.common.time.Time
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.functions.co.KeyedCoProcessFunction
-import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 import org.apache.flink.util.Collector
 
 import scala.collection.JavaConversions.iterableAsScalaIterable
 
 /**
- * VC_TWindow receives tuples already keyed based on their joining attributes, therefore
- * we could just execute a cross join inside the window accordingly to get the resulting list of JoinedItems.
- *
- * @param updateCycle fixed cycle where the window length will be updated according to the calculations
- * @tparam T subtypes of Iterable[Item]
- * @tparam U subtypes of Iterable[Item]
- */
-class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 1.5,
-                                                          val defaultBucketSize:Long = 1000L,
-                                                           val maxDuration:Long = 5000L,
-                                                           val minDuration:Long = 50L,
+  * VC_TWindow receives tuples already keyed based on their joining attributes, therefore
+  * we could just execute a cross join inside the window accordingly to get the resulting list of JoinedItems.
+  *
+  * @param updateCycle fixed cycle where the window length will be updated according to the calculations
+  * @tparam T subtypes of Iterable[Item]
+  * @tparam U subtypes of Iterable[Item]
+  */
+class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon: Double = 1.5,
+                                                           val defaultBucketSize: Long = 1000L,
+                                                           val maxDuration: Long = 5000L,
+                                                           val minDuration: Long = 50L,
                                                            val updateCycle: Time = Time.milliseconds(100))
   extends KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]] {
 
 
-  //Holds the map state of incoming child tuples that are still alive in the window
-  lazy val childMapState: MapState[Long, Iterable[Item]] = getRuntimeContext.getMapState(
-    new MapStateDescriptor[Long, Iterable[Item]]("VC_TWJoinChild", classOf[Long], classOf[Iterable[Item]])
+  //Holds the list state of incoming child tuples that are still alive in the window
+  lazy val childListState: ListState[Iterable[Item]] = getRuntimeContext.getListState(
+    new ListStateDescriptor[Iterable[Item]]("VC_TWJoinChild", classOf[Iterable[Item]])
   )
 
-  //Holds the map state of incoming parent tuples that are still alive in the window
-  lazy val parentMapState: MapState[Long, Iterable[Item]] = getRuntimeContext.getMapState(
-    new MapStateDescriptor[Long, Iterable[Item]]("VC_TWJoinParent", classOf[Long], classOf[Iterable[Item]])
-  )
-
-  //Holds the timestamp when the window was last updated
-  lazy val lastCheckup: ValueState[Time] = getRuntimeContext.getState(
-    new ValueStateDescriptor[Time]("lastCheckup", classOf[Time])
+  //Holds the list state of incoming parent tuples that are still alive in the window
+  lazy val parentListState: ListState[Iterable[Item]] = getRuntimeContext.getListState(
+    new ListStateDescriptor[Iterable[Item]]("VC_TWJoinParent", classOf[Iterable[Item]])
   )
 
 
@@ -64,37 +58,43 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
   )
 
 
-  override def open(parameters: Configuration): Unit = {
-    super.open(parameters)
-    isCallBackFired.update(false)
-    lastCheckup.update(Time.milliseconds(-10L))
-    dynamicUpdateCycle.update(updateCycle)
-    pseudoParentLimit.update(defaultBucketSize)
-    pseudoChildLimit.update(defaultBucketSize)
-
+  private def initializeIfNotSet(): Unit = {
+    if (isCallBackFired.value() == null) {
+      isCallBackFired.update(false)
+    }
+    if (dynamicUpdateCycle.value() == null) {
+      dynamicUpdateCycle.update(updateCycle)
+    }
+    if (pseudoParentLimit.value() == null) {
+      pseudoParentLimit.update(defaultBucketSize)
+    }
+    if (pseudoChildLimit.value() == null) {
+      pseudoChildLimit.update(defaultBucketSize)
+    }
   }
 
   override def processElement1(child: T, context: KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]]#Context, collector: Collector[Iterable[JoinedItem]]): Unit = {
-    val joinedItems = crossJoin(child, isChild = true, context.timestamp(), childMapState, parentMapState)
+    initializeIfNotSet()
+    val joinedItems = crossJoin(child, isChild = true, childListState, parentListState)
 
     joinedItems.foreach(collector.collect)
     fireWindowUpdateCallback(context)
   }
 
   override def processElement2(parent: U, context: KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]]#Context, collector: Collector[Iterable[JoinedItem]]): Unit = {
-
-    val joinedItems = crossJoin(parent, isChild = false, context.timestamp(), parentMapState, childMapState)
+    initializeIfNotSet()
+    val joinedItems = crossJoin(parent, isChild = false, parentListState, childListState)
     joinedItems.foreach(collector.collect)
     fireWindowUpdateCallback(context)
   }
 
-  //TODO: Move this join function out of this class, such that the window can be provided with a 
-  //higher order function to be executed on the incoming elements. 
-  private def crossJoin(elementIter: Iterable[Item], isChild: Boolean, timeStamp: Long, thisMapState: MapState[Long, Iterable[Item]], thatMapState: MapState[Long, Iterable[Item]]):
+  //TODO: Move this join function out of this class, such that the window can be provided with a
+  //higher order function to be executed on the incoming elements.
+  private def crossJoin(elementIter: Iterable[Item], isChild: Boolean, thisListState: ListState[Iterable[Item]], thatListState: ListState[Iterable[Item]]):
   Iterable[Iterable[JoinedItem]] = {
-    thisMapState.put(timeStamp, elementIter)
+    thisListState.add(elementIter)
 
-    thatMapState.values()
+    thatListState.get()
       .map(thatElementIter =>
         thatElementIter.flatMap(item1 =>
           elementIter.map(item2 =>
@@ -110,29 +110,26 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
   }
 
   /**
-   * Fires the onTimer(..) method with a delay based on the dynamic update cycle.
-   *
-   * @param context
-   */
+    * Fires the onTimer(..) method with a delay based on the dynamic update cycle.
+    *
+    * @param context
+    */
   private def fireWindowUpdateCallback(context: KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]]#Context): Unit = {
-    if(lastCheckup.value().getSize < 0L){
-      lastCheckup.update(Time.milliseconds(context.timestamp()))
-    }
 
     if (!isCallBackFired.value()) {
-      context.timerService.registerEventTimeTimer(lastCheckup.value().toMilliseconds + dynamicUpdateCycle.value().toMilliseconds)
+      context.timerService.registerEventTimeTimer(context.timestamp() + dynamicUpdateCycle.value().toMilliseconds)
     }
     isCallBackFired.update(true)
   }
 
   /**
-   * Cyclic update of window size by dynamically adjusting the size according to the velocity of the
-   * incoming tuples.
-   *
-   * @param timestamp timestamp of the callback based on either event time (watermark has passed) or processing time (system wall clock)
-   * @param ctx
-   * @param out
-   */
+    * Cyclic update of window size by dynamically adjusting the size according to the velocity of the
+    * incoming tuples.
+    *
+    * @param timestamp timestamp of the callback based on either event time (watermark has passed) or processing time (system wall clock)
+    * @param ctx
+    * @param out
+    */
   override def onTimer(timestamp: Long, ctx: KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]]#OnTimerContext, out: Collector[Iterable[JoinedItem]]): Unit = {
 
     val (join_entropy, childRatio, parentRatio) = calculateJoinCost()
@@ -148,44 +145,43 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
 
     dynamicUpdateCycle.update(Time.milliseconds(keepUpdateCycleWithinRange(duration)))
 
-
-    lastCheckup.update(Time.milliseconds(timestamp))
     cleanUpWindow()
   }
 
-  private def keepUpdateCycleWithinRange(duration:Long): Long ={
+  private def keepUpdateCycleWithinRange(duration: Long): Long = {
     if (duration < minDuration) minDuration else if (duration > maxDuration) maxDuration else duration
   }
-  private def cleanUpWindow(): Unit = {
-    childMapState.clear()
-    parentMapState.clear()
 
-    isCallBackFired.update(false)
+  private def cleanUpWindow(): Unit = {
+    childListState.clear()
+    pseudoChildLimit.clear()
+    parentListState.clear()
+    pseudoParentLimit.clear()
+    isCallBackFired.clear()
+    dynamicUpdateCycle.clear()
+
   }
 
 
   /**
-   * Calculates the join entropy based on the paper VC-TWJoin: A Stream Join Algorithm Based on Variable Update Cycle Time Window
-   * @return
-   */
+    * Calculates the join entropy based on the paper VC-TWJoin: A Stream Join Algorithm Based on Variable Update Cycle Time Window
+    *
+    * @return
+    */
   private def calculateJoinCost(): (Double, Double, Double) = {
 
 
-
-    val childElementsProcessed: Double = childMapState.values().size
-    val parentElementsProcessed: Double = parentMapState.values().size
+    val childElementsProcessed: Double = childListState.get().size
+    val parentElementsProcessed: Double = parentListState.get().size
     val childStreamN: Double = pseudoChildLimit.value()
     val parentStreamN: Double = pseudoParentLimit.value()
 
-    val childRatio = childElementsProcessed/childStreamN
-    val parentRatio = parentElementsProcessed/parentStreamN
+    val childRatio = childElementsProcessed / childStreamN
+    val parentRatio = parentElementsProcessed / parentStreamN
 
     (childRatio + parentRatio, childRatio + 0.5, parentRatio + 0.5)
 
   }
-
-
-
 
 
 }
