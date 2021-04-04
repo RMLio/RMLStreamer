@@ -132,6 +132,7 @@ object Main extends Logging {
 
       // check if the mapping contains streamed mappings
     } else if (formattedMapping.containsStreamTriplesMaps()) {
+      senv.getConfig.setAutoWatermarkInterval(50)
       val stream = if (formattedMapping.containsDatasetTriplesMaps()) {
         logInfo("Mixed dataset and datastream job found.")
         // At this moment, we only support the case that there is a "streaming" triples map that has a "static" parent triples map.
