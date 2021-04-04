@@ -20,8 +20,7 @@ import scala.collection.JavaConversions.iterableAsScalaIterable
  */
 class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 1.5,
                                                           val defaultBucketSize:Long = 1000L,
-                                                           val windowSize: Time = Time.seconds(2),
-                                                           val updateCycle: Time = Time.seconds(10))
+                                                           val updateCycle: Time = Time.milliseconds(100))
   extends KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]] {
 
 
@@ -40,11 +39,6 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
     new ValueStateDescriptor[Time]("lastCheckup", classOf[Time])
   )
 
-  //Size of the window usd by VC_TWindow to join the incoming tuples
-  //TODO: is this necessary?
-  lazy val windowTimeSlice: ValueState[TimeWindow] = getRuntimeContext.getState(
-    new ValueStateDescriptor[TimeWindow]("timeSlice", classOf[TimeWindow])
-  )
 
   //Pseudo max limit of the hash buckets in the child map state
   lazy val pseudoChildLimit: ValueState[Long] = getRuntimeContext.getState(
@@ -139,26 +133,27 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
    */
   override def onTimer(timestamp: Long, ctx: KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]]#OnTimerContext, out: Collector[Iterable[JoinedItem]]): Unit = {
 
-    val start = TimeWindow.getWindowStartWithOffset(timestamp, 0L, windowSize.toMilliseconds)
-    windowTimeSlice.update(new TimeWindow(start, start + windowSize.toMilliseconds))
     val (join_entropy, childRatio, parentRatio) = calculateJoinCost()
 
     //Adjust pseudo limit based on the calculated ratios
     pseudoChildLimit.update((pseudoChildLimit.value() * childRatio).toLong)
     pseudoParentLimit.update((pseudoParentLimit.value() * parentRatio).toLong)
 
-    val currentDynamicUpdateCycle = dynamicUpdateCycle.value()
-    if (join_entropy > epsilon && join_entropy > 0){
-      dynamicUpdateCycle.update(Time.milliseconds( currentDynamicUpdateCycle.toMilliseconds/2))
-    }else{
-      dynamicUpdateCycle.update(Time.milliseconds(currentDynamicUpdateCycle.toMilliseconds*2))
-    }
+    val currentDynamicUpdateCycle = dynamicUpdateCycle.value().toMilliseconds
+    val duration = if (join_entropy > epsilon && join_entropy > 0)
+      currentDynamicUpdateCycle / 2 else
+      currentDynamicUpdateCycle * 2
+
+    dynamicUpdateCycle.update(Time.milliseconds(keepUpdateCycleWithinRange(duration)))
+
 
     lastCheckup.update(Time.milliseconds(timestamp))
     cleanUpWindow()
   }
 
-
+  private def keepUpdateCycleWithinRange(duration:Long, maxDuration: Long = 50 , minDuration:Long = 5000): Long ={
+    if (duration < minDuration) minDuration else if (duration > maxDuration) maxDuration else duration
+  }
   private def cleanUpWindow(): Unit = {
     childMapState.clear()
     parentMapState.clear()
@@ -180,10 +175,10 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
     val childStreamN: Double = pseudoChildLimit.value()
     val parentStreamN: Double = pseudoParentLimit.value()
 
-    val childRatio = childElementsProcessed/childStreamN  + 1
-    val parentRatio = parentElementsProcessed/parentStreamN + 1
+    val childRatio = childElementsProcessed/childStreamN
+    val parentRatio = parentElementsProcessed/parentStreamN
 
-    (childRatio + parentRatio, childRatio, parentRatio)
+    (childRatio + parentRatio, childRatio + 0.5, parentRatio + 0.5)
 
   }
 
