@@ -9,9 +9,9 @@ import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 
 class CrossJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]]
 (R: DataStream[T], S: DataStream[U], tm: JoinedTriplesMap)
-  extends StreamJoinComposer[T, U, JoinedItem, TimeWindow](R, S, tm) {
+  extends StreamJoinComposer[T, U, Iterable[JoinedItem], TimeWindow](R, S, tm) {
   override def composeStreamJoin()
-                                (implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[JoinedItem] = {
+                                (implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[Iterable[JoinedItem]] = {
     // if there are no join conditions a cross join will be executed
     // add pseudo key for all incoming elements
     val key = tm.logicalSource.semanticIdentifier
@@ -26,7 +26,6 @@ class CrossJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]]
       // mini cross join for all iteritems
       firstIterItems.flatMap(item1 => secondIterItems.map(item2 => JoinedItem(item1, item2)))
     })
-      .flatMap(joined => joined)
 
   }
 }

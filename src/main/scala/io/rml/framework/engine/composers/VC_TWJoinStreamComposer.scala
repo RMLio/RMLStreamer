@@ -10,14 +10,14 @@ import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 
 class VC_TWJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]](childStream: DataStream[T], parentStream: DataStream[U], tm: JoinedTriplesMap) extends
   StreamJoinComposer
-    [T, U, JoinedItem, TimeWindow](childStream, parentStream, tm) {
+    [T, U, Iterable[JoinedItem], TimeWindow](childStream, parentStream, tm) {
 
-  override def composeStreamJoin()(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[JoinedItem] = {
+  override def composeStreamJoin()(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[Iterable[JoinedItem]] = {
 
     val joinCondition = tm.joinCondition.get
 
     childStream.connect(parentStream)
       .keyBy(keySelectorWithJoinCondition(joinCondition.child.map(_.value)), keySelectorWithJoinCondition(joinCondition.parent.map(_.value)))
-      .process[String, JoinedItem](new VC_TWindow())
+      .process[String, Iterable[JoinedItem]](new VC_TWindow())
   }
 }

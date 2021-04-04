@@ -22,7 +22,7 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
                                                           val defaultBucketSize:Long = 1000L,
                                                            val windowSize: Time = Time.seconds(2),
                                                            val updateCycle: Time = Time.seconds(10))
-  extends KeyedCoProcessFunction[String, T, U, JoinedItem] {
+  extends KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]] {
 
 
   //Holds the map state of incoming child tuples that are still alive in the window
@@ -78,14 +78,14 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
 
   }
 
-  override def processElement1(child: T, context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context, collector: Collector[JoinedItem]): Unit = {
+  override def processElement1(child: T, context: KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]]#Context, collector: Collector[Iterable[JoinedItem]]): Unit = {
     val joinedItems = crossJoin(child, isChild = true, context.timestamp(), childMapState, parentMapState)
 
     joinedItems.foreach(collector.collect)
     fireWindowUpdateCallback(context)
   }
 
-  override def processElement2(parent: U, context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context, collector: Collector[JoinedItem]): Unit = {
+  override def processElement2(parent: U, context: KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]]#Context, collector: Collector[Iterable[JoinedItem]]): Unit = {
 
     val joinedItems = crossJoin(parent, isChild = false, context.timestamp(), parentMapState, childMapState)
     joinedItems.foreach(collector.collect)
@@ -95,11 +95,11 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
   //TODO: Move this join function out of this class, such that the window can be provided with a 
   //higher order function to be executed on the incoming elements. 
   private def crossJoin(elementIter: Iterable[Item], isChild: Boolean, timeStamp: Long, thisMapState: MapState[Long, Iterable[Item]], thatMapState: MapState[Long, Iterable[Item]]):
-  Iterable[JoinedItem] = {
+  Iterable[Iterable[JoinedItem]] = {
     thisMapState.put(timeStamp, elementIter)
 
     thatMapState.values()
-      .flatMap(thatElementIter =>
+      .map(thatElementIter =>
         thatElementIter.flatMap(item1 =>
           elementIter.map(item2 =>
             if (isChild)
@@ -118,7 +118,7 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
    *
    * @param context
    */
-  private def fireWindowUpdateCallback(context: KeyedCoProcessFunction[String, T, U, JoinedItem]#Context): Unit = {
+  private def fireWindowUpdateCallback(context: KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]]#Context): Unit = {
     if(lastCheckup.value().getSize < 0L){
       lastCheckup.update(Time.milliseconds(context.timestamp()))
     }
@@ -137,7 +137,7 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
    * @param ctx
    * @param out
    */
-  override def onTimer(timestamp: Long, ctx: KeyedCoProcessFunction[String, T, U, JoinedItem]#OnTimerContext, out: Collector[JoinedItem]): Unit = {
+  override def onTimer(timestamp: Long, ctx: KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]]#OnTimerContext, out: Collector[Iterable[JoinedItem]]): Unit = {
 
     val start = TimeWindow.getWindowStartWithOffset(timestamp, 0L, windowSize.toMilliseconds)
     windowTimeSlice.update(new TimeWindow(start, start + windowSize.toMilliseconds))

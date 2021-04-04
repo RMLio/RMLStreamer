@@ -26,10 +26,11 @@ package io.rml.framework.engine
 
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
-
 import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.model.{Blank, Literal, Uri}
 import io.rml.framework.core.util._
-import io.rml.framework.flink.sink.FlinkRDFQuad
+import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.flink.sink.{FlinkRDFBlank, FlinkRDFLiteral, FlinkRDFQuad, FlinkRDFResource, FlinkRDFTermNode}
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 
 
@@ -85,8 +86,8 @@ class JsonLDProcessor() extends AtMostOneProcessor {
     if (quadStrings.isEmpty || quadStrings.mkString.isEmpty) {
       return List()
     }
-    
-    val quads =  quadStrings.mkString("\n")
+
+    val quads = quadStrings.mkString("\n")
     val dataset = JenaUtil.readDataset(quads, RMLEnvironment.getGeneratorBaseIRI().getOrElse(""), NQuads)
     val bos = new ByteArrayOutputStream
     Util.tryWith(bos: ByteArrayOutputStream) {
@@ -96,4 +97,38 @@ class JsonLDProcessor() extends AtMostOneProcessor {
       }
     }
   }
+}
+  class ThesisProcessor() extends AtMostOneProcessor{
+    override def process(quadStrings: Iterable[FlinkRDFQuad]): List[String] = {
+      if (quadStrings.isEmpty || quadStrings.mkString.isEmpty) {
+        return List()
+      }
+
+      val all_start_times = quadStrings
+        .filter(_.predicate.uri.toString == RMLVoc.Property.LATENCY)
+        .map(_.`object`.value.toString)
+        .map(_.toLong)
+        .toList
+      val latency_sub =  FlinkRDFBlank(Blank("latencyId"))
+      val latency_pred = FlinkRDFResource(Uri(RMLVoc.Property.LATENCY))
+      val currentTime = System.currentTimeMillis()
+
+      val averageLatency = all_start_times.map(v => currentTime - v ).sum / all_start_times.length
+      val latency_val = FlinkRDFLiteral(Literal(averageLatency.toString, Some(Uri(RMLVoc.Type.XSD_LONG))))
+
+
+      val quads =  (quadStrings ++ Seq(FlinkRDFQuad(latency_sub, latency_pred, latency_val)) ).mkString("\n")
+      // Add latency metrics to output
+
+      val dataset = JenaUtil.readDataset(quads, RMLEnvironment.getGeneratorBaseIRI().getOrElse(""), NQuads)
+      val bos = new ByteArrayOutputStream
+      Util.tryWith(bos: ByteArrayOutputStream) {
+        bos => {
+          RDFDataMgr.write(bos, dataset, Lang.JSONLD)
+          List(bos.toString(StandardCharsets.UTF_8.name()))
+        }
+      }
+    }
+
+    override def outputFormat: Format = JSON_LD
 }

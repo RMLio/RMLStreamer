@@ -35,7 +35,7 @@ import io.rml.framework.core.util.{StreamerConfig, Util}
 import io.rml.framework.engine._
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{RMLPartitioner, UniversalKafkaConnectorFactory}
-import io.rml.framework.flink.item.{Item, JoinedItem}
+import io.rml.framework.flink.item.{Item, JoinedItem, ThesisItem}
 import io.rml.framework.flink.source.{EmptyItem, FileDataSet, Source}
 import io.rml.framework.flink.util.ParameterUtil
 import io.rml.framework.flink.util.ParameterUtil.{OutputSinkOption, PostProcessorOption}
@@ -47,11 +47,11 @@ import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.streaming.api.functions.ProcessFunction
 import org.apache.flink.streaming.api.functions.sink.filesystem.{OutputFileConfig, StreamingFileSink}
 import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.BasePathBucketAssigner
-import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.{OnCheckpointRollingPolicy}
+import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy
 import org.apache.flink.streaming.api.scala.{DataStream, OutputTag, StreamExecutionEnvironment}
 import org.apache.flink.util.Collector
-import java.util.Properties
 
+import java.util.Properties
 import io.rml.framework.engine.composers.{CrossJoin, StreamJoinComposer}
 
 import scala.collection.{immutable, mutable}
@@ -83,6 +83,7 @@ object Main extends Logging {
       config.postProcessor match {
         case PostProcessorOption.Bulk => new BulkPostProcessor
         case PostProcessorOption.JsonLD => new JsonLDProcessor
+        case PostProcessorOption.Thesis => new ThesisProcessor
         case _ => new NopPostProcessor
       }
 
@@ -252,7 +253,7 @@ object Main extends Logging {
             // filter out all empty items (some iterators can emit empty items)
           }).filter(iterItems => {
           iterItems.nonEmpty
-        })
+        }).map(iterItems => iterItems.map(ThesisItem(_, System.currentTimeMillis())))
 
 
       val parentTriplesMap = TriplesMapsCache(tm.parentTriplesMap);
@@ -273,7 +274,8 @@ object Main extends Logging {
             // filter out all empty items
           }).filter(iterItems => {
           iterItems.nonEmpty
-        })
+        }).map(iterItems => iterItems.map(ThesisItem(_, System.currentTimeMillis())))
+
 
       //TODO: Be able to choose a specific stream join composer to compose the streaming pipeline
       val joinConfigMap = JoinConfigMapCache.getOrElse(tm.joinConfigMap.get, JoinConfigMap(None))
@@ -281,7 +283,7 @@ object Main extends Logging {
       // if there are join conditions defined join the child dataset and the parent dataset
       val joined = composer.composeStreamJoin()
         // process the JoinedItems in an engine
-        joined.map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items")
+        joined.map(new JoinedStreamProcessor(engine)).name("Execute mapping statements on joined items")
         // format the list of triples as strings
         .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
         .name("Convert triples to strings")

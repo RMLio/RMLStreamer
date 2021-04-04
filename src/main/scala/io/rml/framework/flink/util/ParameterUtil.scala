@@ -71,7 +71,7 @@ object ParameterUtil {
   // possible post processor options
   object PostProcessorOption extends Enumeration {
     type PostProcessorOption = Value
-    val None, Bulk, JsonLD = Value
+    val None, Bulk, JsonLD, Thesis= Value
   }
 
 
@@ -100,6 +100,11 @@ object ParameterUtil {
     opt[String]('m', "mapping-file").valueName("<RML mapping file>").required()
       .action((value, config) => config.copy(mappingFilePath = value))
       .text("REQUIRED. The path to an RML mapping file. The path must be accessible on the Flink cluster.")
+
+    opt[Unit]("thesis")
+      .optional()
+      .action((_, config) => config.copy(postProcessor = PostProcessorOption.Thesis))
+      .text("Write ")
 
     opt[Unit]("json-ld")
         .optional()

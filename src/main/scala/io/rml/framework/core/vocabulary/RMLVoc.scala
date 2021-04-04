@@ -106,6 +106,7 @@ object RMLVoc {
     val JOIN_CONFIG = Namespaces("rmls", "joinConfig")
     val WINDOW_TYPE = Namespaces("rmls", "windowType")
     val JOIN_TYPE = Namespaces("rmls", "joinType")
+    val LATENCY = Namespaces("rmls", "latency")
 
     ///////////////////////////////////////////////////////////////////////////
     // GREL

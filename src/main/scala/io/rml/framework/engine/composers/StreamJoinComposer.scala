@@ -38,7 +38,7 @@ object StreamJoinComposer {
   (implicit env: ExecutionEnvironment,
    senv: StreamExecutionEnvironment,
    postProcessor: PostProcessor):
-  StreamJoinComposer[T, U, JoinedItem, TimeWindow] ={
+  StreamJoinComposer[T, U, Iterable[JoinedItem], TimeWindow] ={
 
 
     val joinType = joinConfigMap.joinType
