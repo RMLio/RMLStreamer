@@ -428,6 +428,7 @@ SOFTWARE.
                 <artifactId>scala-maven-plugin</artifactId>
                 <version>4.0.1</version>
                 <configuration>
+                    <addScalacArgs>-target:jvm-1.8</addScalacArgs>
                     <args>
                         <arg>-deprecation</arg>
                     </args>

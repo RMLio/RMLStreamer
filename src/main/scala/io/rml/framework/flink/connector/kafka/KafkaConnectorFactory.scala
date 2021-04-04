@@ -75,7 +75,7 @@ case object UniversalKafkaConnectorFactory extends KafkaConnectorFactory with Lo
 
   override def getSource[T](topic: String, valueDeserializer: DeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T] = {
     val consumer =  new FlinkKafkaConsumer[T](topic, valueDeserializer, props)
-    consumer assignTimestampsAndWatermarks WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofMillis(50))
+    consumer assignTimestampsAndWatermarks WatermarkStrategy.forBoundedOutOfOrderness[T](Duration.ofMillis(50))
 
   }
 
