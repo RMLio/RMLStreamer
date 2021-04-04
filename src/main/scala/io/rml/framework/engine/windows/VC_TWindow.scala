@@ -20,6 +20,8 @@ import scala.collection.JavaConversions.iterableAsScalaIterable
  */
 class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 1.5,
                                                           val defaultBucketSize:Long = 1000L,
+                                                           val maxDuration:Long = 5000L,
+                                                           val minDuration:Long = 50L,
                                                            val updateCycle: Time = Time.milliseconds(100))
   extends KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]] {
 
@@ -151,7 +153,7 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon:Double = 
     cleanUpWindow()
   }
 
-  private def keepUpdateCycleWithinRange(duration:Long, maxDuration: Long = 50 , minDuration:Long = 5000): Long ={
+  private def keepUpdateCycleWithinRange(duration:Long): Long ={
     if (duration < minDuration) minDuration else if (duration > maxDuration) maxDuration else duration
   }
   private def cleanUpWindow(): Unit = {
