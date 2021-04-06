@@ -34,5 +34,6 @@ case class StdSubjectMap(identifier: String,
                          reference: Option[Literal],
                          template: Option[Literal],
                          termType: Option[Uri],
-                         graphMap: Option[GraphMap]) extends SubjectMap
+                         graphMap: Option[GraphMap],
+                         logicalTargets: List[LogicalTarget]) extends SubjectMap
 

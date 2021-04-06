@@ -82,6 +82,8 @@ trait TermMap extends Node {
     */
   def termType: Option[Uri]
 
+  def logicalTargets: List[LogicalTarget]
+
   /**
     *
     * @return

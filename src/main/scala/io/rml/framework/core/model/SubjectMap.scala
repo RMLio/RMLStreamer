@@ -64,9 +64,10 @@ object SubjectMap {
             reference: Option[Literal],
             template: Option[Literal],
             termType: Option[Uri],
-            graphMap: Option[GraphMap]): SubjectMap = {
+            graphMap: Option[GraphMap],
+            logicalTargets: List[LogicalTarget]): SubjectMap = {
 
-    StdSubjectMap(identifier, `class`, functionMap, constant, reference, template, termType, graphMap)
+    StdSubjectMap(identifier, `class`, functionMap, constant, reference, template, termType, graphMap, logicalTargets)
   }
 
 }

@@ -77,7 +77,7 @@ class StdGraphMapExtractor extends GraphMapExtractor {
 
   def extractGraph(resource: RDFResource): Option[GraphMap] = {
 
-    Some(GraphMap(resource.uri.value, List(), Some(resource.uri), None, None, extractTermType(resource)))
+    Some(GraphMap(resource.uri.value, List(), Some(resource.uri), None, None, extractTermType(resource), extractLogicalTargets(resource)))
 
   }
 
@@ -87,7 +87,7 @@ class StdGraphMapExtractor extends GraphMapExtractor {
     val constant = extractConstant(resource)
     val reference = extractReference(resource)
     val functionMap = FunctionMapExtractor().extract(resource)
-    Some(GraphMap(constant.getOrElse(resource.uri).value, functionMap, constant, reference, template, termType))
+    Some(GraphMap(constant.getOrElse(resource.uri).value, functionMap, constant, reference, template, termType, extractLogicalTargets(resource)))
   }
 
 }

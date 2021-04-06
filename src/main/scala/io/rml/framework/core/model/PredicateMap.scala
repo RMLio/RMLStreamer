@@ -43,12 +43,14 @@ object PredicateMap {
             constant: Option[Entity] = None,
             reference: Option[Literal] = None,
             template: Option[Literal] = None,
-            termType: Option[Uri] = None): PredicateMap =
+            termType: Option[Uri] = None,
+            logicalTargets: List[LogicalTarget]): PredicateMap =
 
     StdPredicateMap(identifier,
       functionMap,
       constant,
       reference,
       template,
-      Some(Uri(R2RMLVoc.Class.IRI)))
+      Some(Uri(R2RMLVoc.Class.IRI)),
+      logicalTargets)
 }
