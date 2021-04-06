@@ -69,8 +69,6 @@ trait TriplesMap extends Node {
     */
   def graphMap: Option[GraphMap]
 
-  def logicalTarget: Option[LogicalTarget]
-
   /**
     *
     * @return
@@ -93,15 +91,13 @@ object TriplesMap {
             logicalSource: LogicalSource,
             subjectMap: SubjectMap,
             identifier: String,
-            graphMap: Option[GraphMap],
-            logicalTarget: Option[LogicalTarget]
+            graphMap: Option[GraphMap] = None
            ): TriplesMap = {
 
     val triplesMap = StdTriplesMap(predicateObjectMaps,
       logicalSource,
       subjectMap,
       graphMap,
-      logicalTarget,
       identifier)
 
     if (logicalSource.source.isInstanceOf[StreamDataSource]) {

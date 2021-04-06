@@ -63,8 +63,6 @@ abstract class StreamTriplesMap(triplesMap: TriplesMap) extends TriplesMap {
     */
   override def graphMap = triplesMap.graphMap
 
-  override def logicalTarget: Option[LogicalTarget] = triplesMap.logicalTarget
-
 }
 
 object StreamTriplesMap {

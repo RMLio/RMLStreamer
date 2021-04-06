@@ -24,7 +24,7 @@
   **/
 package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.{JoinedTriplesMap, LogicalTarget, TriplesMap}
+import io.rml.framework.core.model.{JoinedTriplesMap, TriplesMap}
 
 case class StdJoinedTriplesMap(triplesMap: TriplesMap) extends JoinedTriplesMap(triplesMap) {
   /**
@@ -51,13 +51,11 @@ case class StdJoinedTriplesMap(triplesMap: TriplesMap) extends JoinedTriplesMap(
     */
   override def containsParentTriplesMap = triplesMap.containsParentTriplesMap
 
-  override def identifier: String = triplesMap.identifier
+  override def identifier(): String = triplesMap.identifier
 
   /**
     *
     * @return
     */
   override def graphMap = ???
-
-  override def logicalTarget: Option[LogicalTarget] = triplesMap.logicalTarget
 }
