@@ -4,6 +4,9 @@ import io.rml.framework.core.extractors.LogicalTargetExtractor
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.LogicalTarget
 import io.rml.framework.core.model.rdf.RDFResource
+import io.rml.framework.core.vocabulary.RMLVoc
+
+import scala.collection.mutable.ListBuffer
 
 /**
   * MIT License
@@ -36,8 +39,19 @@ class StdLogicalTargetExtractor extends LogicalTargetExtractor with Logging {
     * @param node Node to extract from.
     * @return
     */
-  override def extract(node: RDFResource): Option[LogicalTarget] = {
-    None
+  override def extract(node: RDFResource): List[LogicalTarget] = {
+    logDebug(s"Extracting logical target: ${node.uri}")
+
+    var result = new ListBuffer[LogicalTarget]
+
+    val properties = node.listProperties(RMLVoc.Property.LOGICALTARGET)
+    properties.foreach(logicalTargetResource => {
+      /*logicalTargetResource match {
+        case resource: RDFResource
+      }*/
+    })
+
+    result.toList
     // TODO here comes the real code
   }
 }

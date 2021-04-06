@@ -27,7 +27,7 @@ import io.rml.framework.core.model.LogicalTarget
   * THE SOFTWARE.
   *
   * */
-trait LogicalTargetExtractor extends ResourceExtractor[Option[LogicalTarget]]
+trait LogicalTargetExtractor extends ResourceExtractor[List[LogicalTarget]]
 
 object LogicalTargetExtractor {
 
