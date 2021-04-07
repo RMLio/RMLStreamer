@@ -1,10 +1,11 @@
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.LogicalTargetExtractor
+import io.rml.framework.core.extractors.{ExtractorUtil, LogicalTargetExtractor}
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.LogicalTarget
 import io.rml.framework.core.model.rdf.RDFResource
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.model.{LogicalTarget, Uri}
+import io.rml.framework.core.vocabulary.{RMLTVoc, RMLVoc}
+import io.rml.framework.shared.RMLException
 
 import scala.collection.mutable.ListBuffer
 
@@ -46,12 +47,47 @@ class StdLogicalTargetExtractor extends LogicalTargetExtractor with Logging {
 
     val properties = node.listProperties(RMLVoc.Property.LOGICALTARGET)
     properties.foreach(logicalTargetResource => {
-      /*logicalTargetResource match {
-        case resource: RDFResource
-      }*/
+      logicalTargetResource match {
+        case resource: RDFResource => {
+          val extractResult = extractLogicalTargetProperties(resource)
+          if (extractResult.isDefined) {
+            result = result += extractResult.get
+          }
+        }
+        case _ => throw new RMLException("Only logical target from resource allowed.")
+      }
     })
 
     result.toList
-    // TODO here comes the real code
+  }
+
+  private def extractLogicalTargetProperties(resource: RDFResource): Option[LogicalTarget] = {
+    val compression: Option[Uri] = extractCompression(resource)
+    val serialization: Option[Uri] = extractSerialization(resource)
+    // TODO extract actual target
+    None
+  }
+
+  /**
+    * Extracts the compression specification.
+    * @param resource The Logical Target resource
+    * @return An Uri representing the compression, or <code>None</code> if no compression.
+    */
+  private def extractCompression(resource: RDFResource): Option[Uri] = {
+    val compressionResource = ExtractorUtil.extractResourceFromProperty(resource, RMLTVoc.Property.COMPRESSION)
+    if (compressionResource.isDefined) {
+      Some(compressionResource.get.uri)
+    } else {
+      None
+    }
+  }
+
+  private def extractSerialization(resource: RDFResource): Option[Uri] = {
+    val serializationResource = ExtractorUtil.extractResourceFromProperty(resource, RMLTVoc.Property.SERIALIZATION)
+    if (serializationResource.isDefined) {
+      Some(serializationResource.get.uri)
+    } else {
+      None
+    }
   }
 }
