@@ -1,0 +1,6 @@
+<http://example.org/0001> <http://xmlns.com/foaf/0.1/name>  "Alice" .
+<http://example.org/0001> <http://xmlns.com/foaf/0.1/age>  "42" .
+<http://example.org/0002> <http://xmlns.com/foaf/0.1/name>  "Bob" .
+<http://example.org/0002> <http://xmlns.com/foaf/0.1/age>  "27" .
+<http://example.org/0003> <http://xmlns.com/foaf/0.1/name>  "Jesus" .
+<http://example.org/0003> <http://xmlns.com/foaf/0.1/age>  "2021" .

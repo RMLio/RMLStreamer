@@ -1,0 +1,42 @@
+@prefix comp: <http://semweb.mmlab.be/ns/rml-compression#> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix formats: <https://www.w3.org/ns/formats/> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix rmlt: <http://semweb.mmlab.be/ns/rml-target#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+
+@base <http://example.com/base/> .
+
+<#LogicalSource1> a rml:LogicalSource;
+  rml:source "../people.json";
+  rml:referenceFormulation ql:JSONPath;
+  rml:iterator "$.*"
+.
+
+<#VoIDDump> a void:Dataset ;
+  void:dataDump <file:///file.nq>;
+.
+
+<#LogicalTarget1> a rmlt:LogicalTarget;
+  rmlt:target <#VoIDDump>;
+  rmlt:serialization formats:N-Quads ;
+  rmlt:compression comp:GZip;
+.
+
+<#TriplesMap> a rr:TriplesMap;
+  rml:logicalSource <#LogicalSource1>;
+  rr:subjectMap [
+    rr:template "http://example.org/{id}";
+    rml:logicalTarget <#LogicalTarget1>;
+   ];
+  rr:predicateObjectMap [
+    rr:predicateMap [ rr:constant foaf:name ];
+    rr:objectMap [ rml:reference "name"; ];
+  ];
+  rr:predicateObjectMap [
+    rr:predicateMap [ rr:constant foaf:age ];
+    rr:objectMap [ rml:reference "age" ];
+  ];
+.

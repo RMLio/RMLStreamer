@@ -126,13 +126,14 @@ class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
     executeTest("sandbox/function_related/condition-on-mapping-subject-function/mapping.ttl")
   }
 
-
   test("failing/fno-testcases/RMLFNOTC0023-CSV") {
     pending
     executeTest("failing/fno-testcases/RMLFNOTC0023-CSV/mapping.ttl")
   }
 
-
+  test("sandbox/logical-target/example-2-subjectMap") {
+    executeTest("sandbox/logical-target/example-2-subjectMap/mapping.ttl")
+  }
 
 
 
