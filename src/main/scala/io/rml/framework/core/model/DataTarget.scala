@@ -1,9 +1,5 @@
 package io.rml.framework.core.model
 
-import io.rml.framework.core.model.std.StdLogicalTarget
-
-import java.util.Objects
-
 /**
   * MIT License
   *
@@ -28,22 +24,4 @@ import java.util.Objects
   * THE SOFTWARE.
   *
   * */
-trait LogicalTarget extends Node {
-
-  def target: DataTarget
-
-  def compression: Option[Uri]
-
-  def serialization: Uri
-
-  override def identifier: String = {
-    Objects.hash(target.identifier, compression, serialization.identifier).toHexString
-  }
-}
-
-object LogicalTarget {
-  def apply(target: DataTarget, serialization: Uri, compression: Option[Uri]) = {
-    StdLogicalTarget(target, serialization, compression)
-  }
-}
-
+trait DataTarget extends DataStore

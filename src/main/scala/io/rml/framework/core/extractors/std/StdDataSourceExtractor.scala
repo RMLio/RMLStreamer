@@ -72,6 +72,7 @@ class StdDataSourceExtractor extends DataSourceExtractor {
         case Uri(RMLSVoc.Class.FILESTREAM) => extractFileStream(resource)
         case Uri(RMLSVoc.Class.KAFKASTREAM) => extractKafkaStream(resource)
         case Uri(WoTVoc.ThingDescription.Class.THING) => extractWoTSource(resource)
+        case _ => throw new RMLException(s"${classResource.uri} not supported as data source.")
       }
       case literal: Literal => throw new RMLException(literal.value + ": type must be a resource.")
     }

@@ -32,7 +32,7 @@ trait LogicalTargetExtractor extends ResourceExtractor[List[LogicalTarget]]
 object LogicalTargetExtractor {
 
   def apply(): LogicalTargetExtractor = {
-    lazy val extractor = new StdLogicalTargetExtractor
+    lazy val extractor = new StdLogicalTargetExtractor(DataTargetExtractor())
     extractor
   }
 

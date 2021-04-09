@@ -1,8 +1,12 @@
 package io.rml.framework.core.model
 
-import io.rml.framework.core.model.std.StdLogicalTarget
+import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.model.std.StdFileDataStore
 
-import java.util.Objects
+import java.io.File
+import java.net.URI
+import java.nio.file.Paths
 
 /**
   * MIT License
@@ -28,22 +32,23 @@ import java.util.Objects
   * THE SOFTWARE.
   *
   * */
-trait LogicalTarget extends Node {
+trait FileDataTarget extends DataTarget
 
-  def target: DataTarget
-
-  def compression: Option[Uri]
-
-  def serialization: Uri
-
-  override def identifier: String = {
-    Objects.hash(target.identifier, compression, serialization.identifier).toHexString
+object FileDataTarget extends Logging {
+  def apply(uri: ExplicitNode): DataTarget = {
+    val fileUri = URI.create(uri.value);
+    if (fileUri.getScheme.equals("file")) {
+      val file = new File(fileUri.getPath)
+      if (file.isAbsolute) {
+        StdFileDataStore(Uri(file.getCanonicalPath))
+      } else {
+        // create path relative to mapping file
+        val mappingFileParentPath = Paths.get(RMLEnvironment.getMappingFileBaseIRI().get).getParent
+        val filePath = mappingFileParentPath.resolve(file.toPath)
+        StdFileDataStore(Uri(filePath.toFile.getCanonicalPath))
+      }
+    } else {
+      StdFileDataStore(Uri(uri.value))
+    }
   }
 }
-
-object LogicalTarget {
-  def apply(target: DataTarget, serialization: Uri, compression: Option[Uri]) = {
-    StdLogicalTarget(target, serialization, compression)
-  }
-}
-

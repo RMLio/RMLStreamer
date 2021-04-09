@@ -93,6 +93,7 @@ class StdSubjectMapExtractor extends SubjectMapExtractor with Logging {
       ", template -> " + template +
       ", termType -> " + termType +
       ", graphMap -> " + graphMap +
+      ", logicalTargets -> " + logicalTargets +
       ", class -> " + _class)
 
     SubjectMap(resource.uri.value, _class, functionMap, constant, reference, template, termType, graphMap, logicalTargets)

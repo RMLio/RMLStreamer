@@ -1,7 +1,12 @@
+package io.rml.framework.core.extractors
+
+import io.rml.framework.core.extractors.std.StdDataTargetExtractor
+import io.rml.framework.core.model.DataTarget
+
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2021 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -21,10 +26,12 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   * THE SOFTWARE.
   *
-  **/
+  * */
+trait DataTargetExtractor extends ResourceExtractor[DataTarget]
 
-package io.rml.framework.core.model.std
+object DataTargetExtractor {
+  def apply(): DataTargetExtractor = {
+    new StdDataTargetExtractor()
+  }
+}
 
-import io.rml.framework.core.model.{FileDataSource, Uri}
-
-case class StdFileDataSource(uri: Uri) extends FileDataSource

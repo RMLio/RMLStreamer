@@ -1,4 +1,6 @@
-package io.rml.framework.core.model
+package io.rml.framework.core.model.std
+
+import io.rml.framework.core.model.{DataTarget, LogicalTarget, Uri}
 
 /**
   * MIT License
@@ -24,4 +26,7 @@ package io.rml.framework.core.model
   * THE SOFTWARE.
   *
   * */
-trait DataSink extends DataStore
+case class StdLogicalTarget (
+                              target: DataTarget,
+                              serialization: Uri,
+                              compression: Option[Uri]) extends LogicalTarget

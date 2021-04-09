@@ -1,8 +1,10 @@
-package io.rml.framework.core.model
+package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.model.std.StdLogicalTarget
-
-import java.util.Objects
+import io.rml.framework.core.extractors.{DataTargetExtractor, ExtractorUtil}
+import io.rml.framework.core.model.rdf.RDFResource
+import io.rml.framework.core.model.{DataTarget, FileDataTarget, Uri}
+import io.rml.framework.core.vocabulary.{RDFVoc, RMLTVoc, VoIDVoc}
+import io.rml.framework.shared.RMLException
 
 /**
   * MIT License
@@ -28,22 +30,25 @@ import java.util.Objects
   * THE SOFTWARE.
   *
   * */
-trait LogicalTarget extends Node {
-
-  def target: DataTarget
-
-  def compression: Option[Uri]
-
-  def serialization: Uri
-
-  override def identifier: String = {
-    Objects.hash(target.identifier, compression, serialization.identifier).toHexString
+class StdDataTargetExtractor extends DataTargetExtractor {
+  /**
+    * Extract.
+    *
+    * @param node Node to extract from.
+    * @return
+    */
+  override def extract(node: RDFResource): DataTarget = {
+    val targetResource = ExtractorUtil.extractSingleResourceFromProperty(node, RMLTVoc.Property.TARGET)
+    val targetType = ExtractorUtil.extractSingleResourceFromProperty(targetResource, RDFVoc.Property.TYPE)
+    targetType.uri match {
+      case Uri(VoIDVoc.Class.DATASET) => extractFileDataTarget(targetResource)
+      case _ => throw new RMLException(s"${targetType} not supported as data target.")
+    }
   }
-}
 
-object LogicalTarget {
-  def apply(target: DataTarget, serialization: Uri, compression: Option[Uri]) = {
-    StdLogicalTarget(target, serialization, compression)
+  private def extractFileDataTarget(resource: RDFResource): DataTarget = {
+    val path = ExtractorUtil.extractSingleResourceFromProperty(resource, VoIDVoc.Property.DATADUMP)
+    FileDataTarget(path.uri)
   }
-}
 
+}

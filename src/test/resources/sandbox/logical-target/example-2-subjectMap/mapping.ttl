@@ -16,7 +16,7 @@
 .
 
 <#VoIDDump> a void:Dataset ;
-  void:dataDump <file:///file.nq>;
+  void:dataDump <file:///tmp/file.nq>;
 .
 
 <#LogicalTarget1> a rmlt:LogicalTarget;

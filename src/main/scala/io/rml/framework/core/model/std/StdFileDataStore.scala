@@ -1,13 +1,7 @@
-package io.rml.framework.core.model
-
-import io.rml.framework.core.model.std.StdLogicalTarget
-
-import java.util.Objects
-
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2021 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -27,23 +21,10 @@ import java.util.Objects
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   * THE SOFTWARE.
   *
-  * */
-trait LogicalTarget extends Node {
+  **/
 
-  def target: DataTarget
+package io.rml.framework.core.model.std
 
-  def compression: Option[Uri]
+import io.rml.framework.core.model.{FileDataSource, FileDataTarget, Uri}
 
-  def serialization: Uri
-
-  override def identifier: String = {
-    Objects.hash(target.identifier, compression, serialization.identifier).toHexString
-  }
-}
-
-object LogicalTarget {
-  def apply(target: DataTarget, serialization: Uri, compression: Option[Uri]) = {
-    StdLogicalTarget(target, serialization, compression)
-  }
-}
-
+case class StdFileDataStore(uri: Uri) extends FileDataSource with FileDataTarget

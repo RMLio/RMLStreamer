@@ -91,7 +91,7 @@ object Util extends Logging{
     var done = false
     while (lineIter.hasNext && !done) {
       val line = lineIter.next().trim
-      if (line.length > 0) {
+      if (line.nonEmpty) {
         if (line.head != '@') {
           done = true
         } else if (line.contains("@base")) {

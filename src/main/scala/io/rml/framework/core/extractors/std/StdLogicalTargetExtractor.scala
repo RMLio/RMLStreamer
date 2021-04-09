@@ -1,10 +1,10 @@
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{ExtractorUtil, LogicalTargetExtractor}
+import io.rml.framework.core.extractors.{DataTargetExtractor, ExtractorUtil, LogicalTargetExtractor}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.RDFResource
-import io.rml.framework.core.model.{LogicalTarget, Uri}
-import io.rml.framework.core.vocabulary.{RMLTVoc, RMLVoc}
+import io.rml.framework.core.model.{DataTarget, LogicalTarget, Uri}
+import io.rml.framework.core.vocabulary.{FormatVoc, RMLTVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
 
 import scala.collection.mutable.ListBuffer
@@ -33,7 +33,7 @@ import scala.collection.mutable.ListBuffer
   * THE SOFTWARE.
   *
   * */
-class StdLogicalTargetExtractor extends LogicalTargetExtractor with Logging {
+class StdLogicalTargetExtractor(dataTargetExtractor: DataTargetExtractor) extends LogicalTargetExtractor with Logging {
   /**
     * Extract.
     *
@@ -49,10 +49,7 @@ class StdLogicalTargetExtractor extends LogicalTargetExtractor with Logging {
     properties.foreach(logicalTargetResource => {
       logicalTargetResource match {
         case resource: RDFResource => {
-          val extractResult = extractLogicalTargetProperties(resource)
-          if (extractResult.isDefined) {
-            result = result += extractResult.get
-          }
+          result += extractLogicalTargetProperties(resource)
         }
         case _ => throw new RMLException("Only logical target from resource allowed.")
       }
@@ -61,11 +58,11 @@ class StdLogicalTargetExtractor extends LogicalTargetExtractor with Logging {
     result.toList
   }
 
-  private def extractLogicalTargetProperties(resource: RDFResource): Option[LogicalTarget] = {
+  private def extractLogicalTargetProperties(resource: RDFResource): LogicalTarget = {
     val compression: Option[Uri] = extractCompression(resource)
-    val serialization: Option[Uri] = extractSerialization(resource)
-    // TODO extract actual target
-    None
+    val serialization: Uri = extractSerialization(resource)
+    val target: DataTarget = dataTargetExtractor.extract(resource)
+    LogicalTarget(target, serialization, compression)
   }
 
   /**
@@ -82,12 +79,17 @@ class StdLogicalTargetExtractor extends LogicalTargetExtractor with Logging {
     }
   }
 
-  private def extractSerialization(resource: RDFResource): Option[Uri] = {
+  /**
+    * Extracts the serialization from the logical target.
+    * @param resource The resource representing the logical target
+    * @return The URI of the resource representing the serialization. The default is http://www.w3.org/ns/formats/N-Quads
+    */
+  private def extractSerialization(resource: RDFResource): Uri = {
     val serializationResource = ExtractorUtil.extractResourceFromProperty(resource, RMLTVoc.Property.SERIALIZATION)
     if (serializationResource.isDefined) {
-      Some(serializationResource.get.uri)
+      serializationResource.get.uri
     } else {
-      None
+      Uri(FormatVoc.Class.NQUADS)
     }
   }
 }

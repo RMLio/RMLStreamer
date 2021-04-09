@@ -1,8 +1,4 @@
-package io.rml.framework.core.model
-
-import io.rml.framework.core.model.std.StdLogicalTarget
-
-import java.util.Objects
+package io.rml.framework.core.vocabulary
 
 /**
   * MIT License
@@ -28,22 +24,15 @@ import java.util.Objects
   * THE SOFTWARE.
   *
   * */
-trait LogicalTarget extends Node {
+object VoIDVoc {
+  val namespace = ("void", "http://rdfs.org/ns/void#")
 
-  def target: DataTarget
-
-  def compression: Option[Uri]
-
-  def serialization: Uri
-
-  override def identifier: String = {
-    Objects.hash(target.identifier, compression, serialization.identifier).toHexString
+  object Property {
+    val DATADUMP = namespace._2 + "dataDump"
   }
-}
 
-object LogicalTarget {
-  def apply(target: DataTarget, serialization: Uri, compression: Option[Uri]) = {
-    StdLogicalTarget(target, serialization, compression)
+  object Class {
+    val DATASET = namespace._2 + "Dataset"
   }
-}
 
+}
