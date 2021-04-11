@@ -73,7 +73,7 @@ object ParameterUtil {
   // possible post processor options
   object PostProcessorOption extends Enumeration {
     type PostProcessorOption = Value
-    val None, Bulk, JsonLD, Thesis= Value
+    val None, Bulk, JsonLD= Value
   }
 
 
@@ -127,10 +127,6 @@ object ParameterUtil {
       .text("If given, Flink's watermarking will be generated periodically with the given interval" +
         "If not given, a default value of 50ms will be used." +
       "This option is only valid for DataStreams.")
-    opt[Unit]("thesis")
-      .optional()
-      .action((_, config) => config.copy(postProcessor = PostProcessorOption.Thesis))
-      .text("Write ")
     // options specifically for writing output to file
     cmd("toFile")
       .text("Write output to file \n" +

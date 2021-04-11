@@ -83,7 +83,6 @@ object Main extends Logging {
       config.postProcessor match {
         case PostProcessorOption.Bulk => new BulkPostProcessor
         case PostProcessorOption.JsonLD => new JsonLDProcessor
-        case PostProcessorOption.Thesis => new ThesisProcessor
         case _ => new NopPostProcessor
       }
 
@@ -284,7 +283,7 @@ object Main extends Logging {
       val joinConfigMap = JoinConfigMapCache.getOrElse(tm.joinConfigMap.get, JoinConfigMap(None))
       val composer = StreamJoinComposer(childDataStream, parentDataStream, tm, joinConfigMap)
       // if there are join conditions defined join the child dataset and the parent dataset
-      val joined = composer.composeStreamJoin()
+      val joined = composer.composeStreamJoin().name("Window join the incoming items")
         // process the JoinedItems in an engine
         joined.map(new JoinedStreamProcessor(engine)).name("Execute mapping statements on joined items")
         // format the list of triples as strings
