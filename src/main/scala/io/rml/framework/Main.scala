@@ -43,7 +43,7 @@ import org.apache.flink.api.common.serialization.{SimpleStringEncoder, SimpleStr
 import org.apache.flink.api.scala._
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.core.fs.Path
-import org.apache.flink.streaming.api.CheckpointingMode
+import org.apache.flink.streaming.api.{CheckpointingMode, TimeCharacteristic}
 import org.apache.flink.streaming.api.functions.ProcessFunction
 import org.apache.flink.streaming.api.functions.sink.filesystem.{OutputFileConfig, StreamingFileSink}
 import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.BasePathBucketAssigner
@@ -114,6 +114,7 @@ object Main extends Logging {
       senv.enableCheckpointing(30000, CheckpointingMode.AT_LEAST_ONCE);
     }
 
+    senv.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
     senv.getConfig.setAutoWatermarkInterval(config.autoWatermarkInterval)
 
     if (formattedMapping.containsDatasetTriplesMaps() && !formattedMapping.containsStreamTriplesMaps()) {
