@@ -21,7 +21,7 @@ class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon: Double =
                                                            val defaultBucketSize: Long = 1000L,
                                                            val maxDuration: Long = 5000L,
                                                            val minDuration: Long = 50L,
-                                                           val updateCycle: Time = Time.milliseconds(100))
+                                                           val updateCycle: Time = Time.seconds(2))
   extends KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]] {
 
 

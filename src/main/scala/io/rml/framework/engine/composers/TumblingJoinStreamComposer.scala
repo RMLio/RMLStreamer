@@ -26,6 +26,6 @@ class TumblingJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]](child
 
     joined.apply((firstIterItems, secondIterItems) => {
       firstIterItems.flatMap(item1 => secondIterItems.map(item2 => JoinedItem(item1, item2)))
-    })
+    }).name("TumblingWindow Join")
   }
 }

@@ -18,6 +18,6 @@ class VC_TWJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]](childStr
 
     childStream.connect(parentStream)
       .keyBy(keySelectorWithJoinCondition(joinCondition.child.map(_.value)), keySelectorWithJoinCondition(joinCondition.parent.map(_.value)))
-      .process[String, Iterable[JoinedItem]](new VC_TWindow())
+      .process[String, Iterable[JoinedItem]](new VC_TWindow()).name("VCTWindow join")
   }
 }

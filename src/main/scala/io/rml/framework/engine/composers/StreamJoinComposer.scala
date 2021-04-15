@@ -13,7 +13,7 @@ abstract class StreamJoinComposer[T <: Iterable[Item],U <: Iterable[Item], V, W 
 (childStream:DataStream[T],
  parentStream:DataStream[U],
  tm: JoinedTriplesMap,
- var windowAssigner: WindowAssigner[Object,TimeWindow] =  TumblingEventTimeWindows.of(Time.milliseconds(20))) {
+ var windowAssigner: WindowAssigner[Object,TimeWindow] =  TumblingEventTimeWindows.of(Time.seconds(2))) extends {
 
 
 
@@ -46,7 +46,6 @@ object StreamJoinComposer {
     joinType match  {
       case VC_TWindowJoin => new VC_TWJoinStreamComposer(stream, stream2, tm)
       case TumblingJoin =>  new TumblingJoinStreamComposer(stream, stream2, tm)
-      case CrossJoin => new CrossJoinStreamComposer(stream, stream2, tm)
       case _ => new TumblingJoinStreamComposer(stream, stream2, tm)
     }
 

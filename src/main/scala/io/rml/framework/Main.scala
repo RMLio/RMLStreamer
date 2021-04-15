@@ -53,6 +53,7 @@ import org.apache.flink.util.Collector
 
 import java.util.Properties
 import io.rml.framework.engine.composers.{CrossJoin, StreamJoinComposer}
+import io.rml.framework.engine.windows.LatencyGauge
 
 import scala.collection.{immutable, mutable}
 
@@ -115,6 +116,8 @@ object Main extends Logging {
 
     senv.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
     senv.getConfig.setAutoWatermarkInterval(config.autoWatermarkInterval)
+    senv.getConfig.setParallelism(4)
+    env.getConfig.setParallelism(4)
 
     if (formattedMapping.containsDatasetTriplesMaps() && !formattedMapping.containsStreamTriplesMaps()) {
 
@@ -255,7 +258,7 @@ object Main extends Logging {
             // filter out all empty items (some iterators can emit empty items)
           }).filter(iterItems => {
           iterItems.nonEmpty
-        }).map(iterItems => iterItems.map(ThesisItem(_, System.currentTimeMillis())))
+        }).map(iterItems => iterItems.map(ThesisItem(_, System.currentTimeMillis()))).name("Latency-Start")
 
 
       val parentTriplesMap = TriplesMapsCache(tm.parentTriplesMap);
@@ -276,16 +279,18 @@ object Main extends Logging {
             // filter out all empty items
           }).filter(iterItems => {
           iterItems.nonEmpty
-        }).map(iterItems => iterItems.map(ThesisItem(_, System.currentTimeMillis())))
+        }).map(iterItems => iterItems.map(ThesisItem(_, System.currentTimeMillis()))).name("Latency-Start")
 
 
       //TODO: Be able to choose a specific stream join composer to compose the streaming pipeline
       val joinConfigMap = JoinConfigMapCache.getOrElse(tm.joinConfigMap.get, JoinConfigMap(None))
       val composer = StreamJoinComposer(childDataStream, parentDataStream, tm, joinConfigMap)
       // if there are join conditions defined join the child dataset and the parent dataset
-      val joined = composer.composeStreamJoin().name("Window join the incoming items")
+      val joined = composer.composeStreamJoin()
+
+
         // process the JoinedItems in an engine
-        joined.map(new JoinedStreamProcessor(engine)).name("Execute mapping statements on joined items")
+        joined.map(new LatencyGauge).name("LatencyMeasurement").map(new JoinedStreamProcessor(engine)).name("Execute mapping statements on joined items")
         // format the list of triples as strings
         .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
         .name("Convert triples to strings")
@@ -296,7 +301,7 @@ object Main extends Logging {
     })
 
     // union all datasets into one dataset
-    unionStreams(datasets)
+    unionStreams(datasets).slotSharingGroup("WindowJoinBenchmark") 
 
   }
 
