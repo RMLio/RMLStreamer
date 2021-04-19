@@ -76,21 +76,6 @@ class KafkaStreamTestSyncFnO extends StreamTestSync{
     logInfo("Creating Kafka client created.")
   }
 
-
-//  override def beforeTestCase(): Unit = {
-    // topics seem to be created automatically...
-
-    /*logInfo("Creating Kafka input topic...")
-    val topicName = "demo"
-    val numPartitions = 1
-    val replicationFactor = 1
-    val topic = new NewTopic(topicName, numPartitions, replicationFactor.toShort)
-    val createTopicsResult = admin.createTopics(ArrayBuffer(topic).asJava)
-    createTopicsResult.all().get()  // wait for completion of creating topics
-    Thread.sleep(2000)
-    logInfo("Creating Kafka input topic done.") */
-//  }
-
   override def afterTestCase(): Unit = {
     logInfo("Deleting Kafka input topic(s)...")
     val topics = admin.listTopics().names().get()
