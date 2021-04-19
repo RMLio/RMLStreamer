@@ -80,6 +80,8 @@ class TCPStreamTestSync extends StreamTestSync {
   }
 
   override def beforeTestCase(): Unit = {
+    // clear the loaded classes, this prevents an Exception that would occur when using classes
+    // from an unloaded class loader
     FnOEnvironment.loadedClassesMap.clear()
   }
 
