@@ -74,6 +74,8 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
 
   // Things to do before running one test case
   protected def beforeTestCase(): Unit = {
+    // clear the loaded classes, this prevents an Exception that would occur when using classes
+    // from an unloaded class loader
     FnOEnvironment.loadedClassesMap.clear()
   }
 
