@@ -7,6 +7,7 @@ import org.eclipse.paho.client.mqttv3.{MqttClient, MqttConnectOptions}
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 
 import java.net.URI
+import java.nio.charset.StandardCharsets
 
 class RichMQTTSink(val broker: String, val topic: String) extends RichSinkFunction[String] {
 
@@ -28,7 +29,7 @@ class RichMQTTSink(val broker: String, val topic: String) extends RichSinkFuncti
   }
 
   override def invoke(value: String, context: SinkFunction.Context[_]): Unit = {
-    val payload = value.getBytes()
+    val payload = value.getBytes(StandardCharsets.UTF_8)
     client.publish(topic, payload, 2, false)
   }
 
