@@ -43,6 +43,8 @@ class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
 
   private def executeTest(mappingFile: String): Unit = {
     NodeCache.clear();
+    // clear the loaded classes, this prevents an Exception that would occur when using classes
+    // from an unloaded class loader
     FnOEnvironment.loadedClassesMap.clear()
     RMLEnvironment.setGeneratorBaseIRI(Some("http://example.org/base/"))
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
