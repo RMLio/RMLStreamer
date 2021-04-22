@@ -25,7 +25,7 @@
 package io.rml.framework
 
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.NopPostProcessor
 import io.rml.framework.util.TestUtil
@@ -41,7 +41,7 @@ class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
 
 
   private def executeTest(mappingFile: String): Unit = {
-    TriplesMapsCache.clear();
+    NodeCache.clear();
     RMLEnvironment.setGeneratorBaseIRI(Some("http://example.org/base/"))
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment

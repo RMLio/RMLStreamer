@@ -25,7 +25,7 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.{Entity, Literal, ObjectMap, Uri}
 import io.rml.framework.core.vocabulary.R2RMLVoc
@@ -36,7 +36,8 @@ class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
     val logicalTargetIDs = higherLevelLogicalTargetIDs ++ objectMap.getAllLogicalTargetIds
     // check if it has a parent triple map
     if (objectMap.parentTriplesMap.isDefined) {
-      super.assemble(TriplesMapsCache.get(objectMap.parentTriplesMap.get).get.subjectMap, logicalTargetIDs)
+
+      super.assemble(NodeCache.getTriplesMap(objectMap.parentTriplesMap.get).get.subjectMap, logicalTargetIDs)
     } else if (objectMap.hasFunctionMap) {
       val assembledFunction = FunctionMapGeneratorAssembler().assemble(objectMap.functionMap.head, logicalTargetIDs)
       val termTypeString = objectMap.termType.map(_.toString).getOrElse("")

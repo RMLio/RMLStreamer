@@ -1,6 +1,6 @@
 package io.rml.framework.core.extractors
 
-import io.rml.framework.core.model.TriplesMap
+import io.rml.framework.core.model.{LogicalTarget, Node, TriplesMap}
 
 /**
   * MIT License
@@ -26,4 +26,23 @@ import io.rml.framework.core.model.TriplesMap
   * THE SOFTWARE.
   *
   * */
-object TriplesMapsCache extends scala.collection.mutable.HashMap[String, TriplesMap]
+object NodeCache extends scala.collection.mutable.HashMap[String, Node] {
+
+  def getTriplesMap(resource: String): Option[TriplesMap] = {
+    val node = NodeCache.get(resource)
+    node match {
+      case Some(tm: TriplesMap) => Some(tm)
+      case None => None
+      case _ => throw new InternalError(s"Expected TriplesMap in node cache for key ${resource}")
+    }
+  }
+
+  def getLogicalTarget(identifier: String): Option[LogicalTarget] = {
+    val node = NodeCache.get(identifier)
+    node match {
+      case Some(tm: LogicalTarget) => Some(tm)
+      case None => None
+      case _ => throw new InternalError(s"Expected TriplesMap in node cache for key ${identifier}")
+    }
+  }
+}

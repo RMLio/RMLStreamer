@@ -25,7 +25,7 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.{Item, JoinedItem}
 import io.rml.framework.core.model._
@@ -108,7 +108,7 @@ object StatementsAssembler {
 
   def assembleParentStatements(joinedTriplesMap: JoinedTriplesMap): List[Statement[JoinedItem]] = {
     val triples = new StatementsAssembler()
-      .assembleStatements(TriplesMapsCache.get(joinedTriplesMap.parentTriplesMap).get)
+      .assembleStatements(NodeCache.getTriplesMap(joinedTriplesMap.parentTriplesMap).get)
     triples.map(triple => ParentStatement(triple._1, triple._2, triple._3, triple._4, triple._5))
   }
 

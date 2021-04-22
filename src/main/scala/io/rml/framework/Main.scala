@@ -27,7 +27,7 @@ package io.rml.framework
 
 
 import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.{EmptyItem, Item, JoinedItem}
 import io.rml.framework.core.model._
@@ -374,7 +374,7 @@ object Main extends Logging {
 
     formattedMapping.joinedSteamTriplesMaps.foreach(joinedTm => {
       // identify the parent triples map
-      val parentTm = TriplesMapsCache.get(joinedTm.parentTriplesMap).get;
+      val parentTm = NodeCache.getTriplesMap(joinedTm.parentTriplesMap).get;
 
       // find the parent source of the join condition
       val joinParentSource = joinedTm.joinCondition.get.parent.identifier
@@ -545,7 +545,7 @@ object Main extends Logging {
         })
 
 
-      val parentTriplesMap = TriplesMapsCache.get(tm.parentTriplesMap).get;
+      val parentTriplesMap = NodeCache.getTriplesMap(tm.parentTriplesMap).get;
       val parentDataset =
       // Create a Source from the parents logical source
         Source(parentTriplesMap.logicalSource).asInstanceOf[FileDataSet]

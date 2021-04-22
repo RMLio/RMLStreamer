@@ -26,7 +26,7 @@ package io.rml.framework.engine
 
 import io.rml.framework.Main
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.util.Util
 import io.rml.framework.util.TestUtil
 import io.rml.framework.util.logging.Logger
@@ -39,7 +39,7 @@ import java.io.File
 class StatementEngineTest extends FunSuite with Matchers {
 
   private def executeTest(mappingFile: String): Unit = {
-    TriplesMapsCache.clear();
+    NodeCache.clear();
     RMLEnvironment.setGeneratorBaseIRI(Some("http://example.org/base/"))
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
