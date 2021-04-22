@@ -22,7 +22,7 @@
 <#LogicalTarget1> a rmlt:LogicalTarget;
   rmlt:target <#VoIDDump>;
   rmlt:serialization formats:N-Quads ;
-  rmlt:compression comp:GZip;
+  rmlt:compression comp:gzip;
 .
 
 <#TriplesMap> a rr:TriplesMap;
