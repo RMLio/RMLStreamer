@@ -28,8 +28,10 @@ object RMLCompVoc {
   val namespace = ("comp", "http://semweb.mmlab.be/ns/rml-compression#")
 
   object Class {
-    val GZIP = namespace._2 + "GZip"
-    val ZIP = namespace._2 + "Zip"
+    val GZIP = namespace._2 + "gzip"
+    val ZIP = namespace._2 + "zip"
+    val TARGZIP = namespace._2 + "targzip"
+    val TARXZ = namespace._2 + "tarxz"
   }
 
 }
