@@ -116,8 +116,8 @@ object Main extends Logging {
 
     senv.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
     senv.getConfig.setAutoWatermarkInterval(config.autoWatermarkInterval)
-    senv.getConfig.setParallelism(4)
-    env.getConfig.setParallelism(4)
+    senv.getConfig.setParallelism(3)
+    env.getConfig.setParallelism(3)
 
     if (formattedMapping.containsDatasetTriplesMaps() && !formattedMapping.containsStreamTriplesMaps()) {
 
@@ -258,7 +258,10 @@ object Main extends Logging {
             // filter out all empty items (some iterators can emit empty items)
           }).filter(iterItems => {
           iterItems.nonEmpty
-        }).map(iterItems => iterItems.map(ThesisItem(_, System.currentTimeMillis()))).name("Latency-Start")
+        }).map(iterItems => {
+          val time = System.currentTimeMillis()
+          iterItems.map(ThesisItem(_, time))
+        }).name("Latency-Start")
 
 
       val parentTriplesMap = TriplesMapsCache(tm.parentTriplesMap);
@@ -279,7 +282,10 @@ object Main extends Logging {
             // filter out all empty items
           }).filter(iterItems => {
           iterItems.nonEmpty
-        }).map(iterItems => iterItems.map(ThesisItem(_, System.currentTimeMillis()))).name("Latency-Start")
+        }).map(iterItems => {
+          val time = System.currentTimeMillis()
+          iterItems.map(ThesisItem(_, time))
+        }).name("Latency-Start")
 
 
       //TODO: Be able to choose a specific stream join composer to compose the streaming pipeline
@@ -692,14 +698,12 @@ object Main extends Logging {
         val joined: JoinDataSet[Item, Item] =
           childDataset.join(parentDataset)
             .where(item => {
-              println("KLSDJFMLKJEFISLMDKJFLSKJDFMLSJDF")
-              println(tm.joinCondition.get.child)
-              println(item.refer(tm.joinCondition.get.child.head.toString))
-
-              item.refer(tm.joinCondition.get.child.head.value).get.head
+              val e = tm.joinCondition.get.child.flatMap( cond => item.refer(cond.value)).flatten
+              e.mkString(",")
             }) // empty fields are already filtered
             .equalTo(item => {
-              item.refer(tm.joinCondition.get.parent.head.value).get.head
+              val e = tm.joinCondition.get.parent.flatMap( cond => item.refer(cond.value)).flatten
+              e.mkString(",")
             }) // empty fields are already filtered
 
         joined.name("Join child and parent.")

@@ -16,13 +16,17 @@ class LatencyGauge extends RichMapFunction[Iterable[JoinedItem], Iterable[Joined
   }
   override def map(in: Iterable[JoinedItem]): Iterable[JoinedItem] = {
     val now = System.currentTimeMillis()
-    val joinedItem = in.head
-    val childTime = joinedItem.child.refer("latency").get.head.toLong
-    val parentTime= joinedItem.parent.refer("latency").get.head.toLong
-    val childLatency = now - childTime
-    val parentlatency = now - parentTime
-    latency = if (childLatency < parentlatency) childLatency else parentlatency
 
+    latency = in.map(
+     joinedItem => {
+
+       val childTime = joinedItem.child.refer("latency").get.head.toLong
+       val parentTime = joinedItem.parent.refer("latency").get.head.toLong
+       val childLatency = now - childTime
+       val parentlatency = now - parentTime
+
+       childLatency.min(parentlatency)
+     }).min
     in
   }
 }
