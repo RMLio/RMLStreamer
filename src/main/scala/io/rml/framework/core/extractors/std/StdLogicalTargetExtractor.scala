@@ -1,6 +1,6 @@
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{DataTargetExtractor, ExtractorUtil, LogicalTargetExtractor}
+import io.rml.framework.core.extractors.{DataTargetExtractor, ExtractorUtil, LogicalTargetExtractor, NodeCache}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.model.{DataTarget, LogicalTarget, Uri}
@@ -49,7 +49,9 @@ class StdLogicalTargetExtractor(dataTargetExtractor: DataTargetExtractor) extend
     properties.foreach(logicalTargetResource => {
       logicalTargetResource match {
         case resource: RDFResource => {
-          result += extractLogicalTargetProperties(resource)
+          val logicalTarget = extractLogicalTargetProperties(resource)
+          NodeCache.put(logicalTarget.identifier, logicalTarget)
+          result += logicalTarget
         }
         case _ => throw new RMLException("Only logical target from resource allowed.")
       }
