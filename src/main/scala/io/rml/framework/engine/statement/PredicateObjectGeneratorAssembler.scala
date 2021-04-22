@@ -32,17 +32,26 @@ class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGe
                                         objectGeneratorAssembler: ObjectGeneratorAssembler,
                                         graphGeneratorAssembler: GraphGeneratorAssembler) extends Logging{
 
-  def assemble(predicateObjectMap: PredicateObjectMap)
-  : List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
+  def assemble(predicateObjectMap: PredicateObjectMap, higherLevelLogicalTargetIDs: Set[String])
+  : List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]], Set[String])] = {
 
     this.logDebug("assemble (predicateObjectMap)")
+    val graphLogicalTargetIDs = if (predicateObjectMap.graphMap.isDefined) {
+      predicateObjectMap.graphMap.get.getAllLogicalTargetIds
+    } else {
+      Set()
+    }
 
-    val graphStatement = graphGeneratorAssembler.assemble(predicateObjectMap.graphMap)
+    val graphStatement = graphGeneratorAssembler.assemble(predicateObjectMap.graphMap, higherLevelLogicalTargetIDs ++ graphLogicalTargetIDs)
     predicateObjectMap.predicateMaps.flatMap(predicateMap => {
+      val predicateLogicalTargetIDs = predicateMap.getAllLogicalTargetIds
       predicateObjectMap.objectMaps.map(objectMap => {
-        (predicateGeneratorAssembler.assemble(predicateMap),
-          objectGeneratorAssembler.assemble(objectMap),
-          graphStatement)
+        val objectLogicalTargetIDs = objectMap.getAllLogicalTargetIds
+        val allLogicalTargetIDs = higherLevelLogicalTargetIDs ++ predicateLogicalTargetIDs ++ objectLogicalTargetIDs ++ graphLogicalTargetIDs
+        (predicateGeneratorAssembler.assemble(predicateMap, allLogicalTargetIDs),
+          objectGeneratorAssembler.assemble(objectMap, allLogicalTargetIDs),
+          graphStatement,
+          allLogicalTargetIDs)
       })
 
     })

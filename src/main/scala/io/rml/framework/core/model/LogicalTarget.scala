@@ -37,7 +37,7 @@ trait LogicalTarget extends Node {
   def serialization: Uri
 
   override def identifier: String = {
-    Objects.hash(target.identifier, compression, serialization.identifier).toHexString
+    Objects.hash(target.identifier, compression.map(uri => uri.identifier).getOrElse(""), serialization.identifier).toHexString
   }
 }
 

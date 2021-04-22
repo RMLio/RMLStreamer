@@ -32,7 +32,7 @@ case class StdGraphMap(identifier: String,
                        constant: Option[Entity],
                        reference: Option[Literal],
                        template: Option[Literal],
-                       logicalTargets: List[LogicalTarget]) extends GraphMap {
+                       logicalTargets: Set[LogicalTarget]) extends GraphMap {
 
   override def termType: Option[Uri] = Some(Uri(R2RMLVoc.Class.IRI))
 

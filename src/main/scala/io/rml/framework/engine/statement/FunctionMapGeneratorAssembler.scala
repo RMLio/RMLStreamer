@@ -35,16 +35,16 @@ import io.rml.framework.shared.RMLException
 case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
 
 
-  override def assemble(termMap: TermMap): (Item) => Option[Iterable[Entity]] = {
+  override def assemble(termMap: TermMap, higherLevelLogicalTargetIDs: Set[String]): (Item) => Option[Iterable[Entity]] = {
     require(termMap.isInstanceOf[FunctionMap], "Wrong TermMap instance.")
 
     val functionMap = termMap.asInstanceOf[FunctionMap]
     val pomAssembler = PredicateObjectGeneratorAssembler()
 
     val assembledPom = functionMap.functionValue.sortBy(_.identifier) // sortBy required for retaining correct parameter ordering
-      .flatMap(pomAssembler.assemble)
+      .flatMap(predicateObjectMap => pomAssembler.assemble(predicateObjectMap, higherLevelLogicalTargetIDs))
       .map {
-        case (predicateGen, objGen, _) => (predicateGen, objGen)
+        case (predicateGen, objGen, _, logicalTargetIDs) => (predicateGen, objGen, logicalTargetIDs)
       }
 
     val function = parseFunction(assembledPom)
@@ -53,7 +53,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
   }
 
   private def parseFunction(assembledPom:
-                            List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Option[Function] = {
+                            List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Set[String])]): Option[Function] = {
 
     this.logDebug("parseFunction (assembledPom)")
     val placeHolder: List[SerializableRDFQuad] = generateFunctionTriples(new EmptyItem(), assembledPom)
@@ -87,7 +87,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
    * @param assembledPom List of predicate object generator functions
    * @return anon function taking in [[Item]] and returns entities using the function
    */
-  private def createAssemblerFunction(function: Option[Function], assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): Item => Option[Iterable[Entity]] = {
+  private def createAssemblerFunction(function: Option[Function], assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Set[String])]): Item => Option[Iterable[Entity]] = {
     (item: Item) => {
       val triples: List[SerializableRDFQuad] = generateFunctionTriples(item, assembledPom)
       val paramTriples = triples.filter(triple => triple.predicate.uri != Uri(FunVoc.FnO.Property.EXECUTES))
@@ -108,16 +108,16 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
    * @param item
    * @return
    */
-  private def generateFunctionTriples(item: Item, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]])]): List[SerializableRDFQuad] = {
+  private def generateFunctionTriples(item: Item, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Set[String])]): List[SerializableRDFQuad] = {
 
     val result = for{
-      (predicateGen, objGen) <- assembledPom
+      (predicateGen, objGen, logicalTargetIDs) <- assembledPom
       predicateIter <- predicateGen(item)
       objIter <- objGen(item)
     } yield for {
       predicate <- predicateIter
       obj <- objIter
-      quad <-  Statement.generateQuad(Blank(), predicate, obj)
+      quad <-  Statement.generateQuad(Blank(), predicate, obj, logicalTargetIDs)
     } yield quad
 
 

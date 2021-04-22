@@ -44,7 +44,7 @@ object PredicateMap {
             reference: Option[Literal] = None,
             template: Option[Literal] = None,
             termType: Option[Uri] = None,
-            logicalTargets: List[LogicalTarget]): PredicateMap =
+            logicalTargets: Set[LogicalTarget]): PredicateMap =
 
     StdPredicateMap(identifier,
       functionMap,

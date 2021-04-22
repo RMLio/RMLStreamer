@@ -40,7 +40,7 @@ class StdLogicalTargetExtractor(dataTargetExtractor: DataTargetExtractor) extend
     * @param node Node to extract from.
     * @return
     */
-  override def extract(node: RDFResource): List[LogicalTarget] = {
+  override def extract(node: RDFResource): Set[LogicalTarget] = {
     logDebug(s"Extracting logical target: ${node.uri}")
 
     var result = new ListBuffer[LogicalTarget]
@@ -55,7 +55,7 @@ class StdLogicalTargetExtractor(dataTargetExtractor: DataTargetExtractor) extend
       }
     })
 
-    result.toList
+    result.toSet
   }
 
   private def extractLogicalTargetProperties(resource: RDFResource): LogicalTarget = {

@@ -40,7 +40,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  def assemble(termMap: TermMap): (Item) => Option[Iterable[Entity]] = {
+  def assemble(termMap: TermMap, higherLevelLogicalTargetIDs: Set[String]): (Item) => Option[Iterable[Entity]] = {
     if (termMap.hasConstant) {
       constantGenerator(termMap)
     } else if (termMap.hasTemplate) {

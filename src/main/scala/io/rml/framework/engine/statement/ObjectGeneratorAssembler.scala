@@ -32,13 +32,13 @@ import io.rml.framework.core.vocabulary.R2RMLVoc
 
 class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
 
-  def assemble(objectMap: ObjectMap): (Item) => Option[Iterable[Entity]] = {
-
+  def assemble(objectMap: ObjectMap, higherLevelLogicalTargetIDs: Set[String]): (Item) => Option[Iterable[Entity]] = {
+    val logicalTargetIDs = higherLevelLogicalTargetIDs ++ objectMap.getAllLogicalTargetIds
     // check if it has a parent triple map
     if (objectMap.parentTriplesMap.isDefined) {
-      super.assemble(TriplesMapsCache.get(objectMap.parentTriplesMap.get).get.subjectMap)
+      super.assemble(TriplesMapsCache.get(objectMap.parentTriplesMap.get).get.subjectMap, logicalTargetIDs)
     } else if (objectMap.hasFunctionMap) {
-      val assembledFunction = FunctionMapGeneratorAssembler().assemble(objectMap.functionMap.head)
+      val assembledFunction = FunctionMapGeneratorAssembler().assemble(objectMap.functionMap.head, logicalTargetIDs)
       val termTypeString = objectMap.termType.map(_.toString).getOrElse("")
       assembledFunction.andThen(item => {
         if (item.isDefined) {
@@ -55,7 +55,7 @@ class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
       })
 
     } else {
-      super.assemble(objectMap)
+      super.assemble(objectMap, Set())
     }
 
   }

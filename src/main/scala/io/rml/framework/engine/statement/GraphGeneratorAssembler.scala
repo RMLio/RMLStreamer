@@ -29,27 +29,27 @@ import io.rml.framework.core.model.{GraphMap, TermMap, Uri}
 
 class GraphGeneratorAssembler extends TermMapGeneratorAssembler {
 
-  def assemble(graphMapOpt: Option[GraphMap]): Item => Option[Iterable[Uri]] = {
+  def assemble(graphMapOpt: Option[GraphMap], higherLevelLogicalTargetIDs: Set[String]): Item => Option[Iterable[Uri]] = {
     graphMapOpt match {
       case None => Item => None
-      case Some(map) => assemble(map)
+      case Some(map) => assemble(map, higherLevelLogicalTargetIDs)
     }
   }
 
 
-  override def assemble(termMap: TermMap): Item => Option[Iterable[Uri]] =
+  override def assemble(termMap: TermMap, higherLevelLogicalTargetIDs: Set[String]): Item => Option[Iterable[Uri]] = {
     if (termMap.hasFunctionMap) {
-      val assembled = FunctionMapGeneratorAssembler().assemble(termMap.functionMap.head)
+      val logicalTargetIDs = termMap.getAllLogicalTargetIds
+      val assembled = FunctionMapGeneratorAssembler().assemble(termMap.functionMap.head, higherLevelLogicalTargetIDs ++ logicalTargetIDs)
 
 
       assembled.andThen(result => {
         result.map(iter => iter.map(elem => Uri(elem.value)))
       })
     } else {
-    super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[Uri]]]
+      super.assemble(termMap, Set()).asInstanceOf[(Item) => Option[Iterable[Uri]]]
     }
-
-
+  }
 }
 
 object GraphGeneratorAssembler {

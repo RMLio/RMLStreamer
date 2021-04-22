@@ -31,11 +31,12 @@ import io.rml.framework.core.model.{TermMap, TermNode, Uri}
 
 
 class SubjectGeneratorAssembler extends TermMapGeneratorAssembler {
-  override def assemble(termMap: TermMap): (Item) => Option[Iterable[TermNode]] = {
+  override def assemble(termMap: TermMap, higherLevelLogicalTargetIDs: Set[String]): (Item) => Option[Iterable[TermNode]] = {
 
     if(termMap.hasFunctionMap){
+      val logicalTargetIDs = higherLevelLogicalTargetIDs ++ termMap.getAllLogicalTargetIds
       val fmap = termMap.functionMap.head
-      val assembledFunction = FunctionMapGeneratorAssembler().assemble(fmap)
+      val assembledFunction = FunctionMapGeneratorAssembler().assemble(fmap, logicalTargetIDs)
       assembledFunction.andThen(item => {
 
         if(item.isDefined) {
@@ -49,7 +50,7 @@ class SubjectGeneratorAssembler extends TermMapGeneratorAssembler {
       })
 
     }else {
-      super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[TermNode]]]
+      super.assemble(termMap, Set()).asInstanceOf[(Item) => Option[Iterable[TermNode]]]
     }
   }
 

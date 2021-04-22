@@ -41,7 +41,7 @@ import scala.util.matching.Regex
 abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
   lazy private val logicalTargetExtractor: LogicalTargetExtractor = LogicalTargetExtractor()
 
-  protected def extractLogicalTargets(node: RDFResource): List[LogicalTarget] = {
+  protected def extractLogicalTargets(node: RDFResource): Set[LogicalTarget] = {
     logicalTargetExtractor.extract(node)
   }
 

@@ -46,6 +46,6 @@ object GraphMap {
             reference: Option[Literal],
             template: Option[Literal],
             termType: Option[Uri],
-            logicalTargets: List[LogicalTarget]): GraphMap = StdGraphMap(
+            logicalTargets: Set[LogicalTarget]): GraphMap = StdGraphMap(
     identifier, functionMap, constant, reference, template, logicalTargets)
 }

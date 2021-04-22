@@ -46,6 +46,14 @@ trait PredicateObjectMap extends Node {
   def predicateMaps: List[PredicateMap]
 
   def graphMap: Option[GraphMap]
+
+  def getGraphMapLogicalTargetIds: Set[String] = {
+    if (graphMap.isDefined) {
+      graphMap.get.getAllLogicalTargetIds
+    } else {
+      Set()
+    }
+  }
 }
 
 object PredicateObjectMap {

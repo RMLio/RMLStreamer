@@ -33,4 +33,4 @@ case class StdPredicateMap(identifier: String,
                            reference: Option[Literal],
                            template: Option[Literal],
                            termType: Option[Uri],
-                           logicalTargets: List[LogicalTarget]) extends PredicateMap
+                           logicalTargets: Set[LogicalTarget]) extends PredicateMap
