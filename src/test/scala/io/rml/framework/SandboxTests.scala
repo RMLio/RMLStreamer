@@ -25,7 +25,6 @@
 package io.rml.framework
 
 import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
-import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.NopPostProcessor
@@ -138,12 +137,4 @@ class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
   test("sandbox/logical-target/example-2-subjectMap") {
     executeTest("sandbox/logical-target/example-2-subjectMap/mapping.ttl")
   }
-
-
-
-
-
-
-
-
 }
