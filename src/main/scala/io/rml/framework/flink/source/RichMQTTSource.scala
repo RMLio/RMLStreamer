@@ -15,7 +15,20 @@ import scala.collection.JavaConversions._
   * @param properties
   * @tparam T
   */
-case class RichMQTTSource(properties: Properties) extends RichSourceFunction[String] with Logging {
+case class RichMQTTSource(hypermediaTarget: String,
+                          contentType: String,
+                          controlPacketValue: String,
+                          dup: String,
+                          qos: Option[String]) extends RichSourceFunction[String] with Logging {
+
+  private val properties = new Properties;
+  properties.put("hypermediaTarget", hypermediaTarget);
+  properties.put("contentType", contentType);
+  properties.put("controlPacketValue", controlPacketValue);
+  if (qos.isDefined) {
+    properties.put("qos", qos.get);
+  }
+  properties.put("dup", dup);
 
   private var client: MqttClient = _
 

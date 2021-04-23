@@ -25,13 +25,18 @@
 package io.rml.framework.core.model
 
 
-import java.util.{Objects, Properties}
-import scala.collection.JavaConversions._
+import java.util.Objects
 
-case class MQTTStream(properties : Properties) extends StreamDataSource {
+case class MQTTStream(
+                       hypermediaTarget: String,
+                       contentType: String,
+                       controlPacketValue: String,
+                       dup: String,
+                       qos: Option[String]
+                     ) extends StreamDataSource {
 
   override def uri: ExplicitNode = {
-    val totalHash = Objects.hash(properties.entrySet().map(e=>s"${e.getKey}=${e.getValue}"))
+    val totalHash = Objects.hash(hypermediaTarget, contentType, controlPacketValue, dup, qos.getOrElse(""))
     Uri(totalHash.toHexString)
   }
 }
