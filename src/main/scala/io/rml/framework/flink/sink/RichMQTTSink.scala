@@ -28,7 +28,7 @@ class RichMQTTSink(val broker: String, val topic: String) extends RichSinkFuncti
     client.connect(connectionOptions)
   }
 
-  override def invoke(value: String, context: SinkFunction.Context[_]): Unit = {
+  override def invoke(value: String, context: SinkFunction.Context): Unit = {
     val payload = value.getBytes(StandardCharsets.UTF_8)
     client.publish(topic, payload, 2, false)
   }
