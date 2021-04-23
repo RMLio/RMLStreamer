@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Support for stream partitioning in windows
 * Joins of data streams
 
+### Added
+* Target in RML TODO: link to spec
+
+### Changed
+* Updated JsonSurfer from version 1.5.1 to 1.6.0
+
 ## [2.1.0] - 2020-03-18
 
 ### Added
