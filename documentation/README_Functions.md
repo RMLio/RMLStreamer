@@ -40,7 +40,7 @@ Note that the function descriptions and function mappings are present.
 
 The command for running the RML Streamer on Flink should look like
 ```
-~/flink/flink-1.12.2-scala_2.11/bin/flink run -c io.rml.framework.Main RMLStreamer-2.1.1-SNAPSHOT.jar toFile --output-path $(pwd)'/out.ttl' -m mapping.ttl
+~/flink/flink-1.11.2-scala_2.11/bin/flink run -c io.rml.framework.Main RMLStreamer-2.0.1-SNAPSHOT.jar toFile --output-path $(pwd)'/out.ttl' -m mapping.ttl
 ```       
        
 ## Test Cases
