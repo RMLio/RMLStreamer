@@ -6,7 +6,10 @@ import org.apache.flink.api.scala.metrics.ScalaGauge
 import org.apache.flink.configuration.Configuration
 
 
-class LatencyGauge extends RichMapFunction[Iterable[JoinedItem], Iterable[JoinedItem]]{
+class LatencyGauge(val windowType: WindowType) extends RichMapFunction[Iterable[JoinedItem], Iterable[JoinedItem]]{
+
+
+
   @transient private var latency:Long = 0
   override def open(parameters: Configuration): Unit = {
     super.open(parameters)
@@ -17,7 +20,7 @@ class LatencyGauge extends RichMapFunction[Iterable[JoinedItem], Iterable[Joined
   override def map(in: Iterable[JoinedItem]): Iterable[JoinedItem] = {
     val now = System.currentTimeMillis()
 
-    latency = in.map(
+    val latency_list = in.flatMap(
      joinedItem => {
 
        val childTime = joinedItem.child.refer("latency").get.head.toLong
@@ -25,8 +28,13 @@ class LatencyGauge extends RichMapFunction[Iterable[JoinedItem], Iterable[Joined
        val childLatency = now - childTime
        val parentlatency = now - parentTime
 
-       childLatency.min(parentlatency)
-     }).min
+       List(childLatency, parentlatency)
+     })
+
+    latency = windowType match {
+      case VCTWindow => latency_list.min
+      case TumblingWindow => latency_list.sum / latency_list.size
+    }
     in
   }
 }

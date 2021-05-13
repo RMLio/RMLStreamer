@@ -116,8 +116,6 @@ object Main extends Logging {
 
     senv.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
     senv.getConfig.setAutoWatermarkInterval(config.autoWatermarkInterval)
-    senv.getConfig.setParallelism(3)
-    env.getConfig.setParallelism(3)
 
     if (formattedMapping.containsDatasetTriplesMaps() && !formattedMapping.containsStreamTriplesMaps()) {
 
@@ -296,7 +294,8 @@ object Main extends Logging {
 
 
         // process the JoinedItems in an engine
-        joined.map(new LatencyGauge).name("LatencyMeasurement").map(new JoinedStreamProcessor(engine)).name("Execute mapping statements on joined items")
+        joined.map(new LatencyGauge(joinConfigMap.windowType.get)).name("LatencyMeasurement")
+          .map(new JoinedStreamProcessor(engine)).name("Execute mapping statements on joined items")
         // format the list of triples as strings
         .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
         .name("Convert triples to strings")
