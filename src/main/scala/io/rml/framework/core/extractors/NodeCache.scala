@@ -45,4 +45,10 @@ object NodeCache extends scala.collection.mutable.HashMap[String, Node] {
       case _ => throw new InternalError(s"Expected TriplesMap in node cache for key ${identifier}")
     }
   }
+
+  def logicalTargetIterator: Iterator[(String, LogicalTarget)] = {
+    this.iterator
+      .filter(entry => entry._2.isInstanceOf[LogicalTarget])
+      .map(entry => (entry._1, entry._2.asInstanceOf[LogicalTarget]))
+  }
 }

@@ -111,7 +111,7 @@ case class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
 
 object Statement extends Logging {
 
-  def quadCombination(subjectIter: Iterable[TermNode], predicateIter: Iterable[Uri], objIter: Iterable[Entity], graphIterOpt: Option[Iterable[Uri]] = None): Iterable[(TermNode, Uri, Entity, Option[Uri])] = {
+  private def quadCombination(subjectIter: Iterable[TermNode], predicateIter: Iterable[Uri], objIter: Iterable[Entity], graphIterOpt: Option[Iterable[Uri]] = None): Iterable[(TermNode, Uri, Entity, Option[Uri])] = {
 
     val graphIter: Iterable[Uri] = graphIterOpt getOrElse List()
 
@@ -148,7 +148,10 @@ object Statement extends Logging {
     }
     val graphUri = graphOpt.map(SerializableRDFResource)
 
-    val result = Some(SerializableRDFQuad(subjectResource, predicateResource, objectNode, graphUri, logicalTargetIDs))
+    // if there are no logical target IDs, then the "default" logical target ID has to be set.
+    val newLogicalTargetIDs: Set[String] = if (logicalTargetIDs.isEmpty) Set("default") else logicalTargetIDs
+
+    val result = Some(SerializableRDFQuad(subjectResource, predicateResource, objectNode, graphUri, newLogicalTargetIDs))
     logDebug(result.get.toString)
     result
   }

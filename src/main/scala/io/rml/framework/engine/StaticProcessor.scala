@@ -29,7 +29,12 @@ import io.rml.framework.engine.statement.StatementEngine
 
 abstract class StaticProcessor[T<:Item](engine: StatementEngine[T]) (implicit postProcessor: PostProcessor) extends  Processor[T, T](engine) {
 
-  override def map(in: T): List[String] = {
+  /**
+    * Maps items to a iterable of (logical target ID, rendered RDF statement(s)) pairs
+    * @param in Input items, in RMLStreamer of [[Item]] type
+    * @return
+    */
+  override def map(in: T): Iterable[(String, String)] = {
     val triples = engine.process(in)
 
     postProcessor.process(triples)

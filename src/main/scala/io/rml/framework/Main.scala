@@ -37,6 +37,7 @@ import io.rml.framework.engine._
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{RMLPartitioner, UniversalKafkaConnectorFactory}
 import io.rml.framework.flink.function.{FnOEnvironmentLoader, FnOEnvironmentStreamLoader, RichItemIdentityFunction, RichStreamItemIdentityFunction}
+import io.rml.framework.flink.sink.{RichMQTTSink, TargetSinkFactory}
 import io.rml.framework.flink.source.{FileDataSet, Source}
 import org.apache.flink.api.common.serialization.{SimpleStringEncoder, SimpleStringSchema}
 import org.apache.flink.api.scala._
@@ -52,7 +53,6 @@ import org.apache.flink.util.Collector
 
 import java.util.Properties
 import scala.collection.{immutable, mutable}
-import io.rml.framework.flink.sink.RichMQTTSink
 
 /**
   *
@@ -240,31 +240,26 @@ object Main extends Logging {
         new RichStreamItemIdentityFunction()
       }
 
+   // Create sinks for every logical target
+    val logicalTargetId2Sinks = TargetSinkFactory.createStreamSinksFromLogicalTargetCache()
+
     // This is the collection of all data streams that are created by the current mapping
-    val processedStreams: immutable.Iterable[DataStream[String]] =
+    val processedStreams: immutable.Iterable[DataStream[String]] = {
       sourceEngineMap.map(entry => {
         val source = entry._1.asInstanceOf[io.rml.framework.flink.source.Stream]
         val engine = entry._2
         // link the different steps in each pipeline
-        source.stream // this will generate a stream of items
+        val dataStream = source.stream // this will generate a stream of items
           // process every item by a processor with a loaded engine
 
           .map(preProcessingFunction)
           .map(new StdStreamProcessor(engine))
           .name("Execute mapping statements on items")
 
-          // format every list of triples (as strings)
-          .flatMap(
-            list => {
-              if (list.nonEmpty) {
-                Some(list.reduce((a, b) => a + "\n" + b) + "\n\n")
-              } else {
-                None
-              }
-            }
-          )
-          .name("Convert triples to strings")
+        // add sinks to the data stream
+        TargetSinkFactory.appendSinksToStream(logicalTargetId2Sinks, dataStream)
       })
+    }
 
     // union all streams to one final stream
     unionStreams(processedStreams)
@@ -354,17 +349,13 @@ object Main extends Logging {
 
         // the "normal" scenario.
         val engine = StatementEngine.fromTriplesMaps(List(triplesMap))
-        stream
+        val dataStream = stream
           .map(new StdStreamProcessor(engine))
           .name("Execute mapping statements on items")
 
-          // format every list of triples (as strings)
-          .flatMap(list =>
-            if (list.nonEmpty) {
-              Some(list.reduce((a, b) => a + "\n" + b) + "\n\n")
-            } else None
-          )
-          .name("Convert triples to strings")
+        val logicalTargetId2Sinks = TargetSinkFactory.createStreamSinksFromLogicalTargetCache()
+
+        TargetSinkFactory.appendSinksToStream(logicalTargetId2Sinks, dataStream)
       }
 
     })
@@ -508,9 +499,16 @@ object Main extends Logging {
             .map(preProcessingFunction)
           .map(new StdStaticProcessor(engine))
           .name("Execute mapping statements on items")
-
+          .map(outputStringToLogicalTargetIDs => {
+            outputStringToLogicalTargetIDs.map(outputStringToLogicalTargetID => outputStringToLogicalTargetID._2)
+            // TODO: integrate logical target for data set.
+          })
+          .name("Ignoring the logical target for now.")
+          .flatMap(list => {
+            list.seq
+          })
           // format every list of triples (as strings)
-          .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b) + "\n\n") else None)
+          .reduce((a, b) => a + "\n" + b + "\n\n")
           .name("Convert triples to strings")
       })
 
@@ -592,7 +590,16 @@ object Main extends Logging {
           .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items")
 
           // format the list of triples as strings
-          .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None)
+          .map(outputStringToLogicalTargetIDs => {
+            outputStringToLogicalTargetIDs.map(outputStringToLogicalTargetID => outputStringToLogicalTargetID._2)
+            // TODO: integrate logical target for data set.
+          })
+          .name("Ignoring the logical target for now.")
+          .flatMap(list => {
+            list.seq
+          })
+          // format every list of triples (as strings)
+          .reduce((a, b) => a + "\n" + b + "\n\n")
           .name("Convert triples to strings")
 
       } else { // if there are no join conditions a cross join will be executed
@@ -604,7 +611,16 @@ object Main extends Logging {
           JoinedItem(items._1, items._2)
         ) // create a JoinedItem from the crossed items
           .map(new JoinedStaticProcessor(engine)).name("Execute mapping statements on joined items") // process the joined items
-          .flatMap(list => if (list.nonEmpty) Some(list.reduce((a, b) => a + "\n" + b)) else None) // format the triples
+          .map(outputStringToLogicalTargetIDs => {
+            outputStringToLogicalTargetIDs.map(outputStringToLogicalTargetID => outputStringToLogicalTargetID._2)
+            // TODO: integrate logical target for data set.
+          })
+          .name("Ignoring the logical target for now.")
+          .flatMap(list => {
+            list.seq
+          })
+          // format every list of triples (as strings)
+          .reduce((a, b) => a + "\n" + b + "\n\n")
           .name("Convert joined triples to strings")
       }
 
@@ -645,8 +661,5 @@ object Main extends Logging {
       streams.tail.foldLeft(head)((a, b) => a.union(b))
     } else head
   }
-
-
-
 
 }
