@@ -11,10 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Joins of data streams
 
 ### Added
-* Target in RML TODO: link to spec
+* [Target in RML](https://rml.io/specs/rml-target) for streams: define an output sink at term map level.
 
 ### Changed
 * Updated JsonSurfer from version 1.5.1 to 1.6.0
+* Updated Flink from version 1.11.3 to 1.12.2
 
 ## [2.1.0] - 2020-03-18
 
