@@ -206,7 +206,6 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     val customConfig = new Configuration()
     customConfig.setString("io.tmp.dirs", getTempDir.getAbsolutePath)
     customConfig.setString("rest.bind-port", "50000-51000") // see https://github.com/apache/flink/commit/730eed71ef3f718d61f85d5e94b1060844ca56db
-    customConfig.setString("classloader.check-leaked-classloader", "false") // this option is to required to fix strange issue related to class loading, see discussion: https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/issues/121
 
     val configuration = new MiniClusterConfiguration.Builder()
       .setConfiguration(customConfig)
