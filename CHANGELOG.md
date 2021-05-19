@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Joins of data streams
 
 ### Added
-* [Target in RML](https://rml.io/specs/rml-target) for streams: define an output sink at term map level.
+* Support for using Web of Things descriptions in logical soure and logical target, as described in [Van Assche et al](https://link.springer.com/chapter/10.1007/978-3-030-74296-6_26)
+  and [Target in RML specification](https://rml.io/specs/rml-target).
+  The current imlementation is a proof-of-concept. As WoT data source RMLStreamer supports MQTT streams;
+  as logical target a file dump is supported.
 
 ### Changed
 * Updated JsonSurfer from version 1.5.1 to 1.6.0
