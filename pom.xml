@@ -113,7 +113,7 @@ SOFTWARE.
         <dependency>
             <groupId>com.github.jsurfer</groupId>
             <artifactId>jsurfer-jackson</artifactId>
-            <version>1.5.1</version>
+            <version>1.6.0</version>
             <exclusions>
                 <!-- provided by Jena -->
                 <exclusion>

@@ -25,7 +25,7 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{DataSourceExtractor, LogicalSourceExtractor}
+import io.rml.framework.core.extractors.{DataSourceExtractor, ExtractorUtil, LogicalSourceExtractor}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.model.{DataSource, Literal, LogicalSource, Uri}
@@ -97,20 +97,7 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
     */
   @throws(classOf[RMLException])
   private def extractIterator(resource: RDFResource, referenceFormulation: Uri): String = {
-
-    val property = RMLVoc.Property.ITERATOR
-    val properties = resource.listProperties(property)
-
-    if (properties.size > 1) throw new RMLException(resource.uri + ": invalid amount of iterators.")
-    if (properties.isEmpty) {
-      return DEFAULT_ITERATOR_MAP(referenceFormulation.value)
-    }
-
-    properties.head match {
-      case uri: Uri => throw new RMLException(uri + ": iterator must be a literal.")
-      case literal: Literal => literal.value
-    }
-
+    ExtractorUtil.extractLiteralFromProperty(resource, RMLVoc.Property.ITERATOR, DEFAULT_ITERATOR_MAP(referenceFormulation.value))
   }
 
   /**
@@ -131,15 +118,7 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
     */
   @throws(classOf[RMLException])
   private def extractReferenceFormulation(resource: RDFResource): Uri = {
-
-    val property = RMLVoc.Property.REFERENCEFORMULATION
-    val properties = resource.listProperties(property)
-
-    if (properties.size != 1) throw new RMLException(resource.uri + ": exactly one reference formulation allowed.")
-
-    properties.head match {
-      case resource: RDFResource => resource.uri
-      case literal: Literal => throw new RMLException(literal.toString + ": iterator must be a uri.")
-    }
+    val referenceFormulationResource = ExtractorUtil.extractSingleResourceFromProperty(resource, RMLVoc.Property.REFERENCEFORMULATION)
+    referenceFormulationResource.uri
   }
 }

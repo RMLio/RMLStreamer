@@ -62,6 +62,7 @@ object ExtractorUtil {
 
   def extractResourceFromProperty(resource: RDFResource, property: String): Option[RDFResource] = {
     val properties = resource.listProperties(property);
+    require(properties.length <= 1, resource.uri.toString + ": at most 1 " + property + " needed.");
     if (properties.isEmpty) {
       None
     } else {

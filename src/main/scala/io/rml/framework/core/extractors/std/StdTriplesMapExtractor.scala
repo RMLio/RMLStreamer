@@ -25,7 +25,7 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{TriplesMapsCache, _}
+import io.rml.framework.core.extractors.{NodeCache, _}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFResource}
 import io.rml.framework.core.model.{TriplesMap, Uri}
@@ -112,8 +112,8 @@ object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
   def extractTriplesMapProperties(resource: RDFResource): Option[TriplesMap] = {
     val resourceStr = resource.value;
     // errors can occur during extraction of sub structures
-    if (TriplesMapsCache.contains(resourceStr)) {
-      TriplesMapsCache.get(resourceStr)
+    if (NodeCache.contains(resourceStr)) {
+      NodeCache.getTriplesMap(resourceStr)
     } else {
       try {
 
@@ -124,7 +124,7 @@ object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
           resource.uri.value,
           GraphMapExtractor().extract(resource)
         )
-        val t = TriplesMapsCache.put(resourceStr, triplesMap);
+        val t = NodeCache.put(resourceStr, triplesMap);
         Some(triplesMap)
 
       } catch {
@@ -132,7 +132,7 @@ object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
         case e: RMLException =>
           e.printStackTrace()
           logWarning(e.getMessage)
-          logWarning(resource.uri + ": Skipping triple map.")
+          logWarning(resource.uri + ": Skipping triples map.")
           throw e
       }
     }

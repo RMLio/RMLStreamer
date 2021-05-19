@@ -35,4 +35,5 @@ case class StdObjectMap(identifier: String,
                         override val datatype: Option[Uri],
                         override val language: Option[Literal],
                         parentTriplesMap: Option[String],
-                        joinCondition: Option[JoinCondition]) extends ObjectMap
+                        joinCondition: Option[JoinCondition],
+                        logicalTargets: Set[LogicalTarget]) extends ObjectMap

@@ -41,7 +41,7 @@ class StdFunctionMapExtractor extends FunctionMapExtractor {
 
       val poms = pomExtractor.extract(functionValue)
 
-      FunctionMap(fnParentMap, functionValue.uri.toString, poms)
+      FunctionMap(fnParentMap, functionValue.uri.toString, poms, extractLogicalTargets(resource))
 
     })
 

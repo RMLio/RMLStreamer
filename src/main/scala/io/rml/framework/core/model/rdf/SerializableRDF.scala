@@ -58,7 +58,8 @@ case class FlinkRDFLiteral(literal: Literal) extends SerializableRDFNode(literal
 case class SerializableRDFQuad(subject: SerializableRDFTermNode,
                                predicate: SerializableRDFResource,
                                `object`: SerializableRDFNode,
-                               graph: Option[SerializableRDFResource] = None)
+                               graph: Option[SerializableRDFResource] = None,
+                               logicalTargetIDs: Set[String])
   extends  Serializable {
 
   override def toString: String = {

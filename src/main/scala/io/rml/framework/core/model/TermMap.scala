@@ -82,6 +82,13 @@ trait TermMap extends Node {
     */
   def termType: Option[Uri]
 
+  def logicalTargets: Set[LogicalTarget]
+
+  def getAllLogicalTargetIds: Set[String] = {
+    logicalTargets
+      .map(logicalTarget => logicalTarget.identifier)
+  }
+
   /**
     *
     * @return

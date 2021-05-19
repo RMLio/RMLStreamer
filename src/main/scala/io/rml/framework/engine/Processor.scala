@@ -38,5 +38,5 @@ import org.apache.flink.api.common.functions.RichMapFunction
   * @tparam T has upper bound of [[Item]]
   * @tparam IN specifies the type of the input for the map(..) function
   */
-abstract class Processor[T<:Item, IN](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends RichMapFunction[IN, List[String]]
+abstract class Processor[T<:Item, IN](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends RichMapFunction[IN, Iterable[(String, String)]]
 

@@ -38,6 +38,7 @@ object ParameterUtil {
                               checkpointInterval: Option[Long] = None,
                               outputPath: Option[String] = None,
                               brokerList: Option[String] = None,
+                              broker: Option[String] = None,
                               topic: Option[String] = None,
                               partitionId: Option[Int] = None,
                               socket: Option[String] = None,
@@ -65,7 +66,7 @@ object ParameterUtil {
   // possible output sink options
   object OutputSinkOption extends Enumeration {
     type OutputSinkOption = Value
-    val File, Socket, Kafka, None = Value
+    val File, Socket, Kafka, MQTT, None = Value
   }
 
   // possible post processor options
@@ -157,6 +158,18 @@ object ParameterUtil {
         opt[String]('s', "output-socket").valueName("<host:port>").required()
           .action((value, config) => config.copy(socket = Some(value)))
           .text("The TCP socket to write to.")
+      )
+
+    cmd("toMQTT")
+      .text("Write output to an MQTT topic")
+      .action((_, config) => config.copy(outputSink = OutputSinkOption.MQTT))
+      .children(
+        opt[String]('b', "broker").valueName("<host:port>").required()
+          .action((value, config) => config.copy(broker = Some(value)))
+          .text("The MQTT broker."),
+        opt[String]('t', "topic").valueName("<topic name>").required()
+          .action((value, config) => config.copy(topic = Some(value)))
+          .text("The name of the MQTT topic to write output to.")
       )
 
     cmd("noOutput")

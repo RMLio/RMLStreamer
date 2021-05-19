@@ -31,12 +31,13 @@ import io.rml.framework.core.model.{TermMap, Uri}
 
 class PredicateGeneratorAssembler extends TermMapGeneratorAssembler {
 
-  override def assemble(termMap: TermMap): (Item) => Option[Iterable[Uri]] = {
+  override def assemble(termMap: TermMap, higherLogicalTargetIDs: Set[String]): (Item) => Option[Iterable[Uri]] = {
 
     // Note: this code is very redundant to ObjectGeneratorAssembler. TODO: generalize?
     if(termMap.hasFunctionMap){
+      val logicalTargetIDs = termMap.getAllLogicalTargetIds ++ higherLogicalTargetIDs
       val fmap = termMap.functionMap.head
-      val assembledFunction = FunctionMapGeneratorAssembler().assemble(fmap)
+      val assembledFunction = FunctionMapGeneratorAssembler().assemble(fmap, logicalTargetIDs)
       assembledFunction.andThen(item => {
         if(item.isDefined) {
           item.map(iter => iter.flatMap(elem => {
@@ -49,7 +50,7 @@ class PredicateGeneratorAssembler extends TermMapGeneratorAssembler {
       })
     }
     else {
-      super.assemble(termMap).asInstanceOf[(Item) => Option[Iterable[Uri]]]
+      super.assemble(termMap, Set()).asInstanceOf[(Item) => Option[Iterable[Uri]]]
     }
   }
 

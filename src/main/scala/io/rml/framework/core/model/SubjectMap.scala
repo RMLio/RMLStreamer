@@ -43,6 +43,16 @@ trait SubjectMap extends TermMap {
   def `class`: List[Uri]
 
   def graphMap: Option[GraphMap]
+
+  override def getAllLogicalTargetIds: Set[String] = {
+    val graphMaps = if (graphMap.isDefined) {
+      graphMap.get.getAllLogicalTargetIds
+    } else {
+      Set()
+    }
+    super.getAllLogicalTargetIds ++ graphMaps
+  }
+
 }
 
 object SubjectMap {
@@ -64,9 +74,10 @@ object SubjectMap {
             reference: Option[Literal],
             template: Option[Literal],
             termType: Option[Uri],
-            graphMap: Option[GraphMap]): SubjectMap = {
+            graphMap: Option[GraphMap],
+            logicalTargets: Set[LogicalTarget]): SubjectMap = {
 
-    StdSubjectMap(identifier, `class`, functionMap, constant, reference, template, termType, graphMap)
+    StdSubjectMap(identifier, `class`, functionMap, constant, reference, template, termType, graphMap, logicalTargets)
   }
 
 }

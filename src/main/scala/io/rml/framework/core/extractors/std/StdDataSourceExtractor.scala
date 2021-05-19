@@ -32,8 +32,6 @@ import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.vocabulary._
 import io.rml.framework.shared.RMLException
 
-import java.util.Properties
-
 class StdDataSourceExtractor extends DataSourceExtractor {
 
   /**
@@ -72,6 +70,7 @@ class StdDataSourceExtractor extends DataSourceExtractor {
         case Uri(RMLSVoc.Class.FILESTREAM) => extractFileStream(resource)
         case Uri(RMLSVoc.Class.KAFKASTREAM) => extractKafkaStream(resource)
         case Uri(WoTVoc.ThingDescription.Class.THING) => extractWoTSource(resource)
+        case _ => throw new RMLException(s"${classResource.uri} not supported as data source.")
       }
       case literal: Literal => throw new RMLException(literal.value + ": type must be a resource.")
     }
@@ -140,14 +139,6 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     }
     logDebug("MQTT data source defined in mapping file. hypermediaTarget: " + hypermediaTarget
       + ", contentType: " + contentType + ", dup: " + dup + ", qosOpt: " + qosOpt);
-    val mqttProperties = new Properties;
-    mqttProperties.put("hypermediaTarget", hypermediaTarget);
-    mqttProperties.put("contentType", contentType);
-    mqttProperties.put("controlPacketValue", controlPacketValue);
-    if (qosOpt.isDefined) {
-      mqttProperties.put("qos", qosOpt.get);
-    }
-    mqttProperties.put("dup", dup); // Java 8 can't handle Scala Boolean objects in a Properties object.
-    MQTTStream(mqttProperties)
+    MQTTStream(hypermediaTarget, contentType, controlPacketValue, dup, qosOpt)
   }
 }

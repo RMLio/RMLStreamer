@@ -49,7 +49,7 @@ abstract class Statement[T] {
   def process(item: T): Option[Iterable[SerializableRDFQuad]]
 
 
-  def subProcess[S <: Item] (graphItem:S, subjItem:S, predItem: S, objectItem: S): Option[Iterable[SerializableRDFQuad]] = {
+  def subProcess[S <: Item] (graphItem:S, subjItem:S, predItem: S, objectItem: S, logicalTargetIDs: Set[String]): Option[Iterable[SerializableRDFQuad]] = {
     val graphOption = graphGenerator(graphItem)
 
     val result = for {
@@ -58,9 +58,9 @@ abstract class Statement[T] {
       _object <- objectGenerator(objectItem ) // try to generate the object
     } yield for {
       (subj, pred, obj, graph) <- Statement.quadCombination(subject, predicate, _object, graphOption)
-      triple <- Statement.generateQuad(subj, pred, obj, graph)
+      quad <- Statement.generateQuad(subj, pred, obj, logicalTargetIDs, graph)
 
-    } yield triple
+    } yield quad
 
 
     if (result.isEmpty) None else result
@@ -71,27 +71,30 @@ abstract class Statement[T] {
 case class ChildStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
                      predicateGenerator: Item => Option[Iterable[Uri]],
                      objectGenerator: Item => Option[Iterable[Entity]],
-                     graphGenerator: Item => Option[Iterable[Uri]]) extends Statement[JoinedItem] with Serializable {
+                     graphGenerator: Item => Option[Iterable[Uri]],
+                     logicalTargetIDs: Set[String]) extends Statement[JoinedItem] with Serializable {
 
   def process(item: JoinedItem): Option[Iterable[SerializableRDFQuad]] = {
-    subProcess(item.child, item.child, item.child, item.parent)
+    subProcess(item.child, item.child, item.child, item.parent, logicalTargetIDs)
   }
 }
 
 case class ParentStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
                       predicateGenerator: Item => Option[Iterable[Uri]],
                       objectGenerator: Item => Option[Iterable[Entity]],
-                      graphGenerator: Item => Option[Iterable[Uri]]) extends Statement[JoinedItem] with Serializable {
+                      graphGenerator: Item => Option[Iterable[Uri]],
+                      logicalTargetIDs: Set[String]) extends Statement[JoinedItem] with Serializable {
 
   def process(item: JoinedItem): Option[Iterable[SerializableRDFQuad]] = {
-    subProcess(item.parent, item.parent, item.parent, item.parent)
+    subProcess(item.parent, item.parent, item.parent, item.parent, logicalTargetIDs)
   }
 }
 
 case class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
                    predicateGenerator: Item => Option[Iterable[Uri]],
                    objectGenerator: Item => Option[Iterable[Entity]],
-                   graphGenerator: Item => Option[Iterable[Uri]]) extends Statement[Item] with Serializable {
+                   graphGenerator: Item => Option[Iterable[Uri]],
+                   logicalTargetIDs: Set[String]) extends Statement[Item] with Serializable {
 
   /**
     * Tries to refer a triple from the given item.
@@ -101,14 +104,14 @@ case class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
     */
   def process(item: Item): Option[Iterable[SerializableRDFQuad]] = {
 
-    subProcess(item,item,item,item)
+    subProcess(item,item,item,item, logicalTargetIDs)
   }
 
 }
 
 object Statement extends Logging {
 
-  def quadCombination(subjectIter: Iterable[TermNode], predicateIter: Iterable[Uri], objIter: Iterable[Entity], graphIterOpt: Option[Iterable[Uri]] = None): Iterable[(TermNode, Uri, Entity, Option[Uri])] = {
+  private def quadCombination(subjectIter: Iterable[TermNode], predicateIter: Iterable[Uri], objIter: Iterable[Entity], graphIterOpt: Option[Iterable[Uri]] = None): Iterable[(TermNode, Uri, Entity, Option[Uri])] = {
 
     val graphIter: Iterable[Uri] = graphIterOpt getOrElse List()
 
@@ -131,7 +134,7 @@ object Statement extends Logging {
   }
 
 
-  def generateQuad(subject: TermNode, predicate: Uri, _object: Entity, graphOpt: Option[Uri] = None): Option[SerializableRDFQuad] = {
+  def generateQuad(subject: TermNode, predicate: Uri, _object: Entity, logicalTargetIDs: Set[String], graphOpt: Option[Uri] = None): Option[SerializableRDFQuad] = {
 
     val subjectResource = subject match {
       case blank: Blank => SerializableRDFBlank(blank)
@@ -145,7 +148,10 @@ object Statement extends Logging {
     }
     val graphUri = graphOpt.map(SerializableRDFResource)
 
-    val result = Some(SerializableRDFQuad(subjectResource, predicateResource, objectNode, graphUri))
+    // if there are no logical target IDs, then the "default" logical target ID has to be set.
+    val newLogicalTargetIDs: Set[String] = if (logicalTargetIDs.isEmpty) Set("default") else logicalTargetIDs
+
+    val result = Some(SerializableRDFQuad(subjectResource, predicateResource, objectNode, graphUri, newLogicalTargetIDs))
     logDebug(result.get.toString)
     result
   }

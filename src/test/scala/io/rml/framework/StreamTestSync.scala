@@ -25,7 +25,7 @@
 package io.rml.framework
 
 import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.util.{StreamerConfig, Util}
 import io.rml.framework.engine.PostProcessor
@@ -108,7 +108,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
 
   // run the test cases
   for ((folderPath, postProcessorName) <- testCases) {
-    TriplesMapsCache.clear();
+    NodeCache.clear();
 
     //it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
     Logger.lineBreak(50)

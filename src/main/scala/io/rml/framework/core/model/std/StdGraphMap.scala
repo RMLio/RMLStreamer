@@ -31,7 +31,8 @@ case class StdGraphMap(identifier: String,
                        override val functionMap:List[FunctionMap],
                        constant: Option[Entity],
                        reference: Option[Literal],
-                       template: Option[Literal]) extends GraphMap {
+                       template: Option[Literal],
+                       logicalTargets: Set[LogicalTarget]) extends GraphMap {
 
   override def termType: Option[Uri] = Some(Uri(R2RMLVoc.Class.IRI))
 

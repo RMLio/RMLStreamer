@@ -25,9 +25,9 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.ResourceExtractor
+import io.rml.framework.core.extractors.{LogicalTargetExtractor, ResourceExtractor}
 import io.rml.framework.core.model.rdf.RDFResource
-import io.rml.framework.core.model.{Entity, Literal, Uri}
+import io.rml.framework.core.model.{Entity, Literal, LogicalTarget, Uri}
 import io.rml.framework.core.vocabulary.{R2RMLVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
 
@@ -39,6 +39,11 @@ import scala.util.matching.Regex
   * @tparam T
   */
 abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
+  lazy private val logicalTargetExtractor: LogicalTargetExtractor = LogicalTargetExtractor()
+
+  protected def extractLogicalTargets(node: RDFResource): Set[LogicalTarget] = {
+    logicalTargetExtractor.extract(node)
+  }
 
   /**
     * Extracts template property from a resource.

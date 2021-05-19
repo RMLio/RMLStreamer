@@ -25,7 +25,7 @@
 package io.rml.framework
 
 import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.NopPostProcessor
 import io.rml.framework.util.TestUtil
@@ -41,7 +41,7 @@ class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
 
 
   private def executeTest(mappingFile: String): Unit = {
-    TriplesMapsCache.clear();
+    NodeCache.clear();
     // clear the loaded classes, this prevents an Exception that would occur when using classes
     // from an unloaded class loader
     FnOEnvironment.loadedClassesMap.clear()
@@ -129,19 +129,12 @@ class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
     executeTest("sandbox/function_related/condition-on-mapping-subject-function/mapping.ttl")
   }
 
-
   test("failing/fno-testcases/RMLFNOTC0023-CSV") {
     pending
     executeTest("failing/fno-testcases/RMLFNOTC0023-CSV/mapping.ttl")
   }
 
-
-
-
-
-
-
-
-
-
+  test("sandbox/logical-target/example-2-subjectMap") {
+    executeTest("sandbox/logical-target/example-2-subjectMap/mapping.ttl")
+  }
 }

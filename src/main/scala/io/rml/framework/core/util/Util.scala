@@ -27,6 +27,7 @@ package io.rml.framework.core.util
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.model.rdf.SerializableRDFQuad
 import io.rml.framework.core.model.{FormattedRMLMapping, Literal, Node, RMLMapping}
 import io.rml.framework.core.vocabulary.QueryVoc
 import io.rml.framework.shared.ReadException
@@ -36,7 +37,7 @@ import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
 import java.util.regex.Pattern
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ListBuffer, Map}
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
@@ -91,7 +92,7 @@ object Util extends Logging{
     var done = false
     while (lineIter.hasNext && !done) {
       val line = lineIter.next().trim
-      if (line.length > 0) {
+      if (line.nonEmpty) {
         if (line.head != '@') {
           done = true
         } else if (line.contains("@base")) {
@@ -265,6 +266,23 @@ object Util extends Logging{
       .getCanonicalFile
   }
 
-
+  /**
+    * Renders RDF statements as N-Quads and groups them by logical target ID
+    * @param quadStrings  The generated RDF statements
+    * @return A map (logical target ID -> Set[rendered statement as N-Quad])
+    */
+  def groupQuadStringsPerLogicalTargetID(quadStrings: Iterable[SerializableRDFQuad]): Map[String, Set[String]] = {
+    val logicalTargetIDs2outputStrings: Map[String, Set[String]] = Map.empty[String, Set[String]].withDefaultValue(Set.empty[String])
+    quadStrings.foreach(quad => {
+      val logicalTargetIDs: Set[String] = quad.logicalTargetIDs
+      val outputString = quad.toString
+      logicalTargetIDs.foreach(logicalTargetID => {
+        var outputStrings: Set[String] = logicalTargetIDs2outputStrings(logicalTargetID)
+        outputStrings += outputString
+        logicalTargetIDs2outputStrings += logicalTargetID -> outputStrings
+      })
+    })
+    logicalTargetIDs2outputStrings
+  }
 
 }

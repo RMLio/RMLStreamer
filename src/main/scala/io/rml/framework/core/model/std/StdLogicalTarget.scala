@@ -1,11 +1,11 @@
-package io.rml.framework.core.extractors
+package io.rml.framework.core.model.std
 
-import io.rml.framework.core.model.TriplesMap
+import io.rml.framework.core.model.{DataTarget, LogicalTarget, Uri}
 
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2021 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -26,4 +26,7 @@ import io.rml.framework.core.model.TriplesMap
   * THE SOFTWARE.
   *
   * */
-object TriplesMapsCache extends scala.collection.mutable.HashMap[String, TriplesMap]
+case class StdLogicalTarget (
+                              target: DataTarget,
+                              serialization: Uri,
+                              compression: Option[Uri]) extends LogicalTarget
