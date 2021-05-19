@@ -26,10 +26,11 @@
 package io.rml.framework.engine.statement
 
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.item.{Item, JoinedItem}
+import io.rml.framework.core.model.rdf.SerializableRDFQuad
 import io.rml.framework.core.model.{JoinedTriplesMap, TriplesMap}
+import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_SET
 import io.rml.framework.engine.Engine
-import io.rml.framework.flink.item.{Item, JoinedItem}
-import io.rml.framework.flink.sink.FlinkRDFQuad
 
 /**
   * A statement engine is an engine implementation that makes use of a transformed
@@ -52,7 +53,7 @@ class StatementEngine[T <: Item](val statementMap: Map[String, List[Statement[T]
     * @param item
     * @return
     */
-  override def process(item: T): List[FlinkRDFQuad] = {
+  override def process(item: T): List[SerializableRDFQuad] = {
 
     val statements = statementMap.getOrElse(item.tag, List())
 
@@ -81,7 +82,7 @@ object StatementEngine extends Logging {
     val iteratorGroup = triplesMaps.groupBy(tm => {
       // here we require the triples map to have only one iterator
       val iteratorQuery = tm.logicalSource.iterators.head
-      if (io.rml.framework.flink.source.Source.DEFAULT_ITERATOR_SET.contains(iteratorQuery)) {
+      if (DEFAULT_ITERATOR_SET.contains(iteratorQuery)) {
         ""
       } else {
         iteratorQuery

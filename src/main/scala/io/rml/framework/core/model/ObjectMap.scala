@@ -54,7 +54,8 @@ object ObjectMap {
             datatype: Option[Uri] = None,
             language: Option[Literal] = None,
             parentTriplesMap: Option[String] = None,
-            joinCondition: Option[JoinCondition] = None): ObjectMap =
+            joinCondition: Option[JoinCondition] = None,
+            logicalTargets: Set[LogicalTarget]): ObjectMap =
 
     StdObjectMap(identifier,
       functionMap,
@@ -65,5 +66,6 @@ object ObjectMap {
       datatype,
       language,
       parentTriplesMap,
-      joinCondition)
+      joinCondition,
+      logicalTargets)
 }

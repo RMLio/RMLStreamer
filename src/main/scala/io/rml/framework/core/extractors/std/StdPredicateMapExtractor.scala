@@ -28,7 +28,7 @@ package io.rml.framework.core.extractors.std
 import io.rml.framework.core.extractors.{FunctionMapExtractor, PredicateMapExtractor}
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.model.{PredicateMap, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.R2RMLVoc
 import io.rml.framework.shared.RMLException
 
 
@@ -50,15 +50,15 @@ class StdPredicateMapExtractor() extends PredicateMapExtractor {
     * @return
     */
   private def extractPredicates(resource: RDFResource): List[PredicateMap] = {
-    val property = RMLVoc.Property.PREDICATE
+    val property = R2RMLVoc.Property.PREDICATE
     val properties = resource.listProperties(property)
 
     // iterates over predicates, converts these to predicate maps as blanks
     properties.map {
       case literal: RDFLiteral =>
-        PredicateMap("", constant = Some(Uri(literal.value)), termType = Some(Uri(RMLVoc.Class.IRI)))
+        PredicateMap("", constant = Some(Uri(literal.value)), termType = Some(Uri(R2RMLVoc.Class.IRI)), logicalTargets = Set())
       case resource: RDFResource =>
-        PredicateMap("", constant = Some(resource.uri), termType = Some(Uri(RMLVoc.Class.IRI)))
+        PredicateMap("", constant = Some(resource.uri), termType = Some(Uri(R2RMLVoc.Class.IRI)), logicalTargets = Set())
     }
   }
 
@@ -69,7 +69,7 @@ class StdPredicateMapExtractor() extends PredicateMapExtractor {
     * @return
     */
   private def extractPredicateMaps(resource: RDFResource): List[PredicateMap] = {
-    val property = RMLVoc.Property.PREDICATEMAP
+    val property = R2RMLVoc.Property.PREDICATEMAP
     val properties = resource.listProperties(property)
 
     // iterates over predicatesMaps
@@ -88,13 +88,14 @@ class StdPredicateMapExtractor() extends PredicateMapExtractor {
     * @return
     */
   private def extractPredicateMap(resource: RDFResource): PredicateMap = {
-    val termType = Some(Uri(RMLVoc.Class.IRI)) // this is always the case as defined by the spec
+    val termType = Some(Uri(R2RMLVoc.Class.IRI)) // this is always the case as defined by the spec
     val template = extractTemplate(resource)
     val constant = extractConstant(resource)
     val reference = extractReference(resource)
     val functionMap = FunctionMapExtractor().extract(resource)
+    val logicalTargets = extractLogicalTargets(resource)
 
-    PredicateMap(resource.uri.toString, functionMap, constant, reference, template, termType)
+    PredicateMap(resource.uri.value, functionMap, constant, reference, template, termType, logicalTargets)
   }
 
 }

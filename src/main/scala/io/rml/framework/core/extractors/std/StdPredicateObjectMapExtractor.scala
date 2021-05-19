@@ -29,7 +29,7 @@ import io.rml.framework.core.extractors._
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.PredicateObjectMap
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.R2RMLVoc
 import io.rml.framework.shared.RMLException
 
 /**
@@ -48,7 +48,7 @@ class StdPredicateObjectMapExtractor extends PredicateObjectMapExtractor with Lo
     logDebug(node.uri + ": Extracting predicate object maps.")
 
     // filter all predicate object map resources
-    val properties = node.listProperties(RMLVoc.Property.PREDICATEOBJECTMAP)
+    val properties = node.listProperties(R2RMLVoc.Property.PREDICATEOBJECTMAP)
 
     // iterate over all found predicate object map resources
     properties.map {
@@ -78,7 +78,7 @@ class StdPredicateObjectMapExtractor extends PredicateObjectMapExtractor with Lo
     val graphMap = GraphMapExtractor().extract(resource)
 
     this.logDebug("extractPredicateObjectMap : returning resulting PredicateObjectMap")
-    PredicateObjectMap(resource.uri.toString, objectMaps, predicateMaps, graphMap)
+    PredicateObjectMap(resource.uri.value, objectMaps, predicateMaps, graphMap)
   }
 
 }

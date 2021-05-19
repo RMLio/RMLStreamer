@@ -28,7 +28,7 @@ SOFTWARE.
 
     <groupId>io.rml</groupId>
     <artifactId>RMLStreamer</artifactId>
-    <version>2.1.0-RELEASE</version>
+    <version>2.1.1</version>
     <packaging>jar</packaging>
 
     <name>RMLStreamer</name>
@@ -36,7 +36,7 @@ SOFTWARE.
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <flink.version>1.11.3</flink.version>
+        <flink.version>1.12.3</flink.version>
         <slf4j.version>1.7.26</slf4j.version>
         <log4j.version>2.13.3</log4j.version>
         <jena.version>3.11.0</jena.version>
@@ -52,6 +52,20 @@ SOFTWARE.
         <license.licenseName>mit</license.licenseName>
     </properties>
 
+
+
+    <repositories>
+        <repository>
+            <id>bintray</id>
+            <url>https://jcenter.bintray.com</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <dependencies>
 
@@ -99,7 +113,7 @@ SOFTWARE.
         <dependency>
             <groupId>com.github.jsurfer</groupId>
             <artifactId>jsurfer-jackson</artifactId>
-            <version>1.5.1</version>
+            <version>1.6.0</version>
             <exclusions>
                 <!-- provided by Jena -->
                 <exclusion>
@@ -223,6 +237,15 @@ SOFTWARE.
             <version>2.12.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- embeddable MQTT broker -->
+        <dependency>
+            <groupId>io.moquette</groupId>
+            <artifactId>moquette-broker</artifactId>
+            <version>0.13</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- explicitly add a standard logging framework, as Flink does not have
             a hard dependency on one specific framework by default -->
         <dependency>
@@ -238,7 +261,12 @@ SOFTWARE.
             <type>pom</type>
             <scope>runtime</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+
     </dependencies>
 
     <!-- This profile helps to make things run out of the box in IntelliJ -->

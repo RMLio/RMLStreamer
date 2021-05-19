@@ -25,10 +25,11 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{DataSourceExtractor, ExtractorUtil}
+import io.rml.framework.core.extractors.DataSourceExtractor
+import io.rml.framework.core.extractors.ExtractorUtil.{extractLiteralFromProperty, extractResourceFromProperty, extractSingleLiteralFromProperty, extractSingleResourceFromProperty}
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.RDFResource
-import io.rml.framework.core.vocabulary.{RDFVoc, RMLVoc}
+import io.rml.framework.core.vocabulary._
 import io.rml.framework.shared.RMLException
 
 class StdDataSourceExtractor extends DataSourceExtractor {
@@ -65,58 +66,79 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     if (properties.size != 1) throw new RMLException(resource.uri + ": type must be given.")
     properties.head match {
       case classResource: RDFResource => classResource.uri match {
-        case Uri(RMLVoc.Class.TCPSOCKETSTREAM) => extractTCPSocketStream(resource)
-        case Uri(RMLVoc.Class.FILESTREAM) => extractFileStream(resource)
-        case Uri(RMLVoc.Class.KAFKASTREAM) => extractKafkaStream(resource)
+        case Uri(RMLSVoc.Class.TCPSOCKETSTREAM) => extractTCPSocketStream(resource)
+        case Uri(RMLSVoc.Class.FILESTREAM) => extractFileStream(resource)
+        case Uri(RMLSVoc.Class.KAFKASTREAM) => extractKafkaStream(resource)
+        case Uri(WoTVoc.ThingDescription.Class.THING) => extractWoTSource(resource)
+        case _ => throw new RMLException(s"${classResource.uri} not supported as data source.")
       }
       case literal: Literal => throw new RMLException(literal.value + ": type must be a resource.")
     }
   }
 
   private def extractFileStream(resource: RDFResource): StreamDataSource = {
-    val pathProperties = resource.listProperties(RMLVoc.Property.PATH)
-    require(pathProperties.length == 1, "exactly 1 path needed.")
-    val path = ExtractorUtil.matchLiteral(pathProperties.head)
-    FileStream(path.value)
+    val path = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.PATH)
+    FileStream(path)
   }
 
   private def extractKafkaStream(resource: RDFResource): StreamDataSource = {
-    val brokerProperties = resource.listProperties(RMLVoc.Property.BROKER)
-    require(brokerProperties.length == 1, "exactly 1 broker needed")
-    val groupIdProperties = resource.listProperties(RMLVoc.Property.GROUPID)
-    require(groupIdProperties.length == 1, "exactly 1 groupID needed")
-    val topicProperties = resource.listProperties(RMLVoc.Property.TOPIC)
-    require(topicProperties.length == 1, "exactly 1 topic needed")
-    val versionProperties = resource.listProperties(RMLVoc.Property.KAFKAVERSION)
-    require(versionProperties.length <= 1, "at most 1 kafka version needed")
+    val broker = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.BROKER)
+    val groupId = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.GROUPID)
+    val topic = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.TOPIC)
 
-
-    val broker = ExtractorUtil.matchLiteral(brokerProperties.head)
-    val groupId = ExtractorUtil.matchLiteral(groupIdProperties.head)
-    val topic = ExtractorUtil.matchLiteral(topicProperties.head)
-
-
-    //val kafkaVersion = Kafka010
-
-
-    KafkaStream(List(broker.value), groupId.value, topic.value/*, kafkaVersion*/)
+    KafkaStream(List(broker), groupId, topic)
   }
 
   private def extractTCPSocketStream(resource: RDFResource): StreamDataSource = {
-    val hostNameProperties = resource.listProperties(RMLVoc.Property.HOSTNAME)
-    require(hostNameProperties.length == 1, resource.uri.toString + ": exactly 1 hostname needed.")
-    val portProperties = resource.listProperties(RMLVoc.Property.PORT)
-    require(portProperties.length == 1, resource.uri.toString + ": exactly 1 port needed.")
-
-    val hostName = hostNameProperties.head match {
-      case resource: RDFResource => throw new RMLException(resource.uri + ": hostname must be a literal.")
-      case literal: Literal => literal.value
-    }
-    val port = portProperties.head match {
-      case resource: RDFResource => throw new RMLException(resource.uri + ": port must be a literal.")
-      case literal: Literal => literal.value
-    }
-
+    val hostName = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.HOSTNAME)
+    val port = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.PORT)
     TCPSocketStream(hostName, port.toInt)
+  }
+
+  private def extractWoTSource(resource: RDFResource): DataSource = {
+    // A WoT Thing contains (in our case) a PropertyAffordance, which contains a form describing how to access the real source
+
+    val propertyAffordance = extractSingleResourceFromProperty(resource, WoTVoc.ThingDescription.Property.HASPROPERTYAFFORDANCE);
+    val form = extractSingleResourceFromProperty(propertyAffordance, WoTVoc.ThingDescription.Property.HASFORM);
+
+    // extract info from form
+
+    // extract the hypermedia target (~uri)
+    val hypermediaTarget = extractSingleLiteralFromProperty(form, HypermediaVoc.Property.HASTARGET);
+
+    // extract the desired content type
+    val contentType = extractSingleLiteralFromProperty(form, HypermediaVoc.Property.FORCONTENTTYPE);
+
+    // now check for soure type (MQTT, HTTP, ...)
+    val isMQTT = form.hasPredicateWith(WoTVoc.WoTMQTT.namespace._2);
+    if (isMQTT) {
+      return extractWoTMQTTSource(form, hypermediaTarget, contentType);
+    } else {
+      throw new RMLException("Unknown Web of Things source defined.")
+    }
+  }
+
+  private def extractWoTMQTTSource(form: RDFResource, hypermediaTarget: String, contentType: String): DataSource = {
+    val controlPacketValue = extractLiteralFromProperty(form, WoTVoc.WoTMQTT.Property.CONTROLPACKETVALUE, "SUBSCRIBE");
+
+    var qosOpt: Option[String] = None;
+    var dup: String = "false";
+    val mqttOptions = extractResourceFromProperty(form, WoTVoc.WoTMQTT.Property.OPTIONS);
+    if (mqttOptions.isDefined) {
+      // extract the actual values
+      val mqttOptionsResource = mqttOptions.get;
+      mqttOptionsResource.getList
+        .map(rdfNode => rdfNode.asInstanceOf[RDFResource])
+        .foreach(mqttOptionsResource => {
+          val optionName = extractSingleLiteralFromProperty(mqttOptionsResource, WoTVoc.WoTMQTT.Property.OPTIONNAME);
+          optionName match {
+            case "qos" => qosOpt = Some(extractSingleLiteralFromProperty(mqttOptionsResource, WoTVoc.WoTMQTT.Property.OPTIONVALUE));
+            case "dup" => dup = "true";
+          };
+        });
+    }
+    logDebug("MQTT data source defined in mapping file. hypermediaTarget: " + hypermediaTarget
+      + ", contentType: " + contentType + ", dup: " + dup + ", qosOpt: " + qosOpt);
+    MQTTStream(hypermediaTarget, contentType, controlPacketValue, dup, qosOpt)
   }
 }

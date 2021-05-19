@@ -24,15 +24,21 @@
   **/
 package io.rml.framework.engine
 
+import io.rml.framework.core.item.{Item, JoinedItem}
 import io.rml.framework.engine.statement.StatementEngine
-import io.rml.framework.flink.item.{Item, JoinedItem}
 
 abstract class StreamProcessor[T <: Item](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends Processor[T, Iterable[T]](engine) {
-  override def map(in: Iterable[T]): List[String] = {
+
+  /**
+    * Maps items to serialized RDF according to the mapping rules ecompassed by the statement engine
+    * @param in A sequence of input items
+    * @return A sequence of (logical target ID, rendered RDF statement(s)) pairs
+    */
+  override def map(in: Iterable[T]): Iterable[(String, String)] = {
     if (in.isEmpty) return List()
 
-    val triples = in flatMap engine.process
-    postProcessor.process(triples)
+    val quads = in flatMap engine.process
+    postProcessor.process(quads)
 
   }
 }

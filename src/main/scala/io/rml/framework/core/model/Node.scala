@@ -39,5 +39,5 @@ trait Node extends Serializable{
   def identifier: String
 
 
-  override def toString: String = identifier.toString
+  override def toString: String = identifier
 }

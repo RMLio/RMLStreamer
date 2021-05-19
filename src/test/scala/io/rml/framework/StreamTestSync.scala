@@ -24,8 +24,8 @@
   **/
 package io.rml.framework
 
-import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.util.{StreamerConfig, Util}
 import io.rml.framework.engine.PostProcessor
@@ -73,7 +73,11 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   }
 
   // Things to do before running one test case
-  protected def beforeTestCase(): Unit
+  protected def beforeTestCase(): Unit = {
+    // clear the loaded classes, this prevents an Exception that would occur when using classes
+    // from an unloaded class loader
+    FnOEnvironment.loadedClassesMap.clear()
+  }
 
   // Things to do after running one test case
   protected def afterTestCase(): Unit
@@ -104,7 +108,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
 
   // run the test cases
   for ((folderPath, postProcessorName) <- testCases) {
-    TriplesMapsCache.clear();
+    NodeCache.clear();
 
     //it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
     Logger.lineBreak(50)

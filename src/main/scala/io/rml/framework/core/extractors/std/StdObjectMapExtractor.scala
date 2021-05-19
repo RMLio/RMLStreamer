@@ -29,7 +29,7 @@ import io.rml.framework.core.extractors.{FunctionMapExtractor, JoinConditionExtr
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.util.Util
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.{FunVoc, R2RMLVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
 
 class StdObjectMapExtractor extends ObjectMapExtractor {
@@ -50,15 +50,15 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     * @return
     */
   private def extractObjects(resource: RDFResource): List[ObjectMap] = {
-    val property = RMLVoc.Property.OBJECT
+    val property = R2RMLVoc.Property.OBJECT
     val properties = resource.listProperties(property)
 
     // iterates over predicates, converts these to predicate maps as blanks
     properties.map {
       case literal: RDFLiteral =>
-        ObjectMap("", constant = Some(Literal(literal.value)), termType = Some(Uri(RMLVoc.Class.LITERAL)))
+        ObjectMap("", constant = Some(Literal(literal.value)), termType = Some(Uri(R2RMLVoc.Class.LITERAL)), logicalTargets = Set())
       case resource: RDFResource =>
-        ObjectMap("", constant = Some(resource.uri), termType = Some(Uri(RMLVoc.Class.IRI)))
+        ObjectMap("", constant = Some(resource.uri), termType = Some(Uri(R2RMLVoc.Class.IRI)), logicalTargets = Set())
     }
   }
 
@@ -70,7 +70,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     */
   private def extractObjectMaps(resource: RDFResource): List[ObjectMap] = {
     this.logDebug("extractObjectMaps(resource)")
-    val property = RMLVoc.Property.OBJECTMAP
+    val property = R2RMLVoc.Property.OBJECTMAP
     val properties = resource.listProperties(property)
 
     // iterates over predicatesMaps
@@ -102,11 +102,12 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     val language = extractLanguage(resource)
     val datatype = extractDatatype(resource)
     val functionMap = FunctionMapExtractor().extract(resource)
-    ObjectMap(resource.uri.toString, functionMap, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition)
+    val logicalTargets = extractLogicalTargets(resource)
+    ObjectMap(resource.uri.identifier, functionMap, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition, logicalTargets)
   }
 
   def extractDatatype(resource: RDFResource): Option[Uri] = {
-    val property = RMLVoc.Property.DATATYPE
+    val property = R2RMLVoc.Property.DATATYPE
     val properties = resource.listProperties(property)
 
     if (properties.size > 1)
@@ -124,13 +125,13 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     if (result.isDefined) result else {
 
       //if the resource has rr:constant, return the type of the node referred by rr:constant.
-      val constantValue = resource.listProperties(RMLVoc.Property.CONSTANT)
+      val constantValue = resource.listProperties(R2RMLVoc.Property.CONSTANT)
 
       if (constantValue.nonEmpty) {
 
         constantValue.head match {
-          case literal: Literal => Some(Uri(RMLVoc.Class.LITERAL))
-          case _ => Some(Uri(RMLVoc.Class.IRI))
+          case literal: Literal => Some(Uri(R2RMLVoc.Class.LITERAL))
+          case _ => Some(Uri(R2RMLVoc.Class.IRI))
         }
 
       } else {
@@ -142,17 +143,17 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
         val elements =
           resource.listProperties(RMLVoc.Property.REFERENCE) ++
           resource.listProperties(RMLVoc.Property.REFERENCEFORMULATION) ++
-          resource.listProperties(RMLVoc.Property.DATATYPE) ++
-          resource.listProperties(RMLVoc.Property.FUNCTIONVALUE)
+          resource.listProperties(R2RMLVoc.Property.DATATYPE) ++
+          resource.listProperties(FunVoc.Fnml.Property.FUNCTIONVALUE)
 
-        if (elements.nonEmpty) Some(Uri(RMLVoc.Class.LITERAL))
-        else Some(Uri(RMLVoc.Class.IRI))
+        if (elements.nonEmpty) Some(Uri(R2RMLVoc.Class.LITERAL))
+        else Some(Uri(R2RMLVoc.Class.IRI))
       }
     }
   }
 
   def extractLanguage(resource: RDFResource): Option[Literal] = {
-    val property = RMLVoc.Property.LANGUAGE
+    val property = R2RMLVoc.Property.LANGUAGE
     val properties = resource.listProperties(property)
 
     if (properties.size > 1)
@@ -163,7 +164,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
       case literal: Literal => Some(literal)
       case resource: RDFResource => throw new RMLException(resource.uri + ": invalid language type.")
     }
-    val tag = languageLiteral.get.toString
+    val tag = languageLiteral.get.value
 
     if (!Util.isValidrrLanguage(tag))
       throw new RMLException(s"Language tag '$tag' does not conform to BCP 47 standards")
@@ -174,7 +175,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
 
   private def extractParentTriplesMap(resource: RDFResource): Option[String] = {
 
-    val property = RMLVoc.Property.PARENTTRIPLESMAP
+    val property = R2RMLVoc.Property.PARENTTRIPLESMAP
     val properties = resource.listProperties(property)
 
     if (properties.size > 1)
@@ -182,7 +183,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     if (properties.isEmpty) return None
 
     properties.head match {
-      case resource: RDFResource => Some(resource.toString)
+      case resource: RDFResource => Some(resource.value)
       case literal: Literal =>
         throw new RMLException(literal.toString + ": invalid parent triple map.")
     }
@@ -190,7 +191,7 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
   }
 
   private def extractJoinCondition(resource: RDFResource): Option[JoinCondition] = {
-    val property = RMLVoc.Property.JOINCONDITION
+    val property = R2RMLVoc.Property.JOINCONDITION
     val properties = resource.listProperties(property)
 
     if (properties.size > 1)

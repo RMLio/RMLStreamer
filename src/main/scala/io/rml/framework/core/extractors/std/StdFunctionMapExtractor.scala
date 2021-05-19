@@ -3,7 +3,7 @@ package io.rml.framework.core.extractors.std
 import io.rml.framework.core.extractors.{FunctionMapExtractor, PredicateObjectMapExtractor}
 import io.rml.framework.core.model.FunctionMap
 import io.rml.framework.core.model.rdf.RDFResource
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.FunVoc
 
 class StdFunctionMapExtractor extends FunctionMapExtractor {
 
@@ -33,7 +33,7 @@ class StdFunctionMapExtractor extends FunctionMapExtractor {
    * @return
    */
   private def extractFunctionMap(fnParentMap: String, resource: RDFResource): List[FunctionMap] = {
-    val functionValues = resource.listProperties(RMLVoc.Property.FUNCTIONVALUE)
+    val functionValues = resource.listProperties(FunVoc.Fnml.Property.FUNCTIONVALUE)
 
     require(functionValues.size <= 1, "At most only 1 function value allowed.")
     val result = functionValues.map(node => {
@@ -41,7 +41,7 @@ class StdFunctionMapExtractor extends FunctionMapExtractor {
 
       val poms = pomExtractor.extract(functionValue)
 
-      FunctionMap(fnParentMap, functionValue.uri.toString, poms)
+      FunctionMap(fnParentMap, functionValue.uri.toString, poms, extractLogicalTargets(resource))
 
     })
 

@@ -25,10 +25,10 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.ResourceExtractor
+import io.rml.framework.core.extractors.{LogicalTargetExtractor, ResourceExtractor}
 import io.rml.framework.core.model.rdf.RDFResource
-import io.rml.framework.core.model.{Entity, Literal, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.model.{Entity, Literal, LogicalTarget, Uri}
+import io.rml.framework.core.vocabulary.{R2RMLVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
 
 import scala.util.matching.Regex
@@ -39,6 +39,11 @@ import scala.util.matching.Regex
   * @tparam T
   */
 abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
+  lazy private val logicalTargetExtractor: LogicalTargetExtractor = LogicalTargetExtractor()
+
+  protected def extractLogicalTargets(node: RDFResource): Set[LogicalTarget] = {
+    logicalTargetExtractor.extract(node)
+  }
 
   /**
     * Extracts template property from a resource.
@@ -49,7 +54,7 @@ abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
     */
   @throws(classOf[RMLException])
   protected def extractTemplate(resource: RDFResource): Option[Literal] = {
-    val property = RMLVoc.Property.TEMPLATE
+    val property = R2RMLVoc.Property.TEMPLATE
     val properties = resource.listProperties(property)
 
     if (properties.size > 1)
@@ -99,7 +104,7 @@ abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
     */
   @throws(classOf[RMLException])
   protected def extractConstant(resource: RDFResource): Option[Entity] = {
-    val property = RMLVoc.Property.CONSTANT
+    val property = R2RMLVoc.Property.CONSTANT
     val properties = resource.listProperties(property)
 
     if (properties.size > 1)
@@ -121,7 +126,7 @@ abstract class TermMapExtractor[T] extends ResourceExtractor[T] {
     */
   @throws(classOf[RMLException])
   protected def extractTermType(resource: RDFResource): Option[Uri] = {
-    val property = RMLVoc.Property.TERMTYPE
+    val property = R2RMLVoc.Property.TERMTYPE
     val properties = resource.listProperties(property)
 
     if (properties.size > 1)

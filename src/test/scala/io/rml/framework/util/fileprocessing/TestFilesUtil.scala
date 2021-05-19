@@ -24,6 +24,7 @@
   **/
 package io.rml.framework.util.fileprocessing
 
+import io.rml.framework.api.FnOEnvironment
 import io.rml.framework.core.util.Util
 import io.rml.framework.util.logging.Logger
 
@@ -74,7 +75,9 @@ trait TestFilesUtil[R] {
   def test(rootDir: String, shouldPass: Boolean, checkFunc: (String, Boolean) => Unit): Unit = {
     var checkedTestCases = Array("")
     for (pathString <- getTestCaseFolders(rootDir).map(_.toString).sorted) {
-
+      // clear the loaded classes, this prevents an Exception that would occur when using classes
+      // from an unloaded class loader
+      FnOEnvironment.loadedClassesMap.clear()
       checkFunc(pathString, shouldPass)
       val testCase = new File(pathString).getName
       Logger.logSuccess("Passed processing: " + testCase)

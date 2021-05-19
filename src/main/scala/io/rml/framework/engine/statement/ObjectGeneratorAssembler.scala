@@ -25,25 +25,26 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
+import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.{Entity, Literal, ObjectMap, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
-import io.rml.framework.flink.item.Item
+import io.rml.framework.core.vocabulary.R2RMLVoc
 
 class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
 
-  def assemble(objectMap: ObjectMap): (Item) => Option[Iterable[Entity]] = {
-
+  def assemble(objectMap: ObjectMap, higherLevelLogicalTargetIDs: Set[String]): (Item) => Option[Iterable[Entity]] = {
+    val logicalTargetIDs = higherLevelLogicalTargetIDs ++ objectMap.getAllLogicalTargetIds
     // check if it has a parent triple map
     if (objectMap.parentTriplesMap.isDefined) {
-      super.assemble(TriplesMapsCache.get(objectMap.parentTriplesMap.get).get.subjectMap)
+
+      super.assemble(NodeCache.getTriplesMap(objectMap.parentTriplesMap.get).get.subjectMap, logicalTargetIDs)
     } else if (objectMap.hasFunctionMap) {
-      val assembledFunction = FunctionMapGeneratorAssembler().assemble(objectMap.functionMap.head)
+      val assembledFunction = FunctionMapGeneratorAssembler().assemble(objectMap.functionMap.head, logicalTargetIDs)
       val termTypeString = objectMap.termType.map(_.toString).getOrElse("")
       assembledFunction.andThen(item => {
         if (item.isDefined) {
           termTypeString match {
-            case RMLVoc.Class.IRI => item.map(iter => iter.map(elem => Uri(elem.toString)))
+            case R2RMLVoc.Class.IRI => item.map(iter => iter.map(elem => Uri(elem.toString)))
             case _ => item.map(iter => iter.flatMap(elem => {
               Some(Literal(elem.identifier, objectMap.datatype, objectMap.language))
             }))
@@ -55,7 +56,7 @@ class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
       })
 
     } else {
-      super.assemble(objectMap)
+      super.assemble(objectMap, Set())
     }
 
   }

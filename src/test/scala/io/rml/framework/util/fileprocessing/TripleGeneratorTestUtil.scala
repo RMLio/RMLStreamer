@@ -25,7 +25,7 @@
 package io.rml.framework.util.fileprocessing
 
 import io.rml.framework.Main
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.util.{Format, NQuads, Util}
 import io.rml.framework.engine.{NopPostProcessor, PostProcessor}
 import io.rml.framework.util.logging.Logger
@@ -65,7 +65,7 @@ object TripleGeneratorTestUtil extends TestFilesUtil[(List[String], Format)] {
     */
    def processFile(file: File): (List[String], Format) = {
      try {
-       TriplesMapsCache.clear();
+       NodeCache.clear();
 
        val formattedMapping = Util.readMappingFile(file.getCanonicalPath)
        val dataSet = Main.createDataSetFromFormattedMapping(formattedMapping).collect

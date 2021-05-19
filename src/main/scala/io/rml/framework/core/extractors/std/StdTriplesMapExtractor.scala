@@ -25,11 +25,11 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{TriplesMapsCache, _}
+import io.rml.framework.core.extractors.{NodeCache, _}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFResource}
 import io.rml.framework.core.model.{TriplesMap, Uri}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.{R2RMLVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
 
 /**
@@ -52,11 +52,11 @@ object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
    */
   private def isTriplesMap(resource : RDFResource) : Boolean = {
     val logicalSourceProperty = RMLVoc.Property.LOGICALSOURCE
-    val subjectMapProperty = RMLVoc.Property.SUBJECTMAP
-    val subjectConstantProperty = RMLVoc.Property.SUBJECT
+    val subjectMapProperty = R2RMLVoc.Property.SUBJECTMAP
+    val subjectConstantProperty = R2RMLVoc.Property.SUBJECT
 
     // trivial case
-    val isTriplesMap = resource.getType.equals(Some(Uri(RMLVoc.Class.TRIPLESMAP)))
+    val isTriplesMap = resource.getType.equals(Some(Uri(R2RMLVoc.Class.TRIPLESMAP)))
 
     // property requirements for a triplesmap
     val hasExactlyOneLogicalSource = resource.listProperties(logicalSourceProperty).length==1
@@ -110,10 +110,10 @@ object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
     * @return
     */
   def extractTriplesMapProperties(resource: RDFResource): Option[TriplesMap] = {
-    val resourceStr = resource.toString;
+    val resourceStr = resource.value;
     // errors can occur during extraction of sub structures
-    if (TriplesMapsCache.contains(resourceStr)) {
-      TriplesMapsCache.get(resourceStr)
+    if (NodeCache.contains(resourceStr)) {
+      NodeCache.getTriplesMap(resourceStr)
     } else {
       try {
 
@@ -121,10 +121,10 @@ object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
         val triplesMap = TriplesMap(PredicateObjectMapExtractor().extract(resource),
           LogicalSourceExtractor().extract(resource),
           SubjectMapExtractor().extract(resource),
-          resource.uri.toString,
+          resource.uri.value,
           GraphMapExtractor().extract(resource)
         )
-        val t = TriplesMapsCache.put(resourceStr, triplesMap);
+        val t = NodeCache.put(resourceStr, triplesMap);
         Some(triplesMap)
 
       } catch {
@@ -132,7 +132,7 @@ object StdTriplesMapExtractor extends TriplesMapExtractor with Logging {
         case e: RMLException =>
           e.printStackTrace()
           logWarning(e.getMessage)
-          logWarning(resource.uri + ": Skipping triple map.")
+          logWarning(resource.uri + ": Skipping triples map.")
           throw e
       }
     }

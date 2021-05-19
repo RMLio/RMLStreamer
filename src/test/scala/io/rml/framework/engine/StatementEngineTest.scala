@@ -26,7 +26,7 @@ package io.rml.framework.engine
 
 import io.rml.framework.Main
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.util.Util
 import io.rml.framework.util.TestUtil
 import io.rml.framework.util.logging.Logger
@@ -39,7 +39,7 @@ import java.io.File
 class StatementEngineTest extends FunSuite with Matchers {
 
   private def executeTest(mappingFile: String): Unit = {
-    TriplesMapsCache.clear();
+    NodeCache.clear();
     RMLEnvironment.setGeneratorBaseIRI(Some("http://example.org/base/"))
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
@@ -62,7 +62,6 @@ class StatementEngineTest extends FunSuite with Matchers {
     testOutcome match {
       case Left(e) => {
         Logger.logError(e)
-        System.exit(1)
         fail(e)
       }
       case Right(e) => {
@@ -77,7 +76,6 @@ class StatementEngineTest extends FunSuite with Matchers {
    * 13:24:26.959 [main] ERROR be.ugent.rml.cli.Main               .main(315) - Expected ':', found '/' [line 1]
    */
   test("example10") {
-    pending
     executeTest("example10/mapping.rml.ttl")
   }
 
@@ -130,6 +128,15 @@ class StatementEngineTest extends FunSuite with Matchers {
   test("csv-special-character-headers") {
     pending //TODO: multiple join conditions are not supported yet
     executeTest("csv-extensive-1/complete.rml.ttl")
+  }
+
+  ///////////////////////////
+  // Web of Things tests
+  ///////////////////////////
+
+  test("wot-mqtt-logical-source") {
+    pending
+    executeTest("WoT/mqtt-logical-source/wot-mqtt.rml.ttl")
   }
 
 }

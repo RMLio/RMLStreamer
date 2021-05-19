@@ -25,10 +25,11 @@
 
 package io.rml.framework.flink.source
 
+import io.rml.framework.core.item.Item
+import io.rml.framework.core.item.csv.{CSVHeader, CSVItem}
 import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
-import io.rml.framework.flink.item.Item
-import io.rml.framework.flink.item.csv.{CSVHeader, CSVItem}
-import io.rml.framework.flink.util.{CustomCSVConfig, DefaultCSVConfig}
+import io.rml.framework.core.util.{CustomCSVConfig, DefaultCSVConfig}
+import io.rml.framework.flink.connector.kafka.UniversalKafkaConnectorFactory
 import org.apache.commons.csv.CSVFormat
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.common.typeinfo.TypeInformation
@@ -89,7 +90,7 @@ object CSVStream {
       .withFirstRecordAsHeader()
 
     val properties = kafkaStream.getProperties
-    val consumer =  kafkaStream.getConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
+    val consumer =  UniversalKafkaConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
     val stream: DataStream[Iterable[Item]] = StreamUtil.paralleliseOverSlots(env.addSource(consumer))
       .map(batchString => {
         CSVItem.fromDataBatch(batchString, format)

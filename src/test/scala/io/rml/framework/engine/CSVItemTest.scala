@@ -25,7 +25,7 @@
 
 package io.rml.framework.engine
 
-import io.rml.framework.flink.item.csv.CSVItem
+import io.rml.framework.core.item.csv.CSVItem
 import org.scalatest.{FunSuite, Matchers}
 
 class CSVItemTest extends FunSuite with Matchers {

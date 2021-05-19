@@ -25,15 +25,51 @@
 package io.rml.framework.core.extractors
 
 import io.rml.framework.core.model.Literal
-import io.rml.framework.core.model.rdf.{RDFNode, RDFResource}
+import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.shared.RMLException
 
 object ExtractorUtil {
 
-  def matchLiteral(node: RDFNode): Literal = {
-    node match {
-      case literal: Literal => literal
+  def extractLiteralFromProperty(resource: RDFResource, property: String, defaultValue: String) = {
+    val properties = resource.listProperties(property);
+    if (properties.isEmpty) {
+      defaultValue;
+    } else {
+      properties.head match {
+        case literal: Literal => literal.value
+        case _ => defaultValue
+      }
+    }
+  }
+
+  def extractSingleLiteralFromProperty(resource: RDFResource, property: String): String = {
+    val properties = resource.listProperties(property);
+    require(properties.length == 1, resource.uri.toString + ": exactly 1 " + property + " needed.");
+    properties.head match {
+      case literal: Literal => literal.value
       case res: RDFResource => throw new RMLException(res.uri + ": must be a literal.")
+    }
+  }
+
+  def extractSingleResourceFromProperty(resource: RDFResource, property: String): RDFResource = {
+    val properties = resource.listProperties(property);
+    require(properties.length == 1, resource.uri.toString + ": exactly 1 " + property + " needed.");
+    properties.head match {
+      case literal: Literal => throw new RMLException(resource.uri + ": " + property + " must be a resource.");
+      case resource: RDFResource => resource
+    }
+  }
+
+  def extractResourceFromProperty(resource: RDFResource, property: String): Option[RDFResource] = {
+    val properties = resource.listProperties(property);
+    require(properties.length <= 1, resource.uri.toString + ": at most 1 " + property + " needed.");
+    if (properties.isEmpty) {
+      None
+    } else {
+      properties.head match {
+        case literal: Literal => throw new RMLException(resource.uri + ": " + property + " must be a resource.");
+        case resource: RDFResource => Some(resource)
+      }
     }
   }
 

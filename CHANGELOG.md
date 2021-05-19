@@ -10,10 +10,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Support for stream partitioning in windows
 * Joins of data streams
 
+## [2.1.1] - 2020-05-19
+
+### Added
+* Support for using Web of Things descriptions in logical soure and logical target, as described in [Van Assche et al](https://link.springer.com/chapter/10.1007/978-3-030-74296-6_26)
+  and [Target in RML specification](https://rml.io/specs/rml-target).
+  The current imlementation is a proof-of-concept. As WoT data source RMLStreamer supports MQTT streams;
+  as logical target a file dump is supported.
+
+### Changed
+* Updated JsonSurfer from version 1.5.1 to 1.6.0
+* Updated Flink from version 1.11.3 to 1.12.3
+
+### Fixed
+* Function loading didn't always work because the `toString` method was called on the `Uri` to a function instead of
+the `value` method. (Internal [issue #132](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/issues/132)).
+
 ## [2.1.0] - 2020-03-18
 
 ### Added
 * Support for functions on a per-record basis using the [Function Ontology](https://fno.io/).
+* Web of Things source (MQTT)
 
 ### Changed
 * Updated Flink from version 1.10.0 to 1.11.3
@@ -124,3 +141,4 @@ can be set with the program argument `--baseIRI`.
 [1.2.3]: https://github.com/RMLio/RMLStreamer/compare/v1.2.2...v1.2.3
 [2.0.0]: https://github.com/RMLio/RMLStreamer/compare/v1.2.3...v2.0.0  
 [2.1.0]: https://github.com/RMLio/RMLStreamer/compare/v2.0.0...v2.1.0  
+[2.1.1]: https://github.com/RMLio/RMLStreamer/compare/v2.1.0...v2.1.1  

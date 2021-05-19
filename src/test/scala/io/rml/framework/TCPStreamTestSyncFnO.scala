@@ -24,6 +24,9 @@
   **/
 package io.rml.framework
 
+import java.net.InetSocketAddress
+import java.nio.charset.StandardCharsets
+import java.util.concurrent.TimeUnit
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.buffer.ByteBuf
 import io.netty.channel.nio.NioEventLoopGroup
@@ -34,9 +37,6 @@ import io.netty.util.{CharsetUtil, ReferenceCountUtil}
 import io.rml.framework.util.logging.Logger
 import io.rml.framework.util.server.TestData
 
-import java.net.InetSocketAddress
-import java.nio.charset.StandardCharsets
-import java.util.concurrent.TimeUnit
 import scala.concurrent.{ExecutionContextExecutor, Future, Promise}
 
 class TCPStreamTestSyncFnO extends StreamTestSync {
@@ -75,8 +75,6 @@ class TCPStreamTestSyncFnO extends StreamTestSync {
     serverChannel = serverBootstrap.bind.sync
 
   }
-
-  override def beforeTestCase(): Unit = {}
 
   override def afterTestCase(): Unit = {}
 

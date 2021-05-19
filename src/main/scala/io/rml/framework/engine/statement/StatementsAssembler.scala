@@ -25,11 +25,11 @@
 
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.item.{Item, JoinedItem}
 import io.rml.framework.core.model._
 import io.rml.framework.core.vocabulary.RDFVoc
-import io.rml.framework.flink.item.{Item, JoinedItem}
 /**
   * Creates statements from triple maps.
   */
@@ -44,35 +44,46 @@ extends Logging{
     * @param triplesMap
     * @return
     */
-  def assembleStatements(triplesMap: TriplesMap): List[(Item => Option[Iterable[TermNode]], Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]])] = {
+  def assembleStatements(triplesMap: TriplesMap): List[(Item => Option[Iterable[TermNode]], Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]], Set[String])] = {
     this.logDebug("assembleStatements(triplesmaps)")
-    val subjectGraphGenerator = graphAssembler.assemble(triplesMap.subjectMap.graphMap)
 
+    val subjectLogicalTargetIds = triplesMap.subjectMap.getAllLogicalTargetIds // including GraphMap logical target IDs
+
+    val subjectGraphGenerator = graphAssembler.assemble(triplesMap.subjectMap.graphMap, subjectLogicalTargetIds)
 
     // assemble subject
-    val subjectGenerator = subjectAssembler.assemble(triplesMap.subjectMap)
+    val subjectGenerator = subjectAssembler.assemble(triplesMap.subjectMap, Set())  // there are no higher level logical targets since it's a "top" SubjectMap
     // check for class mappings (rr:class)
-    val classMappings = getClassMappingStatements(subjectGenerator, triplesMap.subjectMap.`class`, subjectGraphGenerator)
+    val classMappingStatements = getClassMappingStatements(subjectGenerator, triplesMap.subjectMap.`class`, subjectGraphGenerator, subjectLogicalTargetIds)
     // assemble predicate and object
-    val predicateObjects = triplesMap.predicateObjectMaps.flatMap(predicateObjectMap => {
-      predicateObjectAssembler.assemble(predicateObjectMap)
+    val allPredicateObjectsAndLogicalTargetIDs = triplesMap.predicateObjectMaps.map(predicateObjectMap => {
+      predicateObjectAssembler.assemble(predicateObjectMap, subjectLogicalTargetIds)
     })
     // create the statements
-    predicateObjects.map(predicateObject => {
-      val graphGenerator = if(triplesMap.subjectMap.graphMap.isDefined) subjectGraphGenerator else predicateObject._3
-      (subjectGenerator, predicateObject._1, predicateObject._2, graphGenerator)
-    }) ++ classMappings // add class mappings
+    val predicateObjectStatements = allPredicateObjectsAndLogicalTargetIDs.flatMap(predicateObjectAndLogicalTargetIDs => {
+      val statementsPerPredicateObjectMap = predicateObjectAndLogicalTargetIDs.map(predicateObjects => {
+        val graphGenerator = if(triplesMap.subjectMap.graphMap.isDefined) subjectGraphGenerator else predicateObjects._3
+        (subjectGenerator, predicateObjects._1, predicateObjects._2, graphGenerator, predicateObjects._4)
+      })
+      statementsPerPredicateObjectMap
 
+      /*val graphGenerator = if(triplesMap.subjectMap.graphMap.isDefined) subjectGraphGenerator else predicateObjects._3
+      (subjectGenerator, predicateObjectAndLogicalTargetIDs._1, predicateObjectAndLogicalTargetIDs._2, graphGenerator, predicateObjectAndLogicalTargetIDs._4)*/
+    })  // add class mappings
+    predicateObjectStatements ++ classMappingStatements
   }
 
 
   private def getClassMappingStatements(subjectGenerator: (Item) => Option[Iterable[TermNode]],
-                                        classes: List[Uri], graphGenerator: Item => Option[Iterable[Uri]]): Seq[(Item => Option[Iterable[TermNode]], Item => Some[List[Uri]], Item => Some[List[Uri]], Item => Option[Iterable[Uri]])] = {
+                                        classes: List[Uri],
+                                        graphGenerator: Item => Option[Iterable[Uri]],
+                                        subjectLogicalTargetIds: Set[String])
+  : List[(Item => Option[Iterable[TermNode]], Item => Some[List[Uri]], Item => Some[List[Uri]], Item => Option[Iterable[Uri]], Set[String])] = {
 
     classes.map(_class => {
       val predicateGenerator = (item: Item) => Some(List(Uri(RDFVoc.Property.TYPE)))
       val objectGenerator = (item: Item) => Some(List(_class))
-      (subjectGenerator, predicateGenerator, objectGenerator, graphGenerator)
+      (subjectGenerator, predicateGenerator, objectGenerator, graphGenerator, subjectLogicalTargetIds)
     })
 
   }
@@ -86,19 +97,19 @@ object StatementsAssembler {
   def assembleStatements(triplesMap: TriplesMap): List[Statement[Item]] = {
     val quads = new StatementsAssembler()
       .assembleStatements(triplesMap)
-    quads.map(quad => StdStatement(quad._1, quad._2, quad._3,quad._4))
+    quads.map(quad => StdStatement(quad._1, quad._2, quad._3,quad._4, quad._5))
   }
 
   def assembleChildStatements(joinedTriplesMap: JoinedTriplesMap): List[Statement[JoinedItem]] = {
     val triples = new StatementsAssembler()
       .assembleStatements(joinedTriplesMap)
-    triples.map(triple => ChildStatement(triple._1, triple._2, triple._3, triple._4))
+    triples.map(triple => ChildStatement(triple._1, triple._2, triple._3, triple._4, triple._5))
   }
 
   def assembleParentStatements(joinedTriplesMap: JoinedTriplesMap): List[Statement[JoinedItem]] = {
     val triples = new StatementsAssembler()
-      .assembleStatements(TriplesMapsCache.get(joinedTriplesMap.parentTriplesMap).get)
-    triples.map(triple => ParentStatement(triple._1, triple._2, triple._3, triple._4))
+      .assembleStatements(NodeCache.getTriplesMap(joinedTriplesMap.parentTriplesMap).get)
+    triples.map(triple => ParentStatement(triple._1, triple._2, triple._3, triple._4, triple._5))
   }
 
 

@@ -24,8 +24,8 @@
   **/
 package io.rml.framework.engine
 
+import io.rml.framework.core.item.Item
 import io.rml.framework.engine.statement.StatementEngine
-import io.rml.framework.flink.item.Item
 import org.apache.flink.api.common.functions.RichMapFunction
 
 /**
@@ -38,5 +38,5 @@ import org.apache.flink.api.common.functions.RichMapFunction
   * @tparam T has upper bound of [[Item]]
   * @tparam IN specifies the type of the input for the map(..) function
   */
-abstract class Processor[T<:Item, IN](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends RichMapFunction[IN, List[String]]
+abstract class Processor[T<:Item, IN](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends RichMapFunction[IN, Iterable[(String, String)]]
 

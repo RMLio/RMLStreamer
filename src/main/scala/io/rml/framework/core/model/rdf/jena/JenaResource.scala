@@ -43,6 +43,13 @@ class JenaResource(val resource: Resource) extends RDFResource {
     else Uri(_uri)
   }
 
+  override def hasPredicateWith(prefix: String): Boolean = {
+    resource
+      .listProperties().asScala
+      .map(_.getPredicate)
+      .exists(_.getNameSpace.equals(prefix))
+  }
+
   override def listProperties(propertyUri: String): List[RDFNode] = {
 
 

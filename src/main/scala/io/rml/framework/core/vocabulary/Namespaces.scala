@@ -31,23 +31,36 @@ package io.rml.framework.core.vocabulary
 object Namespaces {
 
   private val _namespaces: Map[String, String] = Map(
-    "rdf" -> "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-    "rdfs" -> "http://www.w3.org/2000/01/rdf-schema#",
-    "rr" -> "http://www.w3.org/ns/r2rml#",
-    "ql" -> "http://semweb.mmlab.be/ns/ql#",
-    "rml" -> "http://semweb.mmlab.be/ns/rml#",
-    "rmls" -> "http://semweb.mmlab.be/ns/rmls#",
-    "fnml" -> "http://semweb.mmlab.be/ns/fnml#",
+    RDFVoc.namespace._1 -> RDFVoc.namespace._2,
+    RDFSVoc.namespace._1 -> RDFSVoc.namespace._2,
+    R2RMLVoc.namespace._1 -> R2RMLVoc.namespace._2,
+    FormatVoc.namespace._1 -> FormatVoc.namespace._2,
+    QueryVoc.namespace._1 -> QueryVoc.namespace._2,
+    RMLVoc.namespace._1 -> RMLVoc.namespace._2,
+    RMLSVoc.namespace._1 -> RMLSVoc.namespace._2,
+    FunVoc.Fnml.namespace._1 -> FunVoc.Fnml.namespace._2,
 
-    "fno" -> "https://w3id.org/function/ontology#",
-    "fnom" -> "https://w3id.org/function/vocabulary/mapping#",
-    "fnoi" -> "https://w3id.org/function/vocabulary/implementation#",
+    FunVoc.FnO.namespace._1 -> FunVoc.FnO.namespace._2,
+    FunVoc.FnOMapping.namespace._1 -> FunVoc.FnOMapping.namespace._2,
+    FunVoc.FnoImplementation.namespace._1 -> FunVoc.FnoImplementation.namespace._2,
 
-    "grel" -> "http://users.ugent.be/~bjdmeest/function/grel.ttl#",
-    "lib" -> "http://example.com/library#",
-    "xsd" -> "http://www.w3.org/2001/XMLSchema#",
+    FunVoc.GREL.namespace._1 -> FunVoc.GREL.namespace._2,
+    LibVoc.namespace._1 -> LibVoc.namespace._2,
+    XsdVoc.namespace._1 -> XsdVoc.namespace._2,
 
-    "doap" -> "http://usefulinc.com/ns/doap#"
+    DOAPVoc.namespace._1 -> DOAPVoc.namespace._2,
+
+    // Web of Things
+    WoTVoc.ThingDescription.namespace._1 -> WoTVoc.ThingDescription.namespace._2,
+    WoTVoc.WoTMQTT.namespace._1 -> WoTVoc.WoTMQTT.namespace._2,
+    WoTVoc.WotSecurity.namespace._1 -> WoTVoc.WotSecurity.namespace._2,
+
+    // Hypermedia
+    HypermediaVoc.namespace._1 -> HypermediaVoc.namespace._2
+    
+    // HTTP
+    //"http" -> "http://www.w3.org/2011/http#",
+    // TODO "htv" -> "http://www.w3.org/2011/http#"  // typically used in WoT documents.
   )
 
   /**
@@ -67,5 +80,9 @@ object Namespaces {
     * @return
     */
   def apply(prefix: String, suffix: String): String = _namespaces(prefix) + suffix
+
+  def iterator(): Iterator[(String, String)] = {
+    _namespaces.seq.iterator
+  }
 
 }

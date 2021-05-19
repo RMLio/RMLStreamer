@@ -27,7 +27,9 @@ package io.rml.framework.core.util
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.model.rdf.SerializableRDFQuad
 import io.rml.framework.core.model.{FormattedRMLMapping, Literal, Node, RMLMapping}
+import io.rml.framework.core.vocabulary.QueryVoc
 import io.rml.framework.shared.ReadException
 
 import java.io._
@@ -35,7 +37,7 @@ import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
 import java.util.regex.Pattern
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ListBuffer, Map}
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
@@ -46,6 +48,14 @@ object Util extends Logging{
   private val regexPatternLanguageTag = Pattern.compile("^((?:(en-GB-oed|i-ami|i-bnn|i-default|i-enochian|i-hak|i-klingon|i-lux|i-mingo|i-navajo|i-pwn|i-tao|i-tay|i-tsu|sgn-BE-FR|sgn-BE-NL|sgn-CH-DE)|(art-lojban|cel-gaulish|no-bok|no-nyn|zh-guoyu|zh-hakka|zh-min|zh-min-nan|zh-xiang))|((?:([A-Za-z]{2,3}(-(?:[A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4})(-(?:[A-Za-z]{4}))?(-(?:[A-Za-z]{2}|[0-9]{3}))?(-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-(?:[0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(?:x(-[A-Za-z0-9]{1,8})+))?)|(?:x(-[A-Za-z0-9]{1,8})+))$")
 
   private val baseDirectiveCapture = "@base <([^<>]*)>.*".r
+
+  val DEFAULT_ITERATOR_MAP: Map[String, String] =  Map(
+    QueryVoc.Class.JSONPATH -> "$",
+    QueryVoc.Class.CSV -> "",
+    QueryVoc.Class.XPATH -> "/*"
+  )
+
+  val DEFAULT_ITERATOR_SET: Set[String] = DEFAULT_ITERATOR_MAP.values.toSet
 
   def getLiteral(node: Node):Option[Literal]= {
     node match{
@@ -82,7 +92,7 @@ object Util extends Logging{
     var done = false
     while (lineIter.hasNext && !done) {
       val line = lineIter.next().trim
-      if (line.length > 0) {
+      if (line.nonEmpty) {
         if (line.head != '@') {
           done = true
         } else if (line.contains("@base")) {
@@ -150,7 +160,7 @@ object Util extends Logging{
 
 
   def isRootIteratorTag(tag: String): Boolean = {
-    io.rml.framework.flink.source.Source.DEFAULT_ITERATOR_SET.contains(tag)
+    DEFAULT_ITERATOR_SET.contains(tag)
   }
 
   // auto-close resources, seems to be missing in Scala
@@ -256,6 +266,23 @@ object Util extends Logging{
       .getCanonicalFile
   }
 
-
+  /**
+    * Renders RDF statements as N-Quads and groups them by logical target ID
+    * @param quadStrings  The generated RDF statements
+    * @return A map (logical target ID -> Set[rendered statement as N-Quad])
+    */
+  def groupQuadStringsPerLogicalTargetID(quadStrings: Iterable[SerializableRDFQuad]): Map[String, Set[String]] = {
+    val logicalTargetIDs2outputStrings: Map[String, Set[String]] = Map.empty[String, Set[String]].withDefaultValue(Set.empty[String])
+    quadStrings.foreach(quad => {
+      val logicalTargetIDs: Set[String] = quad.logicalTargetIDs
+      val outputString = quad.toString
+      logicalTargetIDs.foreach(logicalTargetID => {
+        var outputStrings: Set[String] = logicalTargetIDs2outputStrings(logicalTargetID)
+        outputStrings += outputString
+        logicalTargetIDs2outputStrings += logicalTargetID -> outputStrings
+      })
+    })
+    logicalTargetIDs2outputStrings
+  }
 
 }

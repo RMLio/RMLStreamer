@@ -28,7 +28,7 @@ package io.rml.framework.std
 import io.rml.framework.core.extractors.ObjectMapExtractor
 import io.rml.framework.core.model.Uri
 import io.rml.framework.core.model.rdf.{RDFGraph, RDFResource}
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.R2RMLVoc
 import org.scalatest.{FunSuite, Matchers}
 
 class StdObjectMapExtractorTest extends FunSuite with Matchers {
@@ -52,12 +52,12 @@ class StdObjectMapExtractorTest extends FunSuite with Matchers {
 
     val resource =
       RDFResource("#PredicateObjectMap")
-        .addProperty(RMLVoc.Property.OBJECTMAP,
+        .addProperty(R2RMLVoc.Property.OBJECTMAP,
           RDFResource("#ObjectMap")
-            .addProperty(RMLVoc.Property.CONSTANT,
+            .addProperty(R2RMLVoc.Property.CONSTANT,
               RDFResource("#Object")))
 
-        .addProperty(RMLVoc.Property.OBJECT,
+        .addProperty(R2RMLVoc.Property.OBJECT,
           RDFResource("#Object"))
 
     // ============================================================================================

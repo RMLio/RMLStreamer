@@ -24,7 +24,7 @@
   **/
 package io.rml.framework.util.fileprocessing
 
-import io.rml.framework.core.extractors.TriplesMapsCache
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.model.FormattedRMLMapping
 import io.rml.framework.core.util.Util
 
@@ -38,7 +38,7 @@ object MappingTestUtil extends FileProcessingUtil[FormattedRMLMapping] {
 
 
   override def processFile(file: File): FormattedRMLMapping = {
-    TriplesMapsCache.clear();
+    NodeCache.clear();
     Util.readMappingFile(file.getCanonicalPath)
     //val mapping = MappingReader().read(file)
     //FormattedRMLMapping.fromRMLMapping(mapping.asInstanceOf[RMLMapping])

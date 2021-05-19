@@ -34,7 +34,11 @@ case class JenaLiteral(value: String, `type`: Option[Uri], override val language
 object JenaLiteral {
 
   def apply(literal: JLiteral): JenaLiteral = {
-    JenaLiteral(literal.toString, Option(Uri(literal.getDatatypeURI)), Option(Literal(literal.getLanguage)))
+    val language = literal.getLanguage match {
+      case "" => None
+      case someValue: String => Some(Literal(someValue))
+    }
+    JenaLiteral(literal.toString, Option(Uri(literal.getDatatypeURI)), language)
   }
 
 }

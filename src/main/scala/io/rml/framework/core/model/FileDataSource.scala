@@ -27,7 +27,7 @@ package io.rml.framework.core.model
 
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.std.StdFileDataSource
+import io.rml.framework.core.model.std.StdFileDataStore
 import io.rml.framework.core.util.Util
 import io.rml.framework.shared.RMLException
 
@@ -51,20 +51,20 @@ object FileDataSource extends Logging {
     * @return An instance of DataSource.
     */
   def apply(uri: ExplicitNode): DataSource = {
-    val file = new File(uri.toString)
+    val file = new File(uri.value)
     Try(Util.resolveFileRelativeToSourceFileParent(RMLEnvironment.getMappingFileBaseIRI().get, file.getPath)) match {
       case Success(resolvedFile) => {
-        StdFileDataSource(Uri(resolvedFile.getAbsolutePath))
+        StdFileDataStore(Uri(resolvedFile.getCanonicalPath))
       }
       case Failure(exception) => {
         if (file.isAbsolute) {
-          logDebug(Uri(file.getAbsolutePath).uri)
-          StdFileDataSource(Uri(file.getAbsolutePath))
+          logDebug(Uri(file.getCanonicalPath).value)
+          StdFileDataStore(Uri(file.getCanonicalPath))
         } else {
-          val url = ClassLoader.getSystemResource(uri.toString)
+          val url = ClassLoader.getSystemResource(uri.value)
           if (url == null) throw new RMLException(uri.toString + " can't be found.")
           val file_2 = new File(url.toURI)
-          StdFileDataSource(Uri(file_2.getAbsolutePath))
+          StdFileDataStore(Uri(file_2.getCanonicalPath))
         }
       }
     }

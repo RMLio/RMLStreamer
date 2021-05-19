@@ -32,7 +32,7 @@ abstract class Parameter extends Node {
   val paraValue: Option[String]
   val position: Int
 
-  override def identifier: String = paramUri.toString + " " + paraValue.getOrElse("None")
+  override def identifier: String = paramUri.value + " " + paraValue.getOrElse("None")
 
   def getValue: Option[Any] = {
     getValue(paraValue.getOrElse(throw new IllegalStateException(s"${this}'s value option is empty.")))
