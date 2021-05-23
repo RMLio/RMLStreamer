@@ -204,13 +204,13 @@ object RMLVoc {
     val JOIN_CONFIG_MAP = Namespaces("rmls", "JoinConfigMap")
     val CROSS_JOIN_TYPE = Namespaces("rmls", "CrossJoin")
     val TUMBLING_JOIN_TYPE =  Namespaces("rmls", "TumblingJoin")
-    val VC_TW_JOIN_TYPE = Namespaces("rmls", "VCTWindowJoin")
+    val DYNAMIC_JOIN_TYPE = Namespaces("rmls", "DynamicWindowJoin")
     ///////////////////////////////////////////////////////////////////////////
     // RMLS Window types
     ///////////////////////////////////////////////////////////////////////////
     val TUMBLING = Namespaces("rmls", "Tumbling")
     val SLIDING = Namespaces("rmls", "Sliding")
-    val VC_TWINDOW = Namespaces("rmls", "VCTWindow")
+    val DYNAMIC_WINDOW = Namespaces("rmls", "DynamicWindow")
     ///////////////////////////////////////////////////////////////////////////
     // FNML
     ///////////////////////////////////////////////////////////////////////////

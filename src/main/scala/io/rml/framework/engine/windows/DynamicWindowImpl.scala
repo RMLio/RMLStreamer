@@ -10,18 +10,18 @@ import org.apache.flink.util.Collector
 import scala.collection.JavaConversions.iterableAsScalaIterable
 
 /**
-  * VC_TWindow receives tuples already keyed based on their joining attributes, therefore
+  * DynamicWindow receives tuples already keyed based on their joining attributes, therefore
   * we could just execute a cross join inside the window accordingly to get the resulting list of JoinedItems.
   *
   * @param updateCycle fixed cycle where the window length will be updated according to the calculations
   * @tparam T subtypes of Iterable[Item]
   * @tparam U subtypes of Iterable[Item]
   */
-class VC_TWindow[T <: Iterable[Item], U <: Iterable[Item]](val epsilon: Double = 1.5,
-                                                           val defaultBucketSize: Long = 1000L,
-                                                           val maxDuration: Long = 5000L,
-                                                           val minDuration: Long = 50L,
-                                                           val updateCycle: Time = Time.seconds(2))
+class DynamicWindowImpl[T <: Iterable[Item], U <: Iterable[Item]](val epsilon: Double = 1.5,
+                                                                  val defaultBucketSize: Long = 1000L,
+                                                                  val maxDuration: Long = 5000L,
+                                                                  val minDuration: Long = 50L,
+                                                                  val updateCycle: Time = Time.seconds(2))
   extends KeyedCoProcessFunction[String, T, U, Iterable[JoinedItem]] {
 
 

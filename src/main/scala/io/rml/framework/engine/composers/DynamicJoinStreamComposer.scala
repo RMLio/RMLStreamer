@@ -2,13 +2,13 @@ package io.rml.framework.engine.composers
 
 import io.rml.framework.core.model.JoinedTriplesMap
 import io.rml.framework.engine.PostProcessor
-import io.rml.framework.engine.windows.VC_TWindow
+import io.rml.framework.engine.windows.DynamicWindowImpl
 import io.rml.framework.flink.item.{Item, JoinedItem}
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment, createTypeInformation}
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 
-class VC_TWJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]](childStream: DataStream[T], parentStream: DataStream[U], tm: JoinedTriplesMap) extends
+class DynamicJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]](childStream: DataStream[T], parentStream: DataStream[U], tm: JoinedTriplesMap) extends
   StreamJoinComposer
     [T, U, Iterable[JoinedItem], TimeWindow](childStream, parentStream, tm) {
 
@@ -18,6 +18,6 @@ class VC_TWJoinStreamComposer[T <: Iterable[Item], U <: Iterable[Item]](childStr
 
     childStream.connect(parentStream)
       .keyBy(keySelectorWithJoinCondition(joinCondition.child.map(_.value)), keySelectorWithJoinCondition(joinCondition.parent.map(_.value)))
-      .process[String, Iterable[JoinedItem]](new VC_TWindow()).name("VCTWindow join")
+      .process[String, Iterable[JoinedItem]](new DynamicWindowImpl()).name("DynamicWindow join")
   }
 }

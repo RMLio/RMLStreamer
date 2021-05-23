@@ -32,7 +32,7 @@ class LatencyGauge(val windowType: WindowType) extends RichMapFunction[Iterable[
      })
 
     latency = windowType match {
-      case VCTWindow => latency_list.min
+      case DynamicWindow => latency_list.min
       case TumblingWindow => latency_list.sum / latency_list.size
     }
     in

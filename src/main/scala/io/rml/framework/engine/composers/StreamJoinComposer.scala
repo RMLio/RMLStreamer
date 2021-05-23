@@ -44,7 +44,7 @@ object StreamJoinComposer {
     val joinType = joinConfigMap.joinType
 
     joinType match  {
-      case VC_TWindowJoin => new VC_TWJoinStreamComposer(stream, stream2, tm)
+      case DynamicJoin => new DynamicJoinStreamComposer(stream, stream2, tm)
       case TumblingJoin =>  new TumblingJoinStreamComposer(stream, stream2, tm)
       case _ => new TumblingJoinStreamComposer(stream, stream2, tm)
     }

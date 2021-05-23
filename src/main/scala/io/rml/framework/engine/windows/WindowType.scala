@@ -8,18 +8,18 @@ case object TumblingWindow extends WindowType
 
 case object SlidingWindow extends WindowType
 
-case object VCTWindow extends WindowType
+case object DynamicWindow extends WindowType
 
 
 object WindowType {
   private val SUB_TYPE_LIST = Vector(
     TumblingWindow,
     SlidingWindow,
-    VCTWindow)
+    DynamicWindow)
 
   def fromUri(uri: String): Option[WindowType] = {
     uri match {
-      case RMLVoc.Class.VC_TWINDOW => Some(VCTWindow)
+      case RMLVoc.Class.DYNAMIC_WINDOW => Some(DynamicWindow)
       case RMLVoc.Class.TUMBLING => Some(TumblingWindow)
       case RMLVoc.Class.SLIDING => Some(SlidingWindow)
       case _ => None
