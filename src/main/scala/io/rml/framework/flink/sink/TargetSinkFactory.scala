@@ -1,11 +1,14 @@
 package io.rml.framework.flink.sink
 
 import io.rml.framework.core.extractors.NodeCache
-import io.rml.framework.core.model.{DataTarget, FileDataTarget, LogicalTarget}
+import io.rml.framework.core.model.{DataTarget, FileDataTarget, LogicalTarget, Uri}
+import io.rml.framework.core.vocabulary.CompressionVoc
+import io.rml.framework.flink.CompressionBulkWriter
+import io.rml.framework.flink.CompressionFormat.{CompressionFormat, GZIP, TARGZIP, TARXZ, ZIP}
 import io.rml.framework.shared.RMLException
-import org.apache.flink.api.common.serialization.SimpleStringEncoder
+import org.apache.flink.api.common.serialization.{BulkWriter, SimpleStringEncoder}
 import org.apache.flink.api.scala.createTypeInformation
-import org.apache.flink.core.fs.Path
+import org.apache.flink.core.fs.{FSDataOutputStream, Path}
 import org.apache.flink.streaming.api.functions.ProcessFunction
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
 import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.BasePathBucketAssigner
@@ -53,7 +56,7 @@ object TargetSinkFactory {
       val logicalTarget: LogicalTarget = identifier2target._2
       val dataTarget: DataTarget = logicalTarget.target
       val sink: SinkFunction[String] = dataTarget match {
-        case fileDataTarget: FileDataTarget => createFileStreamSink(fileDataTarget)
+        case fileDataTarget: FileDataTarget => createFileStreamSink(fileDataTarget, logicalTarget.compression)
         case _ => throw new RMLException(s"${dataTarget.getClass.toString} not supported as data target.")
       }
       logicalTargetId2Sink += identifier -> sink
@@ -97,31 +100,51 @@ object TargetSinkFactory {
     mainDataStream
   }
 
-  private def createFileStreamSink(fileDataTarget: FileDataTarget): SinkFunction[String] = {
-    createFileStreamSink(fileDataTarget.uri.value)
+  private def createFileStreamSink(fileDataTarget: FileDataTarget, compression: Option[Uri]): SinkFunction[String] = {
+    createFileStreamSink(fileDataTarget.uri.value, compression)
   }
 
-  private def createFileStreamSink(outputPath: String): SinkFunction[String] = {
+  private def createFileStreamSink(outputPath: String, compression: Option[Uri]): SinkFunction[String] = {
+    val compressionFormat: Option[CompressionFormat] = compression.map(c => c.toString match {
+      case CompressionVoc.Class.GZIP => GZIP
+      case CompressionVoc.Class.ZIP => ZIP
+      case CompressionVoc.Class.TARGZIP => TARGZIP
+      case CompressionVoc.Class.TARXZ => TARXZ
+    })
+
     val parts = outputPath.split('.')
     val path = parts.slice(0, parts.length - 1).mkString(".")
-    val suffix = if (parts.length > 1) {
+    var suffix = if (parts.length > 1) {
       "." ++ parts.slice(1, parts.length).mkString(".")
     } else {
       ""
     }
+    suffix += (compressionFormat match {
+      case Some(GZIP) => ".gz"
+      case Some(ZIP) => ".zip"
+      case Some(TARGZIP) => ".tgz"
+      case Some(TARXZ) => ".xz"
+      case None => ""
+    })
 
-    // remark: does not support compression
-    // TODO: One can override SimpleStringEncoder (or implement Encoder) to support compression.
-    StreamingFileSink
-      .forRowFormat(new Path(path),
-        new SimpleStringEncoder[String]("UTF-8")
-      )
-      .withBucketAssigner(new BasePathBucketAssigner[String])
-      .withRollingPolicy(OnCheckpointRollingPolicy.build())
-      .withOutputFileConfig(OutputFileConfig
-        .builder()
-        .withPartSuffix(suffix)
-        .build())
-      .build()
+    if (compressionFormat.isEmpty)
+      StreamingFileSink.forRowFormat(new Path(path), new SimpleStringEncoder[String])
+        .withBucketAssigner(new BasePathBucketAssigner[String])
+        .withRollingPolicy(OnCheckpointRollingPolicy.build())
+        .withOutputFileConfig(OutputFileConfig
+          .builder()
+          .withPartSuffix(suffix)
+          .build())
+        .build()
+    else
+      StreamingFileSink.forBulkFormat(new Path(path), new BulkWriter.Factory[String] {
+        override def create(out: FSDataOutputStream): BulkWriter[String] = new CompressionBulkWriter(compressionFormat.get, out)
+      }).withBucketAssigner(new BasePathBucketAssigner[String])
+        .withRollingPolicy(OnCheckpointRollingPolicy.build())
+        .withOutputFileConfig(OutputFileConfig
+          .builder()
+          .withPartSuffix(suffix)
+          .build())
+        .build()
   }
 }
