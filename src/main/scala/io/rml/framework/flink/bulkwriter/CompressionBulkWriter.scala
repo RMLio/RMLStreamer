@@ -2,10 +2,10 @@ package io.rml.framework.flink.bulkwriter
 
 import org.apache.flink.api.common.serialization.BulkWriter
 
-import java.util.zip.{DeflaterOutputStream}
+import java.io.OutputStream
 
 class CompressionBulkWriter extends BulkWriter[String] {
-  protected var compressionStream: DeflaterOutputStream = _
+  protected var compressionStream: OutputStream = _
 
   override def addElement(element: String): Unit = {
     compressionStream.write(element.getBytes())
@@ -16,7 +16,5 @@ class CompressionBulkWriter extends BulkWriter[String] {
     compressionStream.flush()
   }
 
-  override def finish(): Unit = {
-    compressionStream.finish()
-  }
+  override def finish(): Unit = {}
 }

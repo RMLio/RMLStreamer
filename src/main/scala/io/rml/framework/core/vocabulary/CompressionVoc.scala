@@ -31,6 +31,7 @@ object CompressionVoc {
   object Class {
     val GZIP = namespace._2 + "gzip";
     val ZIP = namespace._2 + "zip";
+    val XZ = namespace._2 + "xz";
     val TARGZIP = namespace._2 + "targzip";
     val TARXZ = namespace._2 + "tarxz";
   }

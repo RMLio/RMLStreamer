@@ -4,5 +4,10 @@ import java.io.OutputStream
 import java.util.zip.GZIPOutputStream
 
 class GZIPBulkWriter(outputStream: OutputStream) extends CompressionBulkWriter {
-  compressionStream = new GZIPOutputStream(outputStream, true)
+  val gzipOutputStream = new GZIPOutputStream(outputStream, true)
+  compressionStream = gzipOutputStream
+
+  override def finish(): Unit = {
+    gzipOutputStream.finish()
+  }
 }
