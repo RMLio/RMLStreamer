@@ -2,7 +2,7 @@ package io.rml.framework.flink.bulkwriter
 
 import org.apache.flink.api.common.serialization.BulkWriter
 
-import java.util.zip.{DeflaterOutputStream, GZIPOutputStream, ZipEntry, ZipOutputStream}
+import java.util.zip.{DeflaterOutputStream}
 
 class CompressionBulkWriter extends BulkWriter[String] {
   protected var compressionStream: DeflaterOutputStream = _
