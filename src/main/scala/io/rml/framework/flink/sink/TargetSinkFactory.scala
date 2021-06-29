@@ -3,8 +3,7 @@ package io.rml.framework.flink.sink
 import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.model.{DataTarget, FileDataTarget, LogicalTarget, Uri}
 import io.rml.framework.core.vocabulary.CompressionVoc
-import io.rml.framework.flink.CompressionBulkWriter
-import io.rml.framework.flink.CompressionFormat.{CompressionFormat, GZIP, TARGZIP, TARXZ, ZIP}
+import io.rml.framework.flink.bulkwriter.{CompressionBulkWriter, GZIPBulkWriter, ZipBulkWriter}
 import io.rml.framework.shared.RMLException
 import org.apache.flink.api.common.serialization.{BulkWriter, SimpleStringEncoder}
 import org.apache.flink.api.scala.createTypeInformation
@@ -105,13 +104,6 @@ object TargetSinkFactory {
   }
 
   private def createFileStreamSink(outputPath: String, compression: Option[Uri]): SinkFunction[String] = {
-    val compressionFormat: Option[CompressionFormat] = compression.map(c => c.toString match {
-      case CompressionVoc.Class.GZIP => GZIP
-      case CompressionVoc.Class.ZIP => ZIP
-      case CompressionVoc.Class.TARGZIP => TARGZIP
-      case CompressionVoc.Class.TARXZ => TARXZ
-    })
-
     val parts = outputPath.split('.')
     val path = parts.slice(0, parts.length - 1).mkString(".")
     var suffix = if (parts.length > 1) {
@@ -119,15 +111,16 @@ object TargetSinkFactory {
     } else {
       ""
     }
-    suffix += (compressionFormat match {
-      case Some(GZIP) => ".gz"
-      case Some(ZIP) => ".zip"
-      case Some(TARGZIP) => ".tgz"
-      case Some(TARXZ) => ".xz"
-      case None => ""
-    })
+    if (compression.isDefined) {
+      suffix += (compression.get.toString match {
+        case CompressionVoc.Class.GZIP => ".gz"
+        case CompressionVoc.Class.ZIP => ".zip"
+        case _ => ""
+      })
+    }
 
-    if (compressionFormat.isEmpty)
+    if (compression.isEmpty || compression.get.toString == CompressionVoc.Class.TARGZIP
+      || compression.get.toString == CompressionVoc.Class.TARXZ)
       StreamingFileSink.forRowFormat(new Path(path), new SimpleStringEncoder[String])
         .withBucketAssigner(new BasePathBucketAssigner[String])
         .withRollingPolicy(OnCheckpointRollingPolicy.build())
@@ -138,7 +131,12 @@ object TargetSinkFactory {
         .build()
     else
       StreamingFileSink.forBulkFormat(new Path(path), new BulkWriter.Factory[String] {
-        override def create(out: FSDataOutputStream): BulkWriter[String] = new CompressionBulkWriter(compressionFormat.get, out)
+        override def create(out: FSDataOutputStream): BulkWriter[String] = {
+          compression.get.toString match {
+            case CompressionVoc.Class.GZIP => new GZIPBulkWriter(out)
+            case CompressionVoc.Class.ZIP => new ZipBulkWriter(out)
+          }
+        }
       }).withBucketAssigner(new BasePathBucketAssigner[String])
         .withRollingPolicy(OnCheckpointRollingPolicy.build())
         .withOutputFileConfig(OutputFileConfig
