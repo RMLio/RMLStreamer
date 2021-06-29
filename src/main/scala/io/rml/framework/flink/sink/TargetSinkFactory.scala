@@ -3,7 +3,7 @@ package io.rml.framework.flink.sink
 import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.model.{DataTarget, FileDataTarget, LogicalTarget, Uri}
 import io.rml.framework.core.vocabulary.CompressionVoc
-import io.rml.framework.flink.bulkwriter.{CompressionBulkWriter, GZIPBulkWriter, XZBulkWriter, ZipBulkWriter}
+import io.rml.framework.flink.bulkwriter.{GZIPBulkWriter, XZBulkWriter, ZipBulkWriter}
 import io.rml.framework.shared.RMLException
 import org.apache.flink.api.common.serialization.{BulkWriter, SimpleStringEncoder}
 import org.apache.flink.api.scala.createTypeInformation

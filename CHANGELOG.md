@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Support for stream partitioning in windows
 * Joins of data streams
 
+## [2.1.2]
+
+### Added
+* Logicat target compression for files: gzip, zip, xz.
+
 ## [2.1.1] - 2020-05-19
 
 ### Added
