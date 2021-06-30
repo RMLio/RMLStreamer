@@ -2,7 +2,7 @@ package io.rml.framework.flink.sink
 
 import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.model.{DataTarget, FileDataTarget, LogicalTarget, Uri}
-import io.rml.framework.core.vocabulary.CompressionVoc
+import io.rml.framework.core.vocabulary.RMLCompVoc
 import io.rml.framework.flink.bulkwriter.{GZIPBulkWriter, XZBulkWriter, ZipBulkWriter}
 import io.rml.framework.shared.RMLException
 import org.apache.flink.api.common.serialization.{BulkWriter, SimpleStringEncoder}
@@ -113,15 +113,15 @@ object TargetSinkFactory {
     }
     if (compression.isDefined) {
       suffix += (compression.get.toString match {
-        case CompressionVoc.Class.GZIP => ".gz"
-        case CompressionVoc.Class.ZIP => ".zip"
-        case CompressionVoc.Class.XZ => ".xz"
+        case RMLCompVoc.Class.GZIP => ".gz"
+        case RMLCompVoc.Class.ZIP => ".zip"
+        case RMLCompVoc.Class.XZ => ".xz"
         case _ => ""
       })
     }
 
-    if (compression.isEmpty || compression.get.toString == CompressionVoc.Class.TARGZIP
-      || compression.get.toString == CompressionVoc.Class.TARXZ)
+    if (compression.isEmpty || compression.get.toString == RMLCompVoc.Class.TARGZIP
+      || compression.get.toString == RMLCompVoc.Class.TARXZ)
       StreamingFileSink.forRowFormat(new Path(path), new SimpleStringEncoder[String])
         .withBucketAssigner(new BasePathBucketAssigner[String])
         .withRollingPolicy(OnCheckpointRollingPolicy.build())
@@ -134,9 +134,9 @@ object TargetSinkFactory {
       StreamingFileSink.forBulkFormat(new Path(path), new BulkWriter.Factory[String] {
         override def create(out: FSDataOutputStream): BulkWriter[String] = {
           compression.get.toString match {
-            case CompressionVoc.Class.GZIP => new GZIPBulkWriter(out)
-            case CompressionVoc.Class.ZIP => new ZipBulkWriter(out)
-            case CompressionVoc.Class.XZ => new XZBulkWriter(out)
+            case RMLCompVoc.Class.GZIP => new GZIPBulkWriter(out)
+            case RMLCompVoc.Class.ZIP => new ZipBulkWriter(out)
+            case RMLCompVoc.Class.XZ => new XZBulkWriter(out)
           }
         }
       }).withBucketAssigner(new BasePathBucketAssigner[String])
