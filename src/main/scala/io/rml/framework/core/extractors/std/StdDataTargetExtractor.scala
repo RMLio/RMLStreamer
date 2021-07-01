@@ -2,8 +2,9 @@ package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.{DataTargetExtractor, ExtractorUtil}
 import io.rml.framework.core.model.rdf.RDFResource
+import io.rml.framework.core.model.std.StdSPARQLDataStore
 import io.rml.framework.core.model.{DataTarget, FileDataTarget, Uri}
-import io.rml.framework.core.vocabulary.{RDFVoc, RMLTVoc, VoIDVoc}
+import io.rml.framework.core.vocabulary.{RDFVoc, RMLTVoc, SPARQLEndpointVoc, VoIDVoc}
 import io.rml.framework.shared.RMLException
 
 /**
@@ -42,6 +43,7 @@ class StdDataTargetExtractor extends DataTargetExtractor {
     val targetType = ExtractorUtil.extractSingleResourceFromProperty(targetResource, RDFVoc.Property.TYPE)
     targetType.uri match {
       case Uri(VoIDVoc.Class.DATASET) => extractFileDataTarget(targetResource)
+      case Uri(SPARQLEndpointVoc.Class.SERVICE) => extractSPARQLEndpointTarget(targetResource)
       case _ => throw new RMLException(s"${targetType} not supported as data target.")
     }
   }
@@ -49,6 +51,11 @@ class StdDataTargetExtractor extends DataTargetExtractor {
   private def extractFileDataTarget(resource: RDFResource): DataTarget = {
     val path = ExtractorUtil.extractSingleResourceFromProperty(resource, VoIDVoc.Property.DATADUMP)
     FileDataTarget(path.uri)
+  }
+
+  private def extractSPARQLEndpointTarget(resource: RDFResource): DataTarget = {
+    val endpoint = ExtractorUtil.extractSingleResourceFromProperty(resource, SPARQLEndpointVoc.Property.ENDPOINT)
+    StdSPARQLDataStore(endpoint.uri)
   }
 
 }

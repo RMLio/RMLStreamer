@@ -273,6 +273,12 @@ SOFTWARE.
             <version>1.9</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpasyncclient</artifactId>
+            <version>4.1.4</version>
+        </dependency>
+
     </dependencies>
 
     <!-- This profile helps to make things run out of the box in IntelliJ -->
