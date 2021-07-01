@@ -147,9 +147,9 @@ object FormattedRMLMapping {
   /**
     * Extract every standard triples map from a triples map, if there are parent triple maps, skip these.
     *
-    * @param triplesMap  a triplesMap which might contain multiple predicateObjectMaps.
-    * @return For every predicateObjectMap in the input triplesMap: a new triplesMap with one predicateObjectMap.
-    *         PredicateObjectMaps with parentTriplesMap(s) are filtered out.
+    * @param triplesMap  a TriplesMap which might contain predicateObjectMaps with one or more predicate and object maps.
+    * @return            a TriplesMap with PredicateObjectMaps each containing ONE PredicateMap + ONE ObjectMap.
+    *                    PredicateObjectMaps with parentTriplesMap(s) are filtered out.
     */
   private def extractStandardTriplesMapsFromTriplesMap(triplesMap: TriplesMap): TriplesMap = {
     val list = triplesMap.predicateObjectMaps.flatMap(pm => pm.objectMaps.map(om => (pm, om, om.parentTriplesMap)))
