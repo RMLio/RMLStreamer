@@ -25,7 +25,7 @@ package io.rml.framework.core.vocabulary
  *
  * */
 object SPARQLEndpointVoc {
-  val namespace = ("void", "http://www.w3.org/ns/sparql-service-description#")
+  val namespace = ("sd", "http://www.w3.org/ns/sparql-service-description#")
 
   object Property {
     val ENDPOINT = namespace._2 + "endpoint"
