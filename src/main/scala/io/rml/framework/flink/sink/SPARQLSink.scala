@@ -1,13 +1,12 @@
 package io.rml.framework.flink.sink
 
-import io.rml.framework.Main.{logError, logInfo}
+import io.rml.framework.Main.logError
 import org.apache.commons.io.IOUtils
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.functions.sink.{RichSinkFunction, SinkFunction}
 import org.apache.http.HttpResponse
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.concurrent.FutureCallback
-import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy
 import org.apache.http.impl.nio.client.{CloseableHttpAsyncClient, HttpAsyncClients}
