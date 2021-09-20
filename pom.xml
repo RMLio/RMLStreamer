@@ -39,7 +39,7 @@ SOFTWARE.
         <flink.version>1.12.3</flink.version>
         <slf4j.version>1.7.26</slf4j.version>
         <log4j.version>2.13.3</log4j.version>
-        <jena.version>3.11.0</jena.version>
+        <jena.version>4.2.0</jena.version>
         <kafka.version>2.4.1</kafka.version>
 
         <scala.binary.version>2.11</scala.binary.version>
