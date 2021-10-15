@@ -44,7 +44,7 @@ class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
       assembledFunction.andThen(item => {
         if (item.isDefined) {
           termTypeString match {
-            case R2RMLVoc.Class.IRI => item.map(iter => iter.map(elem => Uri(elem.toString)))
+            case R2RMLVoc.Class.IRI => item.map(iter => iter.map(elem => Uri(elem.value)))   // TODO: this is because a function always returns a Literal (see DynamicFunction)
             case _ => item.map(iter => iter.flatMap(elem => {
               Some(Literal(elem.identifier, objectMap.datatype, objectMap.language))
             }))
