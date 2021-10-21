@@ -11,7 +11,9 @@ Documentation regarding the use of (custom) functions can be found [here](docume
 
 If you want to get the RMLStreamer up and running within 5 minutes using Docker, check out [docker/README.md](docker/README.md)
 
-If you want to deploy it yourself, read on. 
+If you want to deploy it yourself, read on.
+
+If you want to develop, read [these instructions](documentation/README_DEVELOPMENT.md).
 
 ### Installing Flink
 RMLStreamer runs its jobs on Flink clusters.
@@ -44,6 +46,9 @@ so.
 The resulting `RMLStreamer-<version>.jar`, found in the `target` folder, can be deployed on a Flink cluster.
 
 ### Executing RML Mappings
+
+*This section assumes the use of a CLI. If you want to use Flink's web interface, check out
+[this section](docker/README.md#3-deploy-rmlstreamer-using-the-flink-web-interface) in the Docker README.*
 
 Here we give examples for running RMLStreamer from the command line. We use `FLINK_BIN` to denote the Flink CLI tool,
 usually found in the `bin` directory of the Flink installation. E.g. `/home/myuser/flink-1.12.3/bin/flink`.
@@ -252,4 +257,17 @@ rml:logicalSource [
         ];
         rml:referenceFormulation ql:JSONPath;
     ];
+```
+
+### Logging
+
+RMLStreamer uses Flink's Log4j 2 system. It can be configured in 
+`$FLINK_HOME/conf/log4j.properties`.
+
+To adjust the log level for RMLStreamer specifically, add two lines like this:
+
+```properties
+logger.rmlstreamer.name = io.rml.framework
+logger.rmlstreamer.level = DEBUG
+
 ```
