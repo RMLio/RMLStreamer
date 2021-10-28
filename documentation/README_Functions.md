@@ -15,20 +15,18 @@ These files can be obtained from `src/main/resources`:
 ## Example: RML Streamer + Flink    
 Flink's `lib` directory should contain the jar-files with the custom functions. In this example, these are marked with `*`
 ```
-flink-1.12.3-scala_2.11
+flink-1.14.0-scala_2.11
     └── lib
         ├── GrelFunctions.jar                       *
         ├── IDLabFunctions.jar                      *
-        ├── flink-dist_2.11-1.12.3.jar
-        ├── flink-table-blink_2.11-1.12.3.jar
-        ├── flink-table_2.11-1.12.3.jar
-        ├── log4j-1.2.17.jar
-        └── slf4j-log4j12-1.7.15.jar
+        ├── flink-dist_2.11-1.14.0.jar
+        ├── flink-table-blink_2.11-1.14.0.jar
+        └── flink-table_2.11-1.14.0.jar
 ``` 
 When running the RML Streamer on Flink, the directory should look like
 ```
 .
-├── RMLStreamer-2.0.1-SNAPSHOT.jar
+├── RMLStreamer-2.2.0.jar
 ├── functions_grel.ttl
 ├── functions_idlab.ttl
 ├── grel_java_mapping.ttl
@@ -40,7 +38,7 @@ Note that the function descriptions and function mappings are present.
 
 The command for running the RML Streamer on Flink should look like
 ```
-~/flink/flink-1.12.3-scala_2.11/bin/flink run -c io.rml.framework.Main RMLStreamer-2.1.1-SNAPSHOT.jar toFile --output-path $(pwd)'/out.ttl' -m mapping.ttl
+~/flink/flink-1.14.0-scala_2.11/bin/flink run -c io.rml.framework.Main RMLStreamer-2.2.0.jar toFile --output-path $(pwd)'/out.ttl' -m mapping.ttl
 ```       
        
 ## Test Cases

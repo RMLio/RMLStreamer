@@ -3,7 +3,7 @@
 Get RMLStreamer up and running using Docker. No Java, no Flink, no Maven required.
 
 *Note: this README descibes one way of setting up Flink + RMLStreamer in Docker.
-Check out Flink's elaborate [documentation](https://ci.apache.org/projects/flink/flink-docs-release-1.13/docs/deployment/resource-providers/standalone/docker/) on this topic for more options, configurations, ...*
+Check out Flink's elaborate [documentation](https://ci.apache.org/projects/flink/flink-docs-release-1.14/docs/deployment/resource-providers/standalone/docker/) on this topic for more options, configurations, ...*
 
 ## 1. Prerequisites
 - [Docker or Docker Engine](https://www.docker.com/), version 19 or higher

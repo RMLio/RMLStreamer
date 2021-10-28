@@ -17,9 +17,9 @@ If you want to develop, read [these instructions](documentation/README_DEVELOPME
 
 ### Installing Flink
 RMLStreamer runs its jobs on Flink clusters.
-More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.12/try-flink/local_installation.html).
+More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.14/try-flink/local_installation.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
-Please note that this version works with Flink 1.12.3 with Scala 2.11 support, which can be downloaded [here](https://archive.apache.org/dist/flink/flink-1.12.3/flink-1.12.3-bin-scala_2.11.tgz).
+Please note that this version works with Flink 1.14.0 with Scala 2.11 support, which can be downloaded [here](https://archive.apache.org/dist/flink/flink-1.14.0/flink-1.14.0-bin-scala_2.11.tgz).
 
 ### Building RMLStreamer
 
@@ -51,7 +51,7 @@ The resulting `RMLStreamer-<version>.jar`, found in the `target` folder, can be 
 [this section](docker/README.md#3-deploy-rmlstreamer-using-the-flink-web-interface) in the Docker README.*
 
 Here we give examples for running RMLStreamer from the command line. We use `FLINK_BIN` to denote the Flink CLI tool,
-usually found in the `bin` directory of the Flink installation. E.g. `/home/myuser/flink-1.12.3/bin/flink`.
+usually found in the `bin` directory of the Flink installation. E.g. `/home/myuser/flink-1.14.0/bin/flink`.
 For Windows a `flink.bat` script is provided.
 
 The general usage is:

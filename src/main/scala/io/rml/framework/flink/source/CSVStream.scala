@@ -26,21 +26,14 @@
 package io.rml.framework.flink.source
 
 import io.rml.framework.core.item.Item
-import io.rml.framework.core.item.csv.{CSVHeader, CSVItem}
+import io.rml.framework.core.item.csv.CSVItem
 import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
 import io.rml.framework.core.util.{CustomCSVConfig, DefaultCSVConfig}
 import io.rml.framework.flink.connector.kafka.UniversalKafkaConnectorFactory
 import org.apache.commons.csv.CSVFormat
 import org.apache.flink.api.common.serialization.SimpleStringSchema
-import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
-import org.apache.flink.table.api.Table
-import org.apache.flink.table.api.bridge.scala.StreamTableEnvironment
-import org.apache.flink.table.descriptors.FileSystem
-import org.apache.flink.types.Row
-
-import java.nio.file.Paths
 
 case class CSVStream(stream: DataStream[Iterable[Item]] ) extends Stream
 
@@ -100,50 +93,33 @@ object CSVStream {
 
   def fromFileStream(path: String)(implicit senv: StreamExecutionEnvironment): CSVStream = {
 
-    implicit val tEnv: StreamTableEnvironment = StreamTableEnvironment.create(senv);
-
-    // standard delimiter //TODO: from RML mapping
-    val delimiter = ','
-    val quoteCharacter = '"'
-
-
-    val format = CSVFormat.newFormat(delimiter).withQuote(quoteCharacter).withTrim()
-    // extract header
-    val header: Option[Array[String]] = CSVHeader(Paths.get(path), format)
-
-    // create table source, tables are use for dynamically assigning headers
-    /*val source = CsvTableSource.builder()
-      .path(path.replaceFirst("file://", ""))
-      .ignoreFirstLine() // skip the header
-      .fieldDelimiter(delimiter.toString)*/
-
-    // assign headers dynamically
-    //val builder = header.get.foldLeft(source)((a, b) => a.field(b, DataTypes.STRING())).build()
-
-    // register the table to the table environment
-    //tEnv.registerTableSource(path, builder)
-    val fileSys = (new FileSystem).path(path)
-
-    val tableDescriptor = tEnv.connect(fileSys)
-
-    // create the table
-    /*val table: Table = tEnv
-      .scan(path)
-      .select(convertToSelection(header.get))*/
-
-    val table: Table = tEnv.from(fileSys.toString)
-
-    // create the header->index map
-    val headersMap = convertToIndexMap(header.get)
-
-    // convert to a Flink datastream for further processing
-    implicit val typeInfo = TypeInformation.of(classOf[Row])
-    implicit val rowItemTypeInfo = TypeInformation.of(classOf[Item])
-    val dataSet: DataStream[Item] = tEnv.toAppendStream(table)(typeInfo).map(row => row
-      .asInstanceOf[Item]) // needed since types of datastreams can't be subclasses due to Flink implementation
-
-    // create the CSV Stream
-    //new CSVStream(dataSet)
+//    implicit val tEnv: StreamTableEnvironment = StreamTableEnvironment.create(senv);
+//
+//    // standard delimiter //TODO: from RML mapping
+//    val delimiter = ','
+//    val quoteCharacter = '"'
+//
+//
+//    val format = CSVFormat.newFormat(delimiter).withQuote(quoteCharacter).withTrim()
+//    // extract header
+//    val header: Option[Array[String]] = CSVHeader(Paths.get(path), format)
+//
+//    val csvDataStr = senv.readFile(new CSVInputFormat(path, CSVFormat.DEFAULT), path, FileProcessingMode.PROCESS_ONCE, 0)
+//
+//    // create the table
+//    val table: Table = tEnv.fromDataStream(csvDataStr)
+//
+//    // create the header->index map
+//    val headersMap = convertToIndexMap(header.get)
+//
+//    // convert to a Flink datastream for further processing
+//    implicit val typeInfo = TypeInformation.of(classOf[Row])
+//    implicit val rowItemTypeInfo = TypeInformation.of(classOf[Item])
+//    val dataSet: DataStream[Item] = tEnv.toAppendStream(table)(typeInfo).map(row => row
+//      .asInstanceOf[Item]) // needed since types of datastreams can't be subclasses due to Flink implementation
+//
+//    // create the CSV Stream
+//    new CSVStream(dataSet)
     throw new NotImplementedError("FileStream is not implemented properly yet ")
   }
 
