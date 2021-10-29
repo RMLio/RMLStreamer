@@ -96,7 +96,7 @@ case class RichMQTTSource(hypermediaTarget: String,
     })
 
     while (true)
-      Thread.sleep(1)
+      Thread.sleep(500)
   }
 
   override def cancel(): Unit = {

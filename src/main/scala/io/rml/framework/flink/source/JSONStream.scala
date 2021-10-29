@@ -31,6 +31,7 @@ import io.rml.framework.core.model._
 import io.rml.framework.flink.connector.kafka.UniversalKafkaConnectorFactory
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.scala._
+import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 
 case class JSONStream(val stream: DataStream[Iterable[Item]]) extends Stream
@@ -44,6 +45,7 @@ object JSONStream extends Logging {
       case fileStream: FileStream => fromFileStream(fileStream.path, jsonPaths)
       case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, jsonPaths)
       case mqttStream : MQTTStream => fromMQTTStream(mqttStream, jsonPaths)
+      case wsStream: WsStream => fromWsStream(wsStream, jsonPaths)
     }
   }
 
@@ -69,16 +71,10 @@ object JSONStream extends Logging {
     val consumer = UniversalKafkaConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
 
     logDebug(consumer.getProducedType.toString)
-    val parallelStream = StreamUtil.paralleliseOverSlots(env.addSource(consumer))
-    val stream: DataStream[Iterable[Item]] = parallelStream
-      .map { item =>
-        JSONItem.fromStringOptionableList(item, jsonPaths)
-      }
-    JSONStream(stream)
+    streamFromSource(consumer, jsonPaths, env)
   }
 
   def fromMQTTStream(mqttStream : MQTTStream, jsonPaths : List[String])(implicit env: StreamExecutionEnvironment):JSONStream = {
-
     val source = RichMQTTSource(
       mqttStream.hypermediaTarget,
       mqttStream.contentType,
@@ -86,6 +82,17 @@ object JSONStream extends Logging {
       mqttStream.dup,
       mqttStream.qos
     )
+    streamFromSource(source, jsonPaths, env)
+  }
+
+  def fromWsStream(wsStream: WsStream, jsonPaths : List[String])(implicit env: StreamExecutionEnvironment):JSONStream = {
+    val source = new WebSocketSource(wsStream.hypermediaTarget)
+    streamFromSource(source, jsonPaths, env)
+  }
+
+  private def streamFromSource( source: SourceFunction[String],
+                                                    jsonPaths: List[String],
+                                                    env: StreamExecutionEnvironment): JSONStream = {
     val parallelStream = StreamUtil.paralleliseOverSlots(env.addSource(source))
     val stream: DataStream[Iterable[Item]] = parallelStream
       .map { item =>

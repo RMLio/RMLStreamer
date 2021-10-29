@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 * Logicat target compression for files: gzip, zip, xz.
+* WebSocket support for Logical Target via WoT description and format JSON. 
 * Added scopt dependency
 
 ### Changed

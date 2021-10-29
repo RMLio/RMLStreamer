@@ -108,14 +108,20 @@ class StdDataSourceExtractor extends DataSourceExtractor {
 
     // extract the desired content type
     val contentType = extractSingleLiteralFromProperty(form, HypermediaVoc.Property.FORCONTENTTYPE);
+    // TODO: now JSON is kind of expected and the only option.
+    //       Check contentType if other formats will be processed!
 
     // now check for soure type (MQTT, HTTP, ...)
     val isMQTT = form.hasPredicateWith(WoTVoc.WoTMQTT.namespace._2);
     if (isMQTT) {
       return extractWoTMQTTSource(form, hypermediaTarget, contentType);
-    } else {
-      throw new RMLException("Unknown Web of Things source defined.")
     }
+    val isWS = hypermediaTarget.startsWith("ws");
+    if (isWS) {
+      return extractWSSource(hypermediaTarget, contentType);
+    }
+    throw new RMLException("Unknown Web of Things source defined.")
+
   }
 
   private def extractWoTMQTTSource(form: RDFResource, hypermediaTarget: String, contentType: String): DataSource = {
@@ -140,5 +146,9 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     logDebug("MQTT data source defined in mapping file. hypermediaTarget: " + hypermediaTarget
       + ", contentType: " + contentType + ", dup: " + dup + ", qosOpt: " + qosOpt);
     MQTTStream(hypermediaTarget, contentType, controlPacketValue, dup, qosOpt)
+  }
+
+  private def extractWSSource(hypermediaTarget: String, contentType: String): DataSource = {
+    WsStream(hypermediaTarget, contentType)
   }
 }
