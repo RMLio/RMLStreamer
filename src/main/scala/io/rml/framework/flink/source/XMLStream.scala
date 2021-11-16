@@ -26,8 +26,7 @@ package io.rml.framework.flink.source
 
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.item.xml.XMLItem
-import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
-import io.rml.framework.core.vocabulary.QueryVoc
+import io.rml.framework.core.model._
 import io.rml.framework.flink.connector.kafka.UniversalKafkaConnectorFactory
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.scala._
@@ -45,6 +44,8 @@ object XMLStream {
       case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream, xpaths)
       case fileStream: FileStream => fromFileStream(fileStream.path, xpaths)
       case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream, xpaths)
+      case mqttStream : MQTTStream => fromMQTTStream(mqttStream, xpaths)
+      case wsStream: WsStream => fromWsStream(wsStream, xpaths)
     }
   }
 
@@ -70,6 +71,34 @@ object XMLStream {
       .map(item => {
         XMLItem.fromStringOptionable(item, xpaths)
       })
+    XMLStream(stream)
+  }
+
+  def fromMQTTStream(mqttStream : MQTTStream, xpaths : List[String])(implicit env: StreamExecutionEnvironment):XMLStream = {
+    val source = RichMQTTSource(
+      mqttStream.hypermediaTarget,
+      mqttStream.contentType,
+      mqttStream.controlPacketValue,
+      mqttStream.dup,
+      mqttStream.qos
+    )
+    streamFromSource(source, xpaths, env)
+  }
+
+  def fromWsStream(wsStream: WsStream, xpaths : List[String])(implicit env: StreamExecutionEnvironment):XMLStream = {
+    val source = new WebSocketSource(wsStream.hypermediaTarget)
+    streamFromSource(source, xpaths, env)
+  }
+
+  private def streamFromSource(source: SourceFunction[String],
+                               xpaths: List[String],
+                               env: StreamExecutionEnvironment) : XMLStream = {
+    val parallelStream = StreamUtil.paralleliseOverSlots(env.addSource(source))
+    val stream: DataStream[Iterable[Item]] = parallelStream
+      .map { item =>
+        XMLItem.fromStringOptionable(item, xpaths)
+      }
+
     XMLStream(stream)
   }
 

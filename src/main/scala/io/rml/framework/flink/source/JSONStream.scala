@@ -90,7 +90,7 @@ object JSONStream extends Logging {
     streamFromSource(source, jsonPaths, env)
   }
 
-  private def streamFromSource( source: SourceFunction[String],
+  private def streamFromSource(source: SourceFunction[String],
                                                     jsonPaths: List[String],
                                                     env: StreamExecutionEnvironment): JSONStream = {
     val parallelStream = StreamUtil.paralleliseOverSlots(env.addSource(source))

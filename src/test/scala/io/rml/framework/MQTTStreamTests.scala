@@ -48,6 +48,7 @@ class MQTTStreamTests extends StreamTestSync {
   var broker: Server = _
 
   override def setup(): Unit = {
+    super.setup()
     setupBroker()
     setupProducer()
   }
@@ -100,7 +101,7 @@ class MQTTStreamTests extends StreamTestSync {
       for (in <- batch.data) {
         val deliveryToken = this.producer.publish(topic, in.getBytes, qos, retained)
         deliveryToken.waitForCompletion(completionTimeout)
-        logInfo("messaged delivered...")
+        logInfo("message delivered...")
       }
     }
   }

@@ -27,7 +27,7 @@ package io.rml.framework.flink.source
 
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.item.csv.CSVItem
-import io.rml.framework.core.model.{FileStream, KafkaStream, StreamDataSource, TCPSocketStream}
+import io.rml.framework.core.model._
 import io.rml.framework.core.util.{CustomCSVConfig, DefaultCSVConfig}
 import io.rml.framework.flink.connector.kafka.UniversalKafkaConnectorFactory
 import org.apache.commons.csv.CSVFormat
@@ -45,50 +45,37 @@ object CSVStream {
       case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream)
       case fileStream: FileStream => fromFileStream(fileStream.path)
       case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream)
+      case mqttStream : MQTTStream => fromMQTTStream(mqttStream)
+      case wsStream: WsStream => fromWsStream(wsStream)
       case _ => null
     }
   }
 
   def fromTCPSocketStream(tCPSocketStream: TCPSocketStream)(implicit env: StreamExecutionEnvironment): CSVStream = {
-    // var's set up
-    val defaultConfig = DefaultCSVConfig()
-    val csvConfig = CustomCSVConfig(defaultConfig.delimiter, defaultConfig.quoteCharacter, "\n\n")
-
-
-    // CSVFormat set up with delimiter and quote character
-    val format = CSVFormat.newFormat(csvConfig.delimiter)
-      .withQuote(csvConfig.quoteCharacter)
-      .withTrim()
-      .withFirstRecordAsHeader()
-
-    val stream: DataStream[Iterable[Item]] = StreamUtil.paralleliseOverSlots(StreamUtil.createTcpSocketSource(tCPSocketStream, csvConfig.recordDelimiter))
-      .map(batchString => {
-        CSVItem.fromDataBatch(batchString, format)
-      })
-
-
-    CSVStream(stream)
+    val socketStream = StreamUtil.createTcpSocketSource(tCPSocketStream, "\n\n")
+    streamFromSource(socketStream)
   }
 
   def fromKafkaStream(kafkaStream: KafkaStream)(implicit env: StreamExecutionEnvironment): CSVStream = {
-    // var's set up
-    val defaultConfig = DefaultCSVConfig()
-    val csvConfig = CustomCSVConfig(defaultConfig.delimiter, defaultConfig.quoteCharacter, "\n\n")
-
-
-    // CSVFormat set up with delimiter and quote character
-    val format = CSVFormat.newFormat(csvConfig.delimiter)
-      .withQuote(csvConfig.quoteCharacter)
-      .withTrim()
-      .withFirstRecordAsHeader()
-
     val properties = kafkaStream.getProperties
     val consumer =  UniversalKafkaConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
-    val stream: DataStream[Iterable[Item]] = StreamUtil.paralleliseOverSlots(env.addSource(consumer))
-      .map(batchString => {
-        CSVItem.fromDataBatch(batchString, format)
-      })
-    CSVStream(stream)
+    streamFromSource(env.addSource(consumer))
+  }
+
+  def fromMQTTStream(mqttStream : MQTTStream)(implicit env: StreamExecutionEnvironment):CSVStream = {
+    val source = RichMQTTSource(
+      mqttStream.hypermediaTarget,
+      mqttStream.contentType,
+      mqttStream.controlPacketValue,
+      mqttStream.dup,
+      mqttStream.qos
+    )
+    streamFromSource(env.addSource(source))
+  }
+
+  def fromWsStream(wsStream: WsStream)(implicit env: StreamExecutionEnvironment):CSVStream = {
+    val source = new WebSocketSource(wsStream.hypermediaTarget)
+    streamFromSource(env.addSource(source))
   }
 
   def fromFileStream(path: String)(implicit senv: StreamExecutionEnvironment): CSVStream = {
@@ -133,6 +120,26 @@ object CSVStream {
       index += 1
       (header, index)
     }).toMap
+  }
+
+  private def getDefaultFormat(): CSVFormat = {
+    // vars set up
+    val defaultConfig = DefaultCSVConfig()
+    val csvConfig = CustomCSVConfig(defaultConfig.delimiter, defaultConfig.quoteCharacter, "\n\n")
+
+    // CSVFormat set up with delimiter and quote character
+    CSVFormat.newFormat(csvConfig.delimiter)
+      .withQuote(csvConfig.quoteCharacter)
+      .withTrim()
+      .withFirstRecordAsHeader()
+  }
+
+  private def streamFromSource(source: DataStream[String]): CSVStream = {
+    val stream: DataStream[Iterable[Item]] = StreamUtil.paralleliseOverSlots(source)
+      .map(batchString => {
+        CSVItem.fromDataBatch(batchString, getDefaultFormat())
+      })
+    CSVStream(stream)
   }
 
 }

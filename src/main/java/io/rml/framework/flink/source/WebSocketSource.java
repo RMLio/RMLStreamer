@@ -83,7 +83,7 @@ public class WebSocketSource extends RichSourceFunction<String> {
 				context.collect(message.toString());
 				message = new StringBuilder();
 			}
-			return WebSocket.Listener.super.onText(webSocket, data, last);
+			return null;
 		}
 
 		@Override

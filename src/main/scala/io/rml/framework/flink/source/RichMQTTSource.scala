@@ -96,7 +96,7 @@ case class RichMQTTSource(hypermediaTarget: String,
     })
 
     while (true)
-      Thread.sleep(500)
+      Thread.sleep(100)
   }
 
   override def cancel(): Unit = {
@@ -110,5 +110,6 @@ case class RichMQTTSource(hypermediaTarget: String,
 
   protected def teardownClient() = {
     // TODO: PROPERLY TEARDOWN CLIENT
+    client.disconnect()
   }
 }

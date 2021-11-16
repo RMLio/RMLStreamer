@@ -14,11 +14,6 @@
 @prefix mqv: <http://www.example.org/mqtt-binding#> .
 @base <http://example.com/rules/> .
 
-# API key in HTTP header
-<#WotMQTTSecurity> a wotsec:BasicSecurityScheme;
-  wotsec:in "body";
-.
-
 <#WoTWebAPI> a td:Thing;
   td:hasPropertyAffordance [
     td:hasForm [
@@ -29,7 +24,6 @@
       hctl:hasOperationType "readproperty" ;
     ];
   ];
-  td:hasSecurityConfiguration <#WotMQTTSecurity> ;
 .
 
 <#TriplesMap> a rr:TriplesMap;
