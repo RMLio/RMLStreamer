@@ -53,6 +53,7 @@ public class WebSocketSource extends RichSourceFunction<String> {
 		while (!stop) {
 			Thread.sleep(500);
 		}
+		log.info("WebSocketSource stopped.");
 	}
 
 	public void cancel() {
@@ -70,7 +71,7 @@ public class WebSocketSource extends RichSourceFunction<String> {
 
 		@Override
 		public void onOpen(WebSocket webSocket) {
-			log.debug("onOpen using subprotocol " + webSocket.getSubprotocol());
+			log.debug("onOpen using subprotocol {}", webSocket.getSubprotocol());
 			WebSocket.Listener.super.onOpen(webSocket);
 		}
 
@@ -83,12 +84,19 @@ public class WebSocketSource extends RichSourceFunction<String> {
 				context.collect(message.toString());
 				message = new StringBuilder();
 			}
+			webSocket.request(1);
 			return null;
 		}
 
 		@Override
 		public void onError(WebSocket webSocket, Throwable error) {
 			log.warn("WebSocket error: {}", webSocket.toString(), error);
+		}
+
+		@Override
+		public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
+			log.info("Websocket closes: {} {}", statusCode, reason);
+			return WebSocket.Listener.super.onClose(webSocket, statusCode, reason);
 		}
 	}
 }
