@@ -3,6 +3,7 @@ package io.rml.framework
 import io.rml.framework.api.FnOEnvironment
 import io.rml.framework.core.function.FunctionLoader
 import io.rml.framework.core.internal.Logging
+import org.scalatest.{BeforeAndAfterAll, FunSuite}
 
 object FunctionMappingSetup {
   def setupFunctionLoader(): Option[FunctionLoader] = {
