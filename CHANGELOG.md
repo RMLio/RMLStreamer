@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Support for stream partitioning in windows
 * Joins of data streams
 
-## [2.2.0]
+## [2.2.0] - 2021-12-14
 
 ### Added
 * Logical target compression for files: gzip, zip, xz.
@@ -164,3 +164,4 @@ can be set with the program argument `--baseIRI`.
 [2.0.0]: https://github.com/RMLio/RMLStreamer/compare/v1.2.3...v2.0.0  
 [2.1.0]: https://github.com/RMLio/RMLStreamer/compare/v2.0.0...v2.1.0  
 [2.1.1]: https://github.com/RMLio/RMLStreamer/compare/v2.1.0...v2.1.1  
+[2.2.0]: https://github.com/RMLio/RMLStreamer/compare/v2.1.1...v2.2.0  
