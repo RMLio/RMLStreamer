@@ -1,11 +1,11 @@
 package io.rml.framework
 
 import io.rml.framework.api.FnOEnvironment
+import io.rml.framework.core.function.FunctionLoader
 import io.rml.framework.core.internal.Logging
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
 
 object FunctionMappingSetup {
-  def setupFunctionLoader() = {
+  def setupFunctionLoader(): Option[FunctionLoader] = {
     // singleton FunctionLoader created and initialized with default function descriptions and function mappings
     FnOEnvironment.loadDefaultConfiguration()
     FnOEnvironment.intializeFunctionLoader()

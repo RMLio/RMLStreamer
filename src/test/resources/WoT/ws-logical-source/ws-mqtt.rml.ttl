@@ -1,0 +1,47 @@
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex: <http://example.com/> .
+@prefix schema: <http://schema.org/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix td: <https://www.w3.org/2019/wot/td#> .
+@prefix htv: <http://www.w3.org/2011/http#> .
+@prefix hctl: <https://www.w3.org/2019/wot/hypermedia#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix wotsec: <https://www.w3.org/2019/wot/security#> .
+@prefix mqv: <http://www.example.org/mqtt-binding#> .
+@base <http://example.com/rules/> .
+
+<#WoTWebAPI> a td:Thing;
+  td:hasPropertyAffordance [
+    td:hasForm [
+      # URL and content type
+      hctl:hasTarget "ws://localhost:9000";
+      hctl:forContentType "application/json";
+      # Read only
+      hctl:hasOperationType "readproperty" ;
+    ];
+  ];
+.
+
+<#TriplesMap> a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source <#WoTWebAPI>;
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$";
+  ];
+
+  rr:subjectMap [
+    rr:template "http://example.org/lane/{internalId}"
+  ];
+
+  rr:predicateObjectMap [
+   rr:predicate ex:lat;
+   rr:objectMap [
+     rml:reference "lat";
+   ];
+  ];
+.
+

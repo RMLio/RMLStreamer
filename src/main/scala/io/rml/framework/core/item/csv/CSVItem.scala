@@ -26,17 +26,17 @@
 package io.rml.framework.core.item.csv
 
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.item.{EmptyItem, Item}
+import io.rml.framework.core.item.Item
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
 
-import java.io.{IOException, StringReader}
+import java.io.StringReader
 import scala.collection.JavaConverters._
 
 /**
   *
   * @param record
   */
-class CSVItem(record: CSVRecord, val tag: String) extends Item {
+class CSVItem(record: Map[String, String], val tag: String) extends Item {
 
   /**
     *
@@ -44,13 +44,12 @@ class CSVItem(record: CSVRecord, val tag: String) extends Item {
     * @return
     */
   override def refer(reference: String): Option[List[String]] = {
-    try {
-      Some(List(record.get(reference)))
-    } catch {
-      case ex: IllegalArgumentException => {
-        CSVItem.logDebug(s"Cannot refer reference: \n $ex")
-        None
-      }
+    val value = record.get(reference)
+    if (value.isDefined) {
+      Some(List(value.get))
+    } else {
+      CSVItem.logDebug(s"Cannot refer reference: \n $reference")
+      None
     }
   }
 
@@ -60,15 +59,9 @@ class CSVItem(record: CSVRecord, val tag: String) extends Item {
 object CSVItem  extends  Logging{
 
 
-  def apply(record: CSVRecord): CSVItem = new CSVItem(record, "")
-
-
-  //TODO remove this method and use the one with CSVFormat
-  def apply(csvLine: String, delimiter: Char, quoteCharacter: Char, headers: Array[String]): Item = {
-    CSVItem(csvLine, CSVFormat.newFormat(delimiter)
-      .withQuote(quoteCharacter)
-      .withHeader(headers: _*) // convert to Java var args
-      .withTrim())
+  def apply(record: CSVRecord): CSVItem = {
+    val recordMap = record.toMap
+    new CSVItem(recordMap.asScala.toMap, "")
   }
 
   def fromDataBatch(dataBatch: String, csvFormat: CSVFormat): List[Item] = {
@@ -76,24 +69,10 @@ object CSVItem  extends  Logging{
     //jdata batch string must not contain any leading whitespaces
     val sanitizedData = dataBatch.replaceAll("^\\s+", "").replace("\n\n", "")
     val parser = csvFormat.parse(new StringReader(sanitizedData))
-    val result:List[Item] = parser.getRecords.asScala.toList.map(new CSVItem(_, ""))
+    val result:List[Item] = parser.getRecords.asScala.toList.map(record =>
+      new CSVItem(record.toMap.asScala.toMap, "")
+    )
     result
-  }
-
-  def apply(csvLine: String, cSVFormat: CSVFormat): Item = {
-    try {
-      val reader = new StringReader(csvLine)
-      val record = cSVFormat
-        .parse(reader)
-        .getRecords.get(0)
-
-      CSVItem(record)
-    } catch {
-      case e: IOException => logError(s"Error while parsing CSV:\n${csvLine}", e); new EmptyItem
-      case e: IndexOutOfBoundsException => new EmptyItem
-    }
-
-
   }
 
 }

@@ -104,7 +104,7 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
       } catch {
         case e: Throwable => {
           logError(s"The following exception occurred when invoking the method ${method.getName}: ${e.getMessage}." +
-            s"\nThe result will be set to None.")
+            s"\nThe result will be set to None.", e)
           None
         }
       }

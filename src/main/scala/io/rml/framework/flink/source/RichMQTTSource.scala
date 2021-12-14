@@ -36,11 +36,16 @@ case class RichMQTTSource(hypermediaTarget: String,
     super.open(parameters)
 
     val hmTargetUri = new URI(properties.getProperty("hypermediaTarget"))
-    val serverUri = hmTargetUri.toString
+    var serverUri = hmTargetUri.toString
       // remove path (solves: URI path must be empty "tcp://mosquittobroker:1883/topic")
       .replace(hmTargetUri.getPath, "")
-      // replace mqtt scheme with tcp (solves: no NetworkModule installed for scheme "mqtt" of URI "mqtt://mosquittobroker:1883")
-      .replace("mqtt", "tcp") // TODO: find better solution for "no NetworkModule installed for scheme "mqtt" of URI "mqtt://mosquittobroker:1883""
+      // MqttClient expects the scheme to correspond to the underlying protocol which is used
+      // it is assumed that TCP / SSL is used
+      if (hmTargetUri.getScheme == "mqtt") {
+        serverUri = serverUri.replaceFirst("mqtt", "tcp")
+      } else if (hmTargetUri.getScheme == "mqtts") {
+        serverUri = serverUri.replaceFirst("mqtts", "ssl")
+      }
 
     // strips the first forward-slash from the path (e.g. /topicname becomes topicname)
     val topic = hmTargetUri.getPath.substring(1)
@@ -91,7 +96,7 @@ case class RichMQTTSource(hypermediaTarget: String,
     })
 
     while (true)
-      Thread.sleep(1)
+      Thread.sleep(100)
   }
 
   override def cancel(): Unit = {
@@ -105,5 +110,6 @@ case class RichMQTTSource(hypermediaTarget: String,
 
   protected def teardownClient() = {
     // TODO: PROPERLY TEARDOWN CLIENT
+    client.disconnect()
   }
 }

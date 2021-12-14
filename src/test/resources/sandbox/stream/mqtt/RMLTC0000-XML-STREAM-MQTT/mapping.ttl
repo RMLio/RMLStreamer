@@ -1,0 +1,61 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix mail: <http://example.com/mail#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex: <http://example.com/> .
+@prefix rmls: <http://semweb.mmlab.be/ns/rmls#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix td: <https://www.w3.org/2019/wot/td#> .
+@prefix htv: <http://www.w3.org/2011/http#> .
+@prefix hctl: <https://www.w3.org/2019/wot/hypermedia#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix wotsec: <https://www.w3.org/2019/wot/security#> .
+@prefix mqv: <http://www.example.org/mqtt-binding#> .
+
+@base <http://example.com/base> .
+
+<#WotMQTTSecurity> a wotsec:BasicSecurityScheme;
+  wotsec:in "body";
+.
+
+<#WoTWebAPI> a td:Thing;
+  td:hasPropertyAffordance [
+    td:hasForm [
+      # URL and content type
+      hctl:hasTarget "mqtt://localhost:1883/topic";
+      hctl:forContentType "application/xml";
+      # Read only
+      hctl:hasOperationType "readproperty" ;
+      # Set MQTT stuff
+      mqv:controlPacketValue "SUBSCRIBE";
+      mqv:options ([ mqv:optionName "qos"; mqv:optionValue "1" ] [ mqv:optionName "dup" ]);
+    ];
+  ];
+  td:hasSecurityConfiguration <#WotMQTTSecurity> ;
+.
+
+<TriplesMap1>
+  a rr:TriplesMap;
+        
+  rml:logicalSource [ 
+    rml:source <#WoTWebAPI>;
+    rml:referenceFormulation ql:XPath;
+    rml:iterator "/students/student";
+    rml:frequency [ a time:GeneralDateTimeDescription;
+            time:minute "5"^^xsd:integer;
+        ];
+  ] ;
+	
+  rr:subjectMap [ 
+    rr:template "http://example.com/{Name}" 
+  ]; 
+	
+  rr:predicateObjectMap [ 
+    rr:predicate foaf:name ; 
+    rr:objectMap [ 
+      rml:reference "Name" 
+    ]
+  ].

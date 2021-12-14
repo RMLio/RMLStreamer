@@ -42,7 +42,7 @@ import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironm
 
 import java.io.File
 import java.nio.file.{Path, Paths}
-import java.util.concurrent.Executors
+import java.util.concurrent.{ExecutionException, Executors}
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.reflect.io.Directory
 
@@ -59,7 +59,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   // tuples (folder of test data, post processor to use)
   protected def passingTests: Array[(String, String)]
 
-  // set up things necessary before running actuaol tests
+  // set up things necessary before running actual tests
   def setup(): Unit = {
     val tmpDir = getTempDir
     if (tmpDir.exists) {
@@ -239,7 +239,11 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
 
   private def deleteJob(flink: MiniCluster, jobId: JobID): Unit = {
     logInfo(s"Canceling job ${jobId}...")
-    flink.cancelJob(jobId).get()
+    try {
+      flink.cancelJob(jobId).get()
+    } catch {
+      case e: ExecutionException => logInfo("Flink job already stopped.")
+    }
     Thread.sleep(1000)  // also here: even waiting for the future to complete doesn't guarantee that it's completed!
     logInfo(s"Job ${jobId} canceled.")
   }
