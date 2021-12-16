@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Support for stream partitioning in windows
 * Joins of data streams
 
+## [2.2.2]
+
 ## [2.2.1] - 2021-12-16
 
 ### Changed
