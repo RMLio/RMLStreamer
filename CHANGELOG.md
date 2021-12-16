@@ -10,7 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Support for stream partitioning in windows
 * Joins of data streams
 
-## [2.2.0]
+## [2.2.1] - 2021-12-16
+
+### Changed
+* Updated Log4J from version 2.15.0 to 2.16.0 due to [CVE-2021-45046](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-45046).
+
+## [2.2.0] - 2021-12-14
 
 ### Added
 * Logical target compression for files: gzip, zip, xz.
@@ -163,4 +168,6 @@ can be set with the program argument `--baseIRI`.
 [1.2.3]: https://github.com/RMLio/RMLStreamer/compare/v1.2.2...v1.2.3
 [2.0.0]: https://github.com/RMLio/RMLStreamer/compare/v1.2.3...v2.0.0  
 [2.1.0]: https://github.com/RMLio/RMLStreamer/compare/v2.0.0...v2.1.0  
-[2.1.1]: https://github.com/RMLio/RMLStreamer/compare/v2.1.0...v2.1.1  
+[2.1.1]: https://github.com/RMLio/RMLStreamer/compare/v2.1.0...v2.1.1
+[2.2.0]: https://github.com/RMLio/RMLStreamer/compare/v2.1.1...v2.2.0
+[2.2.1]: https://github.com/RMLio/RMLStreamer/compare/v2.2.0...v2.2.1
