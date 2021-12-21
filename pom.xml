@@ -38,7 +38,7 @@ SOFTWARE.
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <flink.version>1.14.0</flink.version>
         <slf4j.version>1.7.32</slf4j.version>
-        <log4j.version>2.16.0</log4j.version>
+        <log4j.version>2.17.0</log4j.version>
         <jena.version>4.3.1</jena.version>
         <kafka.version>2.4.1</kafka.version>
 
