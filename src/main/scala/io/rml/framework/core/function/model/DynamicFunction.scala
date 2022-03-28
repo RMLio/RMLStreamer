@@ -3,7 +3,7 @@ package io.rml.framework.core.function.model
 import io.rml.framework.api.FnOEnvironment
 import io.rml.framework.core.function.{FunctionUtils, ReflectionUtils}
 import io.rml.framework.core.model.rdf.SerializableRDFQuad
-import io.rml.framework.core.model.{Entity, Literal, Uri}
+import io.rml.framework.core.model.{Entity, Literal}
 
 import java.io.File
 import java.lang.reflect.Method
@@ -107,29 +107,5 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
     else None
 
 
-  }
-
-  override def execute(arguments: Map[Uri, String]): Option[Iterable[Entity]] = {
-    val inputParams = metaData.inputParam
-    // casted to List[AnyRef] since method.invoke(...) only accepts reference type but not primitive type of Scala
-    val paramsOrdered = arguments.groupBy(_._1.value).map(_._2.asInstanceOf[AnyRef]).toList
-
-    val outputParams = metaData.outputParam
-
-    if (paramsOrdered.size == inputParams.size) {
-      val method = optMethod.get
-      val castedParameterValues = ReflectionUtils.castUsingMethodParameterTypes(method, paramsOrdered)
-      val output = method.invoke(null, castedParameterValues: _*)
-
-      if (output != null) {
-        val result = outputParams.flatMap(elem => elem.getValue(output)) map (elem => Literal(elem.toString))
-        Some(result)
-      } else
-        None
-    } else {
-      //TODO: complain about inputparams size != params ordered
-      logError(s"Not all input parameters for ${metaData.methodName} could be bound...")
-      None
-    }
   }
 }
