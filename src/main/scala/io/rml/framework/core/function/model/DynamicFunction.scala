@@ -5,7 +5,7 @@ import io.rml.framework.core.function.{FunctionUtils, ReflectionUtils}
 import io.rml.framework.core.model.rdf.SerializableRDFQuad
 import io.rml.framework.core.model.{Entity, Literal, Uri}
 
-import java.io.{File, IOException, ObjectInputStream, ObjectOutputStream}
+import java.io.File
 import java.lang.reflect.Method
 
 import java.io.{File, IOException, ObjectInputStream, ObjectOutputStream}
@@ -22,12 +22,7 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
 
   @transient
   private var optMethod: Option[Method] = None
-
-  @throws(classOf[IOException])
-  private def writeObject(out: ObjectOutputStream): Unit = {
-    out.defaultWriteObject()
-  }
-
+  
   /**
    * There are two ways in which the method can be loaded:
    * 1. From the FnOEnvironment. This means that the class was by Flink's UserCodeClassLoader was able to retrieve
@@ -111,17 +106,6 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
     }
     else None
 
-
-  }
-
-
-
-
-  @throws(classOf[IOException])
-  @throws(classOf[ClassNotFoundException])
-  private def readObject(in: ObjectInputStream): Unit = {
-    in.defaultReadObject()
-    optMethod = None
 
   }
 
