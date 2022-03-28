@@ -148,9 +148,4 @@ case class DynamicFunction(identifier: String, metaData: FunctionMetaData) exten
       None
     }
   }
-
-
-  override def getMethod: Option[Method] = {
-    optMethod
-  }
 }
