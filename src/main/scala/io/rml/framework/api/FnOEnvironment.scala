@@ -29,7 +29,6 @@ object FnOEnvironment extends Logging{
 
   def intializeFunctionLoader() = {
     this.functionLoader = FunctionLoader.apply(getFunctionDescriptionFilePaths(), getFunctionMappingFilePaths())
-    this.functionLoader
   }
   def getFunctionLoader: Option[FunctionLoader] = {
     this.functionLoader
