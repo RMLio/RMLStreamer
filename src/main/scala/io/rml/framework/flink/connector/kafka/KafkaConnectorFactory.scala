@@ -27,12 +27,14 @@ package io.rml.framework.flink.connector.kafka
 import java.lang
 import java.nio.charset.StandardCharsets
 import java.util.Properties
-
 import io.rml.framework.core.internal.Logging
+import org.apache.flink.api.common.eventtime.WatermarkStrategy
 import org.apache.flink.api.common.serialization.DeserializationSchema
 import org.apache.flink.streaming.api.scala.DataStream
 import org.apache.flink.streaming.connectors.kafka._
 import org.apache.kafka.clients.producer.{ProducerConfig, ProducerRecord}
+
+import java.time.Duration
 
 abstract class KafkaConnectorFactory {
   def getSource[T](topic: String, valueDeserializer: DeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T]
@@ -72,7 +74,15 @@ abstract class KafkaConnectorFactory {
 case object UniversalKafkaConnectorFactory extends KafkaConnectorFactory with Logging {
 
   override def getSource[T](topic: String, valueDeserializer: DeserializationSchema[T], props: Properties): FlinkKafkaConsumerBase[T] = {
-    new FlinkKafkaConsumer[T](topic, valueDeserializer, props)
+
+    
+    val consumer =  new FlinkKafkaConsumer[T](topic, valueDeserializer, props) 
+
+    val strategy = WatermarkStrategy.forBoundedOutOfOrderness[T](Duration.ofMillis(50))
+      .withIdleness(Duration.ofMillis(10))
+    consumer.assignTimestampsAndWatermarks(strategy)
+
+    consumer
   }
 
   override def applySink[T](bootstrapServers: String, rmlPartitionProperties: Properties, topic: String, dataStream: DataStream[T]): Unit = {

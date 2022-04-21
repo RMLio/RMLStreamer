@@ -111,7 +111,7 @@ class JenaGraph(model: Model) extends RDFGraph with Logging {
     withUri(Uri(file.getName)) // overwrite the graph uri with the file path
   }
 
-  private def read(in: InputStream, baseIRI: Option[String], format: Format) {
+  private def read(in: InputStream, baseIRI: Option[String], format: Format): Unit = {
     val bIri = baseIRI match {
       case Some(iri) => iri
       case None => null

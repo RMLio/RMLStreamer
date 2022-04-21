@@ -47,6 +47,12 @@ object RMLSVoc {
     val GROUPID = namespace._2 + "groupId";
     val TOPIC = namespace._2 + "topic";
     val KAFKAVERSION= namespace._2 + "kafkaVersion";
+
+
+    // RMLS: Joins 
+    val JOIN_CONFIG = namespace._2 + "joinConfig";
+    val JOIN_TYPE = namespace._2 + "joinType"; 
+    val WINDOW_TYPE = namespace._2 + "windowType"; 
   }
 
   object Class {
@@ -58,5 +64,19 @@ object RMLSVoc {
     val TCPSOCKETSTREAM = namespace._2 + "TCPSocketStream";
     val FILESTREAM = namespace._2 + "FileStream";
     val KAFKASTREAM = namespace._2 + "KafkaStream";
+
+
+    val JOIN_CONFIG_MAP = namespace._2 + "JoinConfigMap";
+
+    //RMLS: JOIN TYPES
+    val TUMBLING_JOIN_TYPE = namespace._2 + "TumblingJoin";
+    val CROSS_JOIN_TYPE = namespace._2 + "CrossJoin"; 
+    val DYNAMIC_JOIN_TYPE = namespace._2 + "DynamicJoin"; 
+
+
+    //RMLS: WINDOW TYPE 
+    val DYNAMIC_WINDOW = namespace._2 + "DynamicWindow"; 
+    val TUMBLING_WINDOW = namespace._2 + "TumblingWindow"; 
+    val SLIDING_WINDOW = namespace._2 + "SlidingWindow"; 
   }
 }

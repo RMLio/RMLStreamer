@@ -49,14 +49,15 @@ abstract class JoinedTriplesMap(triplesMap: TriplesMap) extends TriplesMap {
 
   if (joinConditions.exists(_ != joinConditions.head)) throw new RMLException(triplesMap.identifier +
     ": Can only create JoinedTripleMap from triple map with one general join condition.")
-
+  val joinConfigMap:Option[String] = triplesMap.predicateObjectMaps.flatMap( pom => {
+    pom.objectMaps.flatMap(om => om.joinConfigMap)
+  }).headOption
   val parentTriplesMap: String = parentTriplesMaps.head
   val joinCondition: Option[JoinCondition] = joinConditions.headOption
 
 }
 
 object JoinedTriplesMap {
-
   def apply(triplesMap: TriplesMap): JoinedTriplesMap = StdJoinedTriplesMap(triplesMap)
 
 }

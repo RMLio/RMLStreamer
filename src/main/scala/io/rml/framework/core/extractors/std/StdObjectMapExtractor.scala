@@ -25,12 +25,14 @@
 
 package io.rml.framework.core.extractors.std
 
-import io.rml.framework.core.extractors.{FunctionMapExtractor, JoinConditionExtractor, ObjectMapExtractor}
+import io.rml.framework.core.extractors.{FunctionMapExtractor, JoinConditionExtractor, JoinConfigMapCache, JoinConfigMapExtractor, ObjectMapExtractor}
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.{RDFLiteral, RDFResource}
 import io.rml.framework.core.util.Util
+import io.rml.framework.engine.windows.WindowType
 import io.rml.framework.core.vocabulary.{FunVoc, R2RMLVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
+import io.rml.framework.core.vocabulary.RMLSVoc
 
 class StdObjectMapExtractor extends ObjectMapExtractor {
   /**
@@ -102,9 +104,15 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     val language = extractLanguage(resource)
     val datatype = extractDatatype(resource)
     val functionMap = FunctionMapExtractor().extract(resource)
+    val windowType = extractWindowType(resource)
+    val joinConfigMap = extractJoinConfigMap(resource, windowType)
     val logicalTargets = extractLogicalTargets(resource)
-    ObjectMap(resource.uri.identifier, functionMap, constant, reference, template, termType, datatype, language, parentTriplesMap, joinCondition, logicalTargets)
+    ObjectMap(resource.uri.identifier, functionMap, constant, 
+    reference, template, termType, 
+    datatype, language, windowType, joinConfigMap, parentTriplesMap, 
+    joinCondition, logicalTargets)
   }
+
 
   def extractDatatype(resource: RDFResource): Option[Uri] = {
     val property = R2RMLVoc.Property.DATATYPE
@@ -120,6 +128,23 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
     }
   }
 
+  def extractWindowType(resource: RDFResource):Option[WindowType] = {
+    val property = RMLSVoc.Property.WINDOW_TYPE; 
+    val properties = resource.listProperties(property)
+
+    if (properties.size > 1)
+      throw new RMLException(resource.uri + ": invalid amount of window type properties.")
+    if (properties.isEmpty) return None
+
+    val windowTypeProperty = properties.head match {
+      case literal: Literal => throw new RMLException(resource.uri + ": invalid window type.")
+      case resource: RDFResource => Some(resource.uri.toString)
+      case _ => None
+    }
+
+    windowTypeProperty.flatMap( WindowType.fromUri)
+
+  }
   override def extractTermType(resource: RDFResource): Option[Uri] = {
     val result = super.extractTermType(resource)
     if (result.isDefined) result else {
@@ -171,6 +196,25 @@ class StdObjectMapExtractor extends ObjectMapExtractor {
 
 
     languageLiteral
+  }
+
+  private def extractJoinConfigMap(resource: RDFResource, windowType: Option[WindowType]): Option[String] = {
+    val property = RMLSVoc.Property.JOIN_CONFIG
+    val properties = resource.listProperties(property)
+
+    if (properties.size > 1)
+      throw new RMLException(resource.uri + ": invalid amount of join config maps.")
+    if (properties.isEmpty) return None
+
+    val configMapOption = JoinConfigMapExtractor(windowType).extract(resource)
+    configMapOption.foreach(configMap => JoinConfigMapCache.put(configMap.toString, configMap))
+
+    properties.head match {
+      case resource: RDFResource => Some(resource.toString)
+      case literal: Literal  =>
+        throw new RMLException(literal.toString + ": invalid join config map.")
+
+    }
   }
 
   private def extractParentTriplesMap(resource: RDFResource): Option[String] = {

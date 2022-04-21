@@ -50,6 +50,7 @@ public class WebSocketSource extends RichSourceFunction<String> {
 				.buildAsync(URI.create(uri), new WebSocketClient(sourceContext))
 				.join();
 
+		log.debug("Running socket!!!");
 		while (!stop) {
 			Thread.sleep(500);
 		}

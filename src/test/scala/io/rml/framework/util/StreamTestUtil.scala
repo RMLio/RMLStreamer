@@ -61,7 +61,7 @@ object StreamTestUtil {
 
     // read the mapping
     val formattedMapping = MappingTestUtil.processFilesInTestFolder(testCaseFolder.getAbsolutePath)
-    val stream = Main.createStreamFromFormattedMapping(formattedMapping.head)
+    val stream = Main.createDataStreamFromFormattedMapping(formattedMapping.head)
     stream
   }
 

@@ -521,6 +521,7 @@ SOFTWARE.
                 <version>4.0.1</version>
                 <configuration>
                     <args>
+                        <arg>-target:jvm-1.8</arg>
                         <arg>-deprecation</arg>
                     </args>
                 </configuration>

@@ -45,14 +45,27 @@ class StdJoinConditionExtractor extends JoinConditionExtractor with Logging {
 
     logDebug(node.uri + ": Extracting join condition's parent & child.")
 
-    for {
-      parent <- extractParent(node)
-      child <- extractChild(node)
-    } yield JoinCondition(child, parent)
+    val child_attributes = extractChild(node)
+    val parent_attributes = extractParent(node)
+
+    if (child_attributes.length  != parent_attributes.length) {
+      throw new RMLException(node.uri + ": number of join attributes for parent and child mismatched \n" +
+        s"Parent: ${parent_attributes.length} \n" +
+        s"Child: ${child_attributes.length}\n")
+    }
+
+    if(child_attributes.isEmpty){
+      None
+    }else {
+      Some(JoinCondition(child_attributes, parent_attributes))
+    }
 
   }
-
-  private def extractParent(resource: RDFResource): Option[Literal] = {
+  private def extractAttributes(literal: Literal): List[Literal] = {
+    val attributes = literal.value
+    attributes.split(",").map(attr =>  Literal(attr.trim())).toList
+  }
+  private def extractParent(resource: RDFResource): List[Literal] = {
 
     val property = R2RMLVoc.Property.PARENT
     val properties = resource.listProperties(property)
@@ -61,13 +74,13 @@ class StdJoinConditionExtractor extends JoinConditionExtractor with Logging {
       throw new RMLException(resource.uri + ": invalid amount of parent literals (amount=" + properties.size + ", should be 1 only).")
 
     properties.head match {
-      case literal: Literal => Some(literal)
+      case literal: Literal => extractAttributes(literal)
       case resource: RDFResource => throw new RMLException(resource.uri + ": parent must be a literal.")
     }
 
   }
 
-  private def extractChild(resource: RDFResource): Option[Literal] = {
+  private def extractChild(resource: RDFResource): List[Literal] = {
     val property = R2RMLVoc.Property.CHILD
     val properties = resource.listProperties(property)
 
@@ -75,7 +88,7 @@ class StdJoinConditionExtractor extends JoinConditionExtractor with Logging {
       throw new RMLException(resource.uri + ": invalid amount of child literals (amount=" + properties.size + ", should be 1 only).")
 
     properties.head match {
-      case literal: Literal => Some(literal)
+      case literal: Literal => extractAttributes(literal)
       case resource: RDFResource => throw new RMLException(resource.uri + ": child must be a literal.")
     }
   }

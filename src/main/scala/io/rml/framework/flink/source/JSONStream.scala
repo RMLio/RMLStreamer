@@ -86,6 +86,7 @@ object JSONStream extends Logging {
   }
 
   def fromWsStream(wsStream: WsStream, jsonPaths : List[String])(implicit env: StreamExecutionEnvironment):JSONStream = {
+    logDebug("From websocket" + wsStream.toString)
     val source = new WebSocketSource(wsStream.hypermediaTarget)
     streamFromSource(source, jsonPaths, env)
   }

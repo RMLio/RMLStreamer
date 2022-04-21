@@ -11,11 +11,12 @@ import org.apache.flink.core.fs.{FSDataOutputStream, Path}
 import org.apache.flink.streaming.api.functions.ProcessFunction
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
 import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.BasePathBucketAssigner
-import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy
+import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.{DefaultRollingPolicy, OnCheckpointRollingPolicy}
 import org.apache.flink.streaming.api.functions.sink.filesystem.{OutputFileConfig, StreamingFileSink}
 import org.apache.flink.streaming.api.scala.{DataStream, OutputTag}
 import org.apache.flink.util.Collector
 
+import java.util.concurrent.TimeUnit
 import scala.collection.mutable.Map
 
 /**
@@ -122,16 +123,21 @@ object TargetSinkFactory {
     }
 
     if (compression.isEmpty || compression.get.toString == RMLCompVoc.Class.TARGZIP
-      || compression.get.toString == RMLCompVoc.Class.TARXZ)
+      || compression.get.toString == RMLCompVoc.Class.TARXZ) {
+
       StreamingFileSink.forRowFormat(new Path(path), new SimpleStringEncoder[String])
         .withBucketAssigner(new BasePathBucketAssigner[String])
-        .withRollingPolicy(OnCheckpointRollingPolicy.build())
+        .withRollingPolicy(DefaultRollingPolicy.builder()
+          .withRolloverInterval(TimeUnit.MINUTES.toMillis(15)) // at least 15 min of data
+          .withInactivityInterval(TimeUnit.MINUTES.toMillis(1)) // no records for 5 min
+          .withMaxPartSize(1024 * 1024 * 1024) // 1 max size GB
+          .build())
         .withOutputFileConfig(OutputFileConfig
           .builder()
           .withPartSuffix(suffix)
           .build())
         .build()
-    else
+    } else
       StreamingFileSink.forBulkFormat(new Path(path), new BulkWriter.Factory[String] {
         override def create(out: FSDataOutputStream): BulkWriter[String] = {
           compression.get.toString match {
