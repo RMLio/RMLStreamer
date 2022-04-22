@@ -37,7 +37,7 @@ import scala.util.control.Exception
 class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with BeforeAndAfter {
 
   before {
-    FunctionMappingSetup.setupFunctionLoader()
+    FunctionMappingSetup.setupFunctionAgent()
   }
 
 

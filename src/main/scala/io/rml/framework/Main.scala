@@ -37,7 +37,6 @@ import io.rml.framework.engine._
 import io.rml.framework.engine.composers.StreamJoinComposer
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{RMLPartitioner, UniversalKafkaConnectorFactory}
-import io.rml.framework.flink.function.{FnOEnvironmentLoader, FnOEnvironmentStreamLoader, RichItemIdentityFunction, RichStreamItemIdentityFunction}
 import io.rml.framework.flink.sink.{RichMQTTSink, TargetSinkFactory}
 import io.rml.framework.flink.source.{FileDataSet, Source}
 import org.apache.flink.api.common.eventtime.{SerializableTimestampAssigner, WatermarkStrategy}
@@ -97,9 +96,7 @@ object Main extends Logging {
 
     // Default function config
     // TODO: support adding variable function related files using CLI arguments
-    FnOEnvironment.loadDefaultConfiguration()
-    FnOEnvironment.intializeFunctionLoader()
-
+    FnOEnvironment()
 
     // set up execution environments, Flink needs these to know how to operate (local, cluster mode, ...)
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
@@ -361,17 +358,6 @@ object Main extends Logging {
       }
     })
 
-    val preProcessingFunction =
-      if (FnOEnvironment.getFunctionLoader.isDefined) {
-        val functionLoaderOption = FnOEnvironment.getFunctionLoader
-        val jarSources = functionLoaderOption.get.getSources
-        val classNames = functionLoaderOption.get.getClassNames
-        new FnOEnvironmentStreamLoader(jarSources, classNames)
-      } else {
-        logInfo("FunctionLoader in RMLEnvironment is NOT DEFINED")
-        new RichStreamItemIdentityFunction()
-      }
-
    // Create sinks for every logical target
     val logicalTargetId2Sinks = TargetSinkFactory.createStreamSinksFromLogicalTargetCache()
 
@@ -384,7 +370,6 @@ object Main extends Logging {
         val dataStream = source.stream // this will generate a stream of items
           // process every item by a processor with a loaded engine
 
-          .map(preProcessingFunction)
           .map(new StdStreamProcessor(engine))
           .name("Execute mapping statements on items")
 
@@ -610,17 +595,6 @@ object Main extends Logging {
       }
     })
 
-    val preProcessingFunction =
-      if (FnOEnvironment.getFunctionLoader.isDefined) {
-        val functionLoaderOption = FnOEnvironment.getFunctionLoader
-        val jarSources = functionLoaderOption.get.getSources
-        val classNames = functionLoaderOption.get.getClassNames
-        new FnOEnvironmentLoader(jarSources, classNames)
-      } else {
-        logInfo("FunctionLoader in RMLEnvironment is NOT DEFINED")
-        new RichItemIdentityFunction()
-      }
-
     // This is the collection of all data streams that are created by the current mapping
     val processedDataSets: immutable.Iterable[DataSet[String]] =
       sourceEngineMap.map(entry => {
@@ -630,7 +604,6 @@ object Main extends Logging {
         source.dataset // this will generate a dataset of items
 
           // process every item by a processor with a loaded engine
-          .map(preProcessingFunction)
           .map(new StdStaticProcessor(engine))
           .name("Execute mapping statements on items")
           .map(outputStringToLogicalTargetIDs => {

@@ -24,7 +24,6 @@
  **/
 package io.rml.framework.engine.statement
 
-import io.rml.framework.core.function.FunctionLoader
 import io.rml.framework.core.function.model.Function
 import io.rml.framework.core.item.{EmptyItem, Item}
 import io.rml.framework.core.model._
@@ -47,13 +46,11 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
         case (predicateGen, objGen, _, logicalTargetIDs) => (predicateGen, objGen, logicalTargetIDs)
       }
 
-    val function = parseFunction(assembledPom)
-
-    createAssemblerFunction(function, assembledPom)
+    parseFunction(assembledPom)
   }
 
   private def parseFunction(assembledPom:
-                            List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Set[String])]): Option[Function] = {
+                            List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Set[String])]): Item => Option[Iterable[Entity]]  = {
 
     this.logDebug("parseFunction (assembledPom)")
     val placeHolder: List[SerializableRDFQuad] = generateFunctionTriples(new EmptyItem(), assembledPom)
@@ -69,15 +66,8 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
       .`object`
       .value
       .value)
-    
 
-    val functionLoaderOption = FunctionLoader();
-
-    if (functionLoaderOption.isDefined) {
-      functionLoaderOption.get.createFunction(functionName);
-    } else {
-      None
-    }
+    createAssemblerFunction(functionName, assembledPom)
   }
 
   /**
@@ -87,17 +77,12 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
    * @param assembledPom List of predicate object generator functions
    * @return anon function taking in [[Item]] and returns entities using the function
    */
-  private def createAssemblerFunction(function: Option[Function], assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Set[String])]): Item => Option[Iterable[Entity]] = {
+  private def createAssemblerFunction(functionName: Uri, assembledPom: List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Set[String])]): Item => Option[Iterable[Entity]] = {
     (item: Item) => {
       val triples: List[SerializableRDFQuad] = generateFunctionTriples(item, assembledPom)
       val paramTriples = triples.filter(triple => triple.predicate.uri != Uri(FunVoc.FnO.Property.EXECUTES))
 
-
-      if (function.isDefined) {
-        function.get.execute(paramTriples)
-      } else {
-        None
-      }
+      Function.execute(functionName.identifier, paramTriples)
     }
   }
 

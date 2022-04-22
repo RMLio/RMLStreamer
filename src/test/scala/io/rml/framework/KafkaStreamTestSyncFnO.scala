@@ -52,7 +52,7 @@ class KafkaStreamTestSyncFnO extends StreamTestSync{
   override def setup(): Unit = {
     super.setup()
     logInfo("Setting up FunctionLoader")
-    FunctionMappingSetup.setupFunctionLoader()
+    FunctionMappingSetup.setupFunctionAgent()
     logInfo("Starting Zookeeper...")
     zookeeper = new TestingServer(
       getZkPort,
