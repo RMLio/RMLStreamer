@@ -26,6 +26,7 @@
 package io.rml.framework.core.model
 
 import io.rml.framework.core.model.std.StdObjectMap
+import io.rml.framework.engine.windows.WindowType
 
 /**
   * This trait represents an object-map.
@@ -37,12 +38,12 @@ import io.rml.framework.core.model.std.StdObjectMap
 trait ObjectMap extends TermMap {
 
   def joinCondition: Option[JoinCondition]
-
+  def joinConfigMap: Option[String]
   def parentTriplesMap: Option[String]
 
 }
 
-case class JoinCondition(child: Literal, parent: Literal) // TODO: make this a trait?
+case class JoinCondition(child: List[Literal], parent: List[Literal]) // TODO: make this a trait?
 
 object ObjectMap {
   def apply(identifier: String,
@@ -53,6 +54,8 @@ object ObjectMap {
             termType: Option[Uri] = None,
             datatype: Option[Uri] = None,
             language: Option[Literal] = None,
+            windowType: Option[WindowType] = None,
+            joinConfigMap: Option[String] = None,
             parentTriplesMap: Option[String] = None,
             joinCondition: Option[JoinCondition] = None,
             logicalTargets: Set[LogicalTarget]): ObjectMap =
@@ -67,5 +70,6 @@ object ObjectMap {
       language,
       parentTriplesMap,
       joinCondition,
+      joinConfigMap, 
       logicalTargets)
 }

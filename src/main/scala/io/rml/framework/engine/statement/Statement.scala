@@ -152,7 +152,6 @@ object Statement extends Logging {
     val newLogicalTargetIDs: Set[String] = if (logicalTargetIDs.isEmpty) Set("default") else logicalTargetIDs
 
     val result = Some(SerializableRDFQuad(subjectResource, predicateResource, objectNode, graphUri, newLogicalTargetIDs))
-    logDebug(result.get.toString)
     result
   }
 }

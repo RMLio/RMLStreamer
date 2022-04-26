@@ -42,7 +42,8 @@ object ParameterUtil {
                               topic: Option[String] = None,
                               partitionId: Option[Int] = None,
                               socket: Option[String] = None,
-                              outputSink: OutputSinkOption = OutputSinkOption.File
+                              outputSink: OutputSinkOption = OutputSinkOption.File,
+                              autoWatermarkInterval: Long =  50L
                             ) {
     override def toString: String = {
       val resultStr: String =
@@ -52,6 +53,7 @@ object ParameterUtil {
         s"Parallelise over local task slots: ${localParallel}\n" +
         s"Post processor: ${postProcessor}\n" +
         s"Checkpoint interval: ${checkpointInterval.getOrElse("/")}\n" +
+          s"Auto Watermark interval: ${autoWatermarkInterval}\n" +
         s"Output method: ${outputSink}\n" +
         s"Output file: ${outputPath.getOrElse("/")}\n" +
         s"Kafka broker list: ${brokerList.getOrElse("/")}\n" +
@@ -72,7 +74,7 @@ object ParameterUtil {
   // possible post processor options
   object PostProcessorOption extends Enumeration {
     type PostProcessorOption = Value
-    val None, Bulk, JsonLD = Value
+    val None, Bulk, JsonLD= Value
   }
 
 
@@ -102,6 +104,7 @@ object ParameterUtil {
       .action((value, config) => config.copy(mappingFilePath = value))
       .text("REQUIRED. The path to an RML mapping file. The path must be accessible on the Flink cluster.")
 
+
     opt[Unit]("json-ld")
         .optional()
         .action((_, config) => config.copy(postProcessor = PostProcessorOption.JsonLD))
@@ -119,7 +122,12 @@ object ParameterUtil {
         .text("If given, Flink's checkpointing is enabled with the given interval. " +
           "If not given, checkpointing is enabled when writing to a file (this is required to use the flink StreamingFileSink). " +
           "Otherwise, checkpointing is disabled.")
-
+    opt[Long]("auto-watermark-interval").valueName("<time (ms)>")
+      .optional()
+      .action((value, config) => config.copy(autoWatermarkInterval = value))
+      .text("If given, Flink's watermarking will be generated periodically with the given interval" +
+        "If not given, a default value of 50ms will be used." +
+      "This option is only valid for DataStreams.")
     // options specifically for writing output to file
     cmd("toFile")
       .text("Write output to file \n" +
