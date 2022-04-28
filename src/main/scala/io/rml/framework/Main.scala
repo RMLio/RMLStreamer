@@ -266,13 +266,11 @@ object Main extends Logging {
               ).nonEmpty
             } else true // if there are no join conditions all items can pass
             // filter out all empty items (some iterators can emit empty items)
-          }).filter(iterItems => {
-          iterItems.nonEmpty
-        })
-          
+          })
+          .filter(iterItems => {
+            iterItems.nonEmpty
+          })
 
-
-        
       val parentTriplesMap = NodeCache.getTriplesMap(tm.parentTriplesMap).get;
       val parentDataStreamTimestamped = Source(parentTriplesMap.logicalSource).asInstanceOf[io.rml.framework.flink.source.Stream]
         .stream
@@ -645,17 +643,16 @@ object Main extends Logging {
 
           // filter out all items that do not contain the childs join condition
           .filter(item => {
-              if (tm.joinCondition.isDefined) {
+            if (tm.joinCondition.isDefined) {
                 val child_attributes = tm.joinCondition.get.child
-
                 child_attributes.flatMap( lit =>
                   item.refer(lit.value)).nonEmpty
             } else true // if there are no join conditions all items can pass
-
-            // filter out all empty items (some iterators can emit empty items)
-          }).filter(item => {
-          !item.isInstanceOf[EmptyItem]
-        })
+          })
+          // filter out all empty items (some iterators can emit empty items)
+          .filter(item => {
+            !item.isInstanceOf[EmptyItem]
+          })
 
 
       val parentTriplesMap = NodeCache.getTriplesMap(tm.parentTriplesMap).get;
