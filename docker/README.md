@@ -157,11 +157,9 @@ on `/var/lib/docker/volumes/docker_data/_data`, as shown by the `$ docker volume
 Copy `scenario-1` subfolder to our docker data volume, that can be read by RMLStreamer:
 
 ```
-$ [sudo] cp -r scenario-1 /var/lib/docker/volumes/docker_data/_data/
-$ [sudo] chmod -R 777 /var/lib/docker/volumes/docker_data/_data
+$ docker cp scenario-1/mapping.rml.ttl docker_taskmanager_1:/mnt/data/scenario-1/mapping.rml.ttl
+$ docker cp scenario-1/input.json docker_taskmanager_1:/mnt/data/scenario-1/input.json
 ```
-
-(TODO: is there a more user-friendly way to put data on docker volumes?)
 
 ### 2. Start RMLStreamer
 
@@ -178,5 +176,11 @@ If all goes well, you will see that the job has finished, after a few seconds:
 
 ![Job done](images/scenario-1-job-done.png)
 
-The result is written to `/var/lib/docker/volumes/docker_data/_data/scenario-1/output.nt` 
+The result is written to `/mnt/data/scenario-1/output.nt` inside the Docker container. 
 and should contain the same triples as `scenario-1/output.nq`.
+
+You can get the generated output from the Docker container by copying it back to the host:
+
+```
+$ docker cp docker_taskmanager_1:/mnt/data/scenario-1/output.nt .
+```

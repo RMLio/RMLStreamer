@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 * Use of external [FnO](https://fno.io/) function handling component
+
+### Changed
+* Use `docker cp` for copying files between Docker containers.
                        
 ## [2.3.0] - 2022-04-26
 
