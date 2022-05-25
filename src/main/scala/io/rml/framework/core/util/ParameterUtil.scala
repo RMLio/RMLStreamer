@@ -43,7 +43,8 @@ object ParameterUtil {
                               partitionId: Option[Int] = None,
                               socket: Option[String] = None,
                               outputSink: OutputSinkOption = OutputSinkOption.File,
-                              autoWatermarkInterval: Long =  50L
+                              autoWatermarkInterval: Long =  50L,
+                              functionDescriptionLocations: Option[Seq[String]] = None
                             ) {
     override def toString: String = {
       val resultStr: String =
@@ -60,7 +61,8 @@ object ParameterUtil {
         s"Kafka topic: ${topic.getOrElse("/")}\n" +
         s"Kafka topic partition id: ${partitionId.getOrElse("/")}\n" +
         s"Output TCP socket: ${socket.getOrElse("/")}\n" +
-      s"Discard output: ${outputSink.equals(OutputSinkOption.None)}"
+        s"Function description locations: ${functionDescriptionLocations}\n" +
+        s"Discard output: ${outputSink.equals(OutputSinkOption.None)}"
       resultStr
     }
   }
@@ -122,12 +124,19 @@ object ParameterUtil {
         .text("If given, Flink's checkpointing is enabled with the given interval. " +
           "If not given, checkpointing is enabled when writing to a file (this is required to use the flink StreamingFileSink). " +
           "Otherwise, checkpointing is disabled.")
+
     opt[Long]("auto-watermark-interval").valueName("<time (ms)>")
       .optional()
       .action((value, config) => config.copy(autoWatermarkInterval = value))
-      .text("If given, Flink's watermarking will be generated periodically with the given interval" +
+      .text("If given, Flink's watermarking will be generated periodically with the given interval. " +
         "If not given, a default value of 50ms will be used." +
       "This option is only valid for DataStreams.")
+
+    opt[Seq[String]]('f', "function-descriptions").valueName("<function description location 1>,<function description location 2>...")
+      .optional()
+      .action((values, config) => config.copy(functionDescriptionLocations = Some(values)))
+      .text("An optional list of paths to function description files (in RDF using FnO). A path can be a file location or a URL.")
+
     // options specifically for writing output to file
     cmd("toFile")
       .text("Write output to file \n" +
@@ -168,6 +177,7 @@ object ParameterUtil {
           .text("The TCP socket to write to.")
       )
 
+    // options specifically for writing to MQTT topic
     cmd("toMQTT")
       .text("Write output to an MQTT topic")
       .action((_, config) => config.copy(outputSink = OutputSinkOption.MQTT))

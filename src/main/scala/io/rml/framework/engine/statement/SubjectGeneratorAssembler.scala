@@ -25,13 +25,14 @@
 
 package io.rml.framework.engine.statement
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.function.FunctionUtils
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.{TermMap, TermNode, Uri}
 
 
 class SubjectGeneratorAssembler extends TermMapGeneratorAssembler {
-  override def assemble(termMap: TermMap, higherLevelLogicalTargetIDs: Set[String]): (Item) => Option[Iterable[TermNode]] = {
+  override def assemble(termMap: TermMap, higherLevelLogicalTargetIDs: Set[String]): ((Item, Agent)) => Option[Iterable[TermNode]] = {
 
     if(termMap.hasFunctionMap){
       val logicalTargetIDs = higherLevelLogicalTargetIDs ++ termMap.getAllLogicalTargetIds
@@ -50,7 +51,7 @@ class SubjectGeneratorAssembler extends TermMapGeneratorAssembler {
       })
 
     }else {
-      super.assemble(termMap, Set()).asInstanceOf[(Item) => Option[Iterable[TermNode]]]
+      super.assemble(termMap, Set()).asInstanceOf[((Item, Agent)) => Option[Iterable[TermNode]]]
     }
   }
 

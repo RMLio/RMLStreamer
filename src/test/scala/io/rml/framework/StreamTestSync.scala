@@ -29,6 +29,7 @@ import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.util.{StreamerConfig, Util}
 import io.rml.framework.engine.PostProcessor
+import io.rml.framework.flink.util.FunctionsFlinkUtil
 import io.rml.framework.util.fileprocessing.StreamDataSourceTestUtil
 import io.rml.framework.util.logging.Logger
 import io.rml.framework.util.server.{TestData, TestSink2}
@@ -102,6 +103,15 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     testCase <- StreamDataSourceTestUtil.getTestCaseFolders(folder).sorted
   } yield (testCase, postProcessor)
 
+  implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
+  implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+  FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv,
+    "functions_grel.ttl",
+    "grel_java_mapping.ttl",
+    "fno/functions_idlab.ttl",
+    "fno/functions_idlab_test_classes_java_mapping.ttl"
+  )
+
   // run the test cases
   for ((folderPath, postProcessorName) <- testCases) {
     NodeCache.clear();
@@ -115,8 +125,15 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     val folder = Util.getFile(folderPath.toString)
 
     // set up the execution environments
-    implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
-    implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI()
+    /*implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
+    implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+
+    FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv,
+      "functions_grel.ttl",
+      "grel_java_mapping.ttl",
+      "fno/functions_idlab.ttl",
+      "fno/functions_idlab_test_classes_java_mapping.ttl"
+    ) */
 
     implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 

@@ -25,6 +25,7 @@
 
 package io.rml.framework.engine.statement
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.{Entity, PredicateObjectMap, Uri}
@@ -33,7 +34,7 @@ class PredicateObjectGeneratorAssembler(predicateGeneratorAssembler: PredicateGe
                                         graphGeneratorAssembler: GraphGeneratorAssembler) extends Logging{
 
   def assemble(predicateObjectMap: PredicateObjectMap, higherLevelLogicalTargetIDs: Set[String])
-  : List[(Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]], Set[String])] = {
+  : List[(((Item, Agent)) => Option[Iterable[Uri]], ((Item, Agent)) => Option[Iterable[Entity]], ((Item, Agent)) => Option[Iterable[Uri]], Set[String])] = {
 
     this.logDebug("assemble (predicateObjectMap)")
     val graphLogicalTargetIDs = if (predicateObjectMap.graphMap.isDefined) {

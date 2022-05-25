@@ -25,6 +25,7 @@
 
 package io.rml.framework.engine.statement
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.{Item, JoinedItem}
 import io.rml.framework.core.model._
@@ -39,23 +40,23 @@ import io.rml.framework.core.model.rdf.{FlinkRDFLiteral, SerializableRDFBlank, S
 
 abstract class Statement[T] {
 
-  val subjectGenerator: Item => Option[Iterable[TermNode]]
-  val predicateGenerator: Item => Option[Iterable[Uri]]
-  val objectGenerator: Item => Option[Iterable[Entity]]
-  val graphGenerator:  Item => Option[Iterable[Uri]]
+  val subjectGenerator: ((Item, Agent)) => Option[Iterable[TermNode]]
+  val predicateGenerator: ((Item, Agent)) => Option[Iterable[Uri]]
+  val objectGenerator: ((Item, Agent)) => Option[Iterable[Entity]]
+  val graphGenerator:  ((Item, Agent)) => Option[Iterable[Uri]]
 
 
 
-  def process(item: T): Option[Iterable[SerializableRDFQuad]]
+  def process(item: T, functionAgent: Agent): Option[Iterable[SerializableRDFQuad]]
 
 
-  def subProcess[S <: Item] (graphItem:S, subjItem:S, predItem: S, objectItem: S, logicalTargetIDs: Set[String]): Option[Iterable[SerializableRDFQuad]] = {
-    val graphOption = graphGenerator(graphItem)
+  def subProcess[S <: Item] (graphItem:S, subjItem:S, predItem: S, objectItem: S, logicalTargetIDs: Set[String], functionAgent: Agent): Option[Iterable[SerializableRDFQuad]] = {
+    val graphOption = graphGenerator(graphItem, functionAgent)
 
     val result = for {
-      subject <- subjectGenerator(subjItem) // try to generate the subject
-      predicate <- predicateGenerator(predItem) // try to generate the  predicate
-      _object <- objectGenerator(objectItem ) // try to generate the object
+      subject <- subjectGenerator(subjItem, functionAgent) // try to generate the subject
+      predicate <- predicateGenerator(predItem, functionAgent) // try to generate the  predicate
+      _object <- objectGenerator(objectItem, functionAgent ) // try to generate the object
     } yield for {
       (subj, pred, obj, graph) <- Statement.quadCombination(subject, predicate, _object, graphOption)
       quad <- Statement.generateQuad(subj, pred, obj, logicalTargetIDs, graph)
@@ -68,32 +69,32 @@ abstract class Statement[T] {
 }
 
 
-case class ChildStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
-                     predicateGenerator: Item => Option[Iterable[Uri]],
-                     objectGenerator: Item => Option[Iterable[Entity]],
-                     graphGenerator: Item => Option[Iterable[Uri]],
+case class ChildStatement(subjectGenerator: ((Item, Agent)) => Option[Iterable[TermNode]],
+                     predicateGenerator: ((Item, Agent)) => Option[Iterable[Uri]],
+                     objectGenerator: ((Item, Agent)) => Option[Iterable[Entity]],
+                     graphGenerator: ((Item, Agent)) => Option[Iterable[Uri]],
                      logicalTargetIDs: Set[String]) extends Statement[JoinedItem] with Serializable {
 
-  def process(item: JoinedItem): Option[Iterable[SerializableRDFQuad]] = {
-    subProcess(item.child, item.child, item.child, item.parent, logicalTargetIDs)
+  def process(item: JoinedItem, functionAgent: Agent): Option[Iterable[SerializableRDFQuad]] = {
+    subProcess(item.child, item.child, item.child, item.parent, logicalTargetIDs, functionAgent)
   }
 }
 
-case class ParentStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
-                      predicateGenerator: Item => Option[Iterable[Uri]],
-                      objectGenerator: Item => Option[Iterable[Entity]],
-                      graphGenerator: Item => Option[Iterable[Uri]],
+case class ParentStatement(subjectGenerator: ((Item, Agent)) => Option[Iterable[TermNode]],
+                      predicateGenerator: ((Item, Agent)) => Option[Iterable[Uri]],
+                      objectGenerator: ((Item, Agent)) => Option[Iterable[Entity]],
+                      graphGenerator: ((Item, Agent)) => Option[Iterable[Uri]],
                       logicalTargetIDs: Set[String]) extends Statement[JoinedItem] with Serializable {
 
-  def process(item: JoinedItem): Option[Iterable[SerializableRDFQuad]] = {
-    subProcess(item.parent, item.parent, item.parent, item.parent, logicalTargetIDs)
+  def process(item: JoinedItem, functionAgent: Agent): Option[Iterable[SerializableRDFQuad]] = {
+    subProcess(item.parent, item.parent, item.parent, item.parent, logicalTargetIDs, functionAgent)
   }
 }
 
-case class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
-                   predicateGenerator: Item => Option[Iterable[Uri]],
-                   objectGenerator: Item => Option[Iterable[Entity]],
-                   graphGenerator: Item => Option[Iterable[Uri]],
+case class StdStatement(subjectGenerator: ((Item, Agent)) => Option[Iterable[TermNode]],
+                   predicateGenerator: ((Item, Agent)) => Option[Iterable[Uri]],
+                   objectGenerator: ((Item, Agent)) => Option[Iterable[Entity]],
+                   graphGenerator: ((Item, Agent)) => Option[Iterable[Uri]],
                    logicalTargetIDs: Set[String]) extends Statement[Item] with Serializable {
 
   /**
@@ -102,9 +103,9 @@ case class StdStatement(subjectGenerator: Item => Option[Iterable[TermNode]],
     * @param item
     * @return
     */
-  def process(item: Item): Option[Iterable[SerializableRDFQuad]] = {
+  def process(item: Item, functionAgent: Agent): Option[Iterable[SerializableRDFQuad]] = {
 
-    subProcess(item,item,item,item, logicalTargetIDs)
+    subProcess(item,item,item,item, logicalTargetIDs, functionAgent)
   }
 
 }

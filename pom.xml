@@ -36,7 +36,7 @@ SOFTWARE.
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <flink.version>1.14.0</flink.version>
+        <flink.version>1.14.4</flink.version>
         <slf4j.version>1.7.32</slf4j.version>
         <log4j.version>2.17.0</log4j.version>
         <jena.version>4.3.1</jena.version>
@@ -385,9 +385,9 @@ SOFTWARE.
         </dependency>
 
         <dependency>
-            <groupId>com.github.fnoio</groupId>
+            <groupId>com.github.FnOio</groupId>
             <artifactId>function-agent-java</artifactId>
-            <version>v0.0.2</version>
+            <version>v0.1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.jena</groupId>
@@ -403,7 +403,7 @@ SOFTWARE.
         <dependency>
             <groupId>com.github.fnoio</groupId>
             <artifactId>idlab-functions-java</artifactId>
-            <version>v0.0.1</version>
+            <version>v0.1.0</version>
         </dependency>
 
     </dependencies>

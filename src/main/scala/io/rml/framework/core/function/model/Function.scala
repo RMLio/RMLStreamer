@@ -1,7 +1,6 @@
 package io.rml.framework.core.function.model
 
-import be.ugent.idlab.knows.functions.agent.Arguments
-import io.rml.framework.api.FnOEnvironment
+import be.ugent.idlab.knows.functions.agent.{Agent, Arguments}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.SerializableRDFQuad
 import io.rml.framework.core.model.{Entity, Literal, Node}
@@ -12,7 +11,7 @@ abstract class Function extends Node with Logging{
 
 object Function extends Logging{
 
-  def execute(identifier: String, paramTriples: List[SerializableRDFQuad]): Option[Iterable[Entity]] = {
+  def execute(identifier: String, paramTriples: List[SerializableRDFQuad], agent: Agent): Option[Iterable[Entity]] = {
     // if a group (key: uri) results in a list with 1 element, extract that single element
     // otherwise, when a group has a list with more than 1 element, keep it as a list
     val argResourcesGroupedByUri = paramTriples.groupBy(_.predicate).map {
@@ -34,7 +33,7 @@ object Function extends Logging{
         arguments.add(parameterName, parameterValue)
       })
       // execute the funtion using the function agent
-      val result = FnOEnvironment.getFunctionAgent.get.execute(identifier, arguments)
+      val result = agent.execute(identifier, arguments)
       Some(List(Literal(result.toString)))
     } catch {
       case e: Throwable => {

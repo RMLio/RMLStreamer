@@ -26,7 +26,7 @@ package io.rml.framework
  **/
 
 
-import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.{JoinConfigMapCache, NodeCache}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.{EmptyItem, Item, JoinedItem}
@@ -39,6 +39,7 @@ import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{RMLPartitioner, UniversalKafkaConnectorFactory}
 import io.rml.framework.flink.sink.{RichMQTTSink, TargetSinkFactory}
 import io.rml.framework.flink.source.{FileDataSet, Source}
+import io.rml.framework.flink.util.FunctionsFlinkUtil
 import org.apache.flink.api.common.eventtime.{SerializableTimestampAssigner, WatermarkStrategy}
 import org.apache.flink.api.common.serialization.{SimpleStringEncoder, SimpleStringSchema}
 import org.apache.flink.api.scala._
@@ -93,15 +94,13 @@ object Main extends Logging {
     // Triple maps are also organized in categories (does it contain streams, does it contain joins, ... )
     val formattedMapping = Util.readMappingFile(config.mappingFilePath)
 
-
-    // Default function config
-    // TODO: support adding variable function related files using CLI arguments
-    FnOEnvironment()
-
     // set up execution environments, Flink needs these to know how to operate (local, cluster mode, ...)
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
+    // TODO: remove functions_idlab.ttl and idlab_java_mapping.ttl
+    // TODO: check FunctionUtils.scala
+    FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv, config.functionDescriptionLocations.get: _*)
 
     if (config.checkpointInterval.isDefined) {
       senv.enableCheckpointing(config.checkpointInterval.get, CheckpointingMode.AT_LEAST_ONCE); // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html

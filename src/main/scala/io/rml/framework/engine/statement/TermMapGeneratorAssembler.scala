@@ -25,6 +25,7 @@
 
 package io.rml.framework.engine.statement
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.model._
@@ -40,7 +41,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  def assemble(termMap: TermMap, higherLevelLogicalTargetIDs: Set[String]): (Item) => Option[Iterable[Entity]] = {
+  def assemble(termMap: TermMap, higherLevelLogicalTargetIDs: Set[String]): ((Item, Agent)) => Option[Iterable[Entity]] = {
     if (termMap.hasConstant) {
       constantGenerator(termMap)
     } else if (termMap.hasTemplate) {
@@ -51,12 +52,13 @@ abstract class TermMapGeneratorAssembler extends Logging {
       blankNodeGenerator()
     } else {
       if (isWarnEnabled) logWarning(termMap.toString + ": no constant, template or reference present.")
-      (item: Item) => None
+      //(item: Item, functionAgent: Agent) => None
+      tuple => None
     }
   }
 
-  private def blankNodeGenerator(): Item => Option[Iterable[Entity]] = {
-    (item: Item) => {
+  private def blankNodeGenerator(): ((Item, Agent)) => Option[Iterable[Entity]] = {
+    itemAgentTupple => {
       Some(List(Blank()))
     }
   }
@@ -66,7 +68,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  private def constantGenerator(termMap: TermMap): Item => Option[Iterable[Entity]] = {
+  private def constantGenerator(termMap: TermMap): ((Item, Agent)) => Option[Iterable[Entity]] = {
     termMap.termType.get.toString match {
       case R2RMLVoc.Class.IRI => TermMapGenerators.constantUriGenerator(termMap.constant.get)
       case R2RMLVoc.Class.LITERAL => TermMapGenerators.constantLiteralGenerator(termMap.constant.get, termMap.datatype, termMap.language)
@@ -78,7 +80,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  private def templateGenerator(termMap: TermMap): Item => Option[Iterable[Entity]] = {
+  private def templateGenerator(termMap: TermMap): ((Item, Agent)) => Option[Iterable[Entity]] = {
     termMap.termType.get.toString match {
       case R2RMLVoc.Class.IRI => TermMapGenerators.templateUriGenerator(termMap)
       case R2RMLVoc.Class.LITERAL => TermMapGenerators.templateLiteralGenerator(termMap)
@@ -91,7 +93,7 @@ abstract class TermMapGeneratorAssembler extends Logging {
     * @param termMap
     * @return
     */
-  private def referenceGenerator(termMap: TermMap): Item =>Option[Iterable[Entity]] = {
+  private def referenceGenerator(termMap: TermMap): ((Item, Agent)) =>Option[Iterable[Entity]] = {
     termMap.termType.get.toString match {
       case R2RMLVoc.Class.IRI => TermMapGenerators.referenceUriGenerator(termMap)
       case R2RMLVoc.Class.LITERAL => TermMapGenerators.referenceLiteralGenerator(termMap)

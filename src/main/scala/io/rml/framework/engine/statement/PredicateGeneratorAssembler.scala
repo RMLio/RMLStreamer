@@ -25,13 +25,14 @@
 
 package io.rml.framework.engine.statement
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.function.FunctionUtils
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.{TermMap, Uri}
 
 class PredicateGeneratorAssembler extends TermMapGeneratorAssembler {
 
-  override def assemble(termMap: TermMap, higherLogicalTargetIDs: Set[String]): (Item) => Option[Iterable[Uri]] = {
+  override def assemble(termMap: TermMap, higherLogicalTargetIDs: Set[String]): ((Item, Agent)) => Option[Iterable[Uri]] = {
 
     // Note: this code is very redundant to ObjectGeneratorAssembler. TODO: generalize?
     if(termMap.hasFunctionMap){
@@ -50,7 +51,7 @@ class PredicateGeneratorAssembler extends TermMapGeneratorAssembler {
       })
     }
     else {
-      super.assemble(termMap, Set()).asInstanceOf[(Item) => Option[Iterable[Uri]]]
+      super.assemble(termMap, Set()).asInstanceOf[((Item, Agent)) => Option[Iterable[Uri]]]
     }
   }
 

@@ -24,10 +24,11 @@
   **/
 package io.rml.framework.engine
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.item.{Item, JoinedItem}
 import io.rml.framework.engine.statement.StatementEngine
 
-abstract class StreamProcessor[T <: Item](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends Processor[T, Iterable[T]](engine) {
+abstract class StreamProcessor[T <: Item, A <: Agent](engine: StatementEngine[T, A])(implicit postProcessor: PostProcessor) extends Processor[T, Iterable[T], A](engine) {
 
   /**
     * Maps items to serialized RDF according to the mapping rules ecompassed by the statement engine
@@ -37,7 +38,7 @@ abstract class StreamProcessor[T <: Item](engine: StatementEngine[T])(implicit p
   override def map(in: Iterable[T]): Iterable[(String, String)] = {
     if (in.isEmpty) return List()
 
-    val quads = in flatMap engine.process
+    val quads = in.flatMap(item => engine.process(item, functionAgent.get))
     postProcessor.process(quads)
 
   }
@@ -45,9 +46,9 @@ abstract class StreamProcessor[T <: Item](engine: StatementEngine[T])(implicit p
 
 
 // Custom processing class with normal items
-class StdStreamProcessor(engine: StatementEngine[Item])(implicit postProcessor: PostProcessor) extends StreamProcessor[Item](engine)
+class StdStreamProcessor(engine: StatementEngine[Item, Agent])(implicit postProcessor: PostProcessor) extends StreamProcessor[Item, Agent](engine)
 
 
 // Custom processing class with joined items
-class JoinedStreamProcessor(engine: StatementEngine[JoinedItem])(implicit postProcessor: PostProcessor) extends StreamProcessor[JoinedItem](engine)
+class JoinedStreamProcessor(engine: StatementEngine[JoinedItem, Agent])(implicit postProcessor: PostProcessor) extends StreamProcessor[JoinedItem, Agent](engine)
 

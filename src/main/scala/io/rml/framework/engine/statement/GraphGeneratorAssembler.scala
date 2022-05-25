@@ -24,30 +24,30 @@
   **/
 package io.rml.framework.engine.statement
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.{GraphMap, TermMap, Uri}
 
 class GraphGeneratorAssembler extends TermMapGeneratorAssembler {
 
-  def assemble(graphMapOpt: Option[GraphMap], higherLevelLogicalTargetIDs: Set[String]): Item => Option[Iterable[Uri]] = {
+  def assemble(graphMapOpt: Option[GraphMap], higherLevelLogicalTargetIDs: Set[String]): ((Item, Agent)) => Option[Iterable[Uri]] = {
     graphMapOpt match {
-      case None => Item => None
+      case None => itemAgentTuple => None
       case Some(map) => assemble(map, higherLevelLogicalTargetIDs)
     }
   }
 
 
-  override def assemble(termMap: TermMap, higherLevelLogicalTargetIDs: Set[String]): Item => Option[Iterable[Uri]] = {
+  override def assemble(termMap: TermMap, higherLevelLogicalTargetIDs: Set[String]): ((Item, Agent)) => Option[Iterable[Uri]] = {
     if (termMap.hasFunctionMap) {
       val logicalTargetIDs = termMap.getAllLogicalTargetIds
       val assembled = FunctionMapGeneratorAssembler().assemble(termMap.functionMap.head, higherLevelLogicalTargetIDs ++ logicalTargetIDs)
-
-
-      assembled.andThen(result => {
-        result.map(iter => iter.map(elem => Uri(elem.value)))
-      })
+      assembled
+        .andThen(result => {
+          result.map(iter => iter.map(elem => Uri(elem.value)))
+        })
     } else {
-      super.assemble(termMap, Set()).asInstanceOf[(Item) => Option[Iterable[Uri]]]
+      super.assemble(termMap, Set()).asInstanceOf[((Item, Agent)) => Option[Iterable[Uri]]]
     }
   }
 }

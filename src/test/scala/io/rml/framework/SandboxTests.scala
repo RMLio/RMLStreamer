@@ -27,11 +27,8 @@ package io.rml.framework
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.util.Util
-import io.rml.framework.engine.NopPostProcessor
 import io.rml.framework.util.TestUtil
 import io.rml.framework.util.logging.Logger
-import org.apache.flink.api.scala.ExecutionEnvironment
-import org.apache.flink.streaming.api.scala._
 import org.scalatest.{FunSuite, Matchers}
 
 import java.io.File
@@ -39,15 +36,11 @@ import java.io.File
 
 class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
 
-
   private def executeTest(mappingFile: String): Unit = {
     NodeCache.clear();
     // clear the loaded classes, this prevents an Exception that would occur when using classes
     // from an unloaded class loader
     RMLEnvironment.setGeneratorBaseIRI(Some("http://example.org/base/"))
-    implicit val env = ExecutionEnvironment.getExecutionEnvironment
-    implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
-    implicit val postProcessor = new NopPostProcessor()
 
     val testDir = Util.getFile(new File(mappingFile).getParent)
     val mappingFileAbs = new File(testDir, new File(mappingFile).getName)

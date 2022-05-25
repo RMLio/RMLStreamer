@@ -25,6 +25,7 @@
 
 package io.rml.framework.engine
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.rdf.SerializableRDFQuad
@@ -38,7 +39,7 @@ import scala.collection.mutable
   */
 trait Engine[T] extends Serializable {
 
-  def process(item: T): List[SerializableRDFQuad]
+  def process(item: T, functionAgent: Agent): List[SerializableRDFQuad]
 
 }
 
