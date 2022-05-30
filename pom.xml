@@ -28,7 +28,7 @@ SOFTWARE.
 
     <groupId>io.rml</groupId>
     <artifactId>RMLStreamer</artifactId>
-    <version>2.2.3-SNAPSHOT</version>
+    <version>2.4.0</version>
     <packaging>jar</packaging>
 
     <name>RMLStreamer</name>

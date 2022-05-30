@@ -19,7 +19,7 @@ If you want to develop, read [these instructions](documentation/README_DEVELOPME
 RMLStreamer runs its jobs on Flink clusters.
 More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.14/try-flink/local_installation.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
-Please note that this version works with Flink 1.14.0 with Scala 2.11 support, which can be downloaded [here](https://archive.apache.org/dist/flink/flink-1.14.0/flink-1.14.0-bin-scala_2.11.tgz).
+Please note that this version works with Flink 1.14.4 with Scala 2.11 support, which can be downloaded [here](https://archive.apache.org/dist/flink/flink-1.14.4/flink-1.14.4-bin-scala_2.11.tgz).
 
 ### Building RMLStreamer
 
@@ -83,6 +83,8 @@ $FLINK_BIN run <path to RMLStreamer jar> toKafka --broker-list <host:port> --top
 ```
 Usage: RMLStreamer [toFile|toKafka|toTCPSocket|noOutput] [options]
 
+  -f, --function-descriptions <function description location 1>,<function description location 2>...
+                           An optional list of paths to function description files (in RDF using FnO). A path can be a file location or a URL.
   -j, --job-name <job name>
                            The name to assign to the job on the Flink cluster. Put some semantics in here ;)
   -i, --base-iri <base IRI>
