@@ -25,6 +25,7 @@
 
 package io.rml.framework.engine.statement
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.model.{Entity, Literal, ObjectMap, Uri}
@@ -32,7 +33,7 @@ import io.rml.framework.core.vocabulary.R2RMLVoc
 
 class ObjectGeneratorAssembler extends TermMapGeneratorAssembler {
 
-  def assemble(objectMap: ObjectMap, higherLevelLogicalTargetIDs: Set[String]): (Item) => Option[Iterable[Entity]] = {
+  def assemble(objectMap: ObjectMap, higherLevelLogicalTargetIDs: Set[String]): ((Item, Agent)) => Option[Iterable[Entity]] = {
     val logicalTargetIDs = higherLevelLogicalTargetIDs ++ objectMap.getAllLogicalTargetIds
     // check if it has a parent triple map
     if (objectMap.parentTriplesMap.isDefined) {

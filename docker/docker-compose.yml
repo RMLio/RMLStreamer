@@ -2,7 +2,7 @@ version: '3'
 services:
 
   jobmanager:
-    image: flink:1.14.0-scala_2.11-java11
+    image: flink:1.14.4-scala_2.11-java11
     expose:
       - "6123"
     ports:
@@ -14,7 +14,7 @@ services:
       - data:/mnt/data
 
   taskmanager:
-    image: flink:1.14.0-scala_2.11-java11
+    image: flink:1.14.4-scala_2.11-java11
     expose:
       - "6121"
       - "6122"

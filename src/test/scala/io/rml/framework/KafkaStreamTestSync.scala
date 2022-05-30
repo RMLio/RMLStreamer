@@ -24,15 +24,14 @@
   **/
 package io.rml.framework
 
-import java.io.File
-import java.util.Properties
-
 import io.rml.framework.util.server.TestData
 import kafka.server.{KafkaConfig, KafkaServerStartable}
 import org.apache.curator.test.TestingServer
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
+import java.io.File
+import java.util.Properties
 import scala.concurrent.ExecutionContextExecutor
 
 
@@ -76,21 +75,6 @@ class KafkaStreamTestSync extends StreamTestSync {
     logInfo("Creating Kafka client...")
     client = new KafkaProducer[String, String](producerProps)
     logInfo("Creating Kafka client created.")
-  }
-
-
-  override def beforeTestCase(): Unit = {
-    // topics seem to be created automatically...
-
-    /*logInfo("Creating Kafka input topic...")
-    val topicName = "demo"
-    val numPartitions = 1
-    val replicationFactor = 1
-    val topic = new NewTopic(topicName, numPartitions, replicationFactor.toShort)
-    val createTopicsResult = admin.createTopics(ArrayBuffer(topic).asJava)
-    createTopicsResult.all().get()  // wait for completion of creating topics
-    Thread.sleep(2000)
-    logInfo("Creating Kafka input topic done.") */
   }
 
   override def afterTestCase(): Unit = {
@@ -173,8 +157,4 @@ class KafkaStreamTestSync extends StreamTestSync {
     }
     inetAddress.split(":")(1).toInt
   }
-}
-
-object KafkaStreamTestSync {
-
 }

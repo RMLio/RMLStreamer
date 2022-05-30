@@ -24,9 +24,12 @@
   **/
 package io.rml.framework.engine
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.item.Item
 import io.rml.framework.engine.statement.StatementEngine
+import io.rml.framework.flink.util.FunctionsFlinkUtil
 import org.apache.flink.api.common.functions.RichMapFunction
+import org.apache.flink.configuration.Configuration
 
 /**
   * Abstract class for creating a custom processing mapping step in a pipeline.
@@ -38,5 +41,10 @@ import org.apache.flink.api.common.functions.RichMapFunction
   * @tparam T has upper bound of [[Item]]
   * @tparam IN specifies the type of the input for the map(..) function
   */
-abstract class Processor[T<:Item, IN](engine: StatementEngine[T])(implicit postProcessor: PostProcessor) extends RichMapFunction[IN, Iterable[(String, String)]]
+abstract class Processor[T<:Item, IN, A <: Agent](engine: StatementEngine[T, A])(implicit postProcessor: PostProcessor) extends RichMapFunction[IN, Iterable[(String, String)]] {
+  protected var functionAgent: Option[Agent] = None
 
+  override def open(parameters: Configuration): Unit = {
+    functionAgent = Some(FunctionsFlinkUtil.initFunctionAgentForProcessor(getRuntimeContext.getDistributedCache));
+  }
+}

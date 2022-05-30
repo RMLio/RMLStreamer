@@ -26,18 +26,25 @@ package io.rml.framework
 
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.engine.{NopPostProcessor, PostProcessor}
+import io.rml.framework.flink.util.FunctionsFlinkUtil
 import io.rml.framework.util.TestUtil
+import io.rml.framework.util.fileprocessing.TripleGeneratorTestUtil.{env, senv}
 import io.rml.framework.util.fileprocessing.{ExpectedOutputTestUtil, TripleGeneratorTestUtil}
 import io.rml.framework.util.logging.Logger
-import org.scalatest.BeforeAndAfter
+import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll}
 
 import scala.util.control.Exception
 
 
-class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with BeforeAndAfter {
+class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with BeforeAndAfter with BeforeAndAfterAll {
 
-  before {
-    FunctionMappingSetup.setupFunctionLoader()
+  override def beforeAll(): Unit = {
+    FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv,
+      "functions_grel.ttl",
+      "grel_java_mapping.ttl",
+      "fno/functions_idlab.ttl",
+      "fno/functions_idlab_test_classes_java_mapping.ttl"
+    )
   }
 
 

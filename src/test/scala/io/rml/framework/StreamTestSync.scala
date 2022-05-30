@@ -24,11 +24,12 @@
   **/
 package io.rml.framework
 
-import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.util.{StreamerConfig, Util}
 import io.rml.framework.engine.PostProcessor
+import io.rml.framework.flink.util.FunctionsFlinkUtil
 import io.rml.framework.util.fileprocessing.StreamDataSourceTestUtil
 import io.rml.framework.util.logging.Logger
 import io.rml.framework.util.server.{TestData, TestSink2}
@@ -73,11 +74,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   }
 
   // Things to do before running one test case
-  protected def beforeTestCase(): Unit = {
-    // clear the loaded classes, this prevents an Exception that would occur when using classes
-    // from an unloaded class loader
-    FnOEnvironment.loadedClassesMap.clear()
-  }
+  protected def beforeTestCase(): Unit = {}
 
   // Things to do after running one test case
   protected def afterTestCase(): Unit
@@ -106,6 +103,15 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     testCase <- StreamDataSourceTestUtil.getTestCaseFolders(folder).sorted
   } yield (testCase, postProcessor)
 
+  implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
+  implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+  FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv,
+    "functions_grel.ttl",
+    "grel_java_mapping.ttl",
+    "fno/functions_idlab.ttl",
+    "fno/functions_idlab_test_classes_java_mapping.ttl"
+  )
+
   // run the test cases
   for ((folderPath, postProcessorName) <- testCases) {
     NodeCache.clear();
@@ -117,10 +123,6 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
 
     implicit val postProcessor: PostProcessor = TestUtil.pickPostProcessor(postProcessorName)
     val folder = Util.getFile(folderPath.toString)
-
-    // set up the execution environments
-    implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
-    implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI()
 
     implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 

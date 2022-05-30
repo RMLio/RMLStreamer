@@ -27,9 +27,4 @@ package io.rml.framework
 class TCPStreamTestSyncFnO extends TCPStreamTestSync {
 
   override def testFolder: String = "stream/fno-testcases/tcp"
-
-  override def setup(): Unit = {
-    FunctionMappingSetup.setupFunctionLoader()
-    super.setup()
-  }
 }

@@ -26,7 +26,7 @@ package io.rml.framework
  **/
 
 
-import io.rml.framework.api.{FnOEnvironment, RMLEnvironment}
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.extractors.{JoinConfigMapCache, NodeCache}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.{EmptyItem, Item, JoinedItem}
@@ -37,9 +37,9 @@ import io.rml.framework.engine._
 import io.rml.framework.engine.composers.StreamJoinComposer
 import io.rml.framework.engine.statement.StatementEngine
 import io.rml.framework.flink.connector.kafka.{RMLPartitioner, UniversalKafkaConnectorFactory}
-import io.rml.framework.flink.function.{FnOEnvironmentLoader, FnOEnvironmentStreamLoader, RichItemIdentityFunction, RichStreamItemIdentityFunction}
 import io.rml.framework.flink.sink.{RichMQTTSink, TargetSinkFactory}
 import io.rml.framework.flink.source.{FileDataSet, Source}
+import io.rml.framework.flink.util.FunctionsFlinkUtil
 import org.apache.flink.api.common.eventtime.{SerializableTimestampAssigner, WatermarkStrategy}
 import org.apache.flink.api.common.serialization.{SimpleStringEncoder, SimpleStringSchema}
 import org.apache.flink.api.scala._
@@ -94,17 +94,12 @@ object Main extends Logging {
     // Triple maps are also organized in categories (does it contain streams, does it contain joins, ... )
     val formattedMapping = Util.readMappingFile(config.mappingFilePath)
 
-
-    // Default function config
-    // TODO: support adding variable function related files using CLI arguments
-    FnOEnvironment.loadDefaultConfiguration()
-    FnOEnvironment.intializeFunctionLoader()
-
-
     // set up execution environments, Flink needs these to know how to operate (local, cluster mode, ...)
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
+    // TODO: check FunctionUtils.scala
+    FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv, config.functionDescriptionLocations.get: _*)
 
     if (config.checkpointInterval.isDefined) {
       senv.enableCheckpointing(config.checkpointInterval.get, CheckpointingMode.AT_LEAST_ONCE); // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
@@ -269,13 +264,11 @@ object Main extends Logging {
               ).nonEmpty
             } else true // if there are no join conditions all items can pass
             // filter out all empty items (some iterators can emit empty items)
-          }).filter(iterItems => {
-          iterItems.nonEmpty
-        })
-          
+          })
+          .filter(iterItems => {
+            iterItems.nonEmpty
+          })
 
-
-        
       val parentTriplesMap = NodeCache.getTriplesMap(tm.parentTriplesMap).get;
       val parentDataStreamTimestamped = Source(parentTriplesMap.logicalSource).asInstanceOf[io.rml.framework.flink.source.Stream]
         .stream
@@ -361,17 +354,6 @@ object Main extends Logging {
       }
     })
 
-    val preProcessingFunction =
-      if (FnOEnvironment.getFunctionLoader.isDefined) {
-        val functionLoaderOption = FnOEnvironment.getFunctionLoader
-        val jarSources = functionLoaderOption.get.getSources
-        val classNames = functionLoaderOption.get.getClassNames
-        new FnOEnvironmentStreamLoader(jarSources, classNames)
-      } else {
-        logInfo("FunctionLoader in RMLEnvironment is NOT DEFINED")
-        new RichStreamItemIdentityFunction()
-      }
-
    // Create sinks for every logical target
     val logicalTargetId2Sinks = TargetSinkFactory.createStreamSinksFromLogicalTargetCache()
 
@@ -384,7 +366,6 @@ object Main extends Logging {
         val dataStream = source.stream // this will generate a stream of items
           // process every item by a processor with a loaded engine
 
-          .map(preProcessingFunction)
           .map(new StdStreamProcessor(engine))
           .name("Execute mapping statements on items")
 
@@ -610,17 +591,6 @@ object Main extends Logging {
       }
     })
 
-    val preProcessingFunction =
-      if (FnOEnvironment.getFunctionLoader.isDefined) {
-        val functionLoaderOption = FnOEnvironment.getFunctionLoader
-        val jarSources = functionLoaderOption.get.getSources
-        val classNames = functionLoaderOption.get.getClassNames
-        new FnOEnvironmentLoader(jarSources, classNames)
-      } else {
-        logInfo("FunctionLoader in RMLEnvironment is NOT DEFINED")
-        new RichItemIdentityFunction()
-      }
-
     // This is the collection of all data streams that are created by the current mapping
     val processedDataSets: immutable.Iterable[DataSet[String]] =
       sourceEngineMap.map(entry => {
@@ -630,7 +600,6 @@ object Main extends Logging {
         source.dataset // this will generate a dataset of items
 
           // process every item by a processor with a loaded engine
-          .map(preProcessingFunction)
           .map(new StdStaticProcessor(engine))
           .name("Execute mapping statements on items")
           .map(outputStringToLogicalTargetIDs => {
@@ -672,17 +641,16 @@ object Main extends Logging {
 
           // filter out all items that do not contain the childs join condition
           .filter(item => {
-              if (tm.joinCondition.isDefined) {
+            if (tm.joinCondition.isDefined) {
                 val child_attributes = tm.joinCondition.get.child
-
                 child_attributes.flatMap( lit =>
                   item.refer(lit.value)).nonEmpty
             } else true // if there are no join conditions all items can pass
-
-            // filter out all empty items (some iterators can emit empty items)
-          }).filter(item => {
-          !item.isInstanceOf[EmptyItem]
-        })
+          })
+          // filter out all empty items (some iterators can emit empty items)
+          .filter(item => {
+            !item.isInstanceOf[EmptyItem]
+          })
 
 
       val parentTriplesMap = NodeCache.getTriplesMap(tm.parentTriplesMap).get;

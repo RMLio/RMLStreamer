@@ -24,10 +24,11 @@
   **/
 package io.rml.framework.engine
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.item.{Item, JoinedItem}
 import io.rml.framework.engine.statement.StatementEngine
 
-abstract class StaticProcessor[T<:Item](engine: StatementEngine[T]) (implicit postProcessor: PostProcessor) extends  Processor[T, T](engine) {
+abstract class StaticProcessor[T<:Item, A <: Agent](engine: StatementEngine[T, A]) (implicit postProcessor: PostProcessor) extends  Processor[T, T, A](engine) {
 
   /**
     * Maps items to a iterable of (logical target ID, rendered RDF statement(s)) pairs
@@ -35,7 +36,7 @@ abstract class StaticProcessor[T<:Item](engine: StatementEngine[T]) (implicit po
     * @return
     */
   override def map(in: T): Iterable[(String, String)] = {
-    val triples = engine.process(in)
+    val triples = engine.process(in, functionAgent.get)
 
     postProcessor.process(triples)
   }
@@ -46,9 +47,9 @@ abstract class StaticProcessor[T<:Item](engine: StatementEngine[T]) (implicit po
 
 
 // Custom processing class with normal items
-class StdStaticProcessor(engine: StatementEngine[Item])(implicit postProcessor: PostProcessor) extends StaticProcessor[Item](engine)
+class StdStaticProcessor(engine: StatementEngine[Item, Agent])(implicit postProcessor: PostProcessor) extends StaticProcessor[Item, Agent](engine)
 
 
 // Custom processing class with joined items
-class JoinedStaticProcessor(engine: StatementEngine[JoinedItem])(implicit postProcessor: PostProcessor) extends StaticProcessor[JoinedItem](engine)
+class JoinedStaticProcessor(engine: StatementEngine[JoinedItem, Agent])(implicit postProcessor: PostProcessor) extends StaticProcessor[JoinedItem, Agent](engine)
 

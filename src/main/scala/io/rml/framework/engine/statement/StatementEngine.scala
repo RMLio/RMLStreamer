@@ -25,6 +25,7 @@
 
 package io.rml.framework.engine.statement
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.{Item, JoinedItem}
 import io.rml.framework.core.model.rdf.SerializableRDFQuad
@@ -44,7 +45,7 @@ import io.rml.framework.engine.Engine
   *
   * @param statementMap
   */
-class StatementEngine[T <: Item](val statementMap: Map[String, List[Statement[T]]]) extends Engine[T] {
+class StatementEngine[T <: Item, A <: Agent](val statementMap: Map[String, List[Statement[T]]]) extends Engine[T] {
 
 
   /**
@@ -53,12 +54,12 @@ class StatementEngine[T <: Item](val statementMap: Map[String, List[Statement[T]
     * @param item
     * @return
     */
-  override def process(item: T): List[SerializableRDFQuad] = {
+  override def process(item: T, functionAgent: Agent): List[SerializableRDFQuad] = {
 
     val statements = statementMap.getOrElse(item.tag, List())
 
     statements.flatMap(statement => {
-      statement.process(item)
+      statement.process(item, functionAgent)
     })
     .flatten
   }
@@ -75,7 +76,7 @@ object StatementEngine extends Logging {
     * @param triplesMaps
     * @return
     */
-  def fromTriplesMaps(triplesMaps: List[TriplesMap]): StatementEngine[Item] = {
+  def fromTriplesMaps(triplesMaps: List[TriplesMap]): StatementEngine[Item, Agent] = {
     // assemble the statements
     this.logDebug("fromTriplesMaps(triplesMaps) - creating statement engine")
     //Group the triple maps with their iterator as the key
@@ -110,7 +111,7 @@ object StatementEngine extends Logging {
     * @param triplesMap
     * @return
     */
-  def fromJoinedTriplesMap(triplesMap: JoinedTriplesMap): StatementEngine[JoinedItem] = {
+  def fromJoinedTriplesMap(triplesMap: JoinedTriplesMap): StatementEngine[JoinedItem, Agent] = {
     val childStatements = StatementsAssembler.assembleChildStatements(triplesMap)
     val parentStatements = StatementsAssembler.assembleParentStatements(triplesMap)
     // do some logging

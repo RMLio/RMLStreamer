@@ -23,7 +23,6 @@
   *
   **/
 package io.rml.framework
-import io.rml.framework.api.FnOEnvironment
 import io.rml.framework.util.logging.Logger
 import io.rml.framework.util.server.TestData
 
@@ -50,11 +49,7 @@ class TCPStreamTestSync extends StreamTestSync {
     serverThread.start()
   }
 
-  override def beforeTestCase(): Unit = {
-    // clear the loaded classes, this prevents an Exception that would occur when using classes
-    // from an unloaded class loader
-    FnOEnvironment.loadedClassesMap.clear()
-  }
+  override def beforeTestCase(): Unit = {}
 
   override def afterTestCase(): Unit = {}
 

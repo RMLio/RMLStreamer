@@ -26,6 +26,7 @@
 package io.rml.framework.engine.statement
 
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.model._
@@ -37,27 +38,27 @@ import io.rml.framework.engine.Engine
   */
 object TermMapGenerators {
 
-  def constantUriGenerator(constant: Entity): Item => Option[Iterable[Uri]] = {
+  def constantUriGenerator(constant: Entity): ((Item, Agent)) => Option[Iterable[Uri]] = {
     // return a function that just returns the constant
-    (item: Item) => {
+    itemAgentTuple => {
       Some(List(Uri(constant.value)))
     }
   }
 
-  def constantLiteralGenerator(constant: Entity, datatype: Option[Uri] = None, language: Option[Literal]): Item => Option[Iterable[Literal]] = {
+  def constantLiteralGenerator(constant: Entity, datatype: Option[Uri] = None, language: Option[Literal]): ((Item, Agent)) => Option[Iterable[Literal]] = {
     // return a function that just returns the constant
-    item: Item => {
+    itemAgentTuple => {
       Some(List(Literal(constant.value, datatype, language)))
     }
 
   }
 
-  def templateUriGenerator(termMap: TermMap): Item => Option[Iterable[Uri]] = {
+  def templateUriGenerator(termMap: TermMap): ((Item, Agent)) => Option[Iterable[Uri]] = {
     // return a function that processes the template
-    item: Item => {
+    itemAgentTuple => {
 
       for {
-        iter <- Engine.processTemplate(termMap.template.get, item, encode = true)
+        iter <- Engine.processTemplate(termMap.template.get, itemAgentTuple._1, encode = true)
       } yield for {
         value <- iter
         processed <- processIRI(value)
@@ -66,11 +67,11 @@ object TermMapGenerators {
     }
   }
 
-  def templateLiteralGenerator(termMap: TermMap): Item => Option[Iterable[Literal]] = {
+  def templateLiteralGenerator(termMap: TermMap): ((Item, Agent)) => Option[Iterable[Literal]] = {
     // return a function that processes the template
-    item: Item => {
+      itemAgentTuple => {
       for {
-        iter <- Engine.processTemplate(termMap.template.get, item)
+        iter <- Engine.processTemplate(termMap.template.get, itemAgentTuple._1)
       } yield for {
         value <- iter
         lit = Literal(value, termMap.datatype, termMap.language)
@@ -79,11 +80,11 @@ object TermMapGenerators {
     }
   }
 
-  def templateBlankNodeGenerator(termMap: TermMap): Item => Option[Iterable[Blank]] = {
-    item: Item => {
+  def templateBlankNodeGenerator(termMap: TermMap): ((Item, Agent)) => Option[Iterable[Blank]] = {
+    itemAgentTuple => {
 
       for {
-        iter <- Engine.processTemplate(termMap.template.get, item, encode = true)
+        iter <- Engine.processTemplate(termMap.template.get, itemAgentTuple._1, encode = true)
       } yield for {
         value <- iter
         blank = Blank(value)
@@ -91,11 +92,11 @@ object TermMapGenerators {
     }
   }
 
-  def referenceLiteralGenerator(termMap: TermMap): Item => Option[Iterable[Literal]] = {
+  def referenceLiteralGenerator(termMap: TermMap): ((Item, Agent)) => Option[Iterable[Literal]] = {
     // return a function that processes a reference
-    item: Item => {
+    itemAgentTuple => {
       for {
-        iter <- Engine.processReference(termMap.reference.get, item)
+        iter <- Engine.processReference(termMap.reference.get, itemAgentTuple._1)
 
       } yield for {
         value <- iter
@@ -105,12 +106,12 @@ object TermMapGenerators {
     }
   }
 
-  def referenceUriGenerator(termMap: TermMap): Item => Option[Iterable[Uri]] = {
+  def referenceUriGenerator(termMap: TermMap): ((Item, Agent)) => Option[Iterable[Uri]] = {
     // return a function that processes a reference
 
-    item: Item => {
+    itenAgentTuple => {
       for {
-        iter <- Engine.processReference(termMap.reference.get, item)
+        iter <- Engine.processReference(termMap.reference.get, itenAgentTuple._1)
 
       } yield for {
         iri <- iter

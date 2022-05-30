@@ -25,6 +25,7 @@
 
 package io.rml.framework.engine.statement
 
+import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.{Item, JoinedItem}
@@ -44,7 +45,7 @@ extends Logging{
     * @param triplesMap
     * @return
     */
-  def assembleStatements(triplesMap: TriplesMap): List[(Item => Option[Iterable[TermNode]], Item => Option[Iterable[Uri]], Item => Option[Iterable[Entity]], Item => Option[Iterable[Uri]], Set[String])] = {
+  def assembleStatements(triplesMap: TriplesMap): List[(((Item, Agent)) => Option[Iterable[TermNode]], ((Item, Agent)) => Option[Iterable[Uri]], ((Item, Agent)) => Option[Iterable[Entity]], ((Item, Agent)) => Option[Iterable[Uri]], Set[String])] = {
     this.logDebug("assembleStatements(triplesmaps)")
 
     val subjectLogicalTargetIds = triplesMap.subjectMap.getAllLogicalTargetIds // including GraphMap logical target IDs
@@ -74,15 +75,15 @@ extends Logging{
   }
 
 
-  private def getClassMappingStatements(subjectGenerator: (Item) => Option[Iterable[TermNode]],
+  private def getClassMappingStatements(subjectGenerator: ((Item, Agent)) => Option[Iterable[TermNode]],
                                         classes: List[Uri],
-                                        graphGenerator: Item => Option[Iterable[Uri]],
+                                        graphGenerator: ((Item, Agent)) => Option[Iterable[Uri]],
                                         subjectLogicalTargetIds: Set[String])
-  : List[(Item => Option[Iterable[TermNode]], Item => Some[List[Uri]], Item => Some[List[Uri]], Item => Option[Iterable[Uri]], Set[String])] = {
+  : List[(((Item, Agent)) => Option[Iterable[TermNode]], ((Item, Agent)) => Some[List[Uri]], ((Item, Agent)) => Some[List[Uri]], ((Item, Agent)) => Option[Iterable[Uri]], Set[String])] = {
 
     classes.map(_class => {
-      val predicateGenerator = (item: Item) => Some(List(Uri(RDFVoc.Property.TYPE)))
-      val objectGenerator = (item: Item) => Some(List(_class))
+      val predicateGenerator = (itemAgentTuple: ((Item, Agent))) => Some(List(Uri(RDFVoc.Property.TYPE)))
+      val objectGenerator = (itemAgentTuple: ((Item, Agent))) => Some(List(_class))
       (subjectGenerator, predicateGenerator, objectGenerator, graphGenerator, subjectLogicalTargetIds)
     })
 
