@@ -21,7 +21,8 @@ trait FunctionMappingTest extends FunSuite  with BeforeAndAfterAll with Logging 
       "functions_grel.ttl",
      "grel_java_mapping.ttl",
      "fno/functions_idlab.ttl",
-     "fno/functions_idlab_test_classes_java_mapping.ttl"
+     "fno/functions_idlab_test_classes_java_mapping.ttl",
+      "src/test/resources/sandbox/function_related/external_jar/simple-test-function-fno.ttl"
     )
   }
 }

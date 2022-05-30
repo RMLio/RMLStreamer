@@ -129,4 +129,8 @@ class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
   test("sandbox/logical-target/example-2-subjectMap") {
     executeTest("sandbox/logical-target/example-2-subjectMap/mapping.ttl")
   }
+
+  test("sandbox/function_related/external_jar") {
+    executeTest("sandbox/function_related/external_jar/mapping.ttl")
+  }
 }
