@@ -98,7 +98,6 @@ object Main extends Logging {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
-    // TODO: remove functions_idlab.ttl and idlab_java_mapping.ttl
     // TODO: check FunctionUtils.scala
     FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv, config.functionDescriptionLocations.get: _*)
 

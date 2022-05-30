@@ -124,17 +124,6 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     implicit val postProcessor: PostProcessor = TestUtil.pickPostProcessor(postProcessorName)
     val folder = Util.getFile(folderPath.toString)
 
-    // set up the execution environments
-    /*implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
-    implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
-
-    FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv,
-      "functions_grel.ttl",
-      "grel_java_mapping.ttl",
-      "fno/functions_idlab.ttl",
-      "fno/functions_idlab_test_classes_java_mapping.ttl"
-    ) */
-
     implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
     // create data stream and sink
