@@ -85,8 +85,9 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     val broker = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.BROKER)
     val groupId = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.GROUPID)
     val topic = extractSingleLiteralFromProperty(resource, RMLSVoc.Property.TOPIC)
+    val offset = extractLiteralFromProperty(resource, RMLSVoc.Property.OFFSET, "earliest")
 
-    KafkaStream(List(broker), groupId, topic)
+    KafkaStream(List(broker), groupId, topic, offset)
   }
 
   private def extractTCPSocketStream(resource: RDFResource): StreamDataSource = {

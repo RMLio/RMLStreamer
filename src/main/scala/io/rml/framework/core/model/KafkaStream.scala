@@ -29,13 +29,14 @@ import java.util.{Objects, Properties}
 case class KafkaStream(
                        brokers: List[String],
                        groupId: String,
-                       topic: String) extends StreamDataSource {
+                       topic: String,
+                       offset: String) extends StreamDataSource {
   def getProperties: Properties = {
     val properties = new Properties()
     val brokersCommaSeparated = brokers.reduce((a, b) => a + ", " + b)
     properties.setProperty("bootstrap.servers", brokersCommaSeparated)
     properties.setProperty("group.id", groupId)
-    properties.setProperty("auto.offset.reset", "earliest")
+    properties.setProperty("auto.offset.reset", offset)
     properties
   }
 
