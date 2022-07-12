@@ -7,9 +7,23 @@ using [RML](http://rml.io/). The difference with other RML implementations is th
 
 Documentation regarding the use of (custom) functions can be found [here](documentation/README_Functions.md).
 
-### Quick start
+### Quick start (standalone)
+
+* Download `RMLStreamer-<version>-standalone.jar` from the [latest release](https://github.com/RMLio/RMLStreamer/releases/latest).
+* Run it as
+```
+$ java -jar RMLStreamer-<version>-standalone.jar <commands and options>
+```
+
+See [Basic commands](#basic-commands) (where you replace `$FLINK_BIN run <path to RMLStreamer jar>` with `java -jar RMLStreamer-<version>-standalone.jar`)
+and [Complete RMLStreamer usage](#complete-rmlstreamer-usage) for
+examples, possible commands and options.
+
+### Moderately quick start (Docker)
 
 If you want to get the RMLStreamer up and running within 5 minutes using Docker, check out [docker/README.md](docker/README.md)
+
+### Not so quick start (deploying on a cluster)
 
 If you want to deploy it yourself, read on.
 
@@ -21,7 +35,11 @@ More information on how to install Flink and getting started can be found [here]
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
 Please note that this version works with Flink 1.14.4 with Scala 2.11 support, which can be downloaded [here](https://archive.apache.org/dist/flink/flink-1.14.4/flink-1.14.4-bin-scala_2.11.tgz).
 
-### Building RMLStreamer
+### Grabbing RMLStreamer...
+
+Download `RMLStreamer-<version>.jar` from the [latest release](https://github.com/RMLio/RMLStreamer/releases/latest).
+
+### ... or building RMLStreamer
 
 In order to build a jar file that can be deployed on a Flink cluster, you need:
 - a Java JDK >= 11 and <= 13 (We develop and test on JDK 11)
@@ -44,6 +62,11 @@ $ mvn -DskipTests clean package
 so.
 
 The resulting `RMLStreamer-<version>.jar`, found in the `target` folder, can be deployed on a Flink cluster.
+
+**Note**: To build a *stand-alone* RMLStreamer jar, add `-P 'stand-alone'` to the build command, e.g.:
+```
+$ mvn clean package -DskipTests -P 'stand-alone'
+```
 
 ### Executing RML Mappings
 

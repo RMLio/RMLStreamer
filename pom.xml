@@ -408,12 +408,12 @@ SOFTWARE.
 
     </dependencies>
 
-    <!-- This profile helps to make things run out of the box in IntelliJ -->
+    <!-- This profile helps to make things run stand-alone or in IntelliJ -->
     <!-- Its adds Flink's core classes to the runtime class path. -->
-    <!-- Otherwise they are missing in IntelliJ, because the dependency is 'provided' -->
+    <!-- Otherwise they are missing because the dependency is 'provided' -->
     <profiles>
         <profile>
-            <id>add-dependencies-for-IDEA</id>
+            <id>stand-alone</id>
             <activation>
                 <property>
                     <name>idea.version</name>
@@ -478,8 +478,6 @@ SOFTWARE.
                             <artifactSet>
                                 <excludes>
                                     <exclude>com.google.code.findbugs:jsr305</exclude>
-                                    <exclude>org.slf4j:*</exclude>
-                                    <exclude>log4j:*</exclude>
                                 </excludes>
                             </artifactSet>
                             <filters>
