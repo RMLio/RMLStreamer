@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 2.4.1 - Unreleased
 
+### Fixed
+* Passing omitting optional parameter `function-descriptions` resulted in program crash.
 
 ## [2.4.0] - 2022-05-30
 

@@ -99,7 +99,7 @@ object Main extends Logging {
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
     // TODO: check FunctionUtils.scala
-    FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv, config.functionDescriptionLocations.get: _*)
+    FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv, config.functionDescriptionLocations.getOrElse(Seq.empty): _*)
 
     if (config.checkpointInterval.isDefined) {
       senv.enableCheckpointing(config.checkpointInterval.get, CheckpointingMode.AT_LEAST_ONCE); // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
