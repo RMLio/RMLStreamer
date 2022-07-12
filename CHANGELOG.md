@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 2.4.1 - Unreleased
 
+### Added
+* Possibility to run stand-alone, with Flink embedded.
+
 ### Fixed
 * Passing omitting optional parameter `function-descriptions` resulted in program crash.
 
