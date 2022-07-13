@@ -60,7 +60,7 @@ The general usage is:
 $ FLINK_BIN run [Flink options] -c io.rml.framework.Main <path to RMLStreamer jar> [toFile|toKafka|toTCPSocket] [options]
 ```
 
-`FLINK HOME`  | The path to the provided Flink CLI script.
+`FLINK_BIN`  | The path to the provided Flink CLI script.
 Flink options | Options to the Flink run script. Example: `-p 4` sets the `parallelism` to 4.
 `-c io.rml.framework.Main` | This is the application class of RMLStreamer.
 Path to RMLStreamer jar | The absolute path to the RMLStreamer jar file.
