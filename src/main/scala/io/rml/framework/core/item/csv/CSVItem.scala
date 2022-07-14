@@ -48,7 +48,7 @@ class CSVItem(record: Map[String, String], val tag: String) extends Item {
     if (value.isDefined) {
       Some(List(value.get))
     } else {
-      CSVItem.logDebug(s"Cannot refer reference: \n $reference")
+      CSVItem.logWarning(s"Cannot find reference: '$reference'. Continuing with no value for this reference.")
       None
     }
   }

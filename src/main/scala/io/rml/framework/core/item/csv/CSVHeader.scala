@@ -25,20 +25,18 @@
 
 package io.rml.framework.core.item.csv
 
+import io.rml.framework.flink.util.IOUtils
 import org.apache.commons.csv.CSVFormat
 
 import java.io.{IOException, StringReader}
 import java.nio.file.Path
 import scala.collection.JavaConverters._
-import scala.io.Source
 
 object CSVHeader {
 
   def apply(path: Path, csvFormat: CSVFormat): Option[Array[String]] = {
-    val src = Source.fromFile(path.toString)
-    val line = src.getLines.take(1).next()
 
-    src.close
+    val line = IOUtils.readFirstLineFromUTF8FileWithBOM(path)
     getCSVHeaders(line, csvFormat)
   }
 

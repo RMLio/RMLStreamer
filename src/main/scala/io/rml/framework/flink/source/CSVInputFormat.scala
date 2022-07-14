@@ -57,9 +57,6 @@ class CSVInputFormat(filePath: String,csvFormat: CSVFormat) extends GenericCsvIn
 
     if (csvIter.hasNext) {
       val csvRecord = csvIter.next();
-      if (csvRecord.getParser == null) {
-        println("boe")
-      }
       CSVItem(csvRecord)
 
     } else {
