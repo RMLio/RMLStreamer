@@ -273,3 +273,15 @@ logger.rmlstreamer.name = io.rml.framework
 logger.rmlstreamer.level = DEBUG
 
 ```
+
+### Benchmark 
+
+RMLStreamer is benchmarked with this [repo.](https://github.com/s-minoo/rmlstreamer-benchmark-rust)
+
+### References ([preprint](./paper/RMLStreamer_ISWC.pdf))
+[1] S. Min Oo, G. Haesendonck, B. De Meester, A. Dimou. RMLStreamer - an RDF stream
+generator from streaming heterogeneous data. The Semantic Web – ISWC 2022. Springer International Publishing, (2022)
+
+
+
+
