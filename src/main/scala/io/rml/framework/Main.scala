@@ -610,8 +610,6 @@ object Main extends Logging {
           .flatMap(list => {
             list.seq
           })
-          // format every list of triples (as strings)
-          .reduce((a, b) => a + "\n" + b + "\n\n")
           .name("Convert triples to strings")
       })
 
@@ -708,8 +706,6 @@ object Main extends Logging {
           .flatMap(list => {
             list.seq
           })
-          // format every list of triples (as strings)
-          .reduce((a, b) => a + "\n" + b + "\n\n")
           .name("Convert triples to strings")
 
       } else { // if there are no join conditions a cross join will be executed
@@ -729,8 +725,6 @@ object Main extends Logging {
           .flatMap(list => {
             list.seq
           })
-          // format every list of triples (as strings)
-          .reduce((a, b) => a + "\n" + b + "\n\n")
           .name("Convert joined triples to strings")
       }
 
