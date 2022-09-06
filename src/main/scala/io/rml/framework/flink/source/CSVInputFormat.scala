@@ -51,7 +51,8 @@ class CSVInputFormat(filePath: String,csvFormat: CSVFormat) extends GenericCsvIn
 
   override def readRecord(reuse: Item, bytes: Array[Byte], offset: Int, numBytes: Int): Item = {
 
-    val line = bytes.slice(offset, numBytes + offset).map(_.toChar).mkString("")
+
+    val line = new String(bytes, offset, numBytes, "UTF-8")
 
     val csvIter: java.util.Iterator[CSVRecord] = CSVParser.parse(line, csvFormat).iterator()
 
