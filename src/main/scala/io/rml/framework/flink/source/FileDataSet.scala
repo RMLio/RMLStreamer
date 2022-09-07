@@ -60,9 +60,12 @@ object FileDataSet extends Logging {
 
   def createCSVDataSet(path: String)(implicit env: ExecutionEnvironment): CSVDataSet = {
     val config = DefaultCSVConfig()
-    val format =  CSVFormat.newFormat(config.delimiter)
-      .withQuote(config.quoteCharacter)
-      .withTrim()
+    val formatBuilder = CSVFormat.Builder.create()
+    val format =  formatBuilder
+      .setDelimiter(config.delimiter)
+      .setTrim(true)
+      .setQuote(config.quoteCharacter)
+      .build()
     val header = CSVHeader(Paths.get(path), format).getOrElse(Array.empty)
     val dataset = env.createInput(new CSVInputFormat(path,format.withHeader(header:_*)))
     CSVDataSet(dataset)
