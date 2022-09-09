@@ -28,6 +28,7 @@ package io.rml.framework.core.extractors.std
 import io.rml.framework.core.extractors.DataSourceExtractor
 import io.rml.framework.core.extractors.ExtractorUtil.{extractLiteralFromProperty, extractResourceFromProperty, extractSingleLiteralFromProperty, extractSingleResourceFromProperty}
 import io.rml.framework.core.model._
+import io.rml.framework.core.model.csvw.{CSVWDialect, CSVWFileSource}
 import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.vocabulary._
 import io.rml.framework.shared.RMLException
@@ -66,10 +67,11 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     if (properties.size != 1) throw new RMLException(resource.uri + ": type must be given.")
     properties.head match {
       case classResource: RDFResource => classResource.uri match {
-        case Uri(RMLSVoc.Class.TCPSOCKETSTREAM) => extractTCPSocketStream(resource)
+        case Uri(RMLSVoc.Class.TCPSOCKETSTREAM)=> extractTCPSocketStream(resource)
         case Uri(RMLSVoc.Class.FILESTREAM) => extractFileStream(resource)
         case Uri(RMLSVoc.Class.KAFKASTREAM) => extractKafkaStream(resource)
         case Uri(WoTVoc.ThingDescription.Class.THING) => extractWoTSource(resource)
+        case Uri(CSVWVoc.Class.TABLE) => extractCSVWSource(resource)
         case _ => throw new RMLException(s"${classResource.uri} not supported as data source.")
       }
       case literal: Literal => throw new RMLException(literal.value + ": type must be a resource.")
@@ -151,5 +153,11 @@ class StdDataSourceExtractor extends DataSourceExtractor {
 
   private def extractWSSource(hypermediaTarget: String, contentType: String): DataSource = {
     WsStream(hypermediaTarget, contentType)
+  }
+
+  private def extractCSVWSource(resource: RDFResource): DataSource = {
+    val path = extractSingleLiteralFromProperty(resource, CSVWVoc.Property.URL)
+    val dialect = extractSingleResourceFromProperty(resource, CSVWVoc.Property.DIALECT)
+    CSVWFileSource(path, CSVWDialect().parse(dialect))
   }
 }

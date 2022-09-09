@@ -26,10 +26,11 @@
 package io.rml.framework.core.item.csv
 
 import io.rml.framework.flink.util.IOUtils
-import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.{CSVFormat, CSVRecord}
 
 import java.io.{IOException, StringReader}
 import java.nio.file.Path
+import java.util.Optional
 import scala.collection.JavaConverters._
 
 object CSVHeader {
@@ -56,7 +57,13 @@ object CSVHeader {
       val reader = new StringReader(csvLine)
       val parser = csvFormat
         .parse(reader)
-      Some(parser.getRecords.get(0).iterator().asScala.toArray)
+      val optionalFirstRecord: Optional[CSVRecord] = parser.stream().findFirst()
+      if (optionalFirstRecord.isPresent) {
+        Some(optionalFirstRecord.get().iterator().asScala.toArray)
+      } else {
+        None
+      }
+      //Some(parser.getRecords.get(0).iterator().asScala.toArray)
     } catch {
       case e: IOException => None
       case e: IndexOutOfBoundsException => None
