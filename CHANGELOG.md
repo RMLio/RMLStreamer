@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 * Passing omitting optional parameter `function-descriptions` resulted in program crash.
+* Functions used on other levels than Predicate Map or Object Map caused RMLStreamer to crash
+* Functions returning `null` no longer cause RMLStreamer logging an error message. 
 
 ## [2.4.0] - 2022-05-30
 

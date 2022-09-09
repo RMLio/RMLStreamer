@@ -6,28 +6,27 @@ Get RMLStreamer up and running using Docker. No Java, no Flink, no Maven require
 Check out Flink's elaborate [documentation](https://ci.apache.org/projects/flink/flink-docs-release-1.14/docs/deployment/resource-providers/standalone/docker/) on this topic for more options, configurations, ...*
 
 ## 1. Prerequisites
-- [Docker or Docker Engine](https://www.docker.com/), version 19 or higher
-- [docker-compose](https://docs.docker.com/compose/), version 3 or higher
-- Have the `docker-compose.yml` file locally (either by cloning this repo or just by copying the file).
+- [Docker or Docker Engine](https://www.docker.com/), version 20 or higher (which includes the `docker compose` command)
+- Have the `compose.yaml` file locally (either by cloning this repo or just by copying the file).
 This is just *a* possible configuration; you can adjust it to your needs. 
 - An RMLStreamer jar file, either from the [latest release](https://github.com/RMLio/RMLStreamer/releases/latest),
 or one that you build yourself (in which case you *do* need Java and Maven).
 
 ## 2. Start the Flink cluster
 
-Go to the directory where you put the `docker-compose.yml` file.
+Go to the directory where you put the `compose.yaml` file.
 
 Run:
 
 ```
-$ docker-compose up
+$ docker compose up
 ```
 
 This will start one Flink Job Manager and one Flink Task Manager. If you want to scale up and add more Task Managers,
 just run the following command (in another terminal):
 
 ```
-$ docker-compose up --scale taskmanager=2
+$ docker compose up --scale taskmanager=2
 ```
 
 Replace the `2` with the number of Task Managers you actually want to have.
