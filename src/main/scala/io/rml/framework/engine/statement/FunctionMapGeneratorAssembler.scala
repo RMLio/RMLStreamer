@@ -30,6 +30,7 @@ import io.rml.framework.core.item.{EmptyItem, Item}
 import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.SerializableRDFQuad
 import io.rml.framework.core.vocabulary.FunVoc
+import io.rml.framework.flink.util.DummyFunctionAgent
 import io.rml.framework.shared.RMLException
 
 case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
@@ -54,9 +55,7 @@ case class FunctionMapGeneratorAssembler() extends TermMapGeneratorAssembler {
                             List[(((Item, Agent)) => Option[Iterable[Uri]], ((Item, Agent)) => Option[Iterable[Entity]], Set[String])]): ((Item, Agent)) => Option[Iterable[Entity]]  = {
 
     this.logDebug("parseFunction (assembledPom)")
-    val placeHolder: List[SerializableRDFQuad] = generateFunctionTriples(((new EmptyItem(), new Agent {
-      override def execute(functionId: String, arguments: Arguments): AnyRef = ???
-    })), assembledPom)
+    val placeHolder: List[SerializableRDFQuad] = generateFunctionTriples((new EmptyItem(), new DummyFunctionAgent), assembledPom)
 
     val executeProperties = placeHolder.filter( quad => quad.predicate.value == Uri(FunVoc.FnO.Property.EXECUTES))
     if(executeProperties.isEmpty)

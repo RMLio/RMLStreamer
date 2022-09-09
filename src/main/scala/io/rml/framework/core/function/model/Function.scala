@@ -34,7 +34,10 @@ object Function extends Logging{
       })
       // execute the funtion using the function agent
       val result = agent.execute(identifier, arguments)
-      Some(List(Literal(result.toString)))
+      result match {
+        case null => None
+        case _ => Some(List(Literal(result.toString)))
+      }
     } catch {
       case e: Throwable => {
         logError(s"The following exception occurred when invoking function ${identifier}: ${e.getMessage}." +
