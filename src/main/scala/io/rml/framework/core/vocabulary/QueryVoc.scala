@@ -33,5 +33,6 @@ object QueryVoc {
     val JSONPATH = namespace._2 + "JSONPath";
     val CSV = namespace._2 + "CSV";
     val XPATH = namespace._2 + "XPath";
+    val Parquet = namespace._2 + "Parquet"
   }
 }

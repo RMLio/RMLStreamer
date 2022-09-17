@@ -191,7 +191,7 @@ SOFTWARE.
             <version>2.4.0-b180830.0359</version>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -406,6 +406,45 @@ SOFTWARE.
             <version>v0.1.0</version>
         </dependency>
 
+        <!-- Parquet Parser -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-parquet</artifactId>
+            <version>1.15.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-common</artifactId>
+            <version>1.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-encoding</artifactId>
+            <version>1.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-column</artifactId>
+            <version>1.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-hadoop</artifactId>
+            <version>1.12.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-avro</artifactId>
+            <version>1.12.3</version> <!-- or latest version -->
+        </dependency>
+
+
     </dependencies>
 
     <!-- This profile helps to make things run stand-alone or in IntelliJ -->
@@ -507,7 +546,7 @@ SOFTWARE.
                                     <mainClass>io.rml.framework.Main</mainClass>
                                 </transformer>
                             </transformers>
-                            
+
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>

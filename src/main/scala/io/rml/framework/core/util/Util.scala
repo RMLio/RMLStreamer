@@ -52,7 +52,8 @@ object Util extends Logging{
   val DEFAULT_ITERATOR_MAP: Map[String, String] =  Map(
     QueryVoc.Class.JSONPATH -> "$",
     QueryVoc.Class.CSV -> "",
-    QueryVoc.Class.XPATH -> "/*"
+    QueryVoc.Class.XPATH -> "/*",
+    QueryVoc.Class.Parquet -> ""
   )
 
   val DEFAULT_ITERATOR_SET: Set[String] = DEFAULT_ITERATOR_MAP.values.toSet
@@ -190,6 +191,7 @@ object Util extends Logging{
       case ".nq" => Some(NQuads)
       case ".json" => Some(JSON_LD)
       case ".json-ld" => Some(JSON_LD)
+      case ".parquet" => Some(Parquet)
       case _ => None
     }
   }

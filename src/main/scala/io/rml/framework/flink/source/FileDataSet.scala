@@ -32,17 +32,25 @@ import io.rml.framework.core.model.{LogicalSource, Uri}
 import io.rml.framework.core.vocabulary.QueryVoc
 import org.apache.commons.csv.CSVFormat
 import org.apache.flink.api.scala._
+import org.apache.flink.configuration.Configuration
+import org.apache.flink.formats.parquet.avro.AvroParquetReaders
+import org.apache.flink.types.Nothing
+import org.apache.parquet.example.data.Group
+import org.apache.hadoop.fs.Path
+import org.apache.parquet.hadoop.ParquetReader
+import org.apache.parquet.hadoop.example.GroupReadSupport
 
 import java.nio.file.Paths
+
 
 sealed abstract class FileDataSet extends Source {
   def dataset: DataSet[Item]
 }
 
 case class XMLDataSet(dataset: DataSet[Item]) extends FileDataSet
-
 case class JSONDataSet(dataset: DataSet[Item]) extends FileDataSet
 case class CSVDataSet(dataset: DataSet[Item]) extends FileDataSet
+case class ParquetDataSet(dataset: DataSet[Item]) extends FileDataSet
 
 /**
   * Object for creating Flink Datasets from a LogicalSource
@@ -54,8 +62,8 @@ object FileDataSet extends Logging {
       case Uri(QueryVoc.Class.CSV) => createCSVDataSet(logicalSource)
       case Uri(QueryVoc.Class.XPATH) => createXMLWithXPathDataSet(logicalSource.source.uri.value, logicalSource.iterators.head)
       case Uri(QueryVoc.Class.JSONPATH) => createJSONWithJSONPathDataSet(logicalSource.source.uri.value, logicalSource.iterators.head)
+      case Uri(QueryVoc.Class.Parquet) => createParquetDataSet(logicalSource.source.uri.value)
     }
-
   }
 
   def createCSVDataSet(logicalSource: LogicalSource)(implicit env: ExecutionEnvironment): CSVDataSet = {
@@ -83,7 +91,26 @@ object FileDataSet extends Logging {
     val csvInputFormat = new CSVInputFormat(path, format.build())
     val dataSet = env.createInput(csvInputFormat)
     CSVDataSet(dataSet)
+  }
 
+  /**
+   * Reads the parquet file into a DataSet
+   * @param path path to the file
+   * @param env execution environment
+   * @return read DataSet
+   */
+  def createParquetDataSet(path: String)(implicit env: ExecutionEnvironment): FileDataSet = {
+
+    val reader = ParquetReader.builder(new GroupReadSupport(), new Path(path)).build()
+
+    var line: Group = reader.read()
+    while(line != null) {
+      print(line)
+      line = reader.read()
+    }
+
+
+    ParquetDataSet(null)
   }
 
   /**

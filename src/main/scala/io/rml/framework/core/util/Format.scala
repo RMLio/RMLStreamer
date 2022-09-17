@@ -34,3 +34,5 @@ case object JSON_LD extends Format
 case object NTriples extends Format
 
 case object NQuads extends Format
+
+case object Parquet extends Format
