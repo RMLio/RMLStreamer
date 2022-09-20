@@ -1,5 +1,6 @@
 package io.rml.framework.engine
 
+import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.{FunctionMappingTest, Main}
 import io.rml.framework.core.util.Util
 import io.rml.framework.util.TestUtil
@@ -11,13 +12,12 @@ import java.io.File
 class ParquetSupportTest extends FunctionMappingTest with Matchers {
 
   private def executeTest(mappingFile: String): Unit = {
+    NodeCache.clear()
     val testDir = Util.getFile(new File(mappingFile).getParent)
     val mappingFileAbs = new File(testDir, new File(mappingFile).getName)
 
     // read the mapping
     val formattedMapping = Util.readMappingFile(mappingFileAbs.getAbsolutePath)
-
-    print(s"Contains dataset maps? ${formattedMapping.containsDatasetTriplesMaps()}\n")
 
     // execute the mappping
     val result = Main.createDataSetFromFormattedMapping(formattedMapping).collect()

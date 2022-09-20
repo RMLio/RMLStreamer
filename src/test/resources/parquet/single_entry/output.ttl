@@ -1,2 +1,3 @@
-<http://example.com/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" .
-
+<http://example.com/0/Alpha> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://example.com/0/Alpha> <http://example.com/id> "0" .
+ <http://example.com/0/Alpha> <http://xmlns.com/foaf/0.1/name> "Alpha" .

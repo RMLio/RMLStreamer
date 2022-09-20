@@ -1,4 +1,12 @@
-<http://example.com/10/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" .
-<http://example.com/10/Venus> <http://example.com/id> "10" .
-<http://example.com/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://example.com/0/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" .
+<http://example.com/0/Venus> <http://example.com/id> "0" .
+<http://example.com/0/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+
+<http://example.com/1/Alpha> <http://xmlns.com/foaf/0.1/name> "Alpha" .
+<http://example.com/1/Alpha> <http://example.com/id> "1" .
+<http://example.com/1/Alpha> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+
+<http://example.com/2/Beta> <http://xmlns.com/foaf/0.1/name> "Beta" .
+<http://example.com/2/Beta> <http://example.com/id> "2" .
+<http://example.com/2/Beta> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
 
