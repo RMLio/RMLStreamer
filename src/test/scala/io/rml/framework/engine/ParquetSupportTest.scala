@@ -11,8 +11,8 @@ import java.io.File
 
 class ParquetSupportTest extends FunctionMappingTest with Matchers {
 
-  private def executeTest(mappingFile: String): Unit = {
-    NodeCache.clear()
+  private def executeTestDataSet(mappingFile: String): Unit = {
+    NodeCache.clear() // important for successive tests to pass....
     val testDir = Util.getFile(new File(mappingFile).getParent)
     val mappingFileAbs = new File(testDir, new File(mappingFile).getName)
 
@@ -35,15 +35,15 @@ class ParquetSupportTest extends FunctionMappingTest with Matchers {
     }
   }
 
-  test("Parquet empty") {
-    executeTest("parquet/empty_database/mapping.ttl")
+  test("Parquet empty DataSet") {
+    executeTestDataSet("parquet/dataset/empty_database/mapping.ttl")
   }
 
-  test("Parquet single entry") {
-    executeTest("parquet/single_entry/mapping.ttl")
+  test("Parquet single entry DataSet") {
+    executeTestDataSet("parquet/dataset/single_entry/mapping.ttl")
   }
 
-  test("Parquet multiple entries") {
-    executeTest("parquet/multiple_entries/mapping.ttl")
+  test("Parquet multiple entries DataSet") {
+    executeTestDataSet("parquet/dataset/multiple_entries/mapping.ttl")
   }
 }

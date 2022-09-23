@@ -95,56 +95,58 @@ object FileDataSet extends Logging {
   }
 
   /**
-   * Reads the parquet file into a DataSet. This is done by hand, since the Flink extension only creates a DataStream.
-   * This approach is not ideal, since we cannot leverage the Parquet file structure. Preferably, use the DataStream way.
-   * This method is ergo kept as a backup.
+   * Reads the parquet file into a DataSet.
    * @param path path to the file
    * @param env execution environment
-   * @return read DataSet
+   * @return the read DataSet
    */
   def createParquetDataSet(path: String)(implicit env: ExecutionEnvironment): FileDataSet = {
-    var items = List[Item]()
+//    var items = List[Item]()
+//
+//    // create a reader of the file and fetch information about the file
+//    val reader = ParquetFileReader.open(HadoopInputFile.fromPath(new Path(path), new Configuration()))
+//    val schema = reader.getFooter.getFileMetaData.getSchema
+//    val fields = schema.getFields.asScala
+//
+//    try {
+//      // read all of the pages
+//      var pages = reader.readNextRowGroup() // throws RuntimeException when file is empty
+//      while (pages != null) {
+//        // each page consists of a number of rows
+//        val rowCount = pages.getRowCount.toInt
+//        // Parquet is column based, we therefore read the columns and convert the different rows to Groups
+//        val columnIO = new ColumnIOFactory().getColumnIO(schema)
+//        val recordReader = columnIO.getRecordReader(pages, new GroupRecordConverter(schema))
+//
+//        // every group will be converted to an instance of CSVItem
+//        // this is done because of the way we parse the file: it becomes nothing more than a mapping
+//        //    from header field to field value.
+//        // This way, we can also leverage already existing operations instead of duplicating them.
+//        for (_ <- 0 until rowCount) {
+//          val group = recordReader.read()
+//          // construct the Map for the CSVItem
+//          val map = mutable.HashMap[String, String]()
+//          for (i <- fields.indices) {
+//            val value = group.getValueToString(i, 0)
+//            map.put(fields(i).getName, value)
+//          }
+//          items = items ++ List(new CSVItem(map.toMap, ""))
+//        }
+//
+//        pages = reader.readNextRowGroup()
+//      }
+//    } catch {
+//      case _: RuntimeException =>
+//        logWarning("Parsing an empty file!")
+//        // nothing more needs to be done, Flink can handle empty dataset
+//    }
+//    reader.close()
+//
+//    ParquetDataSet(env.fromCollection(items))
 
-    // create a reader of the file and fetch information about the file
-    val reader = ParquetFileReader.open(HadoopInputFile.fromPath(new Path(path), new Configuration()))
-    val schema = reader.getFooter.getFileMetaData.getSchema
-    val fields = schema.getFields.asScala
-
-    try {
-      // read all of the pages
-      var pages = reader.readNextRowGroup() // throws RuntimeException when file is empty
-      while (pages != null) {
-        // each page consists of a number of rows
-        val rowCount = pages.getRowCount.toInt
-        // Parquet is column based, we therefore read the columns and convert the different rows to Groups
-        val columnIO = new ColumnIOFactory().getColumnIO(schema)
-        val recordReader = columnIO.getRecordReader(pages, new GroupRecordConverter(schema))
-
-        // every group will be converted to an instance of CSVItem
-        // this is done because of the way we parse the file: it becomes nothing more than a CSV file
-        for (_ <- 0 until rowCount) {
-          val group = recordReader.read()
-          // construct the Map for the CSVItem
-          val map = mutable.HashMap[String, String]()
-          for (i <- fields.indices) {
-            val value = group.getValueToString(i, 0)
-            map.put(fields(i).getName, value)
-          }
-          items = items ++ List(new CSVItem(map.toMap, ""))
-        }
-
-        pages = reader.readNextRowGroup()
-      }
-    } catch {
-      case _: RuntimeException => {
-        logWarning("Parsing an empty file!")
-        // nothing more needs to be done, Flink can handle empty dataset
-      }
-
-    }
-    reader.close()
-
-    ParquetDataSet(env.fromCollection(items))
+    logDebug("Creating Parquet DataSet")
+    val dataset = env.createInput(new ParquetInputFormat(path))
+    ParquetDataSet(dataset)
   }
 
   /**
