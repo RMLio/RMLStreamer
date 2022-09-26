@@ -18,7 +18,6 @@ object Function extends Logging{
       pair => {
         pair._2.length match {
           case 0 => pair._1.uri -> None
-          case 1 => pair._1.uri -> pair._2.head
           case _ => pair._1.uri -> pair._2
         }
       }
@@ -29,8 +28,10 @@ object Function extends Logging{
       val arguments: Arguments = new Arguments();
       argResourcesGroupedByUri.foreach(argPair => {
         val parameterName: String = argPair._1.toString;
-        val parameterValue: String = argPair._2.asInstanceOf[SerializableRDFQuad].`object`.value.value
-        arguments.add(parameterName, parameterValue)
+        argPair._2.asInstanceOf[List[SerializableRDFQuad]].foreach(quad => {
+          val parameterValue: String = quad.`object`.value.value
+          arguments.add(parameterName, parameterValue)
+        })
       })
       // execute the funtion using the function agent
       val result = agent.execute(identifier, arguments)
@@ -40,6 +41,7 @@ object Function extends Logging{
       }
     } catch {
       case e: Throwable => {
+        e.printStackTrace()
         logError(s"The following exception occurred when invoking function ${identifier}: ${e.getMessage}." +
           s"\nThe result will be set to None.", e)
         None
