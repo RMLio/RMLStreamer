@@ -36,14 +36,14 @@ class ParquetSupportTest extends FunctionMappingTest with Matchers {
   }
 
   test("Parquet empty DataSet") {
-    executeTestDataSet("parquet/dataset/empty_database/mapping.ttl")
+    executeTestDataSet("parquet/empty_database/mapping.ttl")
   }
 
   test("Parquet single entry DataSet") {
-    executeTestDataSet("parquet/dataset/single_entry/mapping.ttl")
+    executeTestDataSet("parquet/single_entry/mapping.ttl")
   }
 
   test("Parquet multiple entries DataSet") {
-    executeTestDataSet("parquet/dataset/multiple_entries/mapping.ttl")
+    executeTestDataSet("parquet/multiple_entries/mapping.ttl")
   }
 }
