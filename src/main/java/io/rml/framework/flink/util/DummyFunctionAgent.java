@@ -3,6 +3,10 @@ package io.rml.framework.flink.util;
 import be.ugent.idlab.knows.functions.agent.Agent;
 import be.ugent.idlab.knows.functions.agent.Arguments;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.List;
+
 /**
  * This is a "dummy" function agent that just returns the value of the
  * first argument, or null of there are no arguments.
@@ -33,5 +37,35 @@ public class DummyFunctionAgent implements Agent {
 	@Override
 	public Object execute(String functionId, Arguments arguments) throws Exception {
 		return arguments.size() == 0 ? null : arguments.get(arguments.getArgumentNames().iterator().next());
+	}
+
+	@Override
+	public Object execute(String s, Arguments arguments, boolean b) throws Exception {
+		return execute(s, arguments, false);
+	}
+
+	@Override
+	public void executeToFile(String s, Arguments arguments, String s1) throws Exception {
+		// not used
+	}
+
+	@Override
+	public void executeToFile(String s, Arguments arguments, String s1, boolean b) throws Exception {
+		// not used
+	}
+
+	@Override
+	public void writeModel(String s) throws IOException {
+		// not used
+	}
+
+	@Override
+	public String loadFunction(Method method) {
+		return null;
+	}
+
+	@Override
+	public List<String> getParameterPredicates(String s) {
+		return null;
 	}
 }
