@@ -19,7 +19,24 @@ See [Basic commands](#basic-commands) (where you replace `$FLINK_BIN run <path t
 and [Complete RMLStreamer usage](#complete-rmlstreamer-usage) for
 examples, possible commands and options.
 
-### Moderately quick start (Docker)
+### Quick start (Docker - the fast way to test)
+
+This option builds RMLStreamer from source and puts that build in a Docker container ready to run.
+The main purpose is to have a one-time job image.
+
+```
+$ ./buildDocker.sh
+```
+
+If the build succeeds, you can invoke it as follows.
+If you go to the directory where your data and mappings are,
+you can run something like:
+
+```
+$ docker run -v $PWD:/data --rm rml-streamer:2.4.1-SNAPSHOT toFile -m /data/mapping.ttl -o /data/output.ttl 
+```
+
+### Moderately quick start (Docker - the recommended way)
 
 If you want to get the RMLStreamer up and running within 5 minutes using Docker, check out [docker/README.md](docker/README.md)
 
