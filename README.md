@@ -21,7 +21,20 @@ examples, possible commands and options.
 
 ### Quick start (Docker - the fast way to test)
 
-This option builds RMLStreamer from source and puts that build in a Docker container ready to run.
+This runs the stand-alone version of RMLStreamer in a Docker container.
+This is a good way to quickly test things or run RMLStreamer on a single machine, 
+but you don't have the features of a Flink cluster set-up (distributed, failover, checkpointing). 
+If you need those features, see [docker/README.md](docker/README.md). 
+   
+#### Example usage:
+
+```
+$ docker run -v $PWD:/data --rm rmlio/rmlstreamer toFile -m /data/mapping.ttl -o /data/output
+```
+
+#### Build your own image:
+
+This option builds RMLStreamer from source and puts that build into a Docker container ready to run.
 The main purpose is to have a one-time job image.
 
 ```
@@ -30,10 +43,10 @@ $ ./buildDocker.sh
 
 If the build succeeds, you can invoke it as follows.
 If you go to the directory where your data and mappings are,
-you can run something like:
+you can run something like (change tag to appropriate version):
 
 ```
-$ docker run -v $PWD:/data --rm rml-streamer:2.4.1-SNAPSHOT toFile -m /data/mapping.ttl -o /data/output.ttl 
+$ docker run -v $PWD:/data --rm rmlstreamer:2.4.1 toFile -m /data/mapping.ttl -o /data/output.ttl 
 ```
 
 ### Moderately quick start (Docker - the recommended way)

@@ -7,5 +7,5 @@ echo "Building stand-alone RMLStreamer version $version"
 mvn clean package -DskipTests -P 'stand-alone'
 
 ### 2. Build the docker container
-docker build --tag "rml-streamer:$version" . && \
-echo "Successfully built rml-streamer:$version !"
+docker build --tag "rmlstreamer:$version" . && \
+echo "Successfully built rmlstreamer:$version !"
