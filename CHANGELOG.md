@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.4.1] - 2022-09-03
+
+### Added
+* Possibility to run stand-alone, with Flink embedded.
+
+### Changed
+* Updated Flink from version 1.14.4 to 1.14.5
+* Updated Docker example
+
+### Fixed
+* Passing omitting optional parameter `function-descriptions` resulted in program crash.
+* Functions used on other levels than Predicate Map or Object Map caused RMLStreamer to crash
+* Functions returning `null` no longer cause RMLStreamer logging an error message.
+* Multiple values for same function argument (array) were not passed correctly to function
+
 ## [2.4.0] - 2022-05-30
 
 ### Changed
@@ -189,3 +204,4 @@ can be set with the program argument `--baseIRI`.
 [2.2.2]: https://github.com/RMLio/RMLStreamer/compare/v2.2.1...v2.2.2
 [2.3.0]: https://github.com/RMLio/RMLStreamer/compare/v2.2.2...v2.3.0
 [2.4.0]: https://github.com/RMLio/RMLStreamer/compare/v2.3.0...v2.4.0
+[2.4.1]: https://github.com/RMLio/RMLStreamer/compare/v2.4.0...v2.4.1

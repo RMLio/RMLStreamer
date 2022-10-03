@@ -27,8 +27,8 @@ package io.rml.framework.flink.source
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.item.csv.CSVHeader
+import io.rml.framework.core.model.csvw.CSVWFileSource
 import io.rml.framework.core.model.{LogicalSource, Uri}
-import io.rml.framework.core.util.DefaultCSVConfig
 import io.rml.framework.core.vocabulary.QueryVoc
 import org.apache.commons.csv.CSVFormat
 import org.apache.flink.api.scala._
@@ -51,21 +51,39 @@ object FileDataSet extends Logging {
 
   def apply(logicalSource: LogicalSource)(implicit env: ExecutionEnvironment): FileDataSet = {
     logicalSource.referenceFormulation match {
-      case Uri(QueryVoc.Class.CSV) => createCSVDataSet(logicalSource.source.uri.value)
+      case Uri(QueryVoc.Class.CSV) => createCSVDataSet(logicalSource)
       case Uri(QueryVoc.Class.XPATH) => createXMLWithXPathDataSet(logicalSource.source.uri.value, logicalSource.iterators.head)
       case Uri(QueryVoc.Class.JSONPATH) => createJSONWithJSONPathDataSet(logicalSource.source.uri.value, logicalSource.iterators.head)
     }
 
   }
 
-  def createCSVDataSet(path: String)(implicit env: ExecutionEnvironment): CSVDataSet = {
-    val config = DefaultCSVConfig()
-    val format =  CSVFormat.newFormat(config.delimiter)
-      .withQuote(config.quoteCharacter)
-      .withTrim()
-    val header = CSVHeader(Paths.get(path), format).getOrElse(Array.empty)
-    val dataset = env.createInput(new CSVInputFormat(path,format.withHeader(header:_*)))
-    CSVDataSet(dataset)
+  def createCSVDataSet(logicalSource: LogicalSource)(implicit env: ExecutionEnvironment): CSVDataSet = {
+    logDebug("Creating CSV data set")
+    var format = CSVFormat.Builder.create().setAllowMissingColumnNames(true)
+    val path = logicalSource.source.uri.value
+
+    logicalSource.source match {
+      case csvw: CSVWFileSource =>
+        format = csvw.dialect.setOptions(format)
+        //val header = CSVHeader(Paths.get(path), format.build()).getOrElse(Array.empty)
+        //val csvInputFormat = new CSVInputFormat(path)
+        //val dataset = env.createInput(new CSVWInputFormat(path, header, csvw.dialect))
+        //CSVDataSet(dataset)
+
+      case _ => // a regular CSV file
+        //val dataset = env.createInput(new CSVInputFormat(path))
+        //CSVDataSet(dataset)
+        //format.build()
+    }
+
+    val header = CSVHeader(Paths.get(path), format.build()).getOrElse(Array.empty)
+    format.setHeader(header:_*)
+
+    val csvInputFormat = new CSVInputFormat(path, format.build())
+    val dataSet = env.createInput(csvInputFormat)
+    CSVDataSet(dataSet)
+
   }
 
   /**

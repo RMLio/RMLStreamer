@@ -46,6 +46,7 @@ object RMLSVoc {
     val BROKER = namespace._2 + "broker";
     val GROUPID = namespace._2 + "groupId";
     val TOPIC = namespace._2 + "topic";
+    val OFFSET = namespace._2 + "offset";
     val KAFKAVERSION= namespace._2 + "kafkaVersion";
 
 

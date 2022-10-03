@@ -133,4 +133,8 @@ class SandboxTests extends FunSuite with Matchers  with FunctionMappingTest {
   test("sandbox/function_related/external_jar") {
     executeTest("sandbox/function_related/external_jar/mapping.ttl")
   }
+
+  test("sandbox/function_related/concatSequence") {
+    executeTest("sandbox/function_related/concatSequence/mapping.ttl")
+  }
 }

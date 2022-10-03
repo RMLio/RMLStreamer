@@ -1,7 +1,11 @@
+package io.rml.framework.core.model.csvw
+
+import io.rml.framework.core.model.{ExplicitNode, FileDataSource, Uri}
+
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2022 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -21,29 +25,12 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   * THE SOFTWARE.
   *
-  **/
-package io.rml.framework.core.model
+  * */
+case class CSVWFileSource(var path: String, dialect: CSVWDialect) extends FileDataSource {
 
-import java.util.{Objects, Properties}
+  // a hack to use FileDataSource's apply function to construct the full path
+  path = FileDataSource.apply(Uri(path)).uri.value
 
-case class KafkaStream(
-                       brokers: List[String],
-                       groupId: String,
-                       topic: String,
-                       offset: String) extends StreamDataSource {
-  def getProperties: Properties = {
-    val properties = new Properties()
-    val brokersCommaSeparated = brokers.reduce((a, b) => a + ", " + b)
-    properties.setProperty("bootstrap.servers", brokersCommaSeparated)
-    properties.setProperty("group.id", groupId)
-    properties.setProperty("auto.offset.reset", offset)
-    properties
-  }
-
-  override def uri: ExplicitNode = {
-
-    val totalHash = Objects.hash(groupId, topic, brokers.reduce((a,b)=> a + "," + b))
-
-    Uri(totalHash.toHexString)
-  }
+  override def uri: ExplicitNode = Uri(path)
 }
+

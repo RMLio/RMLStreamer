@@ -1,7 +1,9 @@
+package io.rml.framework.core.vocabulary
+
 /**
   * MIT License
   *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+  * Copyright (C) 2017 - 2022 RDF Mapping Language (RML)
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -21,29 +23,18 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   * THE SOFTWARE.
   *
-  **/
-package io.rml.framework.core.model
+  * */
+object CSVWVoc {
+  val namespace = ("csvw", "http://www.w3.org/ns/csvw#")
 
-import java.util.{Objects, Properties}
-
-case class KafkaStream(
-                       brokers: List[String],
-                       groupId: String,
-                       topic: String,
-                       offset: String) extends StreamDataSource {
-  def getProperties: Properties = {
-    val properties = new Properties()
-    val brokersCommaSeparated = brokers.reduce((a, b) => a + ", " + b)
-    properties.setProperty("bootstrap.servers", brokersCommaSeparated)
-    properties.setProperty("group.id", groupId)
-    properties.setProperty("auto.offset.reset", offset)
-    properties
+  object Property {
+    val TABLE = namespace._2 + "table"
+    val URL = namespace._2 + "url"
+    val DIALECT = namespace._2 + "dialect"
+    val DELIMITER = namespace._2 + "delimiter"
   }
 
-  override def uri: ExplicitNode = {
-
-    val totalHash = Objects.hash(groupId, topic, brokers.reduce((a,b)=> a + "," + b))
-
-    Uri(totalHash.toHexString)
+  object Class {
+    val TABLE = namespace._2 + "Table"
   }
 }

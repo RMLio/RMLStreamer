@@ -7,9 +7,53 @@ using [RML](http://rml.io/). The difference with other RML implementations is th
 
 Documentation regarding the use of (custom) functions can be found [here](documentation/README_Functions.md).
 
-### Quick start
+### Quick start (standalone)
+
+* Download `RMLStreamer-<version>-standalone.jar` from the [latest release](https://github.com/RMLio/RMLStreamer/releases/latest).
+* Run it as
+```
+$ java -jar RMLStreamer-<version>-standalone.jar <commands and options>
+```
+
+See [Basic commands](#basic-commands) (where you replace `$FLINK_BIN run <path to RMLStreamer jar>` with `java -jar RMLStreamer-<version>-standalone.jar`)
+and [Complete RMLStreamer usage](#complete-rmlstreamer-usage) for
+examples, possible commands and options.
+
+### Quick start (Docker - the fast way to test)
+
+This runs the stand-alone version of RMLStreamer in a Docker container.
+This is a good way to quickly test things or run RMLStreamer on a single machine, 
+but you don't have the features of a Flink cluster set-up (distributed, failover, checkpointing). 
+If you need those features, see [docker/README.md](docker/README.md). 
+   
+#### Example usage:
+
+```
+$ docker run -v $PWD:/data --rm rmlio/rmlstreamer toFile -m /data/mapping.ttl -o /data/output
+```
+
+#### Build your own image:
+
+This option builds RMLStreamer from source and puts that build into a Docker container ready to run.
+The main purpose is to have a one-time job image.
+
+```
+$ ./buildDocker.sh
+```
+
+If the build succeeds, you can invoke it as follows.
+If you go to the directory where your data and mappings are,
+you can run something like (change tag to appropriate version):
+
+```
+$ docker run -v $PWD:/data --rm rmlstreamer:2.4.1 toFile -m /data/mapping.ttl -o /data/output.ttl 
+```
+
+### Moderately quick start (Docker - the recommended way)
 
 If you want to get the RMLStreamer up and running within 5 minutes using Docker, check out [docker/README.md](docker/README.md)
+
+### Not so quick start (deploying on a cluster)
 
 If you want to deploy it yourself, read on.
 
@@ -19,9 +63,13 @@ If you want to develop, read [these instructions](documentation/README_DEVELOPME
 RMLStreamer runs its jobs on Flink clusters.
 More information on how to install Flink and getting started can be found [here](https://ci.apache.org/projects/flink/flink-docs-release-1.14/try-flink/local_installation.html).
 At least a local cluster must be running in order to start executing RML Mappings with RMLStreamer.
-Please note that this version works with Flink 1.14.4 with Scala 2.11 support, which can be downloaded [here](https://archive.apache.org/dist/flink/flink-1.14.4/flink-1.14.4-bin-scala_2.11.tgz).
+Please note that this version works with Flink 1.14.5 with Scala 2.11 support, which can be downloaded [here](https://archive.apache.org/dist/flink/flink-1.14.5/flink-1.14.5-bin-scala_2.11.tgz).
 
-### Building RMLStreamer
+### Grabbing RMLStreamer...
+
+Download `RMLStreamer-<version>.jar` from the [latest release](https://github.com/RMLio/RMLStreamer/releases/latest).
+
+### ... or building RMLStreamer
 
 In order to build a jar file that can be deployed on a Flink cluster, you need:
 - a Java JDK >= 11 and <= 13 (We develop and test on JDK 11)
@@ -44,6 +92,11 @@ $ mvn -DskipTests clean package
 so.
 
 The resulting `RMLStreamer-<version>.jar`, found in the `target` folder, can be deployed on a Flink cluster.
+
+**Note**: To build a *stand-alone* RMLStreamer jar, add `-P 'stand-alone'` to the build command, e.g.:
+```
+$ mvn clean package -DskipTests -P 'stand-alone'
+```
 
 ### Executing RML Mappings
 
@@ -273,3 +326,15 @@ logger.rmlstreamer.name = io.rml.framework
 logger.rmlstreamer.level = DEBUG
 
 ```
+
+### Benchmark 
+
+RMLStreamer is benchmarked with this [repo.](https://github.com/s-minoo/rmlstreamer-benchmark-rust)
+
+### References ([preprint](./paper/RMLStreamer_ISWC.pdf))
+[1] S. Min Oo, G. Haesendonck, B. De Meester, A. Dimou. RMLStreamer - an RDF stream
+generator from streaming heterogeneous data. The Semantic Web – ISWC 2022. Springer International Publishing, (2022)
+
+
+
+

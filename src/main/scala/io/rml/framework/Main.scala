@@ -99,7 +99,7 @@ object Main extends Logging {
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
     // TODO: check FunctionUtils.scala
-    FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv, config.functionDescriptionLocations.get: _*)
+    FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv, config.functionDescriptionLocations.getOrElse(Seq.empty): _*)
 
     if (config.checkpointInterval.isDefined) {
       senv.enableCheckpointing(config.checkpointInterval.get, CheckpointingMode.AT_LEAST_ONCE); // This is what Kafka supports ATM, see https://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/connectors/guarantees.html
@@ -610,8 +610,6 @@ object Main extends Logging {
           .flatMap(list => {
             list.seq
           })
-          // format every list of triples (as strings)
-          .reduce((a, b) => a + "\n" + b + "\n\n")
           .name("Convert triples to strings")
       })
 
@@ -708,8 +706,6 @@ object Main extends Logging {
           .flatMap(list => {
             list.seq
           })
-          // format every list of triples (as strings)
-          .reduce((a, b) => a + "\n" + b + "\n\n")
           .name("Convert triples to strings")
 
       } else { // if there are no join conditions a cross join will be executed
@@ -729,8 +725,6 @@ object Main extends Logging {
           .flatMap(list => {
             list.seq
           })
-          // format every list of triples (as strings)
-          .reduce((a, b) => a + "\n" + b + "\n\n")
           .name("Convert joined triples to strings")
       }
 
