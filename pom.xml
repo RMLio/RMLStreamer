@@ -387,7 +387,7 @@ SOFTWARE.
         <dependency>
             <groupId>com.github.FnOio</groupId>
             <artifactId>function-agent-java</artifactId>
-            <version>v0.2.0</version>
+            <version>v0.2.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.jena</groupId>

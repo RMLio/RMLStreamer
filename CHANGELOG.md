@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 * The stand-alone docker image was based on a x86 architecture only. Now others are supported as well.
 
+### Changed
+* Updated Function Agent to v0.2.1
+
 ## [2.4.1] - 2022-09-03
 
 ### Added
