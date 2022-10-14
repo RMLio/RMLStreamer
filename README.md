@@ -49,6 +49,23 @@ you can run something like (change tag to appropriate version):
 $ docker run -v $PWD:/data --rm rmlstreamer:2.4.1 toFile -m /data/mapping.ttl -o /data/output.ttl 
 ```
 
+There are more options for the script, if you want to use specific tags or push to Docker Hub:
+```
+$ ./buildDocker.sh -h
+
+Build and push Docker images for RMLStreamer
+
+buildDocker.sh [-h]
+buildDocker.sh [-a][-n][-p][-u <username>][-v <version>]
+options:
+-a   Build for platforms linux/arm64 and linux/amd64. Default: perform a standard 'docker build'
+-h   Print this help and exit.
+-n   Do NOT (re)build RMLStreamer before building the Docker image. This is risky because the Docker build needs a stand-alone version of RMLStreamer.
+-u <username>  Add an username name to the tag name as on Docker Hub, like <username>/rmlstreamer:<version>.
+-p   Push to Docker Hub repo. You must be logged in for this to succeed.
+-v <version>       Override the version in the tag name, like <username>/rmlstreamer:<version>. If not given, use the current version found in pom.xml.
+```
+
 ### Moderately quick start (Docker - the recommended way)
 
 If you want to get the RMLStreamer up and running within 5 minutes using Docker, check out [docker/README.md](docker/README.md)
