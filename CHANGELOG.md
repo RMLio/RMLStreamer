@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* Updated Function Agent to v1.1.0
+* Updated GREL Functions to v0.9.1
+* Updated IDLab Functions to v0.2.0
+
 ## [2.4.2] - 2022-10-10
 
 ### Fixed

@@ -47,4 +47,10 @@ abstract class Processor[T<:Item, IN, A <: Agent](engine: StatementEngine[T, A])
   override def open(parameters: Configuration): Unit = {
     functionAgent = Some(FunctionsFlinkUtil.initFunctionAgentForProcessor(getRuntimeContext.getDistributedCache));
   }
+
+  override def close(): Unit = {
+    if (functionAgent.isDefined) {
+      functionAgent.get.close();
+    }
+  }
 }

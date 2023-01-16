@@ -41,31 +41,11 @@ public class DummyFunctionAgent implements Agent {
 
 	@Override
 	public Object execute(String s, Arguments arguments, boolean b) throws Exception {
-		return execute(s, arguments, false);
+		return execute(s, arguments);
 	}
 
 	@Override
-	public void executeToFile(String s, Arguments arguments, String s1) throws Exception {
-		// not used
-	}
-
-	@Override
-	public void executeToFile(String s, Arguments arguments, String s1, boolean b) throws Exception {
-		// not used
-	}
-
-	@Override
-	public void writeModel(String s) throws IOException {
-		// not used
-	}
-
-	@Override
-	public String loadFunction(Method method) {
-		return null;
-	}
-
-	@Override
-	public List<String> getParameterPredicates(String s) {
-		return null;
+	public void close() throws Exception {
+		// nothing to close here
 	}
 }
