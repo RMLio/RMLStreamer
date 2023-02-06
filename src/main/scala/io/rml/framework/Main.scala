@@ -346,7 +346,7 @@ object Main extends Logging {
       var logicalSource = entry._2.head.logicalSource
       val triplesMaps = entry._2
       val iterators = triplesMaps.flatMap(tm => tm.logicalSource.iterators).distinct
-      logicalSource = LogicalSource(logicalSource.referenceFormulation, iterators, logicalSource.source)
+      //logicalSource = LogicalSource(logicalSource.referenceFormulation, iterators, logicalSource.source)
       // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
       Source(logicalSource) -> {
         logInfo(entry._2.size + " Triple Maps are found.")

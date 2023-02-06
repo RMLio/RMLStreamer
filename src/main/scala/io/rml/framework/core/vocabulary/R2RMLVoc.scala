@@ -52,7 +52,9 @@ object R2RMLVoc {
     val GRAPHMAP = namespace._2 + "graphMap";
     val DATATYPE = namespace._2 + "datatype";
     val LANGUAGE = namespace._2 + "language";
-    val DEFAULTGRAPH = namespace._2 + "defaultGraph"; 
+    val DEFAULTGRAPH = namespace._2 + "defaultGraph";
+    val TABLE_NAME = namespace._2 + "tableName"
+    val SQL_VERSION = namespace._2 + "sqlVersion"
   }
   
   object Class {

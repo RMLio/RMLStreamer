@@ -26,6 +26,7 @@ package io.rml.framework.flink.source
 
 import io.rml.framework.core.model.{FileDataSource, LogicalSource, StreamDataSource, Uri}
 import io.rml.framework.core.vocabulary.QueryVoc
+import io.rml.framework.shared.RMLException
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 
@@ -51,9 +52,10 @@ object Source {
         logicalSource.source match {
           case source: StreamDataSource =>
             logicalSource.referenceFormulation match {
-              case Uri(QueryVoc.Class.CSV) => CSVStream(source)
+              case Uri(QueryVoc.Class.CSV) => CSVStream(logicalSource)
               case Uri(QueryVoc.Class.XPATH) => XMLStream(source, logicalSource.iterators.distinct)
               case Uri(QueryVoc.Class.JSONPATH) => JSONStream(source, logicalSource.iterators.distinct)
+              case _ => throw new RMLException(s"Reference formulation of the resource unknown. Provided formulation: ${logicalSource.referenceFormulation}")
             }
         }
       }

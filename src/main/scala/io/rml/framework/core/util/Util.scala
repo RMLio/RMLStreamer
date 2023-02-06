@@ -29,6 +29,7 @@ import io.rml.framework.core.extractors.MappingReader
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.model.rdf.SerializableRDFQuad
 import io.rml.framework.core.model.{FormattedRMLMapping, Literal, Node, RMLMapping}
+import io.rml.framework.core.vocabulary
 import io.rml.framework.core.vocabulary.QueryVoc
 import io.rml.framework.shared.ReadException
 
