@@ -163,7 +163,7 @@ object CSVStream extends Logging {
     CSVStream(stream)
   }
 
-  private def accessFromDBStream(dbStream: DatabaseLogicalSource): Access = {
+  private def accessFromDBStream(dbStream: DatabaseLogicalSource): RDBAccess = {
     val source = dbStream.source
     new RDBAccess(source.jdbcURL, source.dbType, source.username, source.password, dbStream.query, QueryVoc.Class.CSV)
   }

@@ -31,8 +31,9 @@ import io.rml.framework.core.model.db.DatabaseLogicalSource
 import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.model._
 import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
-import io.rml.framework.core.vocabulary.{R2RMLVoc, RMLVoc}
+import io.rml.framework.core.vocabulary.{QueryVoc, R2RMLVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
+import org.apache.jena.rdf.model.RDFNode
 
 /**
  * Extractor for extracting a logical source from a resource.
@@ -97,11 +98,17 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
   private def extractDatabase(resource: RDFResource, dbSource: DatabaseSource): LogicalSource = {
     logDebug("Extracting database")
 
-    val version = resource.listProperties(R2RMLVoc.Property.SQL_VERSION).head
 
+    var version = ""
+    val versionProps = resource.listProperties(R2RMLVoc.Property.SQL_VERSION)
+
+    if (versionProps.isEmpty) {
+      version = "http://www.w3.org/ns/r2rml#SQL2008"
+    } else {
+      version = versionProps.head.value
+    }
 
     val tableName = resource.listProperties(R2RMLVoc.Property.TABLE_NAME)
-
     val query = resource.listProperties(RMLVoc.Property.QUERY)
     var queryValue = ""
 
@@ -116,7 +123,7 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
       queryValue = query.head.value
     }
 
-    DatabaseLogicalSource(dbSource, version.value, queryValue)
+    DatabaseLogicalSource(dbSource, version, queryValue)
   }
 
   /**
