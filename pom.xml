@@ -43,7 +43,7 @@ SOFTWARE.
         <kafka.version>2.4.1</kafka.version>
 
         <scala.binary.version>2.11</scala.binary.version>
-        <java.version>11</java.version>
+        <maven.compiler.release>11</maven.compiler.release>
 
         <!-- license properties -->
         <project.inceptionYear>2018</project.inceptionYear>
