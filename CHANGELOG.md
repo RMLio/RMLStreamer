@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Updated Function Agent to v1.1.0
 * Updated GREL Functions to v0.9.1
 * Updated IDLab Functions to v0.2.0
-* Use `<maven.compiler.release>` property in `pom.xml` to set Java version to 11. 
+* Use `<maven.compiler.release>` property in `pom.xml` to set Java version to 11.
+* Allow a relative path (to the working dir) as output directory when writing to file.
 
 ## [2.4.2] - 2022-10-10
 

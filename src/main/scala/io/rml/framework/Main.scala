@@ -121,7 +121,8 @@ object Main extends Logging {
 
       // write dataset to file, depending on the given parameters
       if (config.outputSink.equals(OutputSinkOption.File)) {
-        dataset.writeAsText(s"file://${config.outputPath.get}", WriteMode.OVERWRITE)
+        val outputFile = Util.getFile(config.outputPath.get)
+        dataset.writeAsText(outputFile.getCanonicalPath.toString, WriteMode.OVERWRITE)
           .name("Write to output")
       }
 
