@@ -41,7 +41,7 @@ SOFTWARE.
         <log4j.version>2.17.0</log4j.version>
         <jena.version>4.3.1</jena.version>
         <kafka.version>2.4.1</kafka.version>
-
+        <junit.version>5.9.1</junit.version>
         <scala.binary.version>2.11</scala.binary.version>
         <maven.compiler.release>11</maven.compiler.release>
 
@@ -404,6 +404,19 @@ SOFTWARE.
             <groupId>com.github.fnoio</groupId>
             <artifactId>idlab-functions-java</artifactId>
             <version>v0.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
