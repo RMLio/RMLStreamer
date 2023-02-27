@@ -30,4 +30,6 @@ case class JoinedItem(child: Item, parent: Item) extends  Item {
   }
 
   override def tag: String = ""
+
+  override def getDataTypes: Map[String, String] = Map.empty
 }

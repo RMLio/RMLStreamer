@@ -46,10 +46,10 @@ abstract class TermMapGeneratorAssembler extends Logging {
       constantGenerator(termMap)
     } else if (termMap.hasTemplate) {
       templateGenerator(termMap)
-    } else if (termMap.hasReference) {
-      referenceGenerator(termMap)
     } else if (termMap.hasTermType && termMap.termType.get == Uri(R2RMLVoc.Class.BLANKNODE)) {
       blankNodeGenerator()
+    } else if (termMap.hasReference) {
+      referenceGenerator(termMap)
     } else {
       if (isWarnEnabled) logWarning(termMap.toString + ": no constant, template or reference present.")
       //(item: Item, functionAgent: Agent) => None
@@ -99,5 +99,4 @@ abstract class TermMapGeneratorAssembler extends Logging {
       case R2RMLVoc.Class.LITERAL => TermMapGenerators.referenceLiteralGenerator(termMap)
     }
   }
-
 }

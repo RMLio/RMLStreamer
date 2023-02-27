@@ -80,6 +80,7 @@ class XMLItem(xml: Document, namespaces: Map[String, String], val tag: String) e
 
   override def toString: String = XMLItem.documentToString(xml)
 
+  override def getDataTypes: Map[String, String] = Map.empty
 }
 
 object XMLItem extends Logging {

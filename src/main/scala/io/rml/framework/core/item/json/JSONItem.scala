@@ -66,6 +66,8 @@ class JSONItem(map: java.util.Map[String, Object], val tag: String) extends Item
         None
     }
   }
+
+  override def getDataTypes: Map[String, String] = Map.empty
 }
 
 object JSONItem extends Logging {

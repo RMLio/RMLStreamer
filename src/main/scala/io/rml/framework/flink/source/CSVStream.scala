@@ -125,7 +125,7 @@ object CSVStream extends Logging {
 
     val datastream = senv.addSource(new RDBSourceFunction(access))
       .map(source => {
-        List(new CSVItem(source.getData.asScala.toMap, ""))
+        List(new CSVItem(source.getData.asScala.toMap, "", source.getDataTypes.asScala.toMap))
       }).asInstanceOf[DataStream[Iterable[Item]]]
 
     CSVStream(datastream)
@@ -165,6 +165,6 @@ object CSVStream extends Logging {
 
   private def accessFromDBStream(dbStream: DatabaseLogicalSource): RDBAccess = {
     val source = dbStream.source
-    new RDBAccess(source.jdbcURL, source.dbType, source.username, source.password, dbStream.query, QueryVoc.Class.CSV)
+    new RDBAccess(source.jdbcURL, source.dbType, source.username, source.password, dbStream.query.replace("\\\"", "\""), QueryVoc.Class.CSV)
   }
 }

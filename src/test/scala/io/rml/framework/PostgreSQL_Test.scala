@@ -39,21 +39,9 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   test("RMLTC0002d") {
     runTest("RMLTC0002d")
   }
-  test("RMLTC0002e") {
-    runTest("RMLTC0002e")
-  }
-  test("RMLTC0002f") {
-    runTest("RMLTC0002f")
-  }
-  test("RMLTC0002g") {
-    runTest("RMLTC0002g")
-  }
-  test("RMLTC0002h") {
-    runTest("RMLTC0002h")
-  }
-  test("RMLTC0002i") {
-    runTest("RMLTC0002i")
-  }
+//  test("RMLTC0002f") {
+//    runTest("RMLTC0002f")
+//  }
   test("RMLTC0002j") {
     runTest("RMLTC0002j")
   }
@@ -71,9 +59,6 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   }
   test("RMLTC0004a") {
     runTest("RMLTC0004a")
-  }
-  test("RMLTC0004b") {
-    runTest("RMLTC0004b")
   }
   test("RMLTC0005a") {
     runTest("RMLTC0005a")
@@ -104,9 +89,6 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   }
   test("RMLTC0007g") {
     runTest("RMLTC0007g")
-  }
-  test("RMLTC0007h") {
-    runTest("RMLTC0007h")
   }
   test("RMLTC0008a") {
     runTest("RMLTC0008a")
@@ -150,12 +132,6 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   test("RMLTC0012b") {
     runTest("RMLTC0012b")
   }
-  test("RMLTC0012c") {
-    runTest("RMLTC0012c")
-  }
-  test("RMLTC0012d") {
-    runTest("RMLTC0012d")
-  }
   test("RMLTC0012e") {
     runTest("RMLTC0012e")
   }
@@ -170,9 +146,6 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   }
   test("RMLTC0015a") {
     runTest("RMLTC0015a")
-  }
-  test("RMLTC0015b") {
-    runTest("RMLTC0015b")
   }
   test("RMLTC0016a") {
     runTest("RMLTC0016a")

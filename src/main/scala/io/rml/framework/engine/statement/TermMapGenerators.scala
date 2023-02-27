@@ -33,6 +33,8 @@ import io.rml.framework.core.model._
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.Engine
 
+import scala.Option.option2Iterable
+
 /**
   *
   */
@@ -97,10 +99,20 @@ object TermMapGenerators {
     itemAgentTuple => {
       for {
         iter <- Engine.processReference(termMap.reference.get, itemAgentTuple._1)
-
       } yield for {
         value <- iter
-        lit = Literal(value, termMap.datatype, termMap.language)
+        // TODO: bug here!
+        // If datatype is dynamically loaded (such as from a DB), then it is assumed to be a string
+        item = itemAgentTuple._1
+        reference = termMap.reference.get.value
+        potential = item.getDataTypes.get(reference)
+
+
+        lit =
+          if (potential.isDefined)
+            Literal(value, Some(Uri(potential.get)), termMap.language)
+          else
+            Literal(value, termMap.datatype, termMap.language)
 
       } yield lit
     }

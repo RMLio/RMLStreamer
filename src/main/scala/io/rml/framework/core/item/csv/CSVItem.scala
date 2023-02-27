@@ -36,7 +36,7 @@ import scala.collection.JavaConverters._
  *
  * @param record
  */
-class CSVItem(record: Map[String, String], val tag: String) extends Item {
+class CSVItem(record: Map[String, String], val tag: String, dataTypes: Map[String, String]) extends Item {
 
   /**
    *
@@ -57,6 +57,7 @@ class CSVItem(record: Map[String, String], val tag: String) extends Item {
     }
   }
 
+  override def getDataTypes: Map[String, String] = dataTypes
 }
 
 
@@ -65,7 +66,7 @@ object CSVItem extends Logging {
 
   def apply(record: CSVRecord): CSVItem = {
     val recordMap = record.toMap
-    new CSVItem(recordMap.asScala.toMap, "")
+    new CSVItem(recordMap.asScala.toMap, "", Map.empty)
   }
 
   def fromDataBatch(dataBatch: String, csvFormat: CSVFormat): List[Item] = {
@@ -74,7 +75,7 @@ object CSVItem extends Logging {
     val sanitizedData = dataBatch.replaceAll("^\\s+", "").replace("\n\n", "")
     val parser = csvFormat.parse(new StringReader(sanitizedData))
     val result: List[Item] = parser.getRecords.asScala.toList.map(record =>
-      new CSVItem(record.toMap.asScala.toMap, "")
+      new CSVItem(record.toMap.asScala.toMap, "", Map.empty)
     )
     result
   }

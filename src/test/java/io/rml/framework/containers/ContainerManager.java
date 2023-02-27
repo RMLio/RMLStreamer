@@ -28,10 +28,12 @@ public class ContainerManager {
         return container;
     }
 
-    public static void executeScript(String scriptPath, String dbURL, String username, String password) throws FileNotFoundException, SQLException {
+    public static void executeScript(String scriptPath, String dbURL, String username, String password) throws SQLException {
         try (Connection conn = DriverManager.getConnection(dbURL, username, password)) {
             ScriptRunner runner = new ScriptRunner(conn);
             runner.runScript(new FileReader("src/test/resources/" + scriptPath));
+        } catch (FileNotFoundException ignored) { // if the file is absent, it means that no DB setup is required
+
         }
     }
 }

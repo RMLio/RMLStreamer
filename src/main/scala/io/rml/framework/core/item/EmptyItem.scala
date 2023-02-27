@@ -28,4 +28,6 @@ class EmptyItem() extends Item {
   override def refer(reference: String): Option[List[String]] = None
 
   override def tag = ""
+
+  override def getDataTypes: Map[String, String] = Map.empty
 }
