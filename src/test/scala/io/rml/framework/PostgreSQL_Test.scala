@@ -1,5 +1,6 @@
 package io.rml.framework
 
+import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.containers.ContainerManager
 import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.model.DatabaseSource
@@ -189,6 +190,7 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
 
   def doMapping(mappingPath: String, container: JdbcDatabaseContainer[_]): Unit = {
     NodeCache.clear()
+    RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
 
     val env = ExecutionEnvironment.getExecutionEnvironment
     val senv = StreamExecutionEnvironment.getExecutionEnvironment

@@ -1,27 +1,27 @@
 /**
-  * MIT License
-  *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a copy
-  * of this software and associated documentation files (the "Software"), to deal
-  * in the Software without restriction, including without limitation the rights
-  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  * copies of the Software, and to permit persons to whom the Software is
-  * furnished to do so, subject to the following conditions:
-  *
-  * The above copyright notice and this permission notice shall be included in
-  * all copies or substantial portions of the Software.
-  *
-  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-  * THE SOFTWARE.
-  *
-  **/
+ * MIT License
+ *
+ * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * */
 
 package io.rml.framework.engine
 
@@ -35,8 +35,8 @@ import java.util.regex.Pattern
 import scala.collection.mutable
 
 /**
-  * Created by wmaroy on 22.08.17.
-  */
+ * Created by wmaroy on 22.08.17.
+ */
 trait Engine[T] extends Serializable {
 
   def process(item: T, functionAgent: Agent): List[SerializableRDFQuad]
@@ -47,12 +47,12 @@ object Engine extends Logging {
 
 
   /**
-    * Retrieve reference included in a template from the given item.
-    *
-    * @param template
-    * @param item
-    * @return
-    */
+   * Retrieve reference included in a template from the given item.
+   *
+   * @param template
+   * @param item
+   * @return
+   */
   def processTemplate(template: Literal, item: Item, encode: Boolean = false): Option[Iterable[String]] = {
     val regex = "(\\{[^\\{\\}]*\\})".r
     val replaced = template.value.replaceAll("\\$", "#")
@@ -63,7 +63,11 @@ object Engine extends Logging {
     val tuples = for {
       m <- matches
       sanitizedRef = removeBrackets(m.toString()).replaceAll("#", "\\$")
-      optReferred = if (encode) item.refer(sanitizedRef).map(lString => lString.map(el => Uri.encode(el))) else item.refer(sanitizedRef)
+      // make reference IRI-safe
+      optReferred = if (encode)
+        item.refer(sanitizedRef).map(lString => lString.map(el => Uri.encode(el)))
+      else
+        item.refer(sanitizedRef)
       quotedSanitizedRef = Pattern.quote(sanitizedRef)
       if optReferred.isDefined
     } yield (optReferred, quotedSanitizedRef)
@@ -91,8 +95,6 @@ object Engine extends Logging {
 
               count += 1
             }
-
-
           }
         })
       }
@@ -101,43 +103,40 @@ object Engine extends Logging {
       // any escaped curly bracket can be unescaped.
       // e.g. \{ -> {
       Some(result.map(unescapeCurlyBrackets))
-
     }
   }
 
   /**
-    * Retrieve the value of a reference from a given item.
-    *
-    * @param reference
-    * @param item
-    * @return
-    */
-  def processReference(reference: Literal, item: Item): Option[List[String]] = {
-    item.refer(reference.value)
-  }
-
-  /**
-    * Private util method for removing brackets from a template string.
-    *
-    * @param s
-    * @return
-    */
-  private def removeBrackets(s: String): String
-
-  = {
+   * Private util method for removing brackets from a template string.
+   *
+   * @param s
+   * @return
+   */
+  private def removeBrackets(s: String): String = {
     s.replace("{", "")
       .replace("}", "")
   }
 
   /**
    * Unescapes curly brackets
+   *
    * @param s
    * @return
    */
-  private def unescapeCurlyBrackets(s: String) : String = {
+  private def unescapeCurlyBrackets(s: String): String = {
     s
       .replaceAllLiterally("""\{""", "{")
       .replaceAllLiterally("""\}""", "}")
   }
 
+  /**
+   * Retrieve the value of a reference from a given item.
+   *
+   * @param reference
+   * @param item
+   * @return
+   */
+  def processReference(reference: Literal, item: Item): Option[List[String]] = {
+    item.refer(reference.value)
+  }
 }

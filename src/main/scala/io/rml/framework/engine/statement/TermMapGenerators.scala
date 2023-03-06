@@ -30,7 +30,6 @@ import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.core.function.FunctionUtils
 import io.rml.framework.core.item.Item
-import io.rml.framework.core.model.Literal.clean
 import io.rml.framework.core.model._
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.Engine
@@ -122,7 +121,6 @@ object TermMapGenerators {
 
   def referenceUriGenerator(termMap: TermMap): ((Item, Agent)) => Option[Iterable[Uri]] = {
     // return a function that processes a reference
-
     itenAgentTuple => {
       for {
         iter <- Engine.processReference(termMap.reference.get, itenAgentTuple._1)
@@ -152,5 +150,4 @@ object TermMapGenerators {
       }
     }
   }
-
 }
