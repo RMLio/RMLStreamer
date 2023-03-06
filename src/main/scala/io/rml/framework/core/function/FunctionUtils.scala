@@ -13,7 +13,7 @@ object FunctionUtils extends Logging {
   def typeCastDataType(output: Entity, dataType: Option[Uri]): Option[Entity] = {
     if(dataType.isDefined){
       val typeClass = getTypeClass(dataType.get)
-      val castedValue = Parameter(typeClass, output.toString).getValue
+      val castedValue = Parameter(typeClass, output.value).getValue
 
       castedValue.map(e => Literal(e.toString))
     }else{

@@ -197,7 +197,10 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
     // read mapping file
     val mapping = Util.readMappingFile(mappingPath)
 
-    mapping.triplesMaps.head.logicalSource.source.asInstanceOf[DatabaseSource].setURL(container.getJdbcUrl)
+    // set the correct URL for the container
+    for (map <- mapping.triplesMaps) {
+      map.logicalSource.source.asInstanceOf[DatabaseSource].setURL(container.getJdbcUrl)
+    }
     // create DataStream from the mapping
     val result = Main.createDataStreamFromFormattedMapping(mapping)(env, senv, postProcessor).executeAndCollect().toList
 

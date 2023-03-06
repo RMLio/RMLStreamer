@@ -2,7 +2,9 @@ package io.rml.framework.core.function.model
 
 import io.rml.framework.core.model.{Node, Uri}
 
+import java.text.{DecimalFormat, NumberFormat}
 import java.time.Instant
+import java.util.Locale
 import scala.util.parsing.json.JSON
 
 /**
@@ -64,7 +66,7 @@ abstract class Parameter extends Node {
         case BooleanString |"boolean" => Some(paraValue)
         case ScalaString | "java.lang.String" => Some(paraValue.toString)
         case IntegerString | "int" => Some(paraValue.toString.toInt)
-        case DoubleString | "double" => Some(paraValue.toString.toDouble)
+        case DoubleString | "double" => Some(formatToScientific(paraValue.toString.toDouble))
         case LongString | "long" => Some(paraValue.toString.toLong)
         case InstantString => Some(Instant.parse(paraValue.toString))
         case ObjectString|"java.lang.Object" => Some(paraValue)
@@ -89,6 +91,31 @@ abstract class Parameter extends Node {
 
       }
     }
+  }
+
+  /**
+   * Formats the decimal to scientific notation
+   * Taken from RMLMapper: be.ugent.rml.Utils
+   * @param double double to be cast
+   * @return scientific notation of the double
+   */
+  private def formatToScientific(double: Double): String = {
+    val input = BigDecimal.valueOf(double).bigDecimal.stripTrailingZeros()
+    val precision =
+      if (input.scale() < 0)
+        input.precision() - input.scale()
+      else
+        input.precision()
+
+    val sb = new StringBuilder("0.0")
+    for (_ <- 2 to precision) {
+      sb.append("#")
+    }
+    sb.append("E0")
+    val decimalFormat = NumberFormat.getNumberInstance(Locale.US).asInstanceOf[DecimalFormat]
+    decimalFormat.applyPattern(sb.toString())
+
+    decimalFormat.format(double)
   }
 
 

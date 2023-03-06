@@ -1,43 +1,43 @@
 /**
-  * MIT License
-  *
-  * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a copy
-  * of this software and associated documentation files (the "Software"), to deal
-  * in the Software without restriction, including without limitation the rights
-  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  * copies of the Software, and to permit persons to whom the Software is
-  * furnished to do so, subject to the following conditions:
-  *
-  * The above copyright notice and this permission notice shall be included in
-  * all copies or substantial portions of the Software.
-  *
-  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-  * THE SOFTWARE.
-  *
-  **/
+ * MIT License
+ *
+ * Copyright (C) 2017 - 2020 RDF Mapping Language (RML)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * */
 
 package io.rml.framework.engine.statement
 
 
 import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.function.FunctionUtils
 import io.rml.framework.core.item.Item
+import io.rml.framework.core.model.Literal.clean
 import io.rml.framework.core.model._
 import io.rml.framework.core.util.Util
 import io.rml.framework.engine.Engine
 
-import scala.Option.option2Iterable
-
 /**
-  *
-  */
+ *
+ */
 object TermMapGenerators {
 
   def constantUriGenerator(constant: Entity): ((Item, Agent)) => Option[Iterable[Uri]] = {
@@ -71,7 +71,7 @@ object TermMapGenerators {
 
   def templateLiteralGenerator(termMap: TermMap): ((Item, Agent)) => Option[Iterable[Literal]] = {
     // return a function that processes the template
-      itemAgentTuple => {
+    itemAgentTuple => {
       for {
         iter <- Engine.processTemplate(termMap.template.get, itemAgentTuple._1)
       } yield for {
@@ -101,16 +101,18 @@ object TermMapGenerators {
         iter <- Engine.processReference(termMap.reference.get, itemAgentTuple._1)
       } yield for {
         value <- iter
-        // TODO: bug here!
-        // If datatype is dynamically loaded (such as from a DB), then it is assumed to be a string
         item = itemAgentTuple._1
         reference = termMap.reference.get.value
-        potential = item.getDataTypes.get(reference)
-
+        potentialType = item.getDataTypes.get(reference)
 
         lit =
-          if (potential.isDefined)
-            Literal(value, Some(Uri(potential.get)), termMap.language)
+          if (potentialType.isDefined) {
+            val `type` = Uri(potentialType.get)
+            // cast the value to correct notation
+            // little hack: wrap the value in Uri to allow usage in the typecasting code
+            val l = FunctionUtils.typeCastDataType(Uri(value), Some(`type`))
+            Literal(l.get.value, Some(`type`), termMap.language)
+          }
           else
             Literal(value, termMap.datatype, termMap.language)
 
@@ -133,7 +135,7 @@ object TermMapGenerators {
     }
   }
 
-  private def processIRI(origIri: String): Iterable[String] =  {
+  private def processIRI(origIri: String): Iterable[String] = {
     if (Util.isValidAbsoluteUri(origIri)) {
       List(origIri)
     } else {
