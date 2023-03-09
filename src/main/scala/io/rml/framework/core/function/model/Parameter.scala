@@ -4,7 +4,7 @@ import io.rml.framework.core.model.{Node, Uri}
 
 import java.text.{DecimalFormat, NumberFormat}
 import java.time.Instant
-import java.util.Locale
+import java.util.{Date, Locale}
 import scala.util.parsing.json.JSON
 
 /**
@@ -58,21 +58,22 @@ abstract class Parameter extends Node {
     val BooleanString = classOf[Boolean].getName
     val LongString = classOf[Long].getName
     val InstantString = classOf[Instant].getName
+    val DateString = classOf[Date].getName
 
-    if(paramType== null)
+    if (paramType == null)
       throw new NullPointerException("parameter type is null..")
-    else{
+    else {
       paramType.getName match {
-        case BooleanString |"boolean" => Some(paraValue)
+        case BooleanString | "boolean" => Some(formatBoolean(paraValue.toString))
         case ScalaString | "java.lang.String" => Some(paraValue.toString)
         case IntegerString | "int" => Some(paraValue.toString.toInt)
         case DoubleString | "double" => Some(formatToScientific(paraValue.toString.toDouble))
         case LongString | "long" => Some(paraValue.toString.toLong)
-        case InstantString => Some(Instant.parse(paraValue.toString))
-        case ObjectString|"java.lang.Object" => Some(paraValue)
-
+        case InstantString => Some(paraValue.toString.replace(" ", "T"))
+//        case InstantString => Some(Instant.parse(paraValue.toString))
+        case ObjectString | "java.lang.Object" => Some(paraValue)
+        case DateString => Some(paraValue)
         case ListString | ArrayString | "java.util.List" =>
-
           val parsedListEither = JSON.parseFull(paraValue.toString).toRight("Value can't be parsed as List")
 
           parsedListEither match {
@@ -85,7 +86,7 @@ abstract class Parameter extends Node {
               }
 
 
-        case Left(exMessage) => throw new IllegalArgumentException(exMessage)
+            case Left(exMessage) => throw new IllegalArgumentException(exMessage)
           }
         case _ => throw new Error(s"Couldn't derive type: ${paramType.getName}")
 
@@ -96,6 +97,7 @@ abstract class Parameter extends Node {
   /**
    * Formats the decimal to scientific notation
    * Taken from RMLMapper: be.ugent.rml.Utils
+   *
    * @param double double to be cast
    * @return scientific notation of the double
    */
@@ -118,8 +120,12 @@ abstract class Parameter extends Node {
     decimalFormat.format(double)
   }
 
-
-
+  private def formatBoolean(bool: String): String = {
+    bool match {
+      case "t" | "true" | "TRUE" | "1" => "true"
+      case _ => "false"
+    }
+  }
 
 
 }
@@ -142,8 +148,8 @@ object Parameter {
     DefinedParameter(paramType, paramUri, Some(paraValue), position)
   }
 
-  def apply(paramType:Class[_], paraValue:String): Parameter ={
-    DefinedParameter(paramType, Uri(""),Some(paraValue), 0)
+  def apply(paramType: Class[_], paraValue: String): Parameter = {
+    DefinedParameter(paramType, Uri(""), Some(paraValue), 0)
   }
 
 
