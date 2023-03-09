@@ -29,16 +29,16 @@ import com.ximpleware.extended.{AutoPilotHuge, VTDGenHuge, XMLBuffer}
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
-import io.rml.framework.core.util.XMLNamespace
 import io.rml.framework.core.vocabulary.QueryVoc
+import io.rml.framework.util.XMLNamespace
 import org.apache.commons.io.IOUtils
 import org.w3c.dom.{Document, NodeList}
 
-import java.io.{ByteArrayInputStream, InputStreamReader}
 import java.nio.charset.StandardCharsets
 import javax.xml.namespace.NamespaceContext
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.xpath.{XPathConstants, XPathFactory}
+import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
 class XMLItem(xml: Document, namespaces: Map[String, String], val tag: String) extends Item {
@@ -86,17 +86,6 @@ class XMLItem(xml: Document, namespaces: Map[String, String], val tag: String) e
 object XMLItem extends Logging {
   private val DEFAULT_PATH_OPTION: String = DEFAULT_ITERATOR_MAP(QueryVoc.Class.XPATH)
 
-  def getNSpacesFromString(xml: String): Map[String, String] = {
-    val inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))
-    val reader = new InputStreamReader(inputStream)
-    try {
-      val namespace = XMLNamespace.fromStreamReader(reader)
-      namespace.map(tuple => tuple._1 -> tuple._2).toMap
-    } finally {
-      if (reader != null) reader.close()
-    }
-  }
-
   // Since this is being used in other working parts of the code, it won't be refactored for now 20/7/18
   def fromString(xml: String, namespaces: Map[String, String] = Map(), xpath:String): XMLItem = {
     val documentBuilderFactory = DocumentBuilderFactory.newInstance()
@@ -128,7 +117,7 @@ object XMLItem extends Logging {
   def fromStringOptionable(orgXml: String, iterators: Iterable[String]): List[Item] = {
     try {
 
-      val namespaces = getNSpacesFromString(orgXml)
+      val namespaces = XMLNamespace.namespacesOfRoot(orgXml).asScala.toMap
       val xml = orgXml
       val vg = new VTDGenHuge
 

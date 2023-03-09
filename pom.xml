@@ -41,9 +41,9 @@ SOFTWARE.
         <log4j.version>2.17.0</log4j.version>
         <jena.version>4.3.1</jena.version>
         <kafka.version>2.4.1</kafka.version>
-
+        <junit.version>5.9.1</junit.version>
         <scala.binary.version>2.11</scala.binary.version>
-        <java.version>11</java.version>
+        <maven.compiler.release>11</maven.compiler.release>
 
         <!-- license properties -->
         <project.inceptionYear>2018</project.inceptionYear>
@@ -437,6 +437,18 @@ SOFTWARE.
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>/home/messik/Work/dataio/target/dataio-1.0-SNAPSHOT.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

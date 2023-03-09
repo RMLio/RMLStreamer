@@ -27,11 +27,13 @@ package io.rml.framework.flink.source
 import com.ximpleware.extended.{AutoPilotHuge, VTDGenHuge}
 import io.rml.framework.core.item.xml.XMLIterator
 import io.rml.framework.core.item.{EmptyItem, Item}
-import io.rml.framework.core.util.XMLNamespace
 import io.rml.framework.shared.RMLException
+import io.rml.framework.util.XMLNamespace
 import org.apache.flink.api.common.io.{GenericInputFormat, NonParallelInput}
 import org.apache.flink.core.io.GenericInputSplit
 import org.slf4j.LoggerFactory
+
+import scala.collection.JavaConverters._
 
 class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Item] with NonParallelInput {
 
@@ -42,7 +44,7 @@ class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Ite
   override def open(inputSplit: GenericInputSplit): Unit = {
     super.open(inputSplit)
 
-    val namespaces: Map[String, String] = XMLNamespace.fromFile(path).map(tuple => tuple._1 -> tuple._2).toMap
+    val namespaces: Map[String, String] = XMLNamespace.namespacesOfRootFromFile(path).asScala.toMap
 
     val vg = new VTDGenHuge // parser for xml
 
