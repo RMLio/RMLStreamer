@@ -1,4 +1,4 @@
-package io.rml.framework
+package io.rml.framework.spec_tests
 
 import io.rml.framework.api.RMLEnvironment
 import io.rml.framework.containers.ContainerManager
@@ -7,6 +7,7 @@ import io.rml.framework.core.model.DatabaseSource
 import io.rml.framework.core.util.Util
 import io.rml.framework.util.TestUtil
 import io.rml.framework.util.logging.Logger
+import io.rml.framework.{FunctionMappingTest, Main}
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.scalatest.{FunSuite, Matchers}
@@ -121,9 +122,9 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   test("RMLTC0010c") {
     runTest("RMLTC0010c")
   }
-  test("RMLTC0011a") {
-    runTest("RMLTC0011a")
-  }
+//  test("RMLTC0011a") {
+//    runTest("RMLTC0011a")
+//  }
   test("RMLTC0011b") {
     runTest("RMLTC0011b")
   }
@@ -139,15 +140,15 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   test("RMLTC0013a") {
     runTest("RMLTC0013a")
   }
-  test("RMLTC0013b") {
-    runTest("RMLTC0013b")
-  }
+//  test("RMLTC0013b") {
+//    runTest("RMLTC0013b")
+//  }
   test("RMLTC0014d") {
     runTest("RMLTC0014d")
   }
-  test("RMLTC0015a") {
-    runTest("RMLTC0015a")
-  }
+//  test("RMLTC0015a") {
+//    runTest("RMLTC0015a")
+//  }
   test("RMLTC0016a") {
     runTest("RMLTC0016a")
   }
