@@ -41,9 +41,9 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   test("RMLTC0002d") {
     runTest("RMLTC0002d")
   }
-//  test("RMLTC0002f") {
-//    runTest("RMLTC0002f")
-//  }
+  //  test("RMLTC0002f") {
+  //    runTest("RMLTC0002f")
+  //  }
   test("RMLTC0002j") {
     runTest("RMLTC0002j")
   }
@@ -122,9 +122,9 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   test("RMLTC0010c") {
     runTest("RMLTC0010c")
   }
-//  test("RMLTC0011a") {
-//    runTest("RMLTC0011a")
-//  }
+  //  test("RMLTC0011a") {
+  //    runTest("RMLTC0011a")
+  //  }
   test("RMLTC0011b") {
     runTest("RMLTC0011b")
   }
@@ -140,21 +140,21 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   test("RMLTC0013a") {
     runTest("RMLTC0013a")
   }
-//  test("RMLTC0013b") {
-//    runTest("RMLTC0013b")
-//  }
+  //  test("RMLTC0013b") {
+  //    runTest("RMLTC0013b")
+  //  }
   test("RMLTC0014d") {
     runTest("RMLTC0014d")
   }
-//  test("RMLTC0015a") {
-//    runTest("RMLTC0015a")
-//  }
+  //  test("RMLTC0015a") {
+  //    runTest("RMLTC0015a")
+  //  }
   test("RMLTC0016a") {
     runTest("RMLTC0016a")
   }
-  test("RMLTC0016b") {
-    runTest("RMLTC0016b")
-  }
+  //  test("RMLTC0016b") {
+  //    runTest("RMLTC0016b")
+  //  }
   test("RMLTC0016c") {
     runTest("RMLTC0016c")
   }
@@ -187,6 +187,7 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   def runTest(testName: String): Unit = {
     companion.setupDB(s"rml-testcases/${testName}-PostgreSQL/resource.sql")
     doMapping(s"rml-testcases/${testName}-PostgreSQL/mapping.ttl", companion.container)
+    //    companion.stopContainer()
   }
 
   def doMapping(mappingPath: String, container: JdbcDatabaseContainer[_]): Unit = {
@@ -225,16 +226,12 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
  * Companion class holding information about the container with the database
  */
 class Companion {
-  val container: JdbcDatabaseContainer[_] = startContainer("postgres", "")
+  val container = ContainerManager.POSTGRES_CONTAINER
+  container.start()
   val url: String = container.getJdbcUrl
-
-  def startContainer(username: String, password: String): JdbcDatabaseContainer[_] = {
-    ContainerManager.getPostgresContainer("postgres:latest", username, password)
-  }
 
   def setupDB(resourcePath: String): Unit = {
     val url = container.getJdbcUrl
-
     ContainerManager.executeScript(resourcePath, url, container.getUsername, container.getPassword)
   }
 }

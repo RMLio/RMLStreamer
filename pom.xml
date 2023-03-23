@@ -42,6 +42,7 @@ SOFTWARE.
         <jena.version>4.3.1</jena.version>
         <kafka.version>2.4.1</kafka.version>
         <junit.version>5.9.1</junit.version>
+        <testcontainers.version>1.17.6</testcontainers.version>
         <scala.binary.version>2.11</scala.binary.version>
         <maven.compiler.release>11</maven.compiler.release>
 
@@ -412,20 +413,55 @@ SOFTWARE.
 <!--            <version>main-v0.1.0-ge961850-24</version>-->
 <!--        </dependency>-->
 
-        <!-- Test container dependencies -->
+        <!-- Testcontainers dependencies -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>1.17.6</version>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- containers -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mysql</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>oracle-xe</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mssqlserver</artifactId>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>1.17.6</version>
+            <artifactId>jdbc</artifactId>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- JUnit extension -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- End of Testcontainers dependencies -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -450,6 +486,7 @@ SOFTWARE.
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <!-- This profile helps to make things run stand-alone or in IntelliJ -->
