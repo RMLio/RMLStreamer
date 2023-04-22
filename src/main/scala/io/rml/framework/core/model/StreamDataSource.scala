@@ -25,4 +25,7 @@
 
 package io.rml.framework.core.model
 
+/**
+ * Marker trait for representing DataSources that are to be consumed as a stream, i.e. should not be fully loaded into memory before consumption.
+ */
 trait StreamDataSource extends DataSource

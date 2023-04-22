@@ -338,7 +338,6 @@ object Main extends Logging {
     // to create a Flink Data Stream there must be triple maps that contain streamed logical sources
     val triplesMaps = streamTriplesMaps
 
-    // group triple maps by logical sourceformattedMapping: FormattedRMLMapping
     val grouped = triplesMaps.groupBy(triplesMap => triplesMap.logicalSource.semanticIdentifier)
 
     // create a map with as key a Source and as value an Engine with loaded statements
@@ -347,7 +346,7 @@ object Main extends Logging {
       var logicalSource = entry._2.head.logicalSource
       val triplesMaps = entry._2
       val iterators = triplesMaps.flatMap(tm => tm.logicalSource.iterators).distinct
-      //logicalSource = LogicalSource(logicalSource.referenceFormulation, iterators, logicalSource.source)
+      logicalSource = LogicalSource(logicalSource.referenceFormulation, iterators, logicalSource.source)
       // This creates a Source from a logical source maps this to an Engine with statements loaded from the triple maps
       Source(logicalSource) -> {
         logInfo(entry._2.size + " Triple Maps are found.")
@@ -377,7 +376,6 @@ object Main extends Logging {
 
     // union all streams to one final stream
     unionStreams(processedStreams)
-
   }
 
   private def createMixedPipelineFromFormattedMapping(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[String] = {

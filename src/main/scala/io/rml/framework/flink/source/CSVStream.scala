@@ -25,12 +25,11 @@
 
 package io.rml.framework.flink.source
 
-import be.ugent.idlab.knows.dataio.access.{Access, RDBAccess}
+import be.ugent.idlab.knows.dataio.access.RDBAccess
 import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.item.csv.CSVItem
 import io.rml.framework.core.model._
-import io.rml.framework.core.model.db.DatabaseLogicalSource
 import io.rml.framework.core.util.{CustomCSVConfig, DefaultCSVConfig}
 import io.rml.framework.core.vocabulary.QueryVoc
 import io.rml.framework.flink.connector.kafka.UniversalKafkaConnectorFactory
@@ -55,7 +54,7 @@ object CSVStream extends Logging {
       case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream)
       case mqttStream: MQTTStream => fromMQTTStream(mqttStream)
       case wsStream: WsStream => fromWsStream(wsStream)
-      case _: DatabaseSource => fromDatabase(source.asInstanceOf[DatabaseLogicalSource])
+      case _: DatabaseSource => fromDatabase(source.source.asInstanceOf[DatabaseSource])
       case _ => null
     }
   }
@@ -119,7 +118,7 @@ object CSVStream extends Logging {
     throw new NotImplementedError("FileStream is not implemented properly yet ")
   }
 
-  def fromDatabase(dbStream: DatabaseLogicalSource)(implicit senv: StreamExecutionEnvironment): CSVStream = {
+  def fromDatabase(dbStream: DatabaseSource)(implicit senv: StreamExecutionEnvironment): CSVStream = {
 
     val access = accessFromDBStream(dbStream)
 
@@ -135,13 +134,13 @@ object CSVStream extends Logging {
     headers.reduce((a, b) => a + ", " + b)
   }
 
-//  private def convertToIndexMap(headers: Array[String]): Map[String, Int] = {
-//    var index = -1 // start will be 0
-//    headers.map(header => {
-//      index += 1
-//      (header, index)
-//    }).toMap
-//  }
+  private def convertToIndexMap(headers: Array[String]): Map[String, Int] = {
+    var index = -1 // start will be 0
+    headers.map(header => {
+      index += 1
+      (header, index)
+    }).toMap
+  }
 
   private def getDefaultFormat(): CSVFormat = {
     // vars set up
@@ -163,8 +162,7 @@ object CSVStream extends Logging {
     CSVStream(stream)
   }
 
-  private def accessFromDBStream(dbStream: DatabaseLogicalSource): RDBAccess = {
-    val source = dbStream.source
-    new RDBAccess(source.jdbcURL, source.dbType, source.username, source.password, dbStream.query.replace("\\\"", "\""), QueryVoc.Class.CSV)
+  private def accessFromDBStream(source: DatabaseSource): RDBAccess = {
+    new RDBAccess(source.jdbcURL, source.dbType, source.username, source.password, source.query.replace("\\\"", "\""), QueryVoc.Class.CSV)
   }
 }

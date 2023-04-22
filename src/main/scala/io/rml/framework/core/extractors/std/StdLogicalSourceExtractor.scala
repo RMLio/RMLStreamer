@@ -27,13 +27,11 @@ package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.{DataSourceExtractor, ExtractorUtil, LogicalSourceExtractor}
 import io.rml.framework.core.internal.Logging
-import io.rml.framework.core.model.db.DatabaseLogicalSource
-import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.model._
+import io.rml.framework.core.model.rdf.RDFResource
 import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
 import io.rml.framework.core.vocabulary.{QueryVoc, R2RMLVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
-import org.apache.jena.rdf.model.RDFNode
 
 /**
  * Extractor for extracting a logical source from a resource.
@@ -97,33 +95,23 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
 
   private def extractDatabase(resource: RDFResource, dbSource: DatabaseSource): LogicalSource = {
     logDebug("Extracting database")
+    val queryProps = resource.listProperties(RMLVoc.Property.QUERY)
 
-
-    var version = ""
-    val versionProps = resource.listProperties(R2RMLVoc.Property.SQL_VERSION)
-
-    if (versionProps.isEmpty) {
-      version = "http://www.w3.org/ns/r2rml#SQL2008"
-    } else {
-      version = versionProps.head.value
-    }
-
-    val tableName = resource.listProperties(R2RMLVoc.Property.TABLE_NAME)
-    val query = resource.listProperties(RMLVoc.Property.QUERY)
-    var queryValue = ""
-
-    if (query.isEmpty) { // no query specified, define it based on the logicalSource's properties
-      val tableName = resource.listProperties(R2RMLVoc.Property.TABLE_NAME)
-      if (tableName.isEmpty) {
-        throw new Error("Either rml:query or rr:tableName must be provided in the logical source!")
+    val query = {
+      if (queryProps.isEmpty) { // no query specified, define it based on the logicalSource's properties
+        val tableName = resource.listProperties(R2RMLVoc.Property.TABLE_NAME)
+        if (tableName.isEmpty) {
+          throw new Error("Either rml:query or rr:tableName must be provided in the logical source!")
+        }
+        s"SELECT * FROM ${tableName.head.value}"
+      } else {
+        queryProps.head.value
       }
-
-      queryValue = s"SELECT * FROM ${tableName.head.value}"
-    } else {
-      queryValue = query.head.value
     }
 
-    DatabaseLogicalSource(dbSource, version, queryValue)
+    dbSource.query = query
+
+    LogicalSource(Uri(QueryVoc.Class.CSV), List(""), dbSource)
   }
 
   /**

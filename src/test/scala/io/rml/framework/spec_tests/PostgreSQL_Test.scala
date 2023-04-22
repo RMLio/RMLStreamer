@@ -201,7 +201,7 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
     // read mapping file
     val mapping = Util.readMappingFile(mappingPath)
 
-    // set the correct URL for the container
+    // inject the correct URL for the container
     for (map <- mapping.triplesMaps) {
       map.logicalSource.source.asInstanceOf[DatabaseSource].setURL(container.getJdbcUrl)
     }
