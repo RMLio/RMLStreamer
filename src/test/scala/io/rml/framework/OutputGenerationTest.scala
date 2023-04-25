@@ -137,9 +137,10 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with
     */
   def checkGeneratedOutput(testFolderPath: String, shouldPass: Boolean)(implicit postProcessor: PostProcessor): Unit = {
     Logger.logInfo("checkGeneratedOutput(%s)".format(testFolderPath))
-    val (expectedOutput, expectedOutputFormat) = ExpectedOutputTestUtil.processFilesInTestFolder(testFolderPath).head
-    val tester = TripleGeneratorTestUtil(postProcessor)
     try {
+      val (expectedOutput, expectedOutputFormat) = ExpectedOutputTestUtil.processFilesInTestFolder(testFolderPath).head
+      val tester = TripleGeneratorTestUtil(postProcessor)
+
       var (generatedOutput, generatedOutputFormat) = tester.processFilesInTestFolder(testFolderPath).head
       val outcome = TestUtil.compareResults(testFolderPath, generatedOutput, expectedOutput, generatedOutputFormat, expectedOutputFormat)
       outcome match {
