@@ -59,7 +59,6 @@ class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Ite
       ap.selectXPath(xpath)
       // create the iterator for the Akka Source
       iterator = XMLIterator(ap, vn, namespaces, xpath)
-      LOG.info("Run the XML source!")
     } else {
       throw new RMLException("Can't parse XML with VTD.")
     }
@@ -68,7 +67,6 @@ class XMLInputFormat(path: String, xpath: String) extends GenericInputFormat[Ite
   override def reachedEnd() = !iterator.hasNext
 
   override def nextRecord(reuse: Item) = {
-    LOG.info("Going for the next!")
     val next = iterator.next()
     if (next.isDefined) next.get
     else new EmptyItem
