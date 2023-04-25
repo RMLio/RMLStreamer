@@ -70,7 +70,14 @@ trait LogicalSource extends Node {
    * @return
    */
   def semanticIdentifier: String = {
-    Objects.hash(source.identifier, referenceFormulation.identifier).toHexString
+    source match {
+      case dbSource: DatabaseSource =>
+        // Database source is a special case since there can be multiple tables
+        // in one source.
+        Objects.hash(source.identifier, referenceFormulation.identifier, dbSource.query).toHexString
+      case _ =>
+        Objects.hash(source.identifier, referenceFormulation.identifier).toHexString
+    }
   }
 
 }
