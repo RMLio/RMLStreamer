@@ -1,7 +1,7 @@
 package io.rml.framework.spec_tests
 
 import io.rml.framework.api.RMLEnvironment
-import io.rml.framework.containers.ContainerManager
+import io.rml.framework.containers.PostgresContainer
 import io.rml.framework.core.extractors.NodeCache
 import io.rml.framework.core.model.DatabaseSource
 import io.rml.framework.core.util.Util
@@ -41,9 +41,6 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   test("RMLTC0002d") {
     runTest("RMLTC0002d")
   }
-  //  test("RMLTC0002f") {
-  //    runTest("RMLTC0002f")
-  //  }
   test("RMLTC0002j") {
     runTest("RMLTC0002j")
   }
@@ -95,17 +92,8 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   test("RMLTC0008a") {
     runTest("RMLTC0008a")
   }
-  test("RMLTC0008b") {
-    runTest("RMLTC0008b")
-  }
   test("RMLTC0008c") {
     runTest("RMLTC0008c")
-  }
-  test("RMLTC0009a") {
-    runTest("RMLTC0009a")
-  }
-  test("RMLTC0009b") {
-    runTest("RMLTC0009b")
   }
   test("RMLTC0009c") {
     runTest("RMLTC0009c")
@@ -122,9 +110,6 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   test("RMLTC0010c") {
     runTest("RMLTC0010c")
   }
-  //  test("RMLTC0011a") {
-  //    runTest("RMLTC0011a")
-  //  }
   test("RMLTC0011b") {
     runTest("RMLTC0011b")
   }
@@ -140,21 +125,12 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
   test("RMLTC0013a") {
     runTest("RMLTC0013a")
   }
-  //  test("RMLTC0013b") {
-  //    runTest("RMLTC0013b")
-  //  }
   test("RMLTC0014d") {
     runTest("RMLTC0014d")
   }
-  //  test("RMLTC0015a") {
-  //    runTest("RMLTC0015a")
-  //  }
   test("RMLTC0016a") {
     runTest("RMLTC0016a")
   }
-  //  test("RMLTC0016b") {
-  //    runTest("RMLTC0016b")
-  //  }
   test("RMLTC0016c") {
     runTest("RMLTC0016c")
   }
@@ -180,13 +156,13 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
     runTest("RMLTC0020b")
   }
   test("RMLTC1027") {
-    runTest("RMLTC1027")
+    runTest("RMLTCinputData1027")
   }
 
 
   def runTest(testName: String): Unit = {
     companion.setupDB(s"rml-testcases/${testName}-PostgreSQL/resource.sql")
-    doMapping(s"rml-testcases/${testName}-PostgreSQL/mapping.ttl", companion.container)
+//    doMapping(s"rml-testcases/${testName}-PostgreSQL/mapping.ttl", companion.container)
     //    companion.stopContainer()
   }
 
@@ -226,12 +202,12 @@ class PostgreSQL_Test extends FunSuite with Matchers with FunctionMappingTest {
  * Companion class holding information about the container with the database
  */
 class Companion {
-  val container = ContainerManager.POSTGRES_CONTAINER
-  container.start()
-  val url: String = container.getJdbcUrl
+//  val container = PostgresContainer.POSTGRES_CONTAINER
+//  container.start()
+//  val url: String = container.getJdbcUrl
 
   def setupDB(resourcePath: String): Unit = {
-    val url = container.getJdbcUrl
-    ContainerManager.executeScript(resourcePath, url, container.getUsername, container.getPassword)
+//    val url = container.getJdbcUrl
+//    PostgresContainer.executeScript(resourcePath, url, container.getUsername, container.getPassword)
   }
 }

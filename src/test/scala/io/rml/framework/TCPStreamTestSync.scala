@@ -49,9 +49,9 @@ class TCPStreamTestSync extends StreamTestSync {
     serverThread.start()
   }
 
-  override def beforeTestCase(): Unit = {}
+  override def beforeTestCase(testCaseName: String): Unit = {}
 
-  override def afterTestCase(): Unit = {}
+  override def afterTestCase(testCaseName: String): Unit = {}
 
   override def teardown(): Unit = {
     Logger.logInfo("Stopping TCP server")

@@ -74,10 +74,10 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   }
 
   // Things to do before running one test case
-  protected def beforeTestCase(): Unit = {}
+  protected def beforeTestCase(testCaseName: String): Unit
 
   // Things to do after running one test case
-  protected def afterTestCase(): Unit
+  protected def afterTestCase(testCaseName: String): Unit
 
   // tear down
   protected def teardown(): Unit
@@ -119,7 +119,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     //it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
     Logger.lineBreak(50)
     logInfo(s"Running test ${folderPath}")
-    beforeTestCase()
+    beforeTestCase(folderPath.toString)
 
     implicit val postProcessor: PostProcessor = TestUtil.pickPostProcessor(postProcessorName)
     val folder = Util.getFile(folderPath.toString)
@@ -127,7 +127,17 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
     // create data stream and sink
-    val dataStream = StreamTestUtil.createDataStream(folder)
+    var dataStream: DataStream[String] = null
+
+    // inject the DB URL into the mapping
+    if (folder.getAbsolutePath.contains("db-tests")) {
+      // bit of a hack, obtain the reference of child class and its field
+      val dbURL = this.asInstanceOf[DBTestSync].container.getURL
+      dataStream = StreamTestUtil.createDataStreamDB(folder, dbURL)
+    } else {
+      dataStream = StreamTestUtil.createDataStream(folder)
+    }
+
     Logger.logInfo("Datastream created")
     val sink = TestSink2()
     Logger.logInfo("sink created")
@@ -162,7 +172,7 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     // delete Flink Job
     deleteJob(flink, jobId)
 
-    afterTestCase()
+    afterTestCase(folderPath.toString)
 
     // check the results
     val either = TestUtil.compareResults(folderPath.toString, resultTriples, expectedOutput, postProcessor.outputFormat, expectedOutputFormat)
