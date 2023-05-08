@@ -1,7 +1,8 @@
 package io.rml.framework.containers;
 
-import io.rml.framework.util.logging.Logger;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -17,6 +18,7 @@ import java.sql.SQLException;
  */
 @Testcontainers
 public class PostgresContainer {
+    private final static Logger logger = LoggerFactory.getLogger(PostgresContainer.class);
 
     @Container
     public final PostgreSQLContainer<?> POSTGRES_CONTAINER = new PostgreSQLContainer()
@@ -38,7 +40,7 @@ public class PostgresContainer {
             runner.setLogWriter(null); // make it not spit out the ran SQL into the output
             runner.runScript(new FileReader(scriptPath));
         } catch (FileNotFoundException exception) {
-            Logger.logError(exception.getMessage());
+            logger.error(exception.getMessage());
             throw new Error();
         }
     }
