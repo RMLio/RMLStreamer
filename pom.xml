@@ -471,8 +471,6 @@ SOFTWARE.
             <groupId>be.ugent.idlab.knows</groupId>
             <artifactId>dataio</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>/home/messik/Work/dataio/target/dataio-1.0-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
