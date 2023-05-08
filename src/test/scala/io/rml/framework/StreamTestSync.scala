@@ -240,11 +240,14 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     val jobId = jobGraph.getJobID
     logInfo(s"Job submitted, ID: ${jobId}. Waiting for it to run.")
 
-    while (!flink.getJobStatus(jobId).get().equals(JobStatus.RUNNING)) {
-      Thread.sleep(1000)
-      logInfo("Waiting for Flink job to start...")
+    while (!flink.getJobStatus(jobId).get().equals(JobStatus.RUNNING)
+      && !flink.getJobStatus(jobId).get().equals(JobStatus.FINISHED)
+      && !flink.getJobStatus(jobId).get().equals(JobStatus.FAILED)
+      && !flink.getJobStatus(jobId).get().equals(JobStatus.CANCELED)) {
+      Thread.sleep(500)
+      logInfo(s"Waiting for Flink job to start... Status: ${flink.getJobStatus(jobId).get().name()}")
     }
-    Thread.sleep(1000)
+    Thread.sleep(500)
     logInfo("Flink job started.")
     jobId
   }
