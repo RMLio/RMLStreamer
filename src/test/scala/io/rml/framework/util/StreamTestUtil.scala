@@ -80,7 +80,7 @@ object StreamTestUtil {
       map.logicalSource.source match {
         case source: DatabaseSource =>
           source.setURL(dbURL)
-        case _ => // if not a Database Source, don't inject the URL
+        case _ =>
       }
     }
 

@@ -5,7 +5,7 @@ import io.rml.framework.util.server.TestData
 
 import scala.concurrent.ExecutionContextExecutor
 
-class DBTestSync extends StreamTestSync {
+class DBTestSync2 extends StreamTestSync2 {
   var container: PostgresContainer = _
 
   override def setup(): Unit = {

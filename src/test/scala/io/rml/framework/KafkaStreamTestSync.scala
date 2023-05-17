@@ -52,6 +52,7 @@ class KafkaStreamTestSync extends StreamTestSync {
     (testFolder, "noopt"),                // standard streaming tests
     ("stream/kafka_json_ld", "json-ld")   // test with json-ld as output
   )
+  override protected def failingTests: Array[(String, String)] = Array()
 
   override def setup(): Unit = {
     super.setup()
@@ -159,4 +160,5 @@ class KafkaStreamTestSync extends StreamTestSync {
     }
     inetAddress.split(":")(1).toInt
   }
+
 }

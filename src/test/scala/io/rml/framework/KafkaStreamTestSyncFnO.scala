@@ -30,6 +30,6 @@ class KafkaStreamTestSyncFnO extends KafkaStreamTestSync {
 
   override def passingTests: Array[(String, String)] = Array(
     (testFolder, "noopt")
-
   )
+  override protected def failingTests: Array[(String, String)] = Array()
 }

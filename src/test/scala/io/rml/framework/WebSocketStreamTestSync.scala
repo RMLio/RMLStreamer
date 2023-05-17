@@ -36,6 +36,7 @@ class WebSocketStreamTestSync extends StreamTestSync {
   override protected def passingTests: Array[(String, String)] = Array(
     (testFolder, "noopt")
   )
+  override protected def failingTests: Array[(String, String)] = Array()
 
 
   override def setup(): Unit = {
