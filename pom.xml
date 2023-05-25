@@ -407,12 +407,6 @@ SOFTWARE.
             <version>v0.2.0</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.github.RMLio</groupId>-->
-<!--            <artifactId>dataio</artifactId>-->
-<!--            <version>main-v0.1.0-ge961850-24</version>-->
-<!--        </dependency>-->
-
         <!-- Testcontainers dependencies -->
         <dependency>
             <groupId>org.testcontainers</groupId>
@@ -468,9 +462,9 @@ SOFTWARE.
             <version>42.5.2</version>
         </dependency>
         <dependency>
-            <groupId>be.ugent.idlab.knows</groupId>
+            <groupId>com.github.RMLio</groupId>
             <artifactId>dataio</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>v0.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
