@@ -78,7 +78,9 @@ class KafkaStreamTestSync extends StreamTestSync {
     logInfo("Creating Kafka client created.")
   }
 
-  override protected def beforeTestCase(testCaseName: String): Unit = ???
+  override protected def beforeTestCase(testCaseName: String): Unit = {
+
+  }
 
   override def afterTestCase(testCaseName: String): Unit = {
     logInfo("Deleting Kafka input topic(s)...")
