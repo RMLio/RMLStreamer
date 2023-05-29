@@ -14,11 +14,11 @@ class DBTestSync extends StreamTestSync {
     container.start()
   }
 
-  override protected def testFolder = "db-tests"
-
   override protected def passingTests: Array[(String, String)] = Array((s"$testFolder/positive", "noopt"))
 
   override protected def failingTests: Array[(String, String)] = Array((s"$testFolder/negative", "noopt"))
+
+  override protected def testFolder = "db-tests"
 
   override protected def beforeTestCase(testCaseName: String): Unit = {
     container.executeScript(s"${testCaseName}/resource.sql")
