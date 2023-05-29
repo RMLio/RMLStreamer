@@ -406,6 +406,11 @@ SOFTWARE.
             <artifactId>idlab-functions-java</artifactId>
             <version>v0.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.RMLio</groupId>
+            <artifactId>dataio</artifactId>
+            <version>v0.1.1</version>
+        </dependency>
 
         <!-- Testcontainers dependencies -->
         <dependency>
@@ -422,25 +427,6 @@ SOFTWARE.
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>mysql</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>oracle-xe</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>mssqlserver</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>jdbc</artifactId>
@@ -462,11 +448,6 @@ SOFTWARE.
             <version>42.5.2</version>
         </dependency>
         <dependency>
-            <groupId>com.github.RMLio</groupId>
-            <artifactId>dataio</artifactId>
-            <version>v0.1.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
@@ -478,7 +459,6 @@ SOFTWARE.
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <!-- This profile helps to make things run stand-alone or in IntelliJ -->

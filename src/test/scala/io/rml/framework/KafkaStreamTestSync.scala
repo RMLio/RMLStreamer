@@ -162,5 +162,4 @@ class KafkaStreamTestSync extends StreamTestSync {
     }
     inetAddress.split(":")(1).toInt
   }
-
 }

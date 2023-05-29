@@ -24,7 +24,7 @@
   **/
 package io.rml.framework.flink.source
 
-import io.rml.framework.core.model.{DatabaseSource, FileDataSource, LogicalSource, StreamDataSource, Uri}
+import io.rml.framework.core.model.{FileDataSource, LogicalSource, StreamDataSource, Uri}
 import io.rml.framework.core.vocabulary.QueryVoc
 import io.rml.framework.shared.RMLException
 import org.apache.flink.api.scala.ExecutionEnvironment

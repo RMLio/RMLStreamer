@@ -141,7 +141,7 @@ class OutputGenerationTest extends StaticTestSpec with ReadMappingBehaviour with
       val (expectedOutput, expectedOutputFormat) = ExpectedOutputTestUtil.processFilesInTestFolder(testFolderPath).head
       val tester = TripleGeneratorTestUtil(postProcessor)
 
-      var (generatedOutput, generatedOutputFormat) = tester.processFilesInTestFolder(testFolderPath).head
+      val (generatedOutput, generatedOutputFormat) = tester.processFilesInTestFolder(testFolderPath).head
       val outcome = TestUtil.compareResults(testFolderPath, generatedOutput, expectedOutput, generatedOutputFormat, expectedOutputFormat)
       outcome match {
         case Left(e) => {

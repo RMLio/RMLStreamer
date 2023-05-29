@@ -45,7 +45,7 @@ trait Literal extends Entity  with ExplicitNode{
   def `type`: Option[Uri]
 
   /**
-    * Language the value is in (only really applicable for Strings?)
+    * Language the value is in (only really applicable for Strings)
     * @return
     */
   def language: Option[Literal]
