@@ -53,7 +53,7 @@ object CSVStream extends Logging {
       case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream)
       case mqttStream: MQTTStream => fromMQTTStream(mqttStream)
       case wsStream: WsStream => fromWsStream(wsStream)
-      case _: DatabaseSource => fromDatabase(source.source.asInstanceOf[DatabaseSource])
+      case dbSource: DatabaseSource => fromDatabase(dbSource)
       case _ => null
     }
   }

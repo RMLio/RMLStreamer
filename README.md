@@ -299,6 +299,33 @@ The only option for spreading load is to use multiple topics, and assign one RML
         ] .
         
  ```
+
+##### Generating a stream from a relational database
+RMLStreamer supports relational databases as a logical source. JDBC is used to establish a connection and perform a query against a database. See example mapping below.
+```ttl
+<TriplesMap1>
+  a rr:TriplesMap;
+
+  rml:logicalSource [
+    rml:source <#DB_source>;
+    rr:sqlVersion rr:SQL2008;
+    rr:tableName "country_info";
+  ];
+
+  rr:subjectMap [ rr:template "http://example.com/{Country Code}/{Name}" ];
+	
+  rr:predicateObjectMap [ 
+    rr:predicate ex:name ;
+    rr:objectMap [ rml:reference "Name" ]
+  ] .
+
+<#DB_source> a d2rq:Database;
+  d2rq:jdbcDSN "CONNECTIONDSN";
+  d2rq:jdbcDriver "org.postgresql.Driver";
+  d2rq:username "postgres";
+  d2rq:password "" .
+
+```
  
 #### RML Stream Vocabulary (non-normative)
 

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* Support for relational databases using JDBC
+
 ### Fixed
 * Updated Function Agent to v1.1.0
 * Updated GREL Functions to v0.9.1
