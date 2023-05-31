@@ -98,6 +98,11 @@ object Main extends Logging {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
+    if (config.parallelism.isDefined) {
+      env.setParallelism(config.parallelism.get)
+      senv.setMaxParallelism(config.parallelism.get)
+    }
+
     // TODO: check FunctionUtils.scala
     FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv, config.functionDescriptionLocations.getOrElse(Seq.empty): _*)
 
