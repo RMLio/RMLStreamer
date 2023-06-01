@@ -151,22 +151,26 @@ $FLINK_BIN run <path to RMLStreamer jar> toKafka --broker-list <host:port> --top
 #### Complete RMLStreamer usage:
 
 ```
-Usage: RMLStreamer [toFile|toKafka|toTCPSocket|noOutput] [options]
+Usage: RMLStreamer [toFile|toKafka|toTCPSocket|toMQTT|noOutput] [options]
 
-  -f, --function-descriptions <function description location 1>,<function description location 2>...
-                           An optional list of paths to function description files (in RDF using FnO). A path can be a file location or a URL.
   -j, --job-name <job name>
                            The name to assign to the job on the Flink cluster. Put some semantics in here ;)
   -i, --base-iri <base IRI>
                            The base IRI as defined in the R2RML spec.
   --disable-local-parallel
                            By default input records are spread over the available task slots within a task manager to optimise parallel processing,at the cost of losing the order of the records throughout the process. This option disables this behaviour to guarantee that the output order is the same as the input order.
+  -p, --parallelism <task slots>
+                           Sets the maximum operator parallelism (~nr of task slots used)
   -m, --mapping-file <RML mapping file>
                            REQUIRED. The path to an RML mapping file. The path must be accessible on the Flink cluster.
   --json-ld                Write the output as JSON-LD instead of N-Quads. An object contains all RDF generated from one input record. Note: this is slower than using the default N-Quads format.
   --bulk                   Write all triples generated from one input record at once, instead of writing triples the moment they are generated.
   --checkpoint-interval <time (ms)>
                            If given, Flink's checkpointing is enabled with the given interval. If not given, checkpointing is enabled when writing to a file (this is required to use the flink StreamingFileSink). Otherwise, checkpointing is disabled.
+  --auto-watermark-interval <time (ms)>
+                           If given, Flink's watermarking will be generated periodically with the given interval. If not given, a default value of 50ms will be used.This option is only valid for DataStreams.
+  -f, --function-descriptions <function description location 1>,<function description location 2>...
+                           An optional list of paths to function description files (in RDF using FnO). A path can be a file location or a URL.
 Command: toFile [options]
 Write output to file 
 Note: when the mapping consists only of stream triple maps, a StreamingFileSink is used. This sink will write the output to a part file at every checkpoint.
@@ -183,6 +187,15 @@ Command: toTCPSocket [options]
 Write output to a TCP socket
   -s, --output-socket <host:port>
                            The TCP socket to write to.
+Command: toMQTT [options]
+Write output to an MQTT topic
+  -b, --broker <host:port>
+                           The MQTT broker.
+  -t, --topic <topic name>
+                           The name of the MQTT topic to write output to.
+Command: noOutput
+Do everything, but discard output
+
 ```
 
 #### Examples
