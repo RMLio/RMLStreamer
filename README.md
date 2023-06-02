@@ -115,6 +115,9 @@ The resulting `RMLStreamer-<version>.jar`, found in the `target` folder, can be 
 $ mvn clean package -DskipTests -P 'stand-alone'
 ```
 
+**Note**: If you want to update the version of RMLStreamer (e.g. when developing or releasing), run the script
+`change-version.sh <your-new-version>`. It updates the version on relevant places in the repository.
+
 ### Executing RML Mappings
 
 *This section assumes the use of a CLI. If you want to use Flink's web interface, check out
