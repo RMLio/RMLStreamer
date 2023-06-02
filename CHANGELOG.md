@@ -8,8 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-* Support for relational databases using JDBC
+* Support for relational databases using JDBC.
 * Parameter `parallelism` setting the maximum number of parallel operations.
+* Script `change-version.sh` to update the version of RMLStreamer in required files.
 
 ### Fixed
 * Updated Function Agent to v1.1.0
