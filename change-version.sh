@@ -16,4 +16,4 @@ echo 'Updating ParameterUtil.scala'
 sed -i "s:head(\"RMLStreamer\", \"\(.*\)\"):head(\"RMLStreamer\", \"$VERSION\"):" src/main/scala/io/rml/framework/core/util/ParameterUtil.scala
 
 echo 'Updating README.md'
-sed -i "s/rmlstreamer:\(2.4.1\) toFile/rmlstreamer:$VERSION toFile/" README.md
+sed -i "s/rmlstreamer:\(.*\) toFile/rmlstreamer:$VERSION toFile/" README.md

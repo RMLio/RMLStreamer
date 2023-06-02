@@ -46,7 +46,7 @@ If you go to the directory where your data and mappings are,
 you can run something like (change tag to appropriate version):
 
 ```
-$ docker run -v $PWD:/data --rm rmlstreamer:v2.5.0 toFile -m /data/mapping.ttl -o /data/output.ttl 
+$ docker run -v $PWD:/data --rm rmlstreamer:v2.5.1-SNAPSHOT toFile -m /data/mapping.ttl -o /data/output.ttl 
 ```
 
 There are more options for the script, if you want to use specific tags or push to Docker Hub:
