@@ -37,7 +37,8 @@ object XsdVoc {
     val XSD_POSITIVE_INTEGER = namespace._2 + "positiveInteger";
     val XSD_BOOLEAN = namespace._2 + "boolean";
     val XSD_DATETIME = namespace._2 + "dateTime";
-
+    val XSD_DATE = namespace._2 + "date"
+    val XSD_TIME = namespace._2 + "time"
     val XSD_ANY  = namespace._2 + "any";
   }
 

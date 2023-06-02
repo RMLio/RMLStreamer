@@ -27,31 +27,29 @@ package io.rml.framework.core.extractors.std
 
 import io.rml.framework.core.extractors.{DataSourceExtractor, ExtractorUtil, LogicalSourceExtractor}
 import io.rml.framework.core.internal.Logging
+import io.rml.framework.core.model._
 import io.rml.framework.core.model.rdf.RDFResource
-import io.rml.framework.core.model.{DataSource, Literal, LogicalSource, Uri}
 import io.rml.framework.core.util.Util.DEFAULT_ITERATOR_MAP
-import io.rml.framework.core.vocabulary.RMLVoc
+import io.rml.framework.core.vocabulary.{QueryVoc, R2RMLVoc, RMLVoc}
 import io.rml.framework.shared.RMLException
 
 /**
-  * Extractor for extracting a logical source from a resource.
-  */
+ * Extractor for extracting a logical source from a resource.
+ */
 class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
   extends LogicalSourceExtractor with Logging {
 
   /**
-    * Extracts logical source from resource.
-    *
-    * @param node Resource to extract logical source from.
-    * @return
-    */
+   * Extracts logical source from resource.
+   *
+   * @param node Resource to extract logical source from.
+   * @return
+   */
   @throws(classOf[RMLException])
   override def extract(node: RDFResource): LogicalSource = {
 
     logDebug(node.uri + ": Extracting logical source.")
-
-    val property = RMLVoc.Property.LOGICALSOURCE
-    val properties = node.listProperties(property)
+    val properties = node.listProperties(RMLVoc.Property.LOGICALSOURCE)
 
     if (properties.size != 1)
       throw new RMLException(node.uri + ": invalid amount of logical sources (amount=" + properties.size + ", should be 1 only).")
@@ -65,57 +63,84 @@ class StdLogicalSourceExtractor(dataSourceExtractor: DataSourceExtractor)
   }
 
   /**
-    * Extracts all properties from a logical source resource.
-    *
-    * @param resource Resource that represents a logical source.
-    * @return An instance of LogicalSource.
-    */
+   * Extracts all properties from a logical source resource.
+   *
+   * @param resource Resource that represents a logical source.
+   * @return An instance of LogicalSource.
+   */
   @throws(classOf[RMLException])
   private def extractLogicalSourceProperties(resource: RDFResource): LogicalSource = {
 
     val source: DataSource = extractDataSource(resource)
-    val referenceFormulation: Uri = extractReferenceFormulation(resource)
-    val iterator: String = extractIterator(resource, referenceFormulation)
 
-    // debug log, check for performance
-    if (isDebugEnabled) {
-      logDebug(resource.uri + ": Extracted from logical source" +
-        ": iterator -> " + iterator +
-        ", source -> " + source +
-        ", referenceFormulation -> " + referenceFormulation)
+    source match {
+      case source1: DatabaseSource =>
+        extractDatabase(resource, source1)
+      case _ =>
+        val referenceFormulation = extractReferenceFormulation(resource)
+
+        val iterator: String = extractIterator(resource, referenceFormulation)
+
+        // debug log, check for performance
+        if (isDebugEnabled) {
+          logDebug(resource.uri + ": Extracted from logical source" +
+            ": iterator -> " + iterator +
+            ", source -> " + source +
+            ", referenceFormulation -> " + referenceFormulation)
+        }
+
+        LogicalSource(referenceFormulation, List(iterator), source)
+    }
+  }
+
+  private def extractDatabase(resource: RDFResource, dbSource: DatabaseSource): LogicalSource = {
+    logDebug("Extracting database")
+    val queryProps = resource.listProperties(RMLVoc.Property.QUERY)
+
+    val query = {
+      if (queryProps.isEmpty) { // no query specified, define it based on the logicalSource's properties
+        val tableName = resource.listProperties(R2RMLVoc.Property.TABLE_NAME)
+        if (tableName.isEmpty) {
+          throw new Error("Either rml:query or rr:tableName must be provided in the logical source!")
+        }
+        s"SELECT * FROM ${tableName.head.value}"
+      } else {
+        queryProps.head.value
+      }
     }
 
-    LogicalSource(referenceFormulation, List(iterator), source)
+    dbSource.query = query
 
+    LogicalSource(Uri(QueryVoc.Class.CSV), List(""), dbSource)
   }
 
   /**
-    * Extracts iterator from a logical source resource.
-    *
-    * @param resource Resource that represents a logical source.
-    * @return Optionally a literal that represents the iterator.
-    */
+   * Extracts iterator from a logical source resource.
+   *
+   * @param resource Resource that represents a logical source.
+   * @return Optionally a literal that represents the iterator.
+   */
   @throws(classOf[RMLException])
   private def extractIterator(resource: RDFResource, referenceFormulation: Uri): String = {
     ExtractorUtil.extractLiteralFromProperty(resource, RMLVoc.Property.ITERATOR, DEFAULT_ITERATOR_MAP(referenceFormulation.value))
   }
 
   /**
-    * Extracts data source from a logical source resource.
-    *
-    * @param resource Resource that represents a logical source.
-    * @return An instance of a DataSource
-    */
+   * Extracts data source from a logical source resource.
+   *
+   * @param resource Resource that represents a logical source.
+   * @return An instance of a DataSource
+   */
   private def extractDataSource(resource: RDFResource): DataSource = {
     dataSourceExtractor.extract(resource)
   }
 
   /**
-    * Extracts reference formulation from a logical source resource.
-    *
-    * @param resource Resource that represents a logical source.
-    * @return A literal that represents the reference formulation.
-    */
+   * Extracts reference formulation from a logical source resource.
+   *
+   * @param resource Resource that represents a logical source.
+   * @return A literal that represents the reference formulation.
+   */
   @throws(classOf[RMLException])
   private def extractReferenceFormulation(resource: RDFResource): Uri = {
     val referenceFormulationResource = ExtractorUtil.extractSingleResourceFromProperty(resource, RMLVoc.Property.REFERENCEFORMULATION)

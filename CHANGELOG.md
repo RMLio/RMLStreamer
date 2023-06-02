@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2023-06-02
+
+### Added
+* Support for relational databases using JDBC.
+* Parameter `parallelism` setting the maximum number of parallel operations.
+* Script `change-version.sh` to update the version of RMLStreamer in required files.
+
+### Fixed
+* Updated Function Agent to v1.1.0
+* Updated GREL Functions to v0.9.1
+* Updated IDLab Functions to v0.2.0
+* Use `<maven.compiler.release>` property in `pom.xml` to set Java version to 11.
+* Allow a relative path (to the working dir) as output directory when writing to file.
+* Fixed bug in extracting namespaces from XML element (internal [issue #161](https://gitlab.ilabt.imec.be/rml/proc/rml-streamer/-/issues/161))
+
 ## [2.4.2] - 2022-10-10
 
 ### Fixed
@@ -214,3 +229,4 @@ can be set with the program argument `--baseIRI`.
 [2.4.0]: https://github.com/RMLio/RMLStreamer/compare/v2.3.0...v2.4.0
 [2.4.1]: https://github.com/RMLio/RMLStreamer/compare/v2.4.0...v2.4.1
 [2.4.2]: https://github.com/RMLio/RMLStreamer/compare/v2.4.1...v2.4.2
+[2.5.0]: https://github.com/RMLio/RMLStreamer/compare/v2.4.2...v2.5.0

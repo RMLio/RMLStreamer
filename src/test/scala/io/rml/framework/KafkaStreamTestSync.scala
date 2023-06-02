@@ -52,6 +52,7 @@ class KafkaStreamTestSync extends StreamTestSync {
     (testFolder, "noopt"),                // standard streaming tests
     ("stream/kafka_json_ld", "json-ld")   // test with json-ld as output
   )
+  override protected def failingTests: Array[(String, String)] = Array()
 
   override def setup(): Unit = {
     super.setup()
@@ -77,7 +78,11 @@ class KafkaStreamTestSync extends StreamTestSync {
     logInfo("Creating Kafka client created.")
   }
 
-  override def afterTestCase(): Unit = {
+  override protected def beforeTestCase(testCaseName: String): Unit = {
+
+  }
+
+  override def afterTestCase(testCaseName: String): Unit = {
     logInfo("Deleting Kafka input topic(s)...")
     val topics = admin.listTopics().names().get()
     val deleteResults = admin.deleteTopics(topics)

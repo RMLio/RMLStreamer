@@ -38,6 +38,8 @@ class EngineTest extends FunSuite with Matchers {
     }
 
     override def tag: String = ""
+
+    override def getDataTypes: Map[String, String] = Map.empty
   }
 
   test("testProcessTemplate") {

@@ -75,14 +75,15 @@ class MQTTStreamTests extends StreamTestSync {
   override protected def passingTests: Array[(String, String)] = Array(
     (testFolder, "noopt")
   )
+  override protected def failingTests: Array[(String, String)] = Array()
 
   override protected def testFolder: String = "sandbox/stream/mqtt"
 
-  override protected def beforeTestCase(): Unit = {
+  override protected def beforeTestCase(testCaseName: String): Unit = {
     logInfo("before test case")
   }
 
-  override protected def afterTestCase(): Unit = {
+  override protected def afterTestCase(testCaseName: String): Unit = {
     logInfo("after test case")
   }
 

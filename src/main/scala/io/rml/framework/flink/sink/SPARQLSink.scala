@@ -37,7 +37,7 @@ class SPARQLSink private[sink](val URL: String) extends RichSinkFunction[String]
         val httpStatusCode = result.getStatusLine.getStatusCode
         if (httpStatusCode >= 300) {
           val body = result.getEntity
-          if (body.getContentLength > 0) try {
+          if (body.getContentLength > 0) {
             val inputStream = body.getContent
             try {
               val contents = new String(IOUtils.toByteArray(inputStream), StandardCharsets.UTF_8)

@@ -25,28 +25,35 @@
 
 package io.rml.framework.flink.source
 
+import be.ugent.idlab.knows.dataio.access.RDBAccess
+import io.rml.framework.core.internal.Logging
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.item.csv.CSVItem
 import io.rml.framework.core.model._
 import io.rml.framework.core.util.{CustomCSVConfig, DefaultCSVConfig}
+import io.rml.framework.core.vocabulary.QueryVoc
 import io.rml.framework.flink.connector.kafka.UniversalKafkaConnectorFactory
+import io.rml.framework.flink.source.functions.RDBSourceFunction
 import org.apache.commons.csv.CSVFormat
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 
-case class CSVStream(stream: DataStream[Iterable[Item]] ) extends Stream
+import scala.collection.JavaConverters._
 
-object CSVStream {
 
-  def apply(source: StreamDataSource)(implicit env: StreamExecutionEnvironment): Stream = {
+case class CSVStream(stream: DataStream[Iterable[Item]]) extends Stream
 
-    source match {
+object CSVStream extends Logging {
+
+  def apply(source: LogicalSource)(implicit env: StreamExecutionEnvironment): Stream = {
+    source.source match {
       case tcpStream: TCPSocketStream => fromTCPSocketStream(tcpStream)
       case fileStream: FileStream => fromFileStream(fileStream.path)
       case kafkaStream: KafkaStream => fromKafkaStream(kafkaStream)
-      case mqttStream : MQTTStream => fromMQTTStream(mqttStream)
+      case mqttStream: MQTTStream => fromMQTTStream(mqttStream)
       case wsStream: WsStream => fromWsStream(wsStream)
+      case dbSource: DatabaseSource => fromDatabase(dbSource)
       case _ => null
     }
   }
@@ -58,11 +65,11 @@ object CSVStream {
 
   def fromKafkaStream(kafkaStream: KafkaStream)(implicit env: StreamExecutionEnvironment): CSVStream = {
     val properties = kafkaStream.getProperties
-    val consumer =  UniversalKafkaConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
+    val consumer = UniversalKafkaConnectorFactory.getSource(kafkaStream.topic, new SimpleStringSchema(), properties)
     streamFromSource(env.addSource(consumer))
   }
 
-  def fromMQTTStream(mqttStream : MQTTStream)(implicit env: StreamExecutionEnvironment):CSVStream = {
+  def fromMQTTStream(mqttStream: MQTTStream)(implicit env: StreamExecutionEnvironment): CSVStream = {
     val source = RichMQTTSource(
       mqttStream.hypermediaTarget,
       mqttStream.contentType,
@@ -73,7 +80,7 @@ object CSVStream {
     streamFromSource(env.addSource(source))
   }
 
-  def fromWsStream(wsStream: WsStream)(implicit env: StreamExecutionEnvironment):CSVStream = {
+  def fromWsStream(wsStream: WsStream)(implicit env: StreamExecutionEnvironment): CSVStream = {
     val source = new WebSocketSource(wsStream.hypermediaTarget)
     streamFromSource(env.addSource(source))
   }
@@ -110,6 +117,16 @@ object CSVStream {
     throw new NotImplementedError("FileStream is not implemented properly yet ")
   }
 
+  def fromDatabase(dbStream: DatabaseSource)(implicit senv: StreamExecutionEnvironment): CSVStream = {
+    val access = accessFromDBStream(dbStream)
+    val datastream = senv.addSource(new RDBSourceFunction(access))
+      .map(source => {
+        List(new CSVItem(source.getData.asScala.toMap, "", source.getDataTypes.asScala.toMap))
+      }).asInstanceOf[DataStream[Iterable[Item]]]
+
+    CSVStream(datastream)
+  }
+
   private def convertToSelection(headers: Array[String]): String = {
     headers.reduce((a, b) => a + ", " + b)
   }
@@ -142,4 +159,7 @@ object CSVStream {
     CSVStream(stream)
   }
 
+  private def accessFromDBStream(source: DatabaseSource): RDBAccess = {
+    new RDBAccess(source.jdbcURL, source.dbType, source.username, source.password, source.query.replace("\\\"", "\""), QueryVoc.Class.CSV)
+  }
 }

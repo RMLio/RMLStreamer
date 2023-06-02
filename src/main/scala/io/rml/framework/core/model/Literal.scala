@@ -33,19 +33,19 @@ import io.rml.framework.core.model.std.StdLiteral
 trait Literal extends Entity  with ExplicitNode{
 
   /**
-    *
+    * Value of the literal
     * @return
     */
   def value: String
 
   /**
-    *
+    * Type of the value
     * @return
     */
   def `type`: Option[Uri]
 
   /**
-    *
+    * Language the value is in (only really applicable for Strings)
     * @return
     */
   def language: Option[Literal]

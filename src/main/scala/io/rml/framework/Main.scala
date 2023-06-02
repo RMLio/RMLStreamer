@@ -98,6 +98,11 @@ object Main extends Logging {
     implicit val env = ExecutionEnvironment.getExecutionEnvironment
     implicit val senv = StreamExecutionEnvironment.getExecutionEnvironment
 
+    if (config.parallelism.isDefined) {
+      env.setParallelism(config.parallelism.get)
+      senv.setMaxParallelism(config.parallelism.get)
+    }
+
     // TODO: check FunctionUtils.scala
     FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv, config.functionDescriptionLocations.getOrElse(Seq.empty): _*)
 
@@ -121,7 +126,8 @@ object Main extends Logging {
 
       // write dataset to file, depending on the given parameters
       if (config.outputSink.equals(OutputSinkOption.File)) {
-        dataset.writeAsText(s"file://${config.outputPath.get}", WriteMode.OVERWRITE)
+        val outputFile = Util.getFile(config.outputPath.get)
+        dataset.writeAsText(outputFile.getCanonicalPath.toString, WriteMode.OVERWRITE)
           .name("Write to output")
       }
 
@@ -294,7 +300,7 @@ object Main extends Logging {
 
 
       //TODO: Be able to choose a specific stream join composer to compose the streaming pipeline
-      val joinConfigMap = JoinConfigMapCache.getOrElse(tm.joinConfigMap.get, JoinConfigMap(None))
+      val joinConfigMap = JoinConfigMapCache.getOrElse(tm.joinConfigMap.orNull, JoinConfigMap(None))
       val composer = StreamJoinComposer(childDataStream, parentDataStream, tm, joinConfigMap)
       // if there are join conditions defined join the child dataset and the parent dataset
       //
@@ -337,7 +343,6 @@ object Main extends Logging {
     // to create a Flink Data Stream there must be triple maps that contain streamed logical sources
     val triplesMaps = streamTriplesMaps
 
-    // group triple maps by logical sourceformattedMapping: FormattedRMLMapping
     val grouped = triplesMaps.groupBy(triplesMap => triplesMap.logicalSource.semanticIdentifier)
 
     // create a map with as key a Source and as value an Engine with loaded statements
@@ -376,7 +381,6 @@ object Main extends Logging {
 
     // union all streams to one final stream
     unionStreams(processedStreams)
-
   }
 
   private def createMixedPipelineFromFormattedMapping(formattedMapping: FormattedRMLMapping)(implicit env: ExecutionEnvironment, senv: StreamExecutionEnvironment, postProcessor: PostProcessor): DataStream[String] = {

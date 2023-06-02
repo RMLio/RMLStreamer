@@ -63,7 +63,11 @@ object Engine extends Logging {
     val tuples = for {
       m <- matches
       sanitizedRef = removeBrackets(m.toString()).replaceAll("#", "\\$")
-      optReferred = if (encode) item.refer(sanitizedRef).map(lString => lString.map(el => Uri.encode(el))) else item.refer(sanitizedRef)
+      // make reference IRI-safe
+      optReferred = if (encode)
+        item.refer(sanitizedRef).map(lString => lString.map(el => Uri.encode(el)))
+      else
+        item.refer(sanitizedRef)
       quotedSanitizedRef = Pattern.quote(sanitizedRef)
       if optReferred.isDefined
     } yield (optReferred, quotedSanitizedRef)
@@ -91,8 +95,6 @@ object Engine extends Logging {
 
               count += 1
             }
-
-
           }
         })
       }
@@ -101,43 +103,40 @@ object Engine extends Logging {
       // any escaped curly bracket can be unescaped.
       // e.g. \{ -> {
       Some(result.map(unescapeCurlyBrackets))
-
     }
   }
 
   /**
-    * Retrieve the value of a reference from a given item.
-    *
-    * @param reference
-    * @param item
-    * @return
-    */
-  def processReference(reference: Literal, item: Item): Option[List[String]] = {
-    item.refer(reference.value)
-  }
-
-  /**
-    * Private util method for removing brackets from a template string.
-    *
-    * @param s
-    * @return
-    */
-  private def removeBrackets(s: String): String
-
-  = {
+   * Private util method for removing brackets from a template string.
+   *
+   * @param s
+   * @return
+   */
+  private def removeBrackets(s: String): String = {
     s.replace("{", "")
       .replace("}", "")
   }
 
   /**
    * Unescapes curly brackets
+   *
    * @param s
    * @return
    */
-  private def unescapeCurlyBrackets(s: String) : String = {
+  private def unescapeCurlyBrackets(s: String): String = {
     s
       .replaceAllLiterally("""\{""", "{")
       .replaceAllLiterally("""\}""", "}")
   }
 
+  /**
+   * Retrieve the value of a reference from a given item.
+   *
+   * @param reference
+   * @param item
+   * @return
+   */
+  def processReference(reference: Literal, item: Item): Option[List[String]] = {
+    item.refer(reference.value)
+  }
 }

@@ -28,6 +28,7 @@ package io.rml.framework.engine.statement
 
 import be.ugent.idlab.knows.functions.agent.Agent
 import io.rml.framework.api.RMLEnvironment
+import io.rml.framework.core.function.FunctionUtils
 import io.rml.framework.core.item.Item
 import io.rml.framework.core.model._
 import io.rml.framework.core.util.Util
@@ -69,7 +70,7 @@ object TermMapGenerators {
 
   def templateLiteralGenerator(termMap: TermMap): ((Item, Agent)) => Option[Iterable[Literal]] = {
     // return a function that processes the template
-      itemAgentTuple => {
+    itemAgentTuple => {
       for {
         iter <- Engine.processTemplate(termMap.template.get, itemAgentTuple._1)
       } yield for {
@@ -97,10 +98,22 @@ object TermMapGenerators {
     itemAgentTuple => {
       for {
         iter <- Engine.processReference(termMap.reference.get, itemAgentTuple._1)
-
       } yield for {
         value <- iter
-        lit = Literal(value, termMap.datatype, termMap.language)
+        item = itemAgentTuple._1
+        reference = termMap.reference.get.value
+        potentialType = item.getDataTypes.get(reference)
+
+        lit =
+          if (potentialType.isDefined) {
+            val `type` = Uri(potentialType.get)
+            // cast the value to correct notation
+            // little hack: wrap the value in Uri to allow usage in the typecasting code
+            val l = FunctionUtils.typeCastDataType(Uri(value), Some(`type`))
+            Literal(l.get.value, Some(`type`), termMap.language)
+          }
+          else
+            Literal(value, termMap.datatype, termMap.language)
 
       } yield lit
     }
@@ -108,7 +121,6 @@ object TermMapGenerators {
 
   def referenceUriGenerator(termMap: TermMap): ((Item, Agent)) => Option[Iterable[Uri]] = {
     // return a function that processes a reference
-
     itenAgentTuple => {
       for {
         iter <- Engine.processReference(termMap.reference.get, itenAgentTuple._1)
@@ -121,7 +133,7 @@ object TermMapGenerators {
     }
   }
 
-  private def processIRI(origIri: String): Iterable[String] =  {
+  private def processIRI(origIri: String): Iterable[String] = {
     if (Util.isValidAbsoluteUri(origIri)) {
       List(origIri)
     } else {
@@ -138,5 +150,4 @@ object TermMapGenerators {
       }
     }
   }
-
 }

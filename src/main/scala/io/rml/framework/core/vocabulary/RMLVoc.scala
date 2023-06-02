@@ -43,5 +43,6 @@ object RMLVoc {
     val REFERENCEFORMULATION = namespace._2 + "referenceFormulation";
     val SOURCE = namespace._2 + "source";
     val LOGICALTARGET = namespace._2 + "logicalTarget";
+    val QUERY = namespace._2 + "query"
   }
 }

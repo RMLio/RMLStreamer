@@ -26,8 +26,8 @@ package io.rml.framework.util
 
 import java.io.File
 import java.util.concurrent.CompletableFuture
-
 import io.rml.framework.Main
+import io.rml.framework.core.model.DatabaseSource
 import io.rml.framework.engine.PostProcessor
 import io.rml.framework.util.fileprocessing.MappingTestUtil
 import io.rml.framework.util.logging.Logger
@@ -46,7 +46,7 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 object StreamTestUtil {
 
   /**
-    * Create a data stream from mapping file in de specified test case folder.
+    * Create a data stream from mapping file in the specified test case folder.
     * The method won't run it yet as a job in flink cluster.
     *
     * This is used to generate and obtain job graphs which will be used by the
@@ -61,6 +61,29 @@ object StreamTestUtil {
 
     // read the mapping
     val formattedMapping = MappingTestUtil.processFilesInTestFolder(testCaseFolder.getAbsolutePath)
+    val stream = Main.createDataStreamFromFormattedMapping(formattedMapping.head)
+    stream
+  }
+
+  /**
+   * Create a data stream from mapping file in the specified test case folder.
+   * This method won't run it yet as a job in the Flink cluster.
+   *
+   * The URL for the database is injected into the logical sources of all maps before the stream is created.
+   * @param testCaseFolder
+   */
+  def createDataStreamDB(testCaseFolder: File, dbURL: String)(implicit senv: StreamExecutionEnvironment,
+                                                              env: ExecutionEnvironment,
+                                                              postProcessor: PostProcessor) : DataStream[String] = {
+    val formattedMapping = MappingTestUtil.processFilesInTestFolder(testCaseFolder.getAbsolutePath)
+    for (map <- formattedMapping.head.triplesMaps) {
+      map.logicalSource.source match {
+        case source: DatabaseSource =>
+          source.setURL(dbURL)
+        case _ =>
+      }
+    }
+
     val stream = Main.createDataStreamFromFormattedMapping(formattedMapping.head)
     stream
   }

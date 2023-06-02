@@ -34,6 +34,7 @@ object ParameterUtil {
                               jobName: String = "RMLStreamer",
                               baseIRI: Option[String] = None,
                               localParallel: Boolean = true,
+                              parallelism: Option[Int] = None,
                               postProcessor: PostProcessorOption = PostProcessorOption.None,
                               checkpointInterval: Option[Long] = None,
                               outputPath: Option[String] = None,
@@ -52,9 +53,10 @@ object ParameterUtil {
         s"Job name: ${jobName}\n" +
         s"Base IRI: ${baseIRI.getOrElse("/")}\n" +
         s"Parallelise over local task slots: ${localParallel}\n" +
+        s"Maximum parallelism: ${parallelism}\n" +
         s"Post processor: ${postProcessor}\n" +
         s"Checkpoint interval: ${checkpointInterval.getOrElse("/")}\n" +
-          s"Auto Watermark interval: ${autoWatermarkInterval}\n" +
+        s"Auto Watermark interval: ${autoWatermarkInterval}\n" +
         s"Output method: ${outputSink}\n" +
         s"Output file: ${outputPath.getOrElse("/")}\n" +
         s"Kafka broker list: ${brokerList.getOrElse("/")}\n" +
@@ -83,7 +85,7 @@ object ParameterUtil {
   val parser = new scopt.OptionParser[ParameterConfig]("RMLStreamer") {
     override def showUsageOnError = Some(true)
 
-    head("RMLStreamer", "2.1.0-SNAPSHOT")
+    head("RMLStreamer", "v2.5.0")
 
     opt[String]('j', "job-name").valueName("<job name>")
       .optional()
@@ -101,6 +103,11 @@ object ParameterUtil {
       .text("By default input records are spread over the available task slots within a task manager to optimise parallel processing," +
         "at the cost of losing the order of the records throughout the process." +
         " This option disables this behaviour to guarantee that the output order is the same as the input order.")
+
+    opt[Int]('p', "parallelism").valueName("<task slots>")
+      .optional()
+      .action((value, config) => config.copy(parallelism = Some(value)))
+      .text("Sets the maximum operator parallelism (~nr of task slots used)")
 
     opt[String]('m', "mapping-file").valueName("<RML mapping file>").required()
       .action((value, config) => config.copy(mappingFilePath = value))

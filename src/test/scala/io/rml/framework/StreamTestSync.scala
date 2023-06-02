@@ -52,13 +52,31 @@ import scala.reflect.io.Directory
   */
 abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour with Logging {
 
-  // first we set the environment right
-  RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
 
+  // constants for running tests
+  // folder containing the test cases
   protected def testFolder: String
 
   // tuples (folder of test data, post processor to use)
+  // when utilising both passing and failing tests, specify the folder relative to the testFolder above
   protected def passingTests: Array[(String, String)]
+  protected def failingTests: Array[(String, String)]
+
+  // first we set the environment right
+  RMLEnvironment.setGeneratorBaseIRI(Some("http://example.com/base/"))
+  // set up Flink
+  val flink: MiniCluster = startFlink
+
+  // read in the test cases
+  val passingTestCases: Array[(Path, String)] = for {
+    (folder, postProcessor) <- passingTests
+    testCase <- StreamDataSourceTestUtil.getTestCaseFolders(folder).sorted
+  } yield (testCase, postProcessor)
+
+  val failingTestCases: Array[(Path, String)] = for {
+    (folder, postProcessor) <- failingTests
+    testCase <- StreamDataSourceTestUtil.getTestCaseFolders(folder).sorted
+  } yield (testCase, postProcessor)
 
   // set up things necessary before running actual tests
   def setup(): Unit = {
@@ -74,52 +92,18 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
   }
 
   // Things to do before running one test case
-  protected def beforeTestCase(): Unit = {}
+  protected def beforeTestCase(testCaseName: String): Unit
 
   // Things to do after running one test case
-  protected def afterTestCase(): Unit
+  protected def afterTestCase(testCaseName: String): Unit
 
-  // tear down
-  protected def teardown(): Unit
-
-  // write data to flink via subclass (Kafka, TCP, ...)
-  protected def writeData(input: List[TestData])(implicit executor: ExecutionContextExecutor)
-
-  // turn the folder + post processor data into test cases
-  logInfo(s"==== Starting ${this.getClass.getSimpleName} ====")
-
-  // check mapping files
-  "A streamer mapping reader" should behave like validMappingFile(testFolder)
-
-  // run setup of subclass
-  setup()
-
-  // set up Flink
-  val flink: MiniCluster = startFlink
-
-  logInfo("Reading test cases")
-  val testCases: Array[(Path, String)] = for {
-    (folder, postProcessor) <- passingTests
-    testCase <- StreamDataSourceTestUtil.getTestCaseFolders(folder).sorted
-  } yield (testCase, postProcessor)
-
-  implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
-  implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
-  FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv,
-    "functions_grel.ttl",
-    "grel_java_mapping.ttl",
-    "fno/functions_idlab.ttl",
-    "fno/functions_idlab_test_classes_java_mapping.ttl"
-  )
-
-  // run the test cases
-  for ((folderPath, postProcessorName) <- testCases) {
+  def executeTest(folderPath: Path, postProcessorName: String, shouldPass: Boolean): Unit = {
     NodeCache.clear();
 
     //it should s"produce triples equal to the expected triples for ${folderPath.getFileName}" in {
     Logger.lineBreak(50)
     logInfo(s"Running test ${folderPath}")
-    beforeTestCase()
+    beforeTestCase(folderPath.toString)
 
     implicit val postProcessor: PostProcessor = TestUtil.pickPostProcessor(postProcessorName)
     val folder = Util.getFile(folderPath.toString)
@@ -127,7 +111,15 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     implicit val executor: ExecutionContextExecutor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
 
     // create data stream and sink
-    val dataStream = StreamTestUtil.createDataStream(folder)
+    val dataStream: DataStream[String] = this match {
+      // if executing DB tests, inject the URL of the database provided by the container defined in the test class
+      case sync: DBTestSync =>
+        val dbURL = sync.container.getURL
+        StreamTestUtil.createDataStreamDB(folder, dbURL)
+      case _ =>
+        StreamTestUtil.createDataStream(folder)
+    }
+
     Logger.logInfo("Datastream created")
     val sink = TestSink2()
     Logger.logInfo("sink created")
@@ -162,46 +154,94 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     // delete Flink Job
     deleteJob(flink, jobId)
 
-    afterTestCase()
+    afterTestCase(folderPath.toString)
 
-    // check the results
-    val either = TestUtil.compareResults(folderPath.toString, resultTriples, expectedOutput, postProcessor.outputFormat, expectedOutputFormat)
-    either match {
-      case Left(e) => fail(e)
-      case Right(e) => {
-        logInfo(e)
+    val exitStatus = flink.getJobStatus(jobId).get()
+    deleteJob(flink, jobId)
+    afterTestCase(folderPath.toString)
+
+    if (!shouldPass) {
+      if (exitStatus != JobStatus.FAILED) {
+        Logger.logError(s"Job exited with status ${exitStatus}")
+        fail();
       }
-    }
+    } else {
 
-    it should s"produce triples equal to the expected triples for ${folderPath.toString}" in {
+      // check the results
+      val either = TestUtil.compareResults(folderPath.toString, resultTriples, expectedOutput, postProcessor.outputFormat, expectedOutputFormat)
       either match {
         case Left(e) => fail(e)
-        case Right(e) => {
-          logInfo(e)
-          succeed
-        }
+        case Right(e) => logInfo(e)
       }
     }
+  }
+
+  private def submitJob[T](flink: MiniCluster, dataStream: DataStream[T], name: String): JobID = {
+    logInfo(s"Submitting job ${name} to Flink...")
+    val graph = dataStream.executionEnvironment.getStreamGraph
+    graph.setJobName(name)
+    val jobGraph: JobGraph = graph.getJobGraph
+    flink.runDetached(jobGraph)
+    val jobId = jobGraph.getJobID
+    logInfo(s"Job submitted, ID: ${jobId}. Waiting for it to run.")
+
+    while (!flink.getJobStatus(jobId).get().equals(JobStatus.RUNNING)
+      && !flink.getJobStatus(jobId).get().equals(JobStatus.FINISHED)
+      && !flink.getJobStatus(jobId).get().equals(JobStatus.FAILED)
+      && !flink.getJobStatus(jobId).get().equals(JobStatus.CANCELED)) {
+      Thread.sleep(500)
+      logInfo(s"Waiting for Flink job to start... Status: ${flink.getJobStatus(jobId).get().name()}")
+    }
+    Thread.sleep(500)
+    logInfo("Flink job started.")
+    jobId
+  }
+
+  private def deleteJob(flink: MiniCluster, jobId: JobID): Unit = {
+    logInfo(s"Canceling job ${jobId}...")
+    try {
+      flink.cancelJob(jobId).get()
+    } catch {
+      case e: ExecutionException => logInfo("Flink job already stopped.")
+    }
+    Thread.sleep(1000) // also here: even waiting for the future to complete doesn't guarantee that it's completed!
+    logInfo(s"Job ${jobId} canceled.")
+  }
+
+  // turn the folder + post processor data into test cases
+  logInfo(s"==== Starting ${this.getClass.getSimpleName} ====")
+
+  // check mapping files
+  "A streamer mapping reader" should behave like validMappingFile(testFolder)
+
+  // run setup of subclass
+  setup()
+
+  implicit val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
+  implicit val senv: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+  FunctionsFlinkUtil.putFunctionFilesInFlinkCache(env.getJavaEnv, senv.getJavaEnv,
+    "functions_grel.ttl",
+    "grel_java_mapping.ttl",
+    "fno/functions_idlab.ttl",
+    "fno/functions_idlab_test_classes_java_mapping.ttl"
+  )
+
+  // run the test cases
+  for ((folderPath, postProcessorName) <- passingTestCases) {
+    executeTest(folderPath, postProcessorName, shouldPass = true)
+  }
+
+  for ((folderPath, postProcessorName) <- failingTestCases) {
+    executeTest(folderPath, postProcessorName, shouldPass = false)
   }
 
   // run teardown of subclass
   teardown()
 
-  /////////////////////////
-  // some helper methods //
-  /////////////////////////
-  protected def getTempDir: File = {
-    val file = Paths.get(System.getProperty("java.io.tmpdir"), "rml-streamer", this.getClass.getSimpleName).toFile
-    if (!file.exists()) {
-      file.mkdir()
-    }
-    logInfo(s"Temp folder: ${file.toString}")
-    file
-  }
+  protected def teardown(): Unit
 
-  override def logInfo(log: String) {
-    Logger.logInfo(s"${getClass.getSimpleName}: ${log}")
-  }
+  // write data to flink via subclass (Kafka, TCP, ...)
+  protected def writeData(input: List[TestData])(implicit executor: ExecutionContextExecutor)
 
   private def startFlink: MiniCluster = {
     logInfo("Starting Flink...")
@@ -221,32 +261,19 @@ abstract class StreamTestSync extends StaticTestSpec with ReadMappingBehaviour w
     flink
   }
 
-  private def submitJob[T](flink: MiniCluster, dataStream: DataStream[T], name: String): JobID = {
-    logInfo(s"Submitting job ${name} to Flink...")
-    val graph = dataStream.executionEnvironment.getStreamGraph
-    graph.setJobName(name)
-    val jobGraph: JobGraph = graph.getJobGraph
-    flink.runDetached(jobGraph)
-    val jobId = jobGraph.getJobID
-    logInfo(s"Job submitted, ID: ${jobId}. Waiting for it to run.")
-
-    while (!flink.getJobStatus(jobId).get().equals(JobStatus.RUNNING)) {
-      Thread.sleep(1000)
-      logInfo("Waiting for Flink job to start...")
+  /////////////////////////
+  // some helper methods //
+  /////////////////////////
+  protected def getTempDir: File = {
+    val file = Paths.get(System.getProperty("java.io.tmpdir"), "rml-streamer", this.getClass.getSimpleName).toFile
+    if (!file.exists()) {
+      file.mkdir()
     }
-    Thread.sleep(1000)
-    logInfo("Flink job started.")
-    jobId
+    logInfo(s"Temp folder: ${file.toString}")
+    file
   }
 
-  private def deleteJob(flink: MiniCluster, jobId: JobID): Unit = {
-    logInfo(s"Canceling job ${jobId}...")
-    try {
-      flink.cancelJob(jobId).get()
-    } catch {
-      case e: ExecutionException => logInfo("Flink job already stopped.")
-    }
-    Thread.sleep(1000)  // also here: even waiting for the future to complete doesn't guarantee that it's completed!
-    logInfo(s"Job ${jobId} canceled.")
+  override def logInfo(log: String) {
+    Logger.logInfo(s"${getClass.getSimpleName}: ${log}")
   }
 }

@@ -25,31 +25,31 @@
 
 package io.rml.framework.core.model
 
-import java.util.Objects
-
 import io.rml.framework.core.model.std.StdLogicalSource
 
+import java.util.Objects
+
 /**
-  * Info : ...
-  */
+ * Node describing a Logical Source in a TriplesMap.
+ */
 trait LogicalSource extends Node {
 
   /**
-    *
-    * @return
-    */
+   * A list of iterators used when consuming the Logical Source.
+   *
+   * @return
+   */
   def iterators: List[String]
 
   /**
-    *
-    * @return
-    */
+   * Instance of DataSource representing the location of data to be consumed
+   */
   def source: DataSource
 
   /**
-    *
-    * @return
-    */
+   * Format the data is in.
+   *
+   */
   def referenceFormulation: Uri
 
 
@@ -64,12 +64,20 @@ trait LogicalSource extends Node {
   }
 
   /**
-    * Logical sources are "semantically" the same if their source identifier and their referenceFormulation are
-    * the same. This is used for grouping the sources, regardless of the iterators
-    * @return
-    */
+   * Logical sources are "semantically" the same if their source identifier and their referenceFormulation are
+   * the same. This is used for grouping the sources, regardless of the iterators
+   *
+   * @return
+   */
   def semanticIdentifier: String = {
-    Objects.hash(source.identifier, referenceFormulation.identifier).toHexString
+    source match {
+      case dbSource: DatabaseSource =>
+        // Database source is a special case since there can be multiple tables
+        // in one source.
+        Objects.hash(source.identifier, referenceFormulation.identifier, dbSource.query).toHexString
+      case _ =>
+        Objects.hash(source.identifier, referenceFormulation.identifier).toHexString
+    }
   }
 
 }
@@ -88,7 +96,5 @@ object LogicalSource {
       referenceFormulation,
       iterators,
       source)
-
   }
-
 }

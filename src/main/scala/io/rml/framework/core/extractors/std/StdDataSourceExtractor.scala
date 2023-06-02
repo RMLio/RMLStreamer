@@ -25,6 +25,7 @@
 
 package io.rml.framework.core.extractors.std
 
+import be.ugent.idlab.knows.dataio.access.DatabaseType
 import io.rml.framework.core.extractors.DataSourceExtractor
 import io.rml.framework.core.extractors.ExtractorUtil.{extractLiteralFromProperty, extractResourceFromProperty, extractSingleLiteralFromProperty, extractSingleResourceFromProperty}
 import io.rml.framework.core.model._
@@ -52,7 +53,6 @@ class StdDataSourceExtractor extends DataSourceExtractor {
       case literal: Literal => FileDataSource(literal) // the literal represents a path uri
       case resource: RDFResource => extractDataSourceFromResource(resource)
     }
-
   }
 
   /**
@@ -72,6 +72,7 @@ class StdDataSourceExtractor extends DataSourceExtractor {
         case Uri(RMLSVoc.Class.KAFKASTREAM) => extractKafkaStream(resource)
         case Uri(WoTVoc.ThingDescription.Class.THING) => extractWoTSource(resource)
         case Uri(CSVWVoc.Class.TABLE) => extractCSVWSource(resource)
+        case Uri(D2RQVoc.Class.DATABASE) => extractDatabaseSource(resource)
         case _ => throw new RMLException(s"${classResource.uri} not supported as data source.")
       }
       case literal: Literal => throw new RMLException(literal.value + ": type must be a resource.")
@@ -159,5 +160,15 @@ class StdDataSourceExtractor extends DataSourceExtractor {
     val path = extractSingleLiteralFromProperty(resource, CSVWVoc.Property.URL)
     val dialect = extractSingleResourceFromProperty(resource, CSVWVoc.Property.DIALECT)
     CSVWFileSource(path, CSVWDialect().parse(dialect))
+  }
+
+  private def extractDatabaseSource(resource: RDFResource): StreamDataSource = {
+    val jdbcURL = extractSingleLiteralFromProperty(resource, D2RQVoc.Property.JDBC_DSN)
+    val username = extractSingleLiteralFromProperty(resource, D2RQVoc.Property.USERNAME)
+    val password = extractSingleLiteralFromProperty(resource, D2RQVoc.Property.PASSWORD)
+    val driverString = extractSingleLiteralFromProperty(resource, D2RQVoc.Property.JDBC_DRIVER)
+    val dbType = DatabaseType.getDBtype(driverString)
+
+    DatabaseSource(jdbcURL, username, password, dbType)
   }
 }

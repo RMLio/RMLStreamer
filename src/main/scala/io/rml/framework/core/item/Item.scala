@@ -39,4 +39,5 @@ trait Item extends Serializable {
 
   def tag: String
 
+  def getDataTypes: Map[String, String]
 }

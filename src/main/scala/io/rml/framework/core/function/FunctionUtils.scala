@@ -7,13 +7,14 @@ import io.rml.framework.core.vocabulary.{RDFVoc, XsdVoc}
 import io.rml.framework.shared.RMLException
 
 import java.time.Instant
+import java.util.Date
 
 object FunctionUtils extends Logging {
 
   def typeCastDataType(output: Entity, dataType: Option[Uri]): Option[Entity] = {
     if(dataType.isDefined){
       val typeClass = getTypeClass(dataType.get)
-      val castedValue = Parameter(typeClass, output.toString).getValue
+      val castedValue = Parameter(typeClass, output.value).getValue
 
       castedValue.map(e => Literal(e.toString))
     }else{
@@ -35,6 +36,7 @@ object FunctionUtils extends Logging {
       case Uri(RDFVoc.Type.RDF_LIST) => classOf[List[_]]
       case Uri(XsdVoc.Type.XSD_ANY) => classOf[Any]
       case Uri(RDFVoc.Type.RDF_OBJECT) => classOf[Any]
+      case Uri(XsdVoc.Type.XSD_DATE) => classOf[Date]
       case _ => throw new RMLException(s"Type ${uri.value} not supported for parameter")
     }
   }

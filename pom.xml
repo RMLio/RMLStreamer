@@ -28,7 +28,7 @@ SOFTWARE.
 
     <groupId>io.rml</groupId>
     <artifactId>RMLStreamer</artifactId>
-    <version>2.4.2</version>
+    <version>v2.5.0</version>
     <packaging>jar</packaging>
 
     <name>RMLStreamer</name>
@@ -41,9 +41,10 @@ SOFTWARE.
         <log4j.version>2.17.0</log4j.version>
         <jena.version>4.3.1</jena.version>
         <kafka.version>2.4.1</kafka.version>
-
+        <junit.version>5.9.1</junit.version>
+        <testcontainers.version>1.17.6</testcontainers.version>
         <scala.binary.version>2.11</scala.binary.version>
-        <java.version>11</java.version>
+        <maven.compiler.release>11</maven.compiler.release>
 
         <!-- license properties -->
         <project.inceptionYear>2018</project.inceptionYear>
@@ -387,7 +388,7 @@ SOFTWARE.
         <dependency>
             <groupId>com.github.FnOio</groupId>
             <artifactId>function-agent-java</artifactId>
-            <version>v0.2.1</version>
+            <version>v1.1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.jena</groupId>
@@ -398,14 +399,66 @@ SOFTWARE.
         <dependency>
             <groupId>com.github.fnoio</groupId>
             <artifactId>grel-functions-java</artifactId>
-            <version>v0.8.2</version>
+            <version>v0.9.1</version>
         </dependency>
         <dependency>
             <groupId>com.github.fnoio</groupId>
             <artifactId>idlab-functions-java</artifactId>
-            <version>v0.1.2</version>
+            <version>v0.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.RMLio</groupId>
+            <artifactId>dataio</artifactId>
+            <version>v0.1.1</version>
         </dependency>
 
+        <!-- Testcontainers dependencies -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- containers -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>jdbc</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- JUnit extension -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- End of Testcontainers dependencies -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <!-- This profile helps to make things run stand-alone or in IntelliJ -->
