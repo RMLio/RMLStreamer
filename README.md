@@ -1,7 +1,7 @@
 ## RMLStreamer
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3887065.svg)](https://doi.org/10.5281/zenodo.3887065)
 
-The RMLStreamer generates [RDF](https://www.w3.org/2001/sw/wiki/RDF) from files or data streams
+RMLStreamer generates [RDF](https://www.w3.org/2001/sw/wiki/RDF) from files or data streams
 using [RML](http://rml.io/). The difference with other RML implementations is that it can handle
 *big* input files and *continuous data streams*, like sensor data.
 
@@ -68,7 +68,7 @@ options:
 
 ### Moderately quick start (Docker - the recommended way)
 
-If you want to get the RMLStreamer up and running within 5 minutes using Docker, check out [docker/README.md](docker/README.md)
+If you want to get RMLStreamer up and running within 5 minutes using Docker, check out [docker/README.md](docker/README.md)
 
 ### Not so quick start (deploying on a cluster)
 
