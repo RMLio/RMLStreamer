@@ -63,7 +63,9 @@ extends Logging{
     // create the statements
     val predicateObjectStatements = allPredicateObjectsAndLogicalTargetIDs.flatMap(predicateObjectAndLogicalTargetIDs => {
       val statementsPerPredicateObjectMap = predicateObjectAndLogicalTargetIDs.map(predicateObjects => {
-        val graphGenerator = if(triplesMap.subjectMap.graphMap.isDefined) subjectGraphGenerator else predicateObjects._3
+        // R2RML 11.1: the graphs of a predicate-object map are those of the subject
+        // map and those of the predicate-object map together
+        val graphGenerator = if(triplesMap.subjectMap.graphMap.isDefined) unionOfGraphs(subjectGraphGenerator, predicateObjects._3) else predicateObjects._3
         (subjectGenerator, predicateObjects._1, predicateObjects._2, graphGenerator, predicateObjects._4)
       })
       statementsPerPredicateObjectMap
@@ -74,6 +76,15 @@ extends Logging{
     predicateObjectStatements ++ classMappingStatements
   }
 
+
+  private def unionOfGraphs(first: ((Item, Agent)) => Option[Iterable[Uri]],
+                            second: ((Item, Agent)) => Option[Iterable[Uri]]): ((Item, Agent)) => Option[Iterable[Uri]] = {
+    itemAgentTuple => (first(itemAgentTuple), second(itemAgentTuple)) match {
+      case (Some(a), Some(b)) => Some((a ++ b).toList.distinct)
+      case (a, None) => a
+      case (None, b) => b
+    }
+  }
 
   private def getClassMappingStatements(subjectGenerator: ((Item, Agent)) => Option[Iterable[TermNode]],
                                         classes: List[Uri],
