@@ -45,7 +45,7 @@
   a rr:TriplesMap;
 		
   rml:logicalSource [ 
-    rml:source "rml-testcases/RMLTC0009b-CSV/sport.csv";
+    rml:source "sport.csv";
     rml:referenceFormulation ql:CSV
   ];
 
